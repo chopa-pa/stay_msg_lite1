@@ -207,8 +207,8 @@ main{padding:16px 14px 0;}
 .tpl-title-edit:focus{border-color:var(--accent);}
 
 /* ── VAR CHIPS ── */
-.var-chips-wrap{margin-top:10px;background:#fff7f5;border:1.5px solid #ffd5cc;border-radius:10px;padding:10px;}
-.var-chips-label{font-size:10px;font-weight:700;color:var(--accent);letter-spacing:.5px;margin-bottom:7px;opacity:.8;}
+.var-chips-wrap{margin-top:10px;background:#fff7f5;border:1.5px solid #ffd5cc;border-radius:10px;padding:10px;display:flex;flex-direction:column;gap:10px;}
+.var-chips-label{font-size:10px;font-weight:700;color:var(--accent);letter-spacing:.5px;margin-bottom:4px;opacity:.8;}
 .var-chips{display:flex;flex-wrap:wrap;gap:5px;}
 .var-chip{
   padding:5px 11px;
@@ -218,6 +218,14 @@ main{padding:16px 14px 0;}
   transition:background .15s,transform .1s;
 }
 .var-chip:active{background:#FF6B4A;color:white;transform:scale(.95);}
+.emoji-section{border-top:1px solid #ffd5cc;padding-top:10px;}
+.emoji-chip{
+  padding:4px 7px;font-size:17px;
+  background:white;border:1.5px solid #ffe5dd;
+  border-radius:10px;cursor:pointer;
+  transition:transform .1s;
+}
+.emoji-chip:active{transform:scale(.85);}
 
 /* ── ADD TEMPLATE ── */
 .btn-add-tpl{
@@ -588,8 +596,11 @@ function applyVars(raw){
   };
   return raw.replace(/\{[^}]+\}/g,m=>map[m]!==undefined?map[m]:m);
 }
+const EMOJI_LIST=['😊','🙏','✅','🎉','🌿','🏡','📅','👥','💰','🚗','🅿️','📶','🔥','🌊','⭐','❤️','😔','🍃','🌄','🌲','🛒','🍽️','🧺','🚭','📍','💬','📋','🎊','😄','🙌'];
 function varChipsHtml(taId){
-  return`<div class="var-chips-wrap"><div class="var-chips-label">📌 변수 버튼 (탭하면 입력됩니다)</div><div class="var-chips">${VAR_LIST.map(v=>`<button class="var-chip" onclick="insertVar('${v}','${taId}')">${v}</button>`).join('')}</div></div>`;
+  const vars=`<div><div class="var-chips-label">📌 변수 (탭하면 입력)</div><div class="var-chips">${VAR_LIST.map(v=>`<button class="var-chip" onclick="insertVar('${v}','${taId}')">${v}</button>`).join('')}</div></div>`;
+  const emojis=`<div class="emoji-section"><div class="var-chips-label">😊 이모티콘</div><div class="var-chips">${EMOJI_LIST.map(e=>`<button class="emoji-chip" onclick="insertVar('${e}','${taId}')">${e}</button>`).join('')}</div></div>`;
+  return`<div class="var-chips-wrap">${vars}${emojis}</div>`;
 }
 function insertVar(v,taId){
   const ta=document.getElementById(taId);if(!ta)return;
