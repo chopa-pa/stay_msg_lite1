@@ -394,9 +394,9 @@ function renderStage(){
     html+=`<div class="card">
       <div class="card-h" onclick="togCard('${key}')">
         <span class="card-t">${esc(t.title)}</span>
-        <span class="card-tog" id="tog-${key}">▾</span>
+        <span class="card-tog ${i===0&&s.id==='inquiry'?'open':''}" id="tog-${key}">▾</span>
       </div>
-      <div class="card-b" id="body-${key}">
+      <div class="card-b ${i===0&&s.id==='inquiry'?'open':''}" id="body-${key}">
         ${isEd
           ?`<input class="tpl-title-edit" id="etitle-${key}" value="${esc(t.title)}" placeholder="템플릿 제목">
              <textarea class="tpl-edit" id="edit-${key}">${esc(raw)}</textarea>${varChipsHtml('edit-'+key)}`
