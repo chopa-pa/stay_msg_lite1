@@ -411,7 +411,7 @@ main{padding:16px 14px 0;}
         <label>숙박 금액</label>
         <div class="fi-input">
           <span class="fi-icon">💰</span>
-          <input type="text" id="v_price" inputmode="numeric" placeholder="예: 150,000원" oninput="fmtPrice(this);renderStage()">
+          <input type="text" id="v_price" inputmode="numeric" placeholder="예: 150,000원" onfocus="this.value=this.value.replace(/[^0-9]/g,'')" onblur="fmtPrice(this);renderStage()" oninput="renderStage()">
         </div>
       </div>
     </div>
@@ -491,14 +491,14 @@ main{padding:16px 14px 0;}
         <span class="set-field-icon">📅</span>
         <div class="set-field-body">
           <div class="set-field-label">주중 요금</div>
-          <input type="text" id="cfg_pw" inputmode="numeric" placeholder="예: 100,000원" oninput="fmtPrice(this)">
+          <input type="text" id="cfg_pw" inputmode="numeric" placeholder="예: 100,000원" onfocus="this.value=this.value.replace(/[^0-9]/g,'')" onblur="fmtPrice(this)">
         </div>
       </div>
       <div class="set-field">
         <span class="set-field-icon">🌅</span>
         <div class="set-field-body">
           <div class="set-field-label">주말 요금</div>
-          <input type="text" id="cfg_pwe" inputmode="numeric" placeholder="예: 150,000원" oninput="fmtPrice(this)">
+          <input type="text" id="cfg_pwe" inputmode="numeric" placeholder="예: 150,000원" onfocus="this.value=this.value.replace(/[^0-9]/g,'')" onblur="fmtPrice(this)">
         </div>
       </div>
     </div>
@@ -760,6 +760,7 @@ function clearForm(){
   document.getElementById('v_guests').value='';
   document.getElementById('v_price').value='';
   _cal.ci=null;_cal.co=null;
+  editState={};
   _updateDateDisplay();renderStage();
 }
 
