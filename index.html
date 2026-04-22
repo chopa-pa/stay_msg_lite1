@@ -322,22 +322,6 @@ main{padding:16px 14px 0;}
   opacity:0;transition:all .28s;z-index:999;
   white-space:nowrap;pointer-events:none;
 }
-/* ── PWA 설치 배너 ── */
-#installBanner{
-  position:fixed;bottom:0;left:0;right:0;z-index:990;
-  background:white;
-  border-top:1px solid #ffe0d8;
-  padding:14px 16px calc(env(safe-area-inset-bottom,0px) + 14px);
-  display:none;align-items:center;gap:12px;
-  box-shadow:0 -4px 20px rgba(255,107,74,.15);
-}
-#installBanner.show{display:flex;}
-.install-icon{width:44px;height:44px;border-radius:10px;background:linear-gradient(135deg,#FF6B4A,#FF8C6B);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;}
-.install-text{flex:1;}
-.install-text strong{display:block;font-size:14px;font-weight:700;color:#1c1c1e;}
-.install-text span{font-size:11px;color:#888;}
-.install-btn{padding:9px 16px;background:linear-gradient(135deg,#FF6B4A,#FF8C6B);color:white;border:none;border-radius:20px;font-size:13px;font-weight:700;cursor:pointer;flex-shrink:0;}
-.install-close{padding:6px;font-size:18px;color:#aaa;cursor:pointer;flex-shrink:0;}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
 
 /* ── MODAL ── */
@@ -508,7 +492,10 @@ main{padding:16px 14px 0;}
       <button onclick="confirmResetSettings()" style="padding:14px 16px;background:#fff0f0;border:1.5px solid #ffcccc;border-radius:var(--radius);color:#e55;font-weight:700;font-size:14px;cursor:pointer;">🗑 초기화</button>
     </div>
 
-    <div class="set-group-label" style="margin-top:20px;">📲 데이터 동기화</div>
+    <div class="set-group-label" style="margin-top:20px;">📱 앱 설치</div>
+    <button onclick="installApp()" style="width:100%;padding:13px;background:#f5f0ff;border:1.5px solid #d0b8ff;border-radius:var(--radius);color:#5522cc;font-weight:700;font-size:14px;cursor:pointer;margin-bottom:8px;">📲 홈 화면에 바로가기 추가</button>
+
+    <div class="set-group-label" style="margin-top:8px;">📲 데이터 동기화</div>
     <div style="display:flex;gap:8px;">
       <button onclick="exportData()" style="flex:1;padding:13px;background:#f0f4ff;border:1.5px solid #c0d0ff;border-radius:var(--radius);color:#3355cc;font-weight:700;font-size:14px;cursor:pointer;">📤 내보내기</button>
       <button onclick="document.getElementById('importFile').click()" style="flex:1;padding:13px;background:#f0fff4;border:1.5px solid #b0e8c0;border-radius:var(--radius);color:#226633;font-weight:700;font-size:14px;cursor:pointer;">📥 가져오기</button>
@@ -532,16 +519,6 @@ main{padding:16px 14px 0;}
 <div id="_calModal"></div>
 <div class="toast" id="toast"></div>
 
-<!-- PWA 설치 배너 -->
-<div id="installBanner">
-  <div class="install-icon">🏡</div>
-  <div class="install-text">
-    <strong>홈 화면에 추가</strong>
-    <span>앱처럼 바로 실행할 수 있어요</span>
-  </div>
-  <button class="install-btn" id="installBtn">추가</button>
-  <span class="install-close" onclick="dismissInstall()">✕</span>
-</div>
 
 <script>
 const SK_SET='solsoop_set_v1';
@@ -973,38 +950,22 @@ if('serviceWorker' in navigator){
 
 // PWA 설치 프롬프트
 let _installPrompt=null;
-window.addEventListener('beforeinstallprompt',e=>{
-  e.preventDefault();
-  _installPrompt=e;
-  if(!localStorage.getItem('pwa_dismissed')){
-    document.getElementById('installBanner').classList.add('show');
-  }
-});
-document.getElementById('installBtn').onclick=async()=>{
+window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();_installPrompt=e;});
+async function installApp(){
   if(_installPrompt){
     _installPrompt.prompt();
     const r=await _installPrompt.userChoice;
     _installPrompt=null;
+    if(r.outcome==='accepted')toast('홈 화면에 추가됐어요 📲');
   } else {
-    // iOS 안내
-    showConfirmModal('홈 화면에 추가하기',
-      'Safari에서 하단 공유 버튼(□↑)을 탭한 후 "홈 화면에 추가"를 선택하세요.',
-      null,null,'확인','');
+    const isIos=/iphone|ipad|ipod/i.test(navigator.userAgent);
+    if(isIos){
+      showConfirmModal('홈 화면에 추가 (iOS)','Safari에서 하단 공유 버튼(□↑)을 탭한 후\n"홈 화면에 추가"를 선택하세요.',null,null,'확인','');
+    } else {
+      showConfirmModal('홈 화면에 추가','이미 설치되어 있거나 이 브라우저에서는\n자동 설치가 지원되지 않아요.\n\n브라우저 메뉴 → "홈 화면에 추가"를 이용해 주세요.',null,null,'확인','');
+    }
   }
-  document.getElementById('installBanner').classList.remove('show');
-};
-function dismissInstall(){
-  document.getElementById('installBanner').classList.remove('show');
-  localStorage.setItem('pwa_dismissed','1');
 }
-// iOS: 앱 밖에서 실행 중이면 배너 표시
-window.addEventListener('load',()=>{
-  const isIos=/iphone|ipad|ipod/i.test(navigator.userAgent);
-  const isStandalone=window.navigator.standalone;
-  if(isIos&&!isStandalone&&!localStorage.getItem('pwa_dismissed')){
-    document.getElementById('installBanner').classList.add('show');
-  }
-});
 </script>
 </body>
 </html>
