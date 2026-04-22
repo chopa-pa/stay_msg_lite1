@@ -335,19 +335,6 @@ main{padding:16px 14px 0;}
 .modal-btn-cancel{background:var(--bg);color:var(--ink-light);}
 .modal-btn-ok{background:var(--accent);color:white;}
 
-/* ── 문자 인식 모달 ── */
-.smart-modal-ov{position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:400;display:none;align-items:flex-end;justify-content:center;}
-.smart-modal-ov.open{display:flex;}
-.smart-modal{background:var(--bg);border-radius:24px 24px 0 0;width:100%;max-width:600px;max-height:90vh;overflow-y:auto;padding:0 0 calc(env(safe-area-inset-bottom,0px)+20px);}
-.smart-modal-head{display:flex;align-items:center;justify-content:space-between;padding:20px 20px 12px;}
-.smart-modal-head h3{font-size:17px;font-weight:700;}
-.smart-section{background:white;border-radius:16px;margin:0 14px 10px;padding:14px 16px;box-shadow:0 1px 6px var(--shadow);}
-.smart-section-label{font-size:11px;font-weight:700;color:var(--ink-light);letter-spacing:.05em;margin-bottom:8px;}
-.smart-textarea{width:100%;min-height:120px;border:1.5px solid var(--border);border-radius:10px;padding:12px;font-size:13px;font-family:'Noto Sans KR',sans-serif;resize:vertical;outline:none;line-height:1.7;background:var(--cream);}
-.smart-textarea:focus{border-color:var(--accent);}
-.smart-preview{font-size:13px;line-height:1.8;white-space:pre-wrap;word-break:break-all;color:var(--ink2);}
-.smart-var{background:#fff0ec;color:var(--accent);font-weight:700;border-radius:4px;padding:1px 4px;}
-.smart-footer{display:flex;gap:8px;padding:4px 14px 0;}
 </style>
 </head>
 <body>
@@ -530,31 +517,6 @@ main{padding:16px 14px 0;}
   </div>
 </div>
 
-<!-- 문자 인식 모달 -->
-<div class="smart-modal-ov" id="smartModalOv">
-  <div class="smart-modal">
-    <div class="smart-modal-head">
-      <h3>✨ 기존 문자로 템플릿 만들기</h3>
-      <button onclick="closeSmartModal()" style="background:none;border:none;font-size:22px;color:var(--ink-light);cursor:pointer;">✕</button>
-    </div>
-    <div class="smart-section">
-      <div class="smart-section-label">📋 기존에 보내던 문자를 붙여넣으세요</div>
-      <textarea class="smart-textarea" id="smartInput" placeholder="예: 안녕하세요 이종원님&#10;입금 계좌: 카카오뱅크 3333-33-333333 임연신&#10;입실: 4월 25일 오후 3시..." oninput="runSmartDetect()"></textarea>
-    </div>
-    <div class="smart-section" id="smartPreviewWrap" style="display:none;">
-      <div class="smart-section-label">🔍 인식 결과 미리보기</div>
-      <div class="smart-preview" id="smartPreview"></div>
-    </div>
-    <div class="smart-section" id="smartTitleWrap" style="display:none;">
-      <div class="smart-section-label">📝 템플릿 제목</div>
-      <input type="text" id="smartTitle" placeholder="예: 예약 확정 안내" style="width:100%;border:1.5px solid var(--border);border-radius:10px;padding:10px 12px;font-size:14px;font-family:'Noto Sans KR',sans-serif;outline:none;background:var(--cream);" onkeydown="if(event.key==='Enter')addSmartTemplate()">
-    </div>
-    <div class="smart-footer">
-      <button onclick="closeSmartModal()" style="flex:1;padding:13px;background:var(--bg);border:none;border-radius:14px;font-size:14px;font-weight:600;color:var(--ink-light);cursor:pointer;">취소</button>
-      <button onclick="addSmartTemplate()" id="smartAddBtn" style="flex:2;padding:13px;background:linear-gradient(135deg,#FF6B4A,#FF8C6B);border:none;border-radius:14px;font-size:15px;font-weight:700;color:white;cursor:pointer;box-shadow:0 4px 12px rgba(255,107,74,.3);" disabled>템플릿으로 추가</button>
-    </div>
-  </div>
-</div>
 
 <div id="_calModal"></div>
 <div class="toast" id="toast"></div>
@@ -726,10 +688,7 @@ function renderStage(){
       </div>
     </div>`;
   });
-  html+=`<div style="display:flex;gap:8px;margin-bottom:24px;">
-    <button class="btn-add-tpl" style="flex:1;margin:0;" onclick="addCustomTpl()">＋ 템플릿 추가</button>
-    <button class="btn-add-tpl" style="flex:1;margin:0;border-color:var(--accent);color:var(--accent);" onclick="openSmartModal()">✨ 기존 문자로 만들기</button>
-  </div>`;
+  html+=`<button class="btn-add-tpl" onclick="addCustomTpl()">＋ 템플릿 추가</button>`;
   document.getElementById('stageContent').innerHTML=html;
 }
 
@@ -925,93 +884,6 @@ function confirmResetSettings(){
   });
 }
 
-/* ── 문자 인식 ── */
-function openSmartModal(){
-  document.getElementById('smartInput').value='';
-  document.getElementById('smartPreviewWrap').style.display='none';
-  document.getElementById('smartTitleWrap').style.display='none';
-  document.getElementById('smartAddBtn').disabled=true;
-  document.getElementById('smartTitle').value='';
-  document.getElementById('smartModalOv').classList.add('open');
-  setTimeout(()=>document.getElementById('smartInput').focus(),200);
-}
-function closeSmartModal(){
-  document.getElementById('smartModalOv').classList.remove('open');
-}
-
-function smartDetect(raw){
-  let text=raw;
-
-  // 1. 설정값 치환 (가장 정확 - 긴 것 먼저)
-  const settingMap=[
-    [settings.account,'{계좌}'],
-    [settings.addr,'{주소}'],
-    [settings.name,'{숙소}'],
-    [settings.wifi,'{와이파이}'],
-    [settings.wifipw,'{와이파이비번}'],
-    [settings.door,'{비번}'],
-    [settings.pw,'{주중요금}'],
-    [settings.pwe,'{주말요금}'],
-  ];
-  settingMap.sort((a,b)=>(b[0]||'').length-(a[0]||'').length);
-  for(const [val,varName] of settingMap){
-    if(val&&val.trim())text=text.split(val).join(varName);
-  }
-
-  // 2. 폼 입력값 치환
-  const fName=document.getElementById('v_name').value.trim();
-  const fPhone=document.getElementById('v_phone').value.trim();
-  const fPrice=document.getElementById('v_price').value.trim();
-  if(fName)text=text.split(fName).join('{이름}');
-  if(fPhone)text=text.split(fPhone).join('{연락처}');
-  if(fPrice)text=text.split(fPrice).join('{금액}');
-
-  // 3. 패턴 인식
-  // 전화번호
-  text=text.replace(/01[016789]-?\d{3,4}-?\d{4}/g,'{연락처}');
-  // 금액 (숫자+원)
-  text=text.replace(/[0-9,]+원/g,'{금액}');
-  // 날짜: 첫번째=입실, 두번째=퇴실
-  let dateIdx=0;
-  text=text.replace(/\d{1,2}월\s?\d{1,2}일(\s*\([월화수목금토일]\))?/g,()=>{
-    dateIdx++;
-    return dateIdx===1?'{입실}':'{퇴실}';
-  });
-  // 인원 (숫자+명)
-  text=text.replace(/\d+명/g,'{인원}');
-
-  return text;
-}
-
-function runSmartDetect(){
-  const raw=document.getElementById('smartInput').value;
-  if(!raw.trim()){
-    document.getElementById('smartPreviewWrap').style.display='none';
-    document.getElementById('smartTitleWrap').style.display='none';
-    document.getElementById('smartAddBtn').disabled=true;
-    return;
-  }
-  const result=smartDetect(raw);
-  // 변수 하이라이트
-  const highlighted=result.replace(/\{[^}]+\}/g,m=>`<span class="smart-var">${m}</span>`);
-  document.getElementById('smartPreview').innerHTML=highlighted.replace(/\n/g,'<br>');
-  document.getElementById('smartPreviewWrap').style.display='block';
-  document.getElementById('smartTitleWrap').style.display='block';
-  document.getElementById('smartAddBtn').disabled=false;
-}
-
-function addSmartTemplate(){
-  const raw=document.getElementById('smartInput').value.trim();
-  if(!raw)return;
-  const body=smartDetect(raw);
-  const title=document.getElementById('smartTitle').value.trim()||'가져온 템플릿';
-  const s=STAGES[curStage];
-  (customs[s.id]=customs[s.id]||[]).push({title,body});
-  saveTplStorage();
-  closeSmartModal();
-  renderStage();
-  toast('템플릿이 추가됐어요 ✨');
-}
 
 function exportData(){
   const data={
@@ -1067,7 +939,6 @@ renderStage();
 document.addEventListener('keydown',e=>{
   if(e.key==='Escape'){
     if(document.getElementById('_calModal').innerHTML)document.getElementById('_calModal').innerHTML='';
-    else if(document.getElementById('smartModalOv').classList.contains('open'))closeSmartModal();
     else if(document.getElementById('setPanel').classList.contains('open'))closeSettings();
     else if(document.getElementById('confirmModal').classList.contains('open'))document.getElementById('confirmModal').classList.remove('open');
   }
