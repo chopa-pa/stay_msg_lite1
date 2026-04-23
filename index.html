@@ -540,6 +540,19 @@ main{padding:16px 14px 0;}
       손님 정보를 입력하면 템플릿에 자동으로 변수가 채워져요.
     </div>
 
+    <div class="set-group-label">⚙️ 설정 먼저 하기</div>
+    <div style="background:var(--card);border-radius:var(--radius);overflow:hidden;box-shadow:0 1px 8px var(--shadow);margin-bottom:8px;">
+      <div style="padding:10px 16px;border-bottom:1px solid var(--border);font-size:13px;color:var(--ink2);line-height:1.8;">
+        <strong>오른쪽 상단 ⚙️ 설정</strong>에서 숙소 정보를 입력하면<br>문자 템플릿에 자동으로 채워져요.
+      </div>
+      <div style="padding:10px 16px;font-size:13px;line-height:2;">
+        <div>🏡 <strong>숙소 이름·주소·계좌</strong> — 문자에 자동 입력</div>
+        <div>📶 <strong>와이파이·도어락 비번</strong> — 입실 안내 문자에 자동 입력</div>
+        <div>🔑 <strong>전화번호 뒷자리 자동 사용</strong> — 도어락 번호로 활용</div>
+        <div>💰 <strong>주중·주말 요금</strong> — {주중요금} {주말요금} 변수에 반영</div>
+      </div>
+    </div>
+
     <div class="set-group-label">👤 손님 정보 입력</div>
     <div style="background:var(--card);border-radius:var(--radius);overflow:hidden;box-shadow:0 1px 8px var(--shadow);margin-bottom:8px;">
       <div style="padding:12px 16px;border-bottom:1px solid var(--border);font-size:13px;line-height:1.8;color:var(--ink2);">
@@ -598,32 +611,58 @@ main{padding:16px 14px 0;}
       </div>
     </div>
 
-    <div class="set-group-label">➕ 템플릿 추가·삭제</div>
-    <div style="background:var(--card);border-radius:var(--radius);padding:12px 16px;box-shadow:0 1px 8px var(--shadow);margin-bottom:8px;font-size:13px;line-height:1.9;color:var(--ink2);">
-      각 단계 맨 아래 <strong>＋ 템플릿 추가</strong> 버튼으로 새 템플릿을 만들 수 있어요.<br>
-      직접 추가한 템플릿은 <strong>삭제</strong> 버튼이 표시돼요.
-    </div>
-
-    <div class="set-group-label">⚙️ 설정</div>
+    <div class="set-group-label">➕ 템플릿 수정·추가·삭제</div>
     <div style="background:var(--card);border-radius:var(--radius);overflow:hidden;box-shadow:0 1px 8px var(--shadow);margin-bottom:8px;">
+      <div style="padding:10px 16px;border-bottom:1px solid var(--border);font-size:13px;line-height:2;">
+        <div>✏️ <strong>수정</strong> 버튼 → 제목과 내용을 직접 편집</div>
+        <div style="padding-left:16px;font-size:12px;color:var(--ink-light);">· 변수 칩을 탭하면 커서 위치에 자동 삽입</div>
+        <div style="padding-left:16px;font-size:12px;color:var(--ink-light);">· 이모티콘도 같은 방식으로 삽입 가능</div>
+        <div style="padding-left:16px;font-size:12px;color:var(--ink-light);">· 저장 버튼을 눌러야 최종 저장돼요</div>
+      </div>
+      <div style="padding:10px 16px;border-bottom:1px solid var(--border);font-size:13px;line-height:2;">
+        <div>➕ <strong>템플릿 추가</strong> 버튼 → 각 단계에 새 템플릿 추가</div>
+        <div style="padding-left:16px;font-size:12px;color:var(--ink-light);">· 단계별로 여러 개 만들 수 있어요</div>
+        <div style="padding-left:16px;font-size:12px;color:var(--ink-light);">· 추가한 템플릿은 삭제 버튼이 표시돼요</div>
+      </div>
       <div style="padding:10px 16px;font-size:13px;line-height:2;">
-        <div>🏡 <strong>숙소 이름·주소·계좌</strong> — 변수에 자동 입력</div>
-        <div>📶 <strong>와이파이·도어락</strong> — 입실 안내 문자에 자동 입력</div>
-        <div>🔑 <strong>전화번호 뒷자리</strong> — 도어락 자동 사용 설정 가능</div>
-        <div>💰 <strong>주중·주말 요금</strong> — {주중요금} {주말요금} 변수에 반영</div>
+        <div>⚠️ <strong>기본 제공 템플릿</strong>은 삭제 불가, 수정만 가능해요</div>
+        <div style="padding-left:16px;font-size:12px;color:var(--ink-light);">· 설정 → 초기화 시 수정 내용이 원래대로 돌아와요</div>
       </div>
     </div>
 
     <div class="set-group-label">📲 여러 기기 동기화</div>
     <div style="background:var(--card);border-radius:var(--radius);padding:12px 16px;box-shadow:0 1px 8px var(--shadow);margin-bottom:8px;font-size:13px;line-height:1.9;color:var(--ink2);">
-      <strong>설정 → 내보내기</strong>로 JSON 파일 저장 후<br>
-      다른 기기에서 <strong>가져오기</strong>로 불러오면 설정과 템플릿이 그대로 옮겨져요.
+      <strong>설정 → 📤 내보내기</strong>로 JSON 파일 저장 후<br>
+      다른 기기에서 <strong>📥 가져오기</strong>로 불러오면<br>설정과 수정한 템플릿이 그대로 옮겨져요.
     </div>
 
     <div class="set-group-label">📲 앱으로 설치하기</div>
-    <div style="background:var(--card);border-radius:var(--radius);padding:12px 16px;box-shadow:0 1px 8px var(--shadow);font-size:13px;line-height:1.9;color:var(--ink2);">
-      <strong>설정 → 홈 화면에 바로가기 추가</strong>를 누르거나<br>
-      Safari에서 <strong>공유 → 홈 화면에 추가</strong>를 선택하면<br>앱처럼 홈 화면에서 바로 실행돼요.
+    <div style="background:var(--card);border-radius:var(--radius);overflow:hidden;box-shadow:0 1px 8px var(--shadow);">
+      <div style="padding:12px 16px;border-bottom:1px solid var(--border);">
+        <div style="font-size:12px;font-weight:700;color:#3DDC84;margin-bottom:6px;">🤖 안드로이드</div>
+        <div style="font-size:13px;line-height:1.9;color:var(--ink2);">
+          Chrome 브라우저에서 접속 후<br>
+          주소창 오른쪽 <strong>⋮ 메뉴 → 홈 화면에 추가</strong> 선택<br>
+          또는 하단에 설치 배너가 뜨면 <strong>설치</strong> 탭
+        </div>
+      </div>
+      <div style="padding:12px 16px;border-bottom:1px solid var(--border);">
+        <div style="font-size:12px;font-weight:700;color:#007AFF;margin-bottom:6px;">🍎 아이폰 (iOS)</div>
+        <div style="font-size:13px;line-height:1.9;color:var(--ink2);">
+          Safari 브라우저에서 접속 후<br>
+          하단 <strong>공유 버튼(□↑) → 홈 화면에 추가</strong> 선택<br>
+          <span style="font-size:12px;color:var(--ink-light);">· Chrome 등 다른 브라우저에서는 설치 불가</span>
+        </div>
+      </div>
+      <div style="padding:12px 16px;">
+        <div style="font-size:12px;font-weight:700;color:#8E8E93;margin-bottom:6px;">💻 컴퓨터 (PC·Mac)</div>
+        <div style="font-size:13px;line-height:1.9;color:var(--ink2);">
+          Chrome 또는 Edge 브라우저에서 접속 후<br>
+          주소창 오른쪽 <strong>설치(⊕) 아이콘</strong> 클릭<br>
+          또는 <strong>⋮ 메뉴 → 앱으로 설치</strong> 선택<br>
+          <span style="font-size:12px;color:var(--ink-light);">· 설치 후 바탕화면에서 바로 실행 가능</span>
+        </div>
+      </div>
     </div>
 
   </div>
