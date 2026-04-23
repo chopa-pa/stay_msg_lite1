@@ -44,6 +44,8 @@ header{
   box-shadow:0 2px 12px rgba(255,107,74,0.3);
 }
 .hdr-row{display:flex;align-items:center;justify-content:space-between;height:58px;}
+.hdr-center{position:absolute;left:50%;transform:translateX(-50%);text-align:center;pointer-events:none;}
+header{position:sticky;top:0;z-index:100;}
 .hdr-title{font-size:17px;font-weight:700;color:white;letter-spacing:-.3px;}
 .hdr-set-btn{
   display:flex;align-items:center;gap:5px;
@@ -54,8 +56,7 @@ header{
   cursor:pointer;font-family:'Noto Sans KR',sans-serif;
 }
 .hdr-set-btn:active{background:rgba(255,255,255,0.35);}
-.hdr-btn-label{display:none;}
-@media(hover:hover){.hdr-set-btn:hover .hdr-btn-label{display:inline;}}
+.hdr-btn-label{display:inline;}
 
 /* ── STAGE TABS ── */
 .stabs{
@@ -348,11 +349,12 @@ main{padding:16px 14px 0;}
 <body>
 
 <header>
-  <div class="hdr-row">
-    <div style="display:flex;flex-direction:column;align-items:flex-start;gap:2px;line-height:1.2;">
-      <span style="font-size:10px;font-weight:600;color:rgba(255,255,255,0.7);letter-spacing:1.2px;text-transform:uppercase;margin-left:2px;">stay_msg_lite1</span>
-      <span class="hdr-title" style="font-size:18px;font-weight:800;letter-spacing:-.3px;">🏡 숙소 예약 문자</span>
+  <div class="hdr-row" style="position:relative;">
+    <div class="hdr-center">
+      <span style="font-size:10px;font-weight:600;color:rgba(255,255,255,0.7);letter-spacing:1.2px;text-transform:uppercase;display:block;">stay_msg_lite1</span>
+      <span class="hdr-title" style="font-size:17px;font-weight:800;letter-spacing:-.3px;">🏡 숙소 예약 문자</span>
     </div>
+    <div></div>
     <div style="display:flex;gap:6px;">
       <button class="hdr-set-btn" onclick="openPricePanel()" style="display:none;">💰 요금</button>
       <button class="hdr-set-btn" onclick="openGuide()">📖<span class="hdr-btn-label"> 도움말</span></button>
