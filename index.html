@@ -320,6 +320,27 @@ main{padding:16px 14px 0;}
 }
 .btn-primary:active{opacity:.85;}
 
+/* ── DASHBOARD ── */
+.dash-card{
+  background:var(--card);border-radius:var(--radius);
+  padding:14px 16px;margin-bottom:14px;
+  box-shadow:0 2px 12px var(--shadow);
+}
+.dash-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
+.dash-title{font-size:12px;font-weight:700;color:var(--ink-light);letter-spacing:.06em;text-transform:uppercase;}
+.dash-stats{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;}
+.dash-stat{background:var(--bg);border-radius:10px;padding:10px 12px;text-align:center;}
+.dash-stat-num{font-size:22px;font-weight:800;color:var(--accent);}
+.dash-stat-lbl{font-size:11px;color:var(--ink-light);margin-top:2px;}
+.dash-res-item{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);font-size:13px;}
+.dash-res-item:last-child{border-bottom:none;}
+.dash-res-name{font-weight:600;}
+.dash-res-sub{font-size:12px;color:var(--ink-light);margin-top:1px;}
+.dash-res-tag{font-size:11px;font-weight:700;padding:3px 8px;border-radius:6px;}
+.tag-ci{background:#E8F5E9;color:#2E7D32;}
+.tag-co{background:#FFF3E0;color:#E65100;}
+.dash-empty{text-align:center;font-size:13px;color:var(--ink-light);padding:8px 0;}
+
 /* ── TOAST ── */
 .toast{
   position:fixed;bottom:calc(env(safe-area-inset-bottom,0px) + 24px);
@@ -369,7 +390,10 @@ main{padding:16px 14px 0;}
   <div class="guest-panel">
     <div class="gp-head">
       <span class="gp-title">손님 정보</span>
-      <button class="gp-clear" onclick="clearForm()">✕ 지우기</button>
+      <div style="display:flex;gap:6px;">
+        <button class="gp-clear" onclick="saveReservation()" style="background:#e8f5e9;border-color:#a5d6a7;color:#2e7d32;">💾 저장</button>
+        <button class="gp-clear" onclick="clearForm()">✕ 지우기</button>
+      </div>
     </div>
     <div class="form-grid">
       <div class="fi">
@@ -413,6 +437,25 @@ main{padding:16px 14px 0;}
         </div>
       </div>
     </div>
+  </div>
+
+  <!-- 대시보드 -->
+  <div class="dash-card" id="dashboard">
+    <div class="dash-head">
+      <span class="dash-title">📊 오늘 현황</span>
+      <span id="dashDate" style="font-size:11px;color:var(--ink-light);"></span>
+    </div>
+    <div class="dash-stats">
+      <div class="dash-stat">
+        <div class="dash-stat-num" id="dashCiNum">0</div>
+        <div class="dash-stat-lbl">📅 체크인</div>
+      </div>
+      <div class="dash-stat">
+        <div class="dash-stat-num" id="dashCoNum">0</div>
+        <div class="dash-stat-lbl">🚪 체크아웃</div>
+      </div>
+    </div>
+    <div id="dashList"></div>
   </div>
 
   <!-- 스테이지 콘텐츠 -->
@@ -1099,6 +1142,7 @@ function exportData(){
   const data={
     settings:JSON.parse(localStorage.getItem(SK_SET)||'{}'),
     tpl:JSON.parse(localStorage.getItem(SK_TPL)||'{}'),
+    res:JSON.parse(localStorage.getItem(SK_RES)||'[]'),
     exported:new Date().toISOString()
   };
   const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
@@ -1116,6 +1160,7 @@ function importData(input){
       const data=JSON.parse(e.target.result);
       if(data.settings)localStorage.setItem(SK_SET,JSON.stringify(data.settings));
       if(data.tpl)localStorage.setItem(SK_TPL,JSON.stringify(data.tpl));
+      if(data.res)localStorage.setItem(SK_RES,JSON.stringify(data.res));
       loadAll();
       openSettings();
       renderStage();
@@ -1305,9 +1350,85 @@ function usePriceResult(){
   toast('날짜와 금액이 입력됐어요 💰');
 }
 
+// ── 예약 저장 & 대시보드 ──────────────────────────────────────────────────
+const SK_RES='stay_msg_lite1_res_v1';
+let reservations=[];
+
+function loadReservations(){
+  try{reservations=JSON.parse(localStorage.getItem(SK_RES)||'[]');}catch{reservations=[];}
+}
+function saveReservations(){localStorage.setItem(SK_RES,JSON.stringify(reservations));}
+
+function saveReservation(){
+  const name=document.getElementById('v_name').value.trim();
+  const ci=document.getElementById('v_checkin').value;
+  const co=document.getElementById('v_checkout').value;
+  if(!name){toast('손님 이름을 입력하세요');return;}
+  if(!ci||!co){toast('날짜를 선택하세요');return;}
+  const exists=reservations.find(r=>r.name===name&&r.checkin===ci&&r.checkout===co);
+  if(exists){toast('이미 저장된 예약이에요');return;}
+  reservations.push({
+    id:'r'+Date.now(),
+    name,
+    phone:document.getElementById('v_phone').value,
+    checkin:ci,
+    checkout:co,
+    guests:document.getElementById('v_guests').value,
+    price:document.getElementById('v_price').value,
+    createdAt:new Date().toISOString()
+  });
+  saveReservations();
+  renderDashboard();
+  toast('예약이 저장됐어요 💾');
+}
+
+function getTodayStr(){return new Date().toISOString().slice(0,10);}
+
+function renderDashboard(){
+  const today=getTodayStr();
+  const DOW=['일','월','화','수','목','금','토'];
+  const d=new Date();
+  document.getElementById('dashDate').textContent=`${d.getMonth()+1}월 ${d.getDate()}일(${DOW[d.getDay()]})`;
+  const ciList=reservations.filter(r=>r.checkin===today);
+  const coList=reservations.filter(r=>r.checkout===today);
+  document.getElementById('dashCiNum').textContent=ciList.length;
+  document.getElementById('dashCoNum').textContent=coList.length;
+  const all=[...ciList.map(r=>({...r,tag:'ci'})),...coList.filter(r=>r.checkin!==today).map(r=>({...r,tag:'co'}))];
+  const list=document.getElementById('dashList');
+  if(!all.length){
+    list.innerHTML='<div class="dash-empty">오늘 체크인·체크아웃 예약이 없어요</div>';
+    return;
+  }
+  list.innerHTML=all.map(r=>`
+    <div class="dash-res-item" onclick="loadReservation('${r.id}')">
+      <div>
+        <div class="dash-res-name">${r.name}${r.guests?' · '+r.guests:''}</div>
+        <div class="dash-res-sub">${r.phone||''}${r.price?' · '+r.price:''}</div>
+      </div>
+      <span class="dash-res-tag ${r.tag==='ci'?'tag-ci':'tag-co'}">${r.tag==='ci'?'체크인':'체크아웃'}</span>
+    </div>`).join('');
+}
+
+function loadReservation(id){
+  const r=reservations.find(x=>x.id===id);
+  if(!r) return;
+  document.getElementById('v_name').value=r.name||'';
+  document.getElementById('v_phone').value=r.phone||'';
+  document.getElementById('v_checkin').value=r.checkin||'';
+  document.getElementById('v_checkout').value=r.checkout||'';
+  document.getElementById('v_guests').value=r.guests||'';
+  document.getElementById('v_price').value=r.price||'';
+  _cal.ci=r.checkin||null; _cal.co=r.checkout||null;
+  _updateDateDisplay(); renderStage();
+  window.scrollTo({top:0,behavior:'smooth'});
+  toast(r.name+' 예약 불러왔어요 📋');
+}
+
 loadAll();
+loadReservations();
 buildTabs();
 renderStage();
+renderDashboard();
 
 document.addEventListener('keydown',e=>{
   if(e.key==='Escape'){
