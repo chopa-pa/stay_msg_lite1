@@ -1,4 +1,4 @@
-const CACHE_NAME = 'stay_msg_lite1-v3';
+const CACHE_NAME = 'stay_msg_lite1-v4';
 const ASSETS = ['./index.html', './manifest.json', './icon-192.png', './icon-512.png'];
 
 self.addEventListener('install', e => {
@@ -12,5 +12,16 @@ self.addEventListener('activate', e => {
   self.clients.claim();
 });
 self.addEventListener('fetch', e => {
-  e.respondWith(caches.match(e.request).then(c => c || fetch(e.request)));
+  if(e.request.mode === 'navigate'){
+    // HTML은 항상 네트워크 우선 → 최신 버전 보장
+    e.respondWith(
+      fetch(e.request).then(res => {
+        const clone = res.clone();
+        caches.open(CACHE_NAME).then(c => c.put(e.request, clone));
+        return res;
+      }).catch(() => caches.match(e.request))
+    );
+  } else {
+    e.respondWith(caches.match(e.request).then(c => c || fetch(e.request)));
+  }
 });
