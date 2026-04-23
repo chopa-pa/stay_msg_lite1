@@ -54,6 +54,8 @@ header{
   cursor:pointer;font-family:'Noto Sans KR',sans-serif;
 }
 .hdr-set-btn:active{background:rgba(255,255,255,0.35);}
+.hdr-btn-label{display:none;}
+@media(hover:hover){.hdr-set-btn:hover .hdr-btn-label{display:inline;}}
 
 /* ── STAGE TABS ── */
 .stabs{
@@ -353,9 +355,9 @@ main{padding:16px 14px 0;}
     </div>
     <div style="display:flex;gap:6px;">
       <button class="hdr-set-btn" onclick="openPricePanel()" style="display:none;">💰 요금</button>
-      <button class="hdr-set-btn" onclick="openGuide()">📖 도움말</button>
-      <button class="hdr-set-btn" onclick="location.reload()">🔄 새로고침</button>
-      <button class="hdr-set-btn" onclick="openSettings()">⚙️ 설정</button>
+      <button class="hdr-set-btn" onclick="openGuide()">📖<span class="hdr-btn-label"> 도움말</span></button>
+      <button class="hdr-set-btn" onclick="location.reload()">🔄<span class="hdr-btn-label"> 새로고침</span></button>
+      <button class="hdr-set-btn" onclick="openSettings()">⚙️<span class="hdr-btn-label"> 설정</span></button>
     </div>
   </div>
 </header>
