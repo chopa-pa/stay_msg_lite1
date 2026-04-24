@@ -885,6 +885,7 @@ input,select,textarea{font-family:inherit;}
   pointer-events:none;
 }
 .hero-art svg{width:100%;height:100%;display:block;}
+.hero-art-mobile{display:none;}
 @media(max-width:640px){
   .hero{min-height:150px;}
   .hero-content{padding:16px 18px;max-width:58%;}
@@ -894,6 +895,8 @@ input,select,textarea{font-family:inherit;}
   .hero-sub{display:none;}
   .hero-cta{margin-top:10px;padding:7px 12px;font-size:12px;}
   .hero-art{width:50%;}
+  .hero-art-desktop{display:none;}
+  .hero-art-mobile{display:block;}
 }
 
 /* ─────── SECTIONS / TEMPLATE MANAGE ─────── */
@@ -1119,8 +1122,46 @@ input,select,textarea{font-family:inherit;}
           </g>
         </svg>
 
-        <!-- Clean message-bubbles composition -->
-        <div class="hero-art">
+        <!-- Mobile: Korean pine tree -->
+        <div class="hero-art hero-art-mobile">
+          <svg viewBox="0 0 340 200" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <defs>
+              <linearGradient id="pineLeaf" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#34d399"/>
+                <stop offset="100%" stop-color="#065f46"/>
+              </linearGradient>
+            </defs>
+            <!-- Moon halo -->
+            <circle cx="262" cy="52" r="24" fill="white" opacity="0.22"/>
+            <circle cx="262" cy="52" r="36" fill="white" opacity="0.08"/>
+            <!-- Ground shadow -->
+            <ellipse cx="200" cy="188" rx="115" ry="7" fill="#052e2a" opacity="0.4"/>
+            <!-- Rocks -->
+            <ellipse cx="168" cy="184" rx="14" ry="4" fill="#064e3b"/>
+            <ellipse cx="252" cy="185" rx="11" ry="3.5" fill="#064e3b"/>
+            <!-- Twisted Korean pine trunk -->
+            <path d="M 205 185 C 198 160, 225 150, 212 125 C 200 105, 228 92, 214 68 C 206 52, 226 42, 216 26"
+              stroke="#3e2419" stroke-width="7" fill="none" stroke-linecap="round"/>
+            <!-- Branches -->
+            <path d="M 215 122 L 168 112" stroke="#3e2419" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+            <path d="M 220 78 L 260 72" stroke="#3e2419" stroke-width="3" fill="none" stroke-linecap="round"/>
+            <path d="M 213 44 L 245 38" stroke="#3e2419" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+            <!-- Foliage clusters -->
+            <g>
+              <ellipse cx="162" cy="110" rx="28" ry="13" fill="url(#pineLeaf)"/>
+              <ellipse cx="154" cy="105" rx="14" ry="6" fill="#34d399" opacity="0.7"/>
+              <ellipse cx="266" cy="70" rx="30" ry="14" fill="url(#pineLeaf)"/>
+              <ellipse cx="273" cy="65" rx="14" ry="6" fill="#34d399" opacity="0.7"/>
+              <ellipse cx="250" cy="38" rx="24" ry="11" fill="url(#pineLeaf)"/>
+              <ellipse cx="255" cy="34" rx="12" ry="5" fill="#34d399" opacity="0.7"/>
+              <ellipse cx="214" cy="100" rx="11" ry="6" fill="#065f46"/>
+              <ellipse cx="219" cy="64" rx="10" ry="5" fill="#065f46"/>
+            </g>
+          </svg>
+        </div>
+
+        <!-- Desktop: Clean message-bubbles composition -->
+        <div class="hero-art hero-art-desktop">
           <svg viewBox="0 0 340 200" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
             <defs>
               <linearGradient id="phScreen" x1="0" y1="0" x2="0" y2="1">
@@ -1653,7 +1694,7 @@ input,select,textarea{font-family:inherit;}
 <div class="toast" id="toast"></div>
 
 <script>
-const APP_VERSION='v1.7.5';
+const APP_VERSION='v1.7.6';
 const SK_SET='stay_msg_lite1_set_v1';
 const SK_TPL='stay_msg_lite1_tpl_v1';
 const SK_RES='stay_msg_lite1_res_v1';
