@@ -785,17 +785,42 @@ input,select,textarea{font-family:inherit;}
 .cal-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;}
 .cal-navbtn{background:none;border:none;cursor:pointer;padding:6px 14px;font-size:22px;color:var(--fg);}
 .cal-month{font-weight:700;font-size:15px;color:var(--fg);}
+.cal-title-btn{background:none;border:none;font-weight:700;font-size:15px;color:var(--fg);padding:4px 10px;border-radius:8px;display:inline-flex;align-items:center;gap:4px;cursor:pointer;font-family:inherit;}
+.cal-title-btn:hover{background:var(--accent-soft);}
+.cal-title-btn::after{content:'▾';font-size:11px;color:var(--muted-fg);}
+.cal-title-btn.ym-open::after{content:'▴';}
 .cal-hint{text-align:center;font-size:12px;color:var(--accent-fg);font-weight:700;margin-bottom:12px;}
 .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;margin-bottom:12px;}
 .cal-dow{text-align:center;font-size:11px;font-weight:600;color:var(--muted-fg);padding:4px 0;}
-.cal-day{text-align:center;padding:9px 2px;border-radius:50%;font-size:14px;cursor:pointer;transition:background .1s;}
+.cal-dow:first-child{color:var(--destructive);}
+.cal-dow:last-child{color:#2563eb;}
+.cal-day{text-align:center;padding:6px 2px 7px;border-radius:10px;font-size:14px;cursor:pointer;transition:background .1s;position:relative;min-height:44px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;}
 .cal-day:hover{background:var(--accent-soft);}
 .cal-day.past{color:var(--border-strong);cursor:default;}
 .cal-day.past:hover{background:transparent;}
 .cal-day.sun:not(.past):not(.sel){color:var(--destructive);}
 .cal-day.sat:not(.past):not(.sel){color:#2563eb;}
-.cal-day.range{background:var(--accent);color:var(--accent-fg);}
-.cal-day.sel{background:var(--primary);color:white;font-weight:700;}
+.cal-day.holiday:not(.past):not(.sel):not(.range){color:var(--destructive);}
+.cal-day.range{background:var(--accent);color:var(--accent-fg);border-radius:0;}
+.cal-day.sel{background:var(--primary);color:white;font-weight:700;border-radius:10px;}
+.cal-day.today:not(.sel){outline:2px solid var(--primary);outline-offset:-2px;}
+.cal-day small{display:block;font-size:9px;font-weight:600;line-height:1;}
+.cal-day.sel small{color:rgba(255,255,255,.9);}
+.cal-day.range small{color:var(--accent-fg);}
+.we-lbl{color:#ea580c;font-weight:600;}
+.su-lbl{color:var(--destructive);font-weight:600;}
+.wd-lbl{color:var(--muted-fg);}
+.holi-lbl{color:var(--destructive);font-weight:700;}
+.today-lbl{color:var(--primary);font-weight:700;}
+.ci-lbl,.co-lbl{color:inherit;font-weight:700;}
+.cal-ym-wrap{padding:10px 0 4px;}
+.cal-ym-year{display:flex;align-items:center;justify-content:center;gap:16px;margin-bottom:12px;}
+.cal-ym-year span{font-size:18px;font-weight:700;min-width:70px;text-align:center;color:var(--fg);}
+.cal-ym-ybtn{background:var(--muted);border:none;border-radius:8px;font-size:18px;width:36px;height:36px;cursor:pointer;color:var(--fg);}
+.cal-ym-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:8px;}
+.cal-ym-mbtn{padding:10px 4px;border:1.5px solid var(--border);border-radius:10px;background:white;font-size:13px;font-weight:500;cursor:pointer;font-family:inherit;color:var(--fg);transition:all .15s;}
+.cal-ym-mbtn.cur{border-color:var(--primary);background:var(--accent-soft);color:var(--accent-fg);font-weight:700;}
+.cal-ym-mbtn:hover{background:var(--muted);}
 .cal-summary{display:flex;gap:8px;justify-content:center;margin-bottom:14px;flex-wrap:wrap;}
 .cal-tag{font-size:12px;background:var(--muted);padding:6px 12px;border-radius:20px;color:var(--fg-2);font-weight:600;}
 .cal-btns{display:flex;gap:8px;}
@@ -1628,7 +1653,7 @@ input,select,textarea{font-family:inherit;}
 <div class="toast" id="toast"></div>
 
 <script>
-const APP_VERSION='v1.7.4';
+const APP_VERSION='v1.7.5';
 const SK_SET='stay_msg_lite1_set_v1';
 const SK_TPL='stay_msg_lite1_tpl_v1';
 const SK_RES='stay_msg_lite1_res_v1';
@@ -2078,13 +2103,47 @@ function clearForm(){
 
 // ─────── CALENDAR ───────
 const _MN=['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'];
-let _cal={ci:null,co:null,step:'ci',y:0,m:0};
+let _cal={ci:null,co:null,step:'ci',y:0,m:0,ym:false};
+const HOLIDAYS=(()=>{
+  const h={};
+  const fx=[[1,1,'신정'],[3,1,'삼일절'],[5,5,'어린이날'],[6,6,'현충일'],[8,15,'광복절'],[10,3,'개천절'],[10,9,'한글날'],[12,25,'성탄절']];
+  for(let y=2024;y<=2030;y++)fx.forEach(([m,d,n])=>{h[`${y}-${String(m).padStart(2,'0')}-${String(d).padStart(2,'0')}`]=n;});
+  [['2024-02-09','설연휴'],['2024-02-10','설날'],['2024-02-11','설연휴'],['2024-02-12','대체공휴일'],
+   ['2024-05-15','부처님오신날'],
+   ['2024-09-16','추석연휴'],['2024-09-17','추석'],['2024-09-18','추석연휴'],
+   ['2025-01-28','설연휴'],['2025-01-29','설날'],['2025-01-30','설연휴'],['2025-01-31','대체공휴일'],
+   ['2025-10-05','추석연휴'],['2025-10-06','추석'],['2025-10-07','추석연휴'],['2025-10-08','대체공휴일'],
+   ['2026-02-16','설연휴'],['2026-02-17','설날'],['2026-02-18','설연휴'],
+   ['2026-05-24','부처님오신날'],
+   ['2026-09-24','추석연휴'],['2026-09-25','추석'],['2026-09-26','추석연휴'],
+   ['2027-02-06','설연휴'],['2027-02-07','설날'],['2027-02-08','설연휴'],
+   ['2027-05-13','부처님오신날'],
+   ['2027-09-14','추석연휴'],['2027-09-15','추석'],['2027-09-16','추석연휴'],
+   ['2028-01-26','설연휴'],['2028-01-27','설날'],['2028-01-28','설연휴'],
+   ['2028-05-02','부처님오신날'],
+   ['2028-10-02','추석연휴'],['2028-10-03','추석'],['2028-10-04','추석연휴'],
+  ].forEach(([ds,n])=>{if(!h[ds])h[ds]=n;});
+  return h;
+})();
+function _ymPickerHtml(y,m){
+  const months=_MN.map((mn,i)=>`<button class="cal-ym-mbtn${i===m?' cur':''}" onclick="_calSetYM(${y},${i})">${mn}</button>`).join('');
+  return `<div class="cal-ym-wrap">
+    <div class="cal-ym-year">
+      <button class="cal-ym-ybtn" onclick="_calYearStep(-1)">‹</button>
+      <span>${y}년</span>
+      <button class="cal-ym-ybtn" onclick="_calYearStep(1)">›</button>
+    </div>
+    <div class="cal-ym-grid">${months}</div>
+  </div>`;
+}
+function _calSetYM(y,m){_cal.y=y;_cal.m=m;_cal.ym=false;_renderCal();}
+function _calYearStep(d){_cal.y+=d;_renderCal();}
 function openDatePicker(){
   const today=new Date();
   _cal.y=today.getFullYear();_cal.m=today.getMonth();
   _cal.ci=document.getElementById('v_checkin').value||null;
   _cal.co=document.getElementById('v_checkout').value||null;
-  _cal.step='ci';_renderCal();
+  _cal.step='ci';_cal.ym=false;_renderCal();
 }
 function _renderCal(){
   const y=_cal.y,m=_cal.m;
@@ -2099,29 +2158,43 @@ function _renderCal(){
     const isCi=ds===_cal.ci,isCo=ds===_cal.co;
     const inRange=_cal.ci&&_cal.co&&ds>_cal.ci&&ds<_cal.co;
     const isPast=ds<today;
+    const isToday=ds===today;
     const dow=(first+d-1)%7;
+    const isSun=dow===0,isSat=dow===6,isWe=dow===5||dow===6;
+    const holi=HOLIDAYS[ds];
     const cls=['cal-day'];
     if(isPast)cls.push('past');
     if(isCi||isCo)cls.push('sel');
-    if(inRange)cls.push('range');
-    if(dow===0)cls.push('sun');
-    if(dow===6)cls.push('sat');
-    g+=`<div class="${cls.join(' ')}" onclick="${isPast?'':'_calPick(\''+ds+'\')'}">${d}</div>`;
+    else if(inRange)cls.push('range');
+    if(isSun)cls.push('sun');
+    if(isSat)cls.push('sat');
+    if(!isPast&&holi)cls.push('holiday');
+    if(isToday&&!isCi&&!isCo)cls.push('today');
+    const lbl=isCi?'<small class="ci-lbl">입실</small>'
+      :isCo?'<small class="co-lbl">퇴실</small>'
+      :isToday?'<small class="today-lbl">오늘</small>'
+      :(!isPast&&holi)?`<small class="holi-lbl">${holi}</small>`
+      :(!isPast&&isWe)?'<small class="we-lbl">주말</small>'
+      :(!isPast&&isSun)?'<small class="su-lbl">일</small>'
+      :(!isPast)?'<small class="wd-lbl">주중</small>':'';
+    g+=`<div class="${cls.join(' ')}" onclick="${isPast?'':'_calPick(\''+ds+'\')'}"><span>${d}</span>${lbl}</div>`;
   }
   const hint=_cal.step==='ci'?'입실 날짜를 선택하세요':'퇴실 날짜를 선택하세요';
   const ciTxt=_cal.ci?_cal.ci.slice(5).replace('-','/')+' 입실':'입실 미선택';
   const coTxt=_cal.co?_cal.co.slice(5).replace('-','/')+' 퇴실':'퇴실 미선택';
+  const body=_cal.ym
+    ?_ymPickerHtml(y,m)
+    :`<div class="cal-hint">${hint}</div><div class="cal-grid">${g}</div>`;
   document.getElementById('_calModal').innerHTML=`
     <div class="cal-ov">
       <div class="cal-sheet">
         <div class="cal-handle"></div>
         <div class="cal-nav">
-          <button class="cal-navbtn" onclick="_calNav(-1)">‹</button>
-          <span class="cal-month">${y}년 ${_MN[m]}</span>
-          <button class="cal-navbtn" onclick="_calNav(1)">›</button>
+          <button class="cal-navbtn" ${_cal.ym?'style="visibility:hidden"':''} onclick="_calNav(-1)">‹</button>
+          <button class="cal-title-btn${_cal.ym?' ym-open':''}" onclick="_cal.ym=!_cal.ym;_renderCal()">${y}년 ${_MN[m]}</button>
+          <button class="cal-navbtn" ${_cal.ym?'style="visibility:hidden"':''} onclick="_calNav(1)">›</button>
         </div>
-        <div class="cal-hint">${hint}</div>
-        <div class="cal-grid">${g}</div>
+        ${body}
         <div class="cal-summary">
           <span class="cal-tag">${ciTxt}</span>
           <span style="align-self:center;color:var(--muted-fg);">→</span>
@@ -2129,7 +2202,7 @@ function _renderCal(){
         </div>
         <div class="cal-btns">
           <button class="btn btn-outline" onclick="document.getElementById('_calModal').innerHTML=''">취소</button>
-          ${_cal.ci&&_cal.co?`<button class="btn btn-primary" onclick="_calConfirm()">확인</button>`:''}
+          ${_cal.ci&&_cal.co&&!_cal.ym?`<button class="btn btn-primary" onclick="_calConfirm()">확인</button>`:''}
         </div>
       </div>
     </div>`;
