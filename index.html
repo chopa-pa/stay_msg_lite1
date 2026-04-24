@@ -1628,7 +1628,7 @@ input,select,textarea{font-family:inherit;}
 <div class="toast" id="toast"></div>
 
 <script>
-const APP_VERSION='v1.7.0';
+const APP_VERSION='v1.7.1';
 const SK_SET='stay_msg_lite1_set_v1';
 const SK_TPL='stay_msg_lite1_tpl_v1';
 const SK_RES='stay_msg_lite1_res_v1';
@@ -2170,10 +2170,13 @@ function _updateDateDisplay(){
 function migrateSettings(){
   if(!Array.isArray(settings.rooms)){
     const hasLegacy=settings.wifi||settings.wifipw||settings.door;
-    settings.rooms=hasLegacy?[{id:'r'+Date.now(),name:'기본',wifi:settings.wifi||'',wifipw:settings.wifipw||'',door:settings.door||'',doorAuto:!!settings.doorAuto}]:[];
+    settings.rooms=hasLegacy?[{id:'r'+Date.now(),name:'호실1',wifi:settings.wifi||'',wifipw:settings.wifipw||'',door:settings.door||'',doorAuto:!!settings.doorAuto}]:[];
     delete settings.wifi;delete settings.wifipw;delete settings.door;delete settings.doorAuto;
-    localStorage.setItem(SK_SET,JSON.stringify(settings));
   }
+  if(!settings.rooms.length){
+    settings.rooms.push({id:'r'+Date.now(),name:'호실1',wifi:'',wifipw:'',door:'',doorAuto:false});
+  }
+  localStorage.setItem(SK_SET,JSON.stringify(settings));
 }
 function fillSettingsFields(){
   document.getElementById('cfg_name').value=settings.name||'';
@@ -2195,7 +2198,9 @@ function saveSettings(){
 function confirmResetSettings(){
   showConfirmModal('설정 초기화','모든 설정이 삭제됩니다. 계속할까요?',()=>{
     settings={name:'',addr:'',account:'',rooms:[],pw:'',pwe:''};
-    localStorage.removeItem(SK_SET);fillSettingsFields();
+    localStorage.removeItem(SK_SET);
+    migrateSettings();
+    fillSettingsFields();
     buildRoomSelect();toast('초기화됐어요');renderPreview();
   });
 }
@@ -2249,7 +2254,8 @@ function onRoomDoorAuto(id){
   inp.disabled=chk;if(chk)inp.value='';
 }
 function addRoom(){
-  const r={id:'r'+Date.now(),name:'새 호실',wifi:'',wifipw:'',door:'',doorAuto:false};
+  const n=settings.rooms.length+1;
+  const r={id:'r'+Date.now(),name:'호실'+n,wifi:'',wifipw:'',door:'',doorAuto:false};
   settings.rooms.push(r);
   localStorage.setItem(SK_SET,JSON.stringify(settings));
   editingRoomId=r.id;
@@ -2257,7 +2263,8 @@ function addRoom(){
 }
 function saveRoom(id){
   const r=settings.rooms.find(x=>x.id===id);if(!r)return;
-  r.name=document.getElementById('ri_name_'+id).value.trim()||'호실';
+  const idx=settings.rooms.findIndex(x=>x.id===id);
+  r.name=document.getElementById('ri_name_'+id).value.trim()||('호실'+(idx+1));
   r.wifi=document.getElementById('ri_wifi_'+id).value.trim();
   r.wifipw=document.getElementById('ri_wifipw_'+id).value.trim();
   r.door=document.getElementById('ri_door_'+id).value.trim();
