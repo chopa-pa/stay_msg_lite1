@@ -636,12 +636,15 @@ input,select,textarea{font-family:inherit;}
 }
 
 /* ─────── TEMPLATES PAGE ─────── */
-.tpl-stage{margin-bottom:18px;border:1px solid var(--border);border-radius:var(--radius-lg);background:var(--card);overflow:hidden;}
+.tpl-stage{margin-bottom:10px;border:1px solid var(--border);border-radius:var(--radius-lg);background:var(--card);overflow:hidden;}
 .tpl-stage-head{
   display:flex;align-items:center;justify-content:space-between;gap:10px;
-  padding:14px 16px;border-bottom:1px solid var(--border);
-  background:var(--soft);
+  padding:14px 16px;
+  background:var(--soft);cursor:pointer;
+  transition:background .12s;
 }
+.tpl-stage.open .tpl-stage-head{border-bottom:1px solid var(--border);}
+.tpl-stage-head:hover{background:#eef3f0;}
 .tpl-stage-head .label{display:flex;align-items:center;gap:10px;font-weight:700;font-size:15px;color:var(--fg);}
 .tpl-stage-head .label .stage-ico{
   width:28px;height:28px;border-radius:7px;
@@ -649,6 +652,9 @@ input,select,textarea{font-family:inherit;}
   display:flex;align-items:center;justify-content:center;font-size:14px;
 }
 .tpl-stage-head .count{font-size:12px;color:var(--muted-fg);font-weight:500;margin-left:4px;}
+.tpl-stage-head .stage-chev{color:var(--muted-fg-2);font-size:12px;transition:transform .18s;margin-right:2px;}
+.tpl-stage.open .stage-chev{transform:rotate(90deg);}
+.tpl-stage-right{display:flex;align-items:center;gap:8px;}
 .tpl-rows{padding:6px;}
 .tpl-row{border-radius:8px;margin:2px 0;background:transparent;transition:background .12s;}
 .tpl-row:hover{background:var(--soft);}
@@ -1595,7 +1601,7 @@ input,select,textarea{font-family:inherit;}
 <div class="toast" id="toast"></div>
 
 <script>
-const APP_VERSION='v1.6.4';
+const APP_VERSION='v1.6.5';
 const SK_SET='stay_msg_lite1_set_v1';
 const SK_TPL='stay_msg_lite1_tpl_v1';
 const SK_RES='stay_msg_lite1_res_v1';
@@ -1814,12 +1820,14 @@ function insertAtCursor(v,taId){
 }
 // ─────── TEMPLATES MANAGEMENT ───────
 let editingTplKey=null;
+const openStages=new Set();
 
 function renderTemplatesPage(){
   const host=document.getElementById('tplStagesList');if(!host)return;
   host.innerHTML=STAGES.map(s=>{
     const all=allTpls(s);
-    const rows=all.map((t,i)=>{
+    const stageOpen=openStages.has(s.id);
+    const rows=stageOpen?all.map((t,i)=>{
       const key=`${s.id}:${i}`;
       const isCustom=i>=s.templates.length;
       const isOpen=editingTplKey===key;
@@ -1841,19 +1849,32 @@ function renderTemplatesPage(){
         </div>
         ${isOpen?renderTplEditor(key,t,isCustom):''}
       </div>`;
-    }).join('');
-    return `<div class="tpl-stage">
-      <div class="tpl-stage-head">
+    }).join(''):'';
+    return `<div class="tpl-stage${stageOpen?' open':''}">
+      <div class="tpl-stage-head" onclick="toggleStage('${s.id}')">
         <div class="label">
+          <span class="stage-chev">▶</span>
           <span class="stage-ico">${s.icon}</span>
           ${esc(s.label)}
           <span class="count">· ${all.length}개</span>
         </div>
-        <button class="btn btn-primary btn-sm" onclick="addTplInStage('${s.id}')"><svg class="i"><use href="#i-plus"/></svg>새 템플릿</button>
+        <div class="tpl-stage-right">
+          <button class="btn btn-primary btn-sm" onclick="event.stopPropagation();addTplInStage('${s.id}')"><svg class="i"><use href="#i-plus"/></svg>새 템플릿</button>
+        </div>
       </div>
-      <div class="tpl-rows">${rows}</div>
+      ${stageOpen?`<div class="tpl-rows">${rows}</div>`:''}
     </div>`;
   }).join('');
+}
+
+function toggleStage(stageId){
+  if(openStages.has(stageId)){
+    openStages.delete(stageId);
+    if(editingTplKey&&editingTplKey.startsWith(stageId+':'))editingTplKey=null;
+  } else {
+    openStages.add(stageId);
+  }
+  renderTemplatesPage();
 }
 
 function renderTplEditor(key,t,isCustom){
@@ -1916,6 +1937,7 @@ function addTplInStage(stageId){
   (customs[s.id]=customs[s.id]||[]).push({title:'새 템플릿',body:'내용을 입력하세요.'});
   saveTplStorage();buildTplSelect();
   const newIdx=s.templates.length+customs[s.id].length-1;
+  openStages.add(s.id);
   editingTplKey=`${s.id}:${newIdx}`;
   renderTemplatesPage();toast('템플릿이 추가됐어요 ＋');
 }
@@ -1927,6 +1949,7 @@ function duplicateTpl(key){
   (customs[s.id]=customs[s.id]||[]).push({title:src.title+' (복사본)',body:src.body});
   saveTplStorage();buildTplSelect();
   const newIdx=s.templates.length+customs[s.id].length-1;
+  openStages.add(s.id);
   editingTplKey=`${s.id}:${newIdx}`;
   renderTemplatesPage();toast('복제됐어요 ✓');
 }
