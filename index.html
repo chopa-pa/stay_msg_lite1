@@ -870,7 +870,7 @@ input,select,textarea{font-family:inherit;}
       <div class="sidebar-brand" onclick="switchTab('home')" role="button" tabindex="0" aria-label="홈으로">
         <div class="sidebar-logo">SM</div>
         <div class="sidebar-brand-text">
-          <div class="sidebar-brand-name">Stay_Msg_lite<span class="sidebar-brand-ver" id="appVer">v1.5.17</span></div>
+          <div class="sidebar-brand-name">Stay_Msg_lite<span class="sidebar-brand-ver" id="appVer">v1.6.0</span></div>
           <div class="sidebar-brand-sub">숙소 예약 문자</div>
         </div>
       </div>
@@ -909,7 +909,7 @@ input,select,textarea{font-family:inherit;}
       <div class="mheader-brand" onclick="switchTab('home')" role="button" tabindex="0" aria-label="홈으로">
         <div class="mheader-logo">SM</div>
         <div>
-          <div class="mheader-title">Stay_Msg_lite<span class="mheader-ver" id="appVerM">v1.5.17</span></div>
+          <div class="mheader-title">Stay_Msg_lite<span class="mheader-ver" id="appVerM">v1.6.0</span></div>
           <div class="mheader-sub">숙소 예약 문자</div>
         </div>
       </div>
@@ -1140,6 +1140,19 @@ input,select,textarea{font-family:inherit;}
 
           <div class="card">
             <div class="card-head">
+              <div class="card-head-title"><span class="ico"><svg class="i"><use href="#i-house"/></svg></span>숙소 / 호실</div>
+            </div>
+            <div class="card-body" style="padding-top:14px;">
+              <div id="composePropName" style="font-weight:700;color:var(--fg);margin-bottom:8px;font-size:14px;"></div>
+              <select class="select" id="v_room" onchange="onRoomChange()"></select>
+              <div id="roomEmpty" style="display:none;color:var(--muted-fg);font-size:13px;padding:4px 0;">
+                등록된 호실이 없어요. <a href="#" onclick="switchTab('prop');return false;" style="color:var(--primary);font-weight:600;text-decoration:none;">숙소 프로필에서 호실 추가 →</a>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-head">
               <div class="card-head-title"><span class="ico"><svg class="i"><use href="#i-doc"/></svg></span>템플릿 선택</div>
             </div>
             <div class="card-body" style="padding-top:14px;">
@@ -1290,27 +1303,12 @@ input,select,textarea{font-family:inherit;}
 
       <div class="card">
         <div class="card-head">
-          <div class="card-head-title"><span class="ico"><svg class="i"><use href="#i-lock"/></svg></span>입실 정보</div>
+          <div class="card-head-title"><span class="ico"><svg class="i"><use href="#i-lock"/></svg></span>호실 관리</div>
         </div>
         <div class="card-body">
-          <div class="form-grid">
-            <div class="fi">
-              <label>와이파이 이름</label>
-              <input class="input" type="text" id="cfg_wifi" placeholder="예: solsoop_5G">
-            </div>
-            <div class="fi">
-              <label>와이파이 비밀번호</label>
-              <input class="input" type="text" id="cfg_wifipw" placeholder="예: 12345678">
-            </div>
-            <div class="fi full">
-              <label>도어락 비밀번호</label>
-              <input class="input" type="text" id="cfg_door" placeholder="예: 1234#">
-              <label class="checkbox-row">
-                <input type="checkbox" id="cfg_door_auto" onchange="toggleDoorAuto()">
-                손님 전화번호 뒷자리 자동 사용
-              </label>
-            </div>
-          </div>
+          <p style="font-size:12px;color:var(--muted-fg);margin-bottom:10px;">호실마다 와이파이·도어락을 따로 저장할 수 있어요.</p>
+          <div id="roomsList"></div>
+          <button class="btn btn-outline btn-sm" style="width:100%;margin-top:10px;" onclick="addRoom()"><svg class="i"><use href="#i-plus"/></svg>호실 추가</button>
         </div>
       </div>
 
@@ -1472,14 +1470,15 @@ input,select,textarea{font-family:inherit;}
 <div class="toast" id="toast"></div>
 
 <script>
-const APP_VERSION='v1.5.17';
+const APP_VERSION='v1.6.0';
 const SK_SET='stay_msg_lite1_set_v1';
 const SK_TPL='stay_msg_lite1_tpl_v1';
 const SK_RES='stay_msg_lite1_res_v1';
 const SK_LAST='stay_msg_lite1_last_tpl';
 const SK_HIST='stay_msg_lite1_hist_v1';
+const SK_ROOM='stay_msg_lite1_last_room';
 
-let settings={name:'',addr:'',account:'',wifi:'',wifipw:'',door:'',doorAuto:false,pw:'',pwe:''};
+let settings={name:'',addr:'',account:'',rooms:[],pw:'',pwe:''};
 let customs={};
 let curTplKey=null;
 
@@ -1517,11 +1516,12 @@ const STAGES=[
   ]}
 ];
 
-const VAR_LIST=['{이름}','{입실}','{퇴실}','{인원}','{금액}','{연락처}','{숙소}','{주소}','{계좌}','{와이파이}','{와이파이비번}','{비번}','{전번뒷자리}','{주중요금}','{주말요금}'];
+const VAR_LIST=['{이름}','{입실}','{퇴실}','{인원}','{금액}','{연락처}','{숙소}','{호실}','{주소}','{계좌}','{와이파이}','{와이파이비번}','{비번}','{전번뒷자리}','{주중요금}','{주말요금}'];
 const EMOJI_LIST=['😊','🙏','✅','🎉','🌿','🏡','📅','👥','💰','🚗','🅿️','📶','🔥','🌊','⭐','❤️','😔','🍃','🌄','🌲','🛒','🍽️','🧺','🚭','📍','💬','📋','🎊'];
 
 function loadAll(){
   try{const s=localStorage.getItem(SK_SET);if(s)settings={...settings,...JSON.parse(s)};}catch(e){}
+  migrateSettings();
   try{
     const t=localStorage.getItem(SK_TPL);
     if(t){
@@ -1565,12 +1565,13 @@ function applyVars(raw){
     '{인원}':document.getElementById('v_guests').value||'{인원}',
     '{금액}':document.getElementById('v_price').value||'{금액}',
     '{숙소}':settings.name||'{숙소}',
+    '{호실}':(getSelectedRoom()?.name)||'{호실}',
     '{주소}':settings.addr||'{주소}',
     '{계좌}':settings.account||'{계좌}',
-    '{와이파이}':settings.wifi||'{와이파이}',
-    '{와이파이비번}':settings.wifipw||'{와이파이비번}',
+    '{와이파이}':(getSelectedRoom()?.wifi)||'{와이파이}',
+    '{와이파이비번}':(getSelectedRoom()?.wifipw)||'{와이파이비번}',
     '{전번뒷자리}':(()=>{const p=document.getElementById('v_phone').value.replace(/\D/g,'');return p.length>=4?p.slice(-4):'{전번뒷자리}';})(),
-    '{비번}':(()=>{if(settings.doorAuto){const p=document.getElementById('v_phone').value.replace(/\D/g,'');return p.length>=4?p.slice(-4):'{비번}';}return settings.door||'{비번}';})(),
+    '{비번}':(()=>{const r=getSelectedRoom();if(r&&r.doorAuto){const p=document.getElementById('v_phone').value.replace(/\D/g,'');return p.length>=4?p.slice(-4):'{비번}';}return (r?.door)||'{비번}';})(),
     '{주중요금}':fmtPriceVal(settings.pw)||'{주중요금}',
     '{주말요금}':fmtPriceVal(settings.pwe)||'{주말요금}',
   };
@@ -1944,44 +1945,141 @@ function _updateDateDisplay(){
 }
 
 // ─────── SETTINGS ───────
+function migrateSettings(){
+  if(!Array.isArray(settings.rooms)){
+    const hasLegacy=settings.wifi||settings.wifipw||settings.door;
+    settings.rooms=hasLegacy?[{id:'r'+Date.now(),name:'기본',wifi:settings.wifi||'',wifipw:settings.wifipw||'',door:settings.door||'',doorAuto:!!settings.doorAuto}]:[];
+    delete settings.wifi;delete settings.wifipw;delete settings.door;delete settings.doorAuto;
+    localStorage.setItem(SK_SET,JSON.stringify(settings));
+  }
+}
 function fillSettingsFields(){
   document.getElementById('cfg_name').value=settings.name||'';
   document.getElementById('cfg_addr').value=settings.addr||'';
   document.getElementById('cfg_account').value=settings.account||'';
-  document.getElementById('cfg_wifi').value=settings.wifi||'';
-  document.getElementById('cfg_wifipw').value=settings.wifipw||'';
-  document.getElementById('cfg_door').value=settings.door||'';
-  document.getElementById('cfg_door_auto').checked=!!settings.doorAuto;
-  document.getElementById('cfg_door').disabled=!!settings.doorAuto;
   document.getElementById('cfg_pw').value=fmtPriceVal(settings.pw||'');
   document.getElementById('cfg_pwe').value=fmtPriceVal(settings.pwe||'');
+  renderRoomsList();
 }
 function saveSettings(){
-  settings={
-    name:document.getElementById('cfg_name').value.trim(),
-    addr:document.getElementById('cfg_addr').value.trim(),
-    account:document.getElementById('cfg_account').value.trim(),
-    wifi:document.getElementById('cfg_wifi').value.trim(),
-    wifipw:document.getElementById('cfg_wifipw').value.trim(),
-    door:document.getElementById('cfg_door').value.trim(),
-    doorAuto:document.getElementById('cfg_door_auto').checked,
-    pw:document.getElementById('cfg_pw').value.trim(),
-    pwe:document.getElementById('cfg_pwe').value.trim(),
-  };
+  settings.name=document.getElementById('cfg_name').value.trim();
+  settings.addr=document.getElementById('cfg_addr').value.trim();
+  settings.account=document.getElementById('cfg_account').value.trim();
+  settings.pw=document.getElementById('cfg_pw').value.trim();
+  settings.pwe=document.getElementById('cfg_pwe').value.trim();
   localStorage.setItem(SK_SET,JSON.stringify(settings));
-  toast('저장됐어요 ✓');renderPreview();
-}
-function toggleDoorAuto(){
-  const chk=document.getElementById('cfg_door_auto').checked;
-  const inp=document.getElementById('cfg_door');
-  inp.disabled=chk;if(chk)inp.value='';
+  toast('저장됐어요 ✓');buildRoomSelect();renderPreview();
 }
 function confirmResetSettings(){
   showConfirmModal('설정 초기화','모든 설정이 삭제됩니다. 계속할까요?',()=>{
-    settings={name:'',addr:'',account:'',wifi:'',wifipw:'',door:'',doorAuto:false,pw:'',pwe:''};
+    settings={name:'',addr:'',account:'',rooms:[],pw:'',pwe:''};
     localStorage.removeItem(SK_SET);fillSettingsFields();
-    toast('초기화됐어요');renderPreview();
+    buildRoomSelect();toast('초기화됐어요');renderPreview();
   });
+}
+
+// ─────── ROOMS (호실 관리) ───────
+let editingRoomId=null;
+function renderRoomsList(){
+  const host=document.getElementById('roomsList');if(!host)return;
+  if(!settings.rooms.length){
+    host.innerHTML='<div class="empty" style="padding:24px 10px;"><span class="emoji">🏠</span>등록된 호실이 없어요<br><span style="font-size:12px;">아래 버튼으로 첫 호실을 추가하세요</span></div>';
+    return;
+  }
+  host.innerHTML=settings.rooms.map(r=>{
+    const isEdit=editingRoomId===r.id;
+    return `
+    <div class="tpl-row${isEdit?' open':''}">
+      <div class="tpl-row-head" onclick="toggleRoomRow('${r.id}')">
+        <div class="tpl-row-title"><svg class="i" style="color:var(--primary);margin-right:6px;vertical-align:-0.22em;"><use href="#i-house"/></svg>${esc(r.name||'(이름 없음)')}</div>
+        <svg class="i tpl-row-chev"><use href="#i-pencil"/></svg>
+      </div>
+      ${isEdit?`
+      <div class="tpl-edit">
+        <div class="fi" style="margin-bottom:10px;">
+          <label>호실명</label>
+          <input class="input" id="ri_name_${r.id}" value="${esc(r.name||'')}" placeholder="예: 솔숲 201호">
+        </div>
+        <div class="form-grid">
+          <div class="fi"><label>와이파이 이름</label><input class="input" id="ri_wifi_${r.id}" value="${esc(r.wifi||'')}" placeholder="예: solsoop_5G"></div>
+          <div class="fi"><label>와이파이 비밀번호</label><input class="input" id="ri_wifipw_${r.id}" value="${esc(r.wifipw||'')}"></div>
+        </div>
+        <div class="fi full" style="margin-top:10px;">
+          <label>도어락 비밀번호</label>
+          <input class="input" id="ri_door_${r.id}" value="${esc(r.door||'')}" placeholder="예: 1234#" ${r.doorAuto?'disabled':''}>
+          <label class="checkbox-row">
+            <input type="checkbox" id="ri_dauto_${r.id}" ${r.doorAuto?'checked':''} onchange="onRoomDoorAuto('${r.id}')">
+            손님 전화번호 뒷자리 자동 사용
+          </label>
+        </div>
+        <div class="btn-row-2" style="margin-top:10px;">
+          <button class="btn btn-destructive btn-sm" onclick="deleteRoom('${r.id}')"><svg class="i"><use href="#i-trash"/></svg>삭제</button>
+          <button class="btn btn-primary btn-sm" onclick="saveRoom('${r.id}')"><svg class="i"><use href="#i-save"/></svg>저장</button>
+        </div>
+      </div>`:''}
+    </div>`;
+  }).join('');
+}
+function toggleRoomRow(id){editingRoomId=editingRoomId===id?null:id;renderRoomsList();}
+function onRoomDoorAuto(id){
+  const chk=document.getElementById('ri_dauto_'+id).checked;
+  const inp=document.getElementById('ri_door_'+id);
+  inp.disabled=chk;if(chk)inp.value='';
+}
+function addRoom(){
+  const r={id:'r'+Date.now(),name:'새 호실',wifi:'',wifipw:'',door:'',doorAuto:false};
+  settings.rooms.push(r);
+  localStorage.setItem(SK_SET,JSON.stringify(settings));
+  editingRoomId=r.id;
+  renderRoomsList();buildRoomSelect();
+}
+function saveRoom(id){
+  const r=settings.rooms.find(x=>x.id===id);if(!r)return;
+  r.name=document.getElementById('ri_name_'+id).value.trim()||'호실';
+  r.wifi=document.getElementById('ri_wifi_'+id).value.trim();
+  r.wifipw=document.getElementById('ri_wifipw_'+id).value.trim();
+  r.door=document.getElementById('ri_door_'+id).value.trim();
+  r.doorAuto=document.getElementById('ri_dauto_'+id).checked;
+  localStorage.setItem(SK_SET,JSON.stringify(settings));
+  editingRoomId=null;
+  renderRoomsList();buildRoomSelect();renderPreview();
+  toast('저장됐어요 💾');
+}
+function deleteRoom(id){
+  showConfirmModal('호실 삭제','이 호실을 삭제할까요?',()=>{
+    settings.rooms=settings.rooms.filter(x=>x.id!==id);
+    localStorage.setItem(SK_SET,JSON.stringify(settings));
+    editingRoomId=null;
+    renderRoomsList();buildRoomSelect();renderPreview();toast('삭제됐어요');
+  });
+}
+function buildRoomSelect(){
+  const sel=document.getElementById('v_room');if(!sel)return;
+  const empty=document.getElementById('roomEmpty');
+  const pname=document.getElementById('composePropName');
+  if(pname)pname.textContent=settings.name?`🏠 ${settings.name}`:'숙소 이름을 프로필에서 먼저 등록하세요';
+  if(!settings.rooms.length){
+    sel.style.display='none';if(empty)empty.style.display='';
+    return;
+  }
+  sel.style.display='';if(empty)empty.style.display='none';
+  const saved=localStorage.getItem(SK_ROOM);
+  const keep=sel.value;
+  sel.innerHTML=settings.rooms.map(r=>`<option value="${r.id}">${esc(r.name)}</option>`).join('');
+  if(keep&&settings.rooms.find(x=>x.id===keep))sel.value=keep;
+  else if(saved&&settings.rooms.find(x=>x.id===saved))sel.value=saved;
+}
+function onRoomChange(){
+  const sel=document.getElementById('v_room');
+  if(sel)localStorage.setItem(SK_ROOM,sel.value);
+  renderPreview();
+}
+function getSelectedRoom(){
+  if(!settings.rooms||!settings.rooms.length)return null;
+  const sel=document.getElementById('v_room');
+  const id=sel?.value;
+  if(id){const r=settings.rooms.find(x=>x.id===id);if(r)return r;}
+  return settings.rooms[0];
 }
 
 function exportData(){
@@ -2007,7 +2105,7 @@ function importData(input){
       if(data.tpl)localStorage.setItem(SK_TPL,JSON.stringify(data.tpl));
       if(data.res)localStorage.setItem(SK_RES,JSON.stringify(data.res));
       loadAll();loadReservations();loadHistory();
-      fillSettingsFields();buildTplSelect();renderPreview();renderDashboard();
+      fillSettingsFields();buildRoomSelect();buildTplSelect();renderPreview();renderDashboard();
       toast('가져오기 완료 ✅');
     }catch(err){toast('파일이 올바르지 않아요 ❌');}
     input.value='';
@@ -2257,7 +2355,7 @@ document.addEventListener('keydown',e=>{
 });
 
 ['appVer','appVerM'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=APP_VERSION;});
-loadAll();loadReservations();loadHistory();fillSettingsFields();buildTplSelect();renderPreview();renderDashboard();
+loadAll();loadReservations();loadHistory();fillSettingsFields();buildRoomSelect();buildTplSelect();renderPreview();renderDashboard();
 document.getElementById('guideVarChips').innerHTML=VAR_LIST.map(v=>`<span class="var-chip" style="cursor:default;">${v}</span>`).join('');
 
 if('serviceWorker' in navigator){
