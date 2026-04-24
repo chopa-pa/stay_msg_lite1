@@ -1628,7 +1628,7 @@ input,select,textarea{font-family:inherit;}
 <div class="toast" id="toast"></div>
 
 <script>
-const APP_VERSION='v1.7.1';
+const APP_VERSION='v1.7.2';
 const SK_SET='stay_msg_lite1_set_v1';
 const SK_TPL='stay_msg_lite1_tpl_v1';
 const SK_RES='stay_msg_lite1_res_v1';
@@ -2170,11 +2170,11 @@ function _updateDateDisplay(){
 function migrateSettings(){
   if(!Array.isArray(settings.rooms)){
     const hasLegacy=settings.wifi||settings.wifipw||settings.door;
-    settings.rooms=hasLegacy?[{id:'r'+Date.now(),name:'호실1',wifi:settings.wifi||'',wifipw:settings.wifipw||'',door:settings.door||'',doorAuto:!!settings.doorAuto}]:[];
+    settings.rooms=hasLegacy?[{id:'r'+Date.now(),name:settings.name||'',wifi:settings.wifi||'',wifipw:settings.wifipw||'',door:settings.door||'',doorAuto:!!settings.doorAuto}]:[];
     delete settings.wifi;delete settings.wifipw;delete settings.door;delete settings.doorAuto;
   }
   if(!settings.rooms.length){
-    settings.rooms.push({id:'r'+Date.now(),name:'호실1',wifi:'',wifipw:'',door:'',doorAuto:false});
+    settings.rooms.push({id:'r'+Date.now(),name:settings.name||'',wifi:'',wifipw:'',door:'',doorAuto:false});
   }
   localStorage.setItem(SK_SET,JSON.stringify(settings));
 }
@@ -2187,13 +2187,18 @@ function fillSettingsFields(){
   renderRoomsList();
 }
 function saveSettings(){
+  const prevName=settings.name||'';
   settings.name=document.getElementById('cfg_name').value.trim();
   settings.addr=document.getElementById('cfg_addr').value.trim();
   settings.account=document.getElementById('cfg_account').value.trim();
   settings.pw=document.getElementById('cfg_pw').value.trim();
   settings.pwe=document.getElementById('cfg_pwe').value.trim();
+  if(settings.rooms&&settings.rooms[0]){
+    const r=settings.rooms[0];
+    if(!r.name||r.name===prevName)r.name=settings.name;
+  }
   localStorage.setItem(SK_SET,JSON.stringify(settings));
-  toast('저장됐어요 ✓');buildRoomSelect();renderPreview();
+  toast('저장됐어요 ✓');renderRoomsList();buildRoomSelect();renderPreview();
 }
 function confirmResetSettings(){
   showConfirmModal('설정 초기화','모든 설정이 삭제됩니다. 계속할까요?',()=>{
@@ -2255,7 +2260,7 @@ function onRoomDoorAuto(id){
 }
 function addRoom(){
   const n=settings.rooms.length+1;
-  const r={id:'r'+Date.now(),name:'호실'+n,wifi:'',wifipw:'',door:'',doorAuto:false};
+  const r={id:'r'+Date.now(),name:settings.name?settings.name+' '+n+'호':'호실'+n,wifi:'',wifipw:'',door:'',doorAuto:false};
   settings.rooms.push(r);
   localStorage.setItem(SK_SET,JSON.stringify(settings));
   editingRoomId=r.id;
@@ -2264,7 +2269,7 @@ function addRoom(){
 function saveRoom(id){
   const r=settings.rooms.find(x=>x.id===id);if(!r)return;
   const idx=settings.rooms.findIndex(x=>x.id===id);
-  r.name=document.getElementById('ri_name_'+id).value.trim()||('호실'+(idx+1));
+  r.name=document.getElementById('ri_name_'+id).value.trim()||settings.name||('호실'+(idx+1));
   r.wifi=document.getElementById('ri_wifi_'+id).value.trim();
   r.wifipw=document.getElementById('ri_wifipw_'+id).value.trim();
   r.door=document.getElementById('ri_door_'+id).value.trim();
