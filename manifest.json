@@ -1,12 +1,12 @@
 {
-  "name": "stay_msg_lite1",
-  "short_name": "stay_msg_lite1",
+  "name": "Stay_Msg_lite",
+  "short_name": "Stay_Msg",
   "start_url": "./index.html",
   "display": "standalone",
-  "background_color": "#FF6B4A",
-  "theme_color": "#FF6B4A",
+  "background_color": "#10b981",
+  "theme_color": "#10b981",
   "icons": [
-    {"src":"./icon-192.png","sizes":"192x192","type":"image/png"},
-    {"src":"./icon-512.png","sizes":"512x512","type":"image/png"}
+    {"src":"./icon-192.png","sizes":"192x192","type":"image/png","purpose":"any"},
+    {"src":"./icon-512.png","sizes":"512x512","type":"image/png","purpose":"any"}
   ]
 }
