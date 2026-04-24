@@ -777,6 +777,18 @@ input,select,textarea{font-family:inherit;}
   opacity:0.95;line-height:1.55;
   max-width:360px;
 }
+.hero-cta{
+  display:inline-flex;align-items:center;gap:6px;
+  margin-top:14px;
+  padding:10px 18px;border-radius:10px;
+  background:white;color:var(--primary);
+  font-size:13px;font-weight:700;
+  border:0;cursor:pointer;
+  box-shadow:0 4px 12px -4px rgba(0,0,0,0.2);
+  transition:transform .15s ease, box-shadow .15s ease;
+}
+.hero-cta:hover{transform:translateY(-1px);box-shadow:0 6px 16px -4px rgba(0,0,0,0.25);}
+.hero-cta .i{width:16px;height:16px;}
 .hero-art{
   position:absolute;right:0;top:0;bottom:0;
   width:50%;max-width:340px;
@@ -857,7 +869,7 @@ input,select,textarea{font-family:inherit;}
       <div class="sidebar-brand" onclick="switchTab('home')" role="button" tabindex="0" aria-label="홈으로">
         <div class="sidebar-logo">SM</div>
         <div class="sidebar-brand-text">
-          <div class="sidebar-brand-name">Stay_Msg_lite<span class="sidebar-brand-ver" id="appVer">v1.5.12</span></div>
+          <div class="sidebar-brand-name">Stay_Msg_lite<span class="sidebar-brand-ver" id="appVer">v1.5.13</span></div>
           <div class="sidebar-brand-sub">숙소 예약 문자</div>
         </div>
       </div>
@@ -896,7 +908,7 @@ input,select,textarea{font-family:inherit;}
       <div class="mheader-brand" onclick="switchTab('home')" role="button" tabindex="0" aria-label="홈으로">
         <div class="mheader-logo">SM</div>
         <div>
-          <div class="mheader-title">Stay_Msg_lite<span class="mheader-ver" id="appVerM">v1.5.12</span></div>
+          <div class="mheader-title">Stay_Msg_lite<span class="mheader-ver" id="appVerM">v1.5.13</span></div>
           <div class="mheader-sub">숙소 예약 문자</div>
         </div>
       </div>
@@ -1036,6 +1048,7 @@ input,select,textarea{font-family:inherit;}
           <span class="hero-eyebrow"><svg class="i"><use href="#i-hand"/></svg>환영합니다</span>
           <h1 class="hero-title">Stay_Msg<br>예약 문자를 빠르게 💬</h1>
           <p class="hero-sub">템플릿을 선택하고 게스트 정보만 입력하면, 정성 담긴 문자가 자동으로 완성돼요.</p>
+          <button type="button" class="hero-cta" onclick="switchTab('compose')"><svg class="i"><use href="#i-pencil"/></svg>새 문자 작성</button>
         </div>
       </div>
 
@@ -1078,11 +1091,6 @@ input,select,textarea{font-family:inherit;}
         </div>
       </div>
 
-      <div class="section-label">빠른 실행</div>
-      <div class="btn-row-2">
-        <button class="btn btn-primary" onclick="switchTab('compose')"><svg class="i"><use href="#i-pencil"/></svg>새 문자 작성</button>
-        <button class="btn btn-outline" onclick="switchTab('reserv')"><svg class="i"><use href="#i-clipboard"/></svg>예약 관리</button>
-      </div>
     </section>
 
     <!-- ─── COMPOSE ─── -->
@@ -1431,7 +1439,7 @@ input,select,textarea{font-family:inherit;}
 <div class="toast" id="toast"></div>
 
 <script>
-const APP_VERSION='v1.5.12';
+const APP_VERSION='v1.5.13';
 const SK_SET='stay_msg_lite1_set_v1';
 const SK_TPL='stay_msg_lite1_tpl_v1';
 const SK_RES='stay_msg_lite1_res_v1';
