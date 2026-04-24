@@ -271,7 +271,7 @@ input,select,textarea{font-family:inherit;}
   font-size:12px;font-weight:600;color:var(--fg-2);
   padding-left:2px;
 }
-.fi label .req{color:var(--destructive);margin-left:2px;}
+.fi label .req{color:var(--destructive);margin-right:3px;font-weight:700;}
 .input,.select,.date-btn{
   width:100%;
   background:var(--card);
@@ -1284,7 +1284,7 @@ input,select,textarea{font-family:inherit;}
             <div class="card-body">
               <div class="form-grid">
                 <div class="fi">
-                  <label>이름<span class="req">*</span></label>
+                  <label><span class="req">*</span>이름</label>
                   <input class="input" type="text" id="v_name" placeholder="홍길동" oninput="renderPreview()" onkeydown="if(event.key==='Enter')document.getElementById('v_phone').focus()" autocomplete="off">
                 </div>
                 <div class="fi">
@@ -1301,7 +1301,7 @@ input,select,textarea{font-family:inherit;}
             </div>
             <div class="card-body">
               <div class="fi">
-                <label>입실 · 퇴실<span class="req">*</span></label>
+                <label><span class="req">*</span>입실 · 퇴실</label>
                 <div class="date-btn" id="dateRangeBtn" onclick="openDatePicker()">
                   <div class="drb-placeholder">📅 날짜를 선택하세요</div>
                 </div>
@@ -1445,7 +1445,7 @@ input,select,textarea{font-family:inherit;}
         </div>
         <div class="card-body">
           <div class="fi" style="margin-bottom:12px;">
-            <label>숙소 이름</label>
+            <label><span class="req">*</span>숙소 이름</label>
             <input class="input" type="text" id="cfg_name" placeholder="예: 솔숲 스테이">
           </div>
           <div class="fi" style="margin-bottom:12px;">
@@ -1628,7 +1628,7 @@ input,select,textarea{font-family:inherit;}
 <div class="toast" id="toast"></div>
 
 <script>
-const APP_VERSION='v1.7.2';
+const APP_VERSION='v1.7.3';
 const SK_SET='stay_msg_lite1_set_v1';
 const SK_TPL='stay_msg_lite1_tpl_v1';
 const SK_RES='stay_msg_lite1_res_v1';
@@ -1952,11 +1952,11 @@ function renderTplEditor(key,t,isCustom){
   const safeKey=`'${key}'`;
   return `<div class="tpl-edit">
     <div class="fi">
-      <label>제목</label>
+      <label><span class="req">*</span>제목</label>
       <input class="input" type="text" id="${titleId}" value="${esc(t.title)}">
     </div>
     <div class="fi">
-      <label>내용</label>
+      <label><span class="req">*</span>내용</label>
       <textarea id="${bodyId}">${esc(t.body)}</textarea>
     </div>
     <div id="varChipArea_${key.replace(':','_')}"></div>
