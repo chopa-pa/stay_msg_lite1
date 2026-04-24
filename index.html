@@ -828,11 +828,14 @@ input,select,textarea{font-family:inherit;}
 }
 .hero-art svg{width:100%;height:100%;display:block;}
 @media(max-width:640px){
-  .hero{min-height:160px;}
-  .hero-content{padding:18px 20px;max-width:65%;}
-  .hero-title{font-size:17px;}
-  .hero-sub{font-size:12px;max-width:none;}
-  .hero-art{width:45%;}
+  .hero{min-height:112px;}
+  .hero-content{padding:14px 16px;max-width:62%;}
+  .hero-eyebrow{padding:3px 8px;font-size:9px;margin-bottom:6px;}
+  .hero-title{font-size:16px;line-height:1.25;}
+  .hero-title br{display:none;}
+  .hero-sub{display:none;}
+  .hero-cta{margin-top:8px;padding:7px 12px;font-size:12px;}
+  .hero-art{width:44%;}
 }
 
 /* ─────── SECTIONS / TEMPLATE MANAGE ─────── */
@@ -901,7 +904,7 @@ input,select,textarea{font-family:inherit;}
       <div class="sidebar-brand" onclick="switchTab('home')" role="button" tabindex="0" aria-label="홈으로">
         <div class="sidebar-logo">SM</div>
         <div class="sidebar-brand-text">
-          <div class="sidebar-brand-name">Stay_Msg_lite<span class="sidebar-brand-ver" id="appVer">v1.6.3</span></div>
+          <div class="sidebar-brand-name">Stay_Msg_lite<span class="sidebar-brand-ver" id="appVer">v1.6.4</span></div>
           <div class="sidebar-brand-sub">숙소 예약 문자</div>
         </div>
       </div>
@@ -940,7 +943,7 @@ input,select,textarea{font-family:inherit;}
       <div class="mheader-brand" onclick="switchTab('home')" role="button" tabindex="0" aria-label="홈으로">
         <div class="mheader-logo">SM</div>
         <div>
-          <div class="mheader-title">Stay_Msg_lite<span class="mheader-ver" id="appVerM">v1.6.3</span></div>
+          <div class="mheader-title">Stay_Msg_lite<span class="mheader-ver" id="appVerM">v1.6.4</span></div>
           <div class="mheader-sub">숙소 예약 문자</div>
         </div>
       </div>
@@ -1158,7 +1161,7 @@ input,select,textarea{font-family:inherit;}
         <div class="hero-content">
           <span class="hero-eyebrow"><svg class="i"><use href="#i-hand"/></svg>환영합니다</span>
           <h1 class="hero-title">Stay_Msg<br>예약 문자를 빠르게 💬</h1>
-          <p class="hero-sub">템플릿을 선택하고 게스트 정보만 입력하면, 정성 담긴 문자가 자동으로 완성돼요.</p>
+          <p class="hero-sub">템플릿 + 게스트 정보만 있으면 정성 담긴 문자가 자동 완성됩니다.</p>
           <button type="button" class="hero-cta" onclick="switchTab('compose')"><svg class="i"><use href="#i-pencil"/></svg>새 문자 작성</button>
         </div>
       </div>
@@ -1592,7 +1595,7 @@ input,select,textarea{font-family:inherit;}
 <div class="toast" id="toast"></div>
 
 <script>
-const APP_VERSION='v1.6.3';
+const APP_VERSION='v1.6.4';
 const SK_SET='stay_msg_lite1_set_v1';
 const SK_TPL='stay_msg_lite1_tpl_v1';
 const SK_RES='stay_msg_lite1_res_v1';
