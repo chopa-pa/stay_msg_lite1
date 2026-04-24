@@ -656,6 +656,16 @@ input,select,textarea{font-family:inherit;}
 .tpl-stage.open .stage-chev{transform:rotate(90deg);}
 .tpl-stage-right{display:flex;align-items:center;gap:8px;}
 .tpl-rows{padding:6px;}
+.tpl-titles{padding:4px 8px 8px;border-top:1px solid var(--border);}
+.tpl-title-item{
+  display:flex;align-items:center;gap:8px;
+  padding:8px 10px;border-radius:6px;cursor:pointer;
+  font-size:13px;color:var(--fg);font-weight:500;
+  transition:background .12s;
+}
+.tpl-title-item:hover{background:var(--soft);}
+.tpl-title-item .dot{width:4px;height:4px;border-radius:50%;background:var(--muted-fg-2);flex-shrink:0;}
+.tpl-title-item .t{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .tpl-row{border-radius:8px;margin:2px 0;background:transparent;transition:background .12s;}
 .tpl-row:hover{background:var(--soft);}
 .tpl-row-head{
@@ -1601,7 +1611,7 @@ input,select,textarea{font-family:inherit;}
 <div class="toast" id="toast"></div>
 
 <script>
-const APP_VERSION='v1.6.5';
+const APP_VERSION='v1.6.6';
 const SK_SET='stay_msg_lite1_set_v1';
 const SK_TPL='stay_msg_lite1_tpl_v1';
 const SK_RES='stay_msg_lite1_res_v1';
@@ -1827,29 +1837,44 @@ function renderTemplatesPage(){
   host.innerHTML=STAGES.map(s=>{
     const all=allTpls(s);
     const stageOpen=openStages.has(s.id);
-    const rows=stageOpen?all.map((t,i)=>{
-      const key=`${s.id}:${i}`;
-      const isCustom=i>=s.templates.length;
-      const isOpen=editingTplKey===key;
-      const snippet=esc((t.body||'').replace(/\n+/g,' ').slice(0,80));
-      const safeKey=`'${key}'`;
-      const actions=[
-        `<button class="btn btn-outline btn-sm" onclick="event.stopPropagation();useTplFromManage(${safeKey})" title="작성에 사용"><svg class="i"><use href="#i-pencil"/></svg></button>`,
-        `<button class="btn btn-outline btn-sm" onclick="event.stopPropagation();duplicateTpl(${safeKey})" title="복제"><svg class="i"><use href="#i-copy"/></svg></button>`,
-        isCustom?`<button class="btn btn-destructive btn-sm" onclick="event.stopPropagation();deleteTplRow(${safeKey})" title="삭제"><svg class="i"><use href="#i-trash"/></svg></button>`:''
-      ].join('');
-      return `<div class="tpl-row${isOpen?' open':''}" data-key="${key}">
-        <div class="tpl-row-head" onclick="toggleTplRow(${safeKey})">
-          <span class="chev">▶</span>
-          <div style="flex:1;min-width:0;">
-            <div class="tpl-row-title">${esc(t.title)}${isCustom?'<span class="badge">사용자</span>':''}</div>
-            <div class="tpl-row-snippet">${snippet}</div>
+    let body='';
+    if(stageOpen){
+      const rows=all.map((t,i)=>{
+        const key=`${s.id}:${i}`;
+        const isCustom=i>=s.templates.length;
+        const isOpen=editingTplKey===key;
+        const snippet=esc((t.body||'').replace(/\n+/g,' ').slice(0,80));
+        const safeKey=`'${key}'`;
+        const actions=[
+          `<button class="btn btn-outline btn-sm" onclick="event.stopPropagation();toggleTplRow(${safeKey})" title="수정"><svg class="i"><use href="#i-pencil"/></svg></button>`,
+          `<button class="btn btn-outline btn-sm" onclick="event.stopPropagation();useTplFromManage(${safeKey})" title="작성에 사용"><svg class="i"><use href="#i-paperplane"/></svg></button>`,
+          `<button class="btn btn-outline btn-sm" onclick="event.stopPropagation();duplicateTpl(${safeKey})" title="복제"><svg class="i"><use href="#i-copy"/></svg></button>`,
+          isCustom?`<button class="btn btn-destructive btn-sm" onclick="event.stopPropagation();deleteTplRow(${safeKey})" title="삭제"><svg class="i"><use href="#i-trash"/></svg></button>`:''
+        ].join('');
+        return `<div class="tpl-row${isOpen?' open':''}" data-key="${key}">
+          <div class="tpl-row-head" onclick="toggleTplRow(${safeKey})">
+            <span class="chev">▶</span>
+            <div style="flex:1;min-width:0;">
+              <div class="tpl-row-title">${esc(t.title)}${isCustom?'<span class="badge">사용자</span>':''}</div>
+              <div class="tpl-row-snippet">${snippet}</div>
+            </div>
+            <div class="tpl-row-actions">${actions}</div>
           </div>
-          <div class="tpl-row-actions">${actions}</div>
-        </div>
-        ${isOpen?renderTplEditor(key,t,isCustom):''}
-      </div>`;
-    }).join(''):'';
+          ${isOpen?renderTplEditor(key,t,isCustom):''}
+        </div>`;
+      }).join('');
+      body=`<div class="tpl-rows">${rows}</div>`;
+    } else if(all.length){
+      const items=all.map((t,i)=>{
+        const key=`${s.id}:${i}`;const safeKey=`'${key}'`;
+        const isCustom=i>=s.templates.length;
+        return `<div class="tpl-title-item" onclick="openStageAndEdit(${safeKey})">
+          <span class="dot"></span>
+          <span class="t">${esc(t.title)}${isCustom?'<span class="badge">사용자</span>':''}</span>
+        </div>`;
+      }).join('');
+      body=`<div class="tpl-titles">${items}</div>`;
+    }
     return `<div class="tpl-stage${stageOpen?' open':''}">
       <div class="tpl-stage-head" onclick="toggleStage('${s.id}')">
         <div class="label">
@@ -1862,9 +1887,21 @@ function renderTemplatesPage(){
           <button class="btn btn-primary btn-sm" onclick="event.stopPropagation();addTplInStage('${s.id}')"><svg class="i"><use href="#i-plus"/></svg>새 템플릿</button>
         </div>
       </div>
-      ${stageOpen?`<div class="tpl-rows">${rows}</div>`:''}
+      ${body}
     </div>`;
   }).join('');
+}
+
+function openStageAndEdit(key){
+  const [sid]=key.split(':');
+  openStages.add(sid);
+  editingTplKey=key;
+  renderTemplatesPage();
+  const chipHost=document.getElementById('varChipArea_'+key.replace(':','_'));
+  const bodyId='edt_body_'+key.replace(':','_');
+  if(chipHost)chipHost.innerHTML=buildVarChips(bodyId);
+  const row=document.querySelector(`.tpl-row[data-key="${key}"]`);
+  if(row)row.scrollIntoView({behavior:'smooth',block:'nearest'});
 }
 
 function toggleStage(stageId){
