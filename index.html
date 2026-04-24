@@ -195,6 +195,37 @@ input,select,textarea{font-family:inherit;}
   display:flex;align-items:center;gap:8px;
 }
 .page-sub{font-size:13px;color:var(--muted-fg);margin-top:4px;}
+.btn-help{
+  margin-left:auto;width:30px;height:30px;
+  border:1px solid var(--border);border-radius:8px;
+  background:var(--card);cursor:pointer;
+  display:inline-flex;align-items:center;justify-content:center;
+  color:var(--muted-fg);
+  transition:background .15s ease,color .15s ease,border-color .15s ease;
+}
+.btn-help:hover{background:var(--accent);color:var(--primary);border-color:var(--primary);}
+.btn-help .i{width:18px;height:18px;}
+.help-panel{
+  background:var(--accent);
+  border:1px solid var(--border);
+  border-left:3px solid var(--primary);
+  border-radius:10px;
+  padding:14px 16px;
+  margin-top:12px;margin-bottom:18px;
+  font-size:13px;color:var(--fg);line-height:1.65;
+}
+.help-panel h4{font-size:13px;font-weight:700;color:var(--primary);margin:0 0 8px;}
+.help-panel ul{margin:0;padding-left:18px;}
+.help-panel li{margin:4px 0;}
+.help-panel li strong{color:var(--primary);}
+.help-panel + .help-panel{margin-top:0;}
+.help-panel code{
+  background:white;border:1px solid var(--border);
+  padding:1px 6px;border-radius:5px;
+  font-size:12px;color:var(--primary);font-weight:600;
+  font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+}
+.help-panel em{color:var(--primary);font-style:normal;font-weight:600;}
 
 /* ─────── CARD ─────── */
 .card{
@@ -870,7 +901,7 @@ input,select,textarea{font-family:inherit;}
       <div class="sidebar-brand" onclick="switchTab('home')" role="button" tabindex="0" aria-label="홈으로">
         <div class="sidebar-logo">SM</div>
         <div class="sidebar-brand-text">
-          <div class="sidebar-brand-name">Stay_Msg_lite<span class="sidebar-brand-ver" id="appVer">v1.6.2</span></div>
+          <div class="sidebar-brand-name">Stay_Msg_lite<span class="sidebar-brand-ver" id="appVer">v1.6.3</span></div>
           <div class="sidebar-brand-sub">숙소 예약 문자</div>
         </div>
       </div>
@@ -909,7 +940,7 @@ input,select,textarea{font-family:inherit;}
       <div class="mheader-brand" onclick="switchTab('home')" role="button" tabindex="0" aria-label="홈으로">
         <div class="mheader-logo">SM</div>
         <div>
-          <div class="mheader-title">Stay_Msg_lite<span class="mheader-ver" id="appVerM">v1.6.2</span></div>
+          <div class="mheader-title">Stay_Msg_lite<span class="mheader-ver" id="appVerM">v1.6.3</span></div>
           <div class="mheader-sub">숙소 예약 문자</div>
         </div>
       </div>
@@ -1176,8 +1207,20 @@ input,select,textarea{font-family:inherit;}
     <!-- ─── COMPOSE ─── -->
     <section class="page" id="tab-compose">
       <div class="page-head">
-        <h1 class="page-title"><svg class="i"><use href="#i-pencil"/></svg>문자 작성</h1>
+        <h1 class="page-title"><svg class="i"><use href="#i-pencil"/></svg>문자 작성<button class="btn-help" onclick="toggleHelp('compose')" aria-label="도움말"><svg class="i"><use href="#i-help"/></svg></button></h1>
         <p class="page-sub">게스트 정보를 입력하면 템플릿에 자동으로 채워집니다</p>
+      </div>
+      <div class="help-panel" id="help-compose" style="display:none;">
+        <h4>💬 문자 작성 사용 방법</h4>
+        <ul>
+          <li><strong>① 숙소/호실</strong> — 보낼 대상 호실을 고르면 해당 와이파이·도어락이 자동 반영됩니다.</li>
+          <li><strong>② 게스트 정보</strong> — 이름과 연락처 입력. 연락처는 자동 하이픈.</li>
+          <li><strong>③ 체크인/체크아웃</strong> — 날짜 버튼을 눌러 입·퇴실을 한번에 선택. 인원·금액도 여기서.</li>
+          <li><strong>④ 템플릿 선택</strong> — 단계별 템플릿을 고르면 우측 프리뷰에 실제 문자가 나타납니다.</li>
+          <li><strong>{변수}</strong>는 <code>{이름}</code>, <code>{입실}</code>, <code>{호실}</code>, <code>{와이파이}</code>, <code>{금액}</code> 등이 자동 치환됩니다.</li>
+          <li><strong>문자 앱 열기</strong>를 누르면 iOS/Android 문자 앱이 열리고 발송 이력에 자동 기록됩니다.</li>
+          <li><strong>예약 저장</strong>으로 이 예약을 "예약/발송 → 예약 목록"에 보관할 수 있어요.</li>
+        </ul>
       </div>
 
       <div class="compose-grid">
@@ -1290,8 +1333,19 @@ input,select,textarea{font-family:inherit;}
     <!-- ─── TEMPLATES ─── -->
     <section class="page" id="tab-templates">
       <div class="page-head">
-        <h1 class="page-title"><svg class="i"><use href="#i-stack"/></svg>템플릿 관리</h1>
+        <h1 class="page-title"><svg class="i"><use href="#i-stack"/></svg>템플릿 관리<button class="btn-help" onclick="toggleHelp('templates')" aria-label="도움말"><svg class="i"><use href="#i-help"/></svg></button></h1>
         <p class="page-sub">단계별 문자 템플릿을 추가·편집·삭제합니다</p>
+      </div>
+      <div class="help-panel" id="help-templates" style="display:none;">
+        <h4>📚 템플릿 관리 사용 방법</h4>
+        <ul>
+          <li><strong>6개 단계</strong> — 문의·예약·입실 전·입실 당일·체크인·체크아웃별로 템플릿을 모아놨어요.</li>
+          <li><strong>추가</strong> — 각 단계의 <em>+ 템플릿 추가</em>를 눌러 새 문자를 만듭니다.</li>
+          <li><strong>편집</strong> — 템플릿 제목 행을 클릭하면 펼쳐지고, 제목·본문을 수정 후 <em>저장</em>.</li>
+          <li><strong>복제</strong> — 비슷한 문자를 빠르게 만들 때 사용 (해당 단계에 복사본 추가).</li>
+          <li><strong>사용 가능한 변수</strong>: <code>{이름}</code> <code>{입실}</code> <code>{퇴실}</code> <code>{인원}</code> <code>{금액}</code> <code>{연락처}</code> <code>{숙소}</code> <code>{호실}</code> <code>{주소}</code> <code>{계좌}</code> <code>{와이파이}</code> <code>{와이파이비번}</code> <code>{비번}</code> <code>{주중요금}</code> <code>{주말요금}</code></li>
+          <li>변경 사항은 즉시 <strong>문자 작성</strong>에도 반영됩니다.</li>
+        </ul>
       </div>
       <div id="tplStagesList"></div>
     </section>
@@ -1299,8 +1353,18 @@ input,select,textarea{font-family:inherit;}
     <!-- ─── RESERV ─── -->
     <section class="page" id="tab-reserv">
       <div class="page-head">
-        <h1 class="page-title"><svg class="i"><use href="#i-clipboard"/></svg>예약/발송</h1>
+        <h1 class="page-title"><svg class="i"><use href="#i-clipboard"/></svg>예약/발송<button class="btn-help" onclick="toggleHelp('reserv')" aria-label="도움말"><svg class="i"><use href="#i-help"/></svg></button></h1>
         <p class="page-sub"><span id="resvCount">저장된 예약이 없습니다</span></p>
+      </div>
+      <div class="help-panel" id="help-reserv" style="display:none;">
+        <h4>📋 예약/발송 사용 방법</h4>
+        <ul>
+          <li><strong>예약 목록 탭</strong> — 문자 작성 탭에서 <em>예약 저장</em>으로 보관한 게스트 예약을 관리합니다. 카드를 클릭하면 해당 예약이 문자 작성에 자동 로드돼요.</li>
+          <li><strong>발송 이력 탭</strong> — <em>문자 앱 열기</em>를 눌렀던 모든 발송 기록이 자동 저장됩니다.</li>
+          <li><strong>다시 보내기</strong> — 이력의 문자 내용 그대로 문자 앱이 다시 열려요.</li>
+          <li><strong>복사 / 삭제</strong> — 이력별 개별 조작, <em>전체 삭제</em>로 이력 초기화도 가능.</li>
+          <li>예약 카드의 <strong>오늘 입실·퇴실·예정</strong> 라벨로 상태를 한눈에 확인.</li>
+        </ul>
       </div>
 
       <div class="subtabs" role="tablist">
@@ -1324,8 +1388,19 @@ input,select,textarea{font-family:inherit;}
     <!-- ─── PROP (settings) ─── -->
     <section class="page" id="tab-prop">
       <div class="page-head">
-        <h1 class="page-title"><svg class="i"><use href="#i-house"/></svg>숙소 프로필</h1>
-        <p class="page-sub">숙소 정보·입실 정보·요금을 설정하면 문자에 자동으로 반영됩니다</p>
+        <h1 class="page-title"><svg class="i"><use href="#i-house"/></svg>숙소 프로필<button class="btn-help" onclick="toggleHelp('prop')" aria-label="도움말"><svg class="i"><use href="#i-help"/></svg></button></h1>
+        <p class="page-sub">숙소 정보·호실·요금을 설정하면 문자에 자동으로 반영됩니다</p>
+      </div>
+      <div class="help-panel" id="help-prop" style="display:none;">
+        <h4>🏠 숙소 프로필 사용 방법</h4>
+        <ul>
+          <li><strong>숙소 정보</strong> — 이름·주소·계좌를 입력하면 <code>{숙소}</code> <code>{주소}</code> <code>{계좌}</code> 변수에 자동 반영됩니다.</li>
+          <li><strong>호실 관리</strong> — 호실마다 와이파이·도어락을 따로 저장. 다중 호실 운영에 편리합니다.</li>
+          <li><strong>도어락 자동</strong> — <em>손님 전화번호 뒷자리 자동 사용</em>을 체크하면 게스트마다 도어락 비번이 자동 생성돼요.</li>
+          <li><strong>요금</strong> — 주중·주말 요금을 저장하면 <code>{주중요금}</code> <code>{주말요금}</code>에 반영.</li>
+          <li><strong>내보내기 / 가져오기</strong> — 설정·템플릿·예약 전체를 JSON 파일로 백업·복원할 수 있어요.</li>
+          <li><strong>홈 화면에 바로가기 추가</strong> — 모바일 브라우저에서 누르면 PWA 앱처럼 설치됩니다.</li>
+        </ul>
       </div>
 
       <div class="card">
@@ -1517,7 +1592,7 @@ input,select,textarea{font-family:inherit;}
 <div class="toast" id="toast"></div>
 
 <script>
-const APP_VERSION='v1.6.2';
+const APP_VERSION='v1.6.3';
 const SK_SET='stay_msg_lite1_set_v1';
 const SK_TPL='stay_msg_lite1_tpl_v1';
 const SK_RES='stay_msg_lite1_res_v1';
@@ -1625,6 +1700,11 @@ function applyVars(raw){
   return raw.replace(/\{[^}]+\}/g,m=>map[m]!==undefined?map[m]:m);
 }
 function smsBytes(s){let b=0;for(const ch of s){b+=(ch.charCodeAt(0)>127)?2:1;}return b;}
+
+function toggleHelp(name){
+  const el=document.getElementById('help-'+name);if(!el)return;
+  el.style.display=el.style.display==='none'?'':'none';
+}
 
 function switchTab(name){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
