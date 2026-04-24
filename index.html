@@ -540,6 +540,51 @@ input,select,textarea{font-family:inherit;}
 .guide-item strong{color:var(--fg);font-weight:700;}
 .guide-item .sub{color:var(--muted-fg);font-size:12px;padding-left:16px;display:block;}
 
+/* ─────── TEMPLATES PAGE ─────── */
+.tpl-stage{margin-bottom:18px;border:1px solid var(--border);border-radius:var(--radius-lg);background:var(--card);overflow:hidden;}
+.tpl-stage-head{
+  display:flex;align-items:center;justify-content:space-between;gap:10px;
+  padding:14px 16px;border-bottom:1px solid var(--border);
+  background:var(--soft);
+}
+.tpl-stage-head .label{display:flex;align-items:center;gap:10px;font-weight:700;font-size:15px;color:var(--fg);}
+.tpl-stage-head .label .stage-ico{
+  width:28px;height:28px;border-radius:7px;
+  background:var(--accent);color:var(--accent-fg);
+  display:flex;align-items:center;justify-content:center;font-size:14px;
+}
+.tpl-stage-head .count{font-size:12px;color:var(--muted-fg);font-weight:500;margin-left:4px;}
+.tpl-rows{padding:6px;}
+.tpl-row{border-radius:8px;margin:2px 0;background:transparent;transition:background .12s;}
+.tpl-row:hover{background:var(--soft);}
+.tpl-row-head{
+  display:flex;align-items:center;gap:10px;padding:10px 12px;cursor:pointer;min-width:0;
+}
+.tpl-row-head .chev{color:var(--muted-fg-2);font-size:12px;transition:transform .18s;}
+.tpl-row.open .chev{transform:rotate(90deg);}
+.tpl-row-title{flex:1;min-width:0;font-size:14px;font-weight:600;color:var(--fg);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.tpl-row-title .badge{
+  display:inline-block;font-size:10px;font-weight:700;
+  padding:2px 6px;border-radius:10px;
+  background:var(--accent);color:var(--accent-fg);
+  margin-left:6px;vertical-align:1px;letter-spacing:.02em;
+}
+.tpl-row-snippet{font-size:12px;color:var(--muted-fg);font-weight:400;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.tpl-row-actions{display:flex;gap:4px;flex-shrink:0;}
+.tpl-row-actions .btn{padding:6px 10px;font-size:12px;}
+.tpl-edit{
+  padding:12px 14px 14px;border-top:1px solid var(--border);background:var(--soft);
+}
+.tpl-edit .fi{margin-bottom:10px;}
+.tpl-edit label{display:block;font-size:11px;font-weight:700;color:var(--muted-fg);margin-bottom:4px;letter-spacing:.02em;text-transform:uppercase;}
+.tpl-edit textarea{
+  width:100%;min-height:180px;border:1px solid var(--border);border-radius:8px;
+  padding:10px 12px;font-family:inherit;font-size:14px;line-height:1.6;resize:vertical;
+  background:var(--card);color:var(--fg);
+}
+.tpl-edit textarea:focus{outline:2px solid var(--primary);outline-offset:-1px;border-color:transparent;}
+.tpl-edit-actions{display:flex;gap:8px;margin-top:10px;}
+
 /* ─────── BOTTOM NAV (mobile) ─────── */
 .bnav{
   position:fixed;bottom:0;left:0;right:0;
@@ -732,6 +777,10 @@ input,select,textarea{font-family:inherit;}
 <symbol id="i-lock" viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="1.8" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M8 11 V7 A4 4 0 0 1 16 7 V11" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
 <symbol id="i-dollar" viewBox="0 0 24 24"><path d="M16.5 7 H9 A2 2 0 0 0 9 11 H15 A2 2 0 0 1 15 15 H7.5 M12 4 V20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
 <symbol id="i-hand" viewBox="0 0 24 24"><path d="M9 11 V6 A1.5 1.5 0 0 1 12 6 V13 M12 13 V5 A1.5 1.5 0 0 1 15 5 V13 M15 13 V7 A1.5 1.5 0 0 1 18 7 V15 A6 6 0 0 1 12 21 L11 21 C9 21 7 19.5 6 17.5 L3.5 13 A1.5 1.5 0 0 1 6 11.5 L9 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+<symbol id="i-stack" viewBox="0 0 24 24"><rect x="4" y="8.5" width="16" height="12.5" rx="2" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M6.5 5.5 H17.5 M8.5 3 H15.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
+<symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 4 V20 M4 12 H20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
+<symbol id="i-copy" viewBox="0 0 24 24"><rect x="8" y="8" width="12" height="13" rx="2" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M16 8 V5 A1.5 1.5 0 0 0 14.5 3.5 H5.5 A1.5 1.5 0 0 0 4 5 V16 A1.5 1.5 0 0 0 5.5 17.5 H8" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
+<symbol id="i-xmark" viewBox="0 0 24 24"><path d="M5 5 L19 19 M19 5 L5 19" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
 </defs></svg>
 
 <div class="app">
@@ -742,7 +791,7 @@ input,select,textarea{font-family:inherit;}
       <div class="sidebar-brand" onclick="switchTab('home')" role="button" tabindex="0" aria-label="홈으로">
         <div class="sidebar-logo">SM</div>
         <div class="sidebar-brand-text">
-          <div class="sidebar-brand-name">Stay_Msg_lite<span class="sidebar-brand-ver" id="appVer">v1.5.8</span></div>
+          <div class="sidebar-brand-name">Stay_Msg_lite<span class="sidebar-brand-ver" id="appVer">v1.5.9</span></div>
           <div class="sidebar-brand-sub">숙소 예약 문자</div>
         </div>
       </div>
@@ -753,6 +802,9 @@ input,select,textarea{font-family:inherit;}
       </button>
       <button class="sidebar-link" data-tab="compose" onclick="switchTab('compose')">
         <span class="sidebar-link-icon"><svg class="i"><use href="#i-pencil"/></svg></span>문자 작성
+      </button>
+      <button class="sidebar-link" data-tab="templates" onclick="switchTab('templates')">
+        <span class="sidebar-link-icon"><svg class="i"><use href="#i-stack"/></svg></span>템플릿 관리
       </button>
       <button class="sidebar-link" data-tab="reserv" onclick="switchTab('reserv')">
         <span class="sidebar-link-icon"><svg class="i"><use href="#i-clipboard"/></svg></span>예약 관리
@@ -778,7 +830,7 @@ input,select,textarea{font-family:inherit;}
       <div class="mheader-brand" onclick="switchTab('home')" role="button" tabindex="0" aria-label="홈으로">
         <div class="mheader-logo">SM</div>
         <div>
-          <div class="mheader-title">Stay_Msg_lite<span class="mheader-ver" id="appVerM">v1.5.8</span></div>
+          <div class="mheader-title">Stay_Msg_lite<span class="mheader-ver" id="appVerM">v1.5.9</span></div>
           <div class="mheader-sub">숙소 예약 문자</div>
         </div>
       </div>
@@ -1049,40 +1101,33 @@ input,select,textarea{font-family:inherit;}
             <div class="preview-warn" id="previewWarn" style="display:none;"></div>
           </div>
 
-          <div id="editArea" style="display:none;margin-top:12px;">
-            <div class="card">
-              <div class="card-head">
-                <div class="card-head-title"><span class="ico"><svg class="i"><use href="#i-pencil"/></svg></span>템플릿 편집</div>
-              </div>
-              <textarea class="edit-ta" id="editBody"></textarea>
-              <div id="varChipArea"></div>
-              <div style="padding:12px 16px;display:flex;gap:8px;border-top:1px solid var(--border);">
-                <button class="btn btn-outline" style="flex:1;" onclick="cancelEditTpl()">취소</button>
-                <button class="btn btn-primary" style="flex:1;" onclick="saveEditTpl()"><svg class="i"><use href="#i-save"/></svg>저장</button>
-              </div>
-            </div>
-          </div>
-
           <div class="action-bar">
             <button class="btn btn-outline" onclick="clearForm()"><svg class="i"><use href="#i-trash"/></svg>초기화</button>
             <button class="btn btn-outline" onclick="saveReservation()"><svg class="i"><use href="#i-save"/></svg>예약 저장</button>
-            <button class="btn btn-outline" onclick="copyMessage()">📋 텍스트 복사</button>
+            <button class="btn btn-outline" onclick="copyMessage()"><svg class="i"><use href="#i-copy"/></svg>텍스트 복사</button>
             <button class="btn btn-primary" onclick="openSmsApp()"><svg class="i"><use href="#i-iphone"/></svg>문자 앱 열기</button>
           </div>
 
-          <div style="margin-top:10px;display:flex;gap:8px;">
-            <button class="btn btn-outline btn-sm" style="flex:1;" onclick="startEditTpl()"><svg class="i"><use href="#i-pencil"/></svg>템플릿 편집</button>
-            <button class="btn btn-outline btn-sm" style="flex:1;" onclick="addNewTemplate()">＋ 새 템플릿</button>
-            <button class="btn btn-destructive btn-sm" id="delTplBtn" onclick="deleteCurTpl()" style="display:none;"><svg class="i"><use href="#i-trash"/></svg>삭제</button>
+          <div style="margin-top:10px;">
+            <button class="btn btn-outline btn-sm" style="width:100%;" onclick="editCurTplInManagement()"><svg class="i"><use href="#i-pencil"/></svg>현재 템플릿 편집 →</button>
           </div>
         </div>
       </div>
     </section>
 
+    <!-- ─── TEMPLATES ─── -->
+    <section class="page" id="tab-templates">
+      <div class="page-head">
+        <h1 class="page-title"><svg class="i"><use href="#i-stack"/></svg>템플릿 관리</h1>
+        <p class="page-sub">단계별 문자 템플릿을 추가·편집·삭제합니다</p>
+      </div>
+      <div id="tplStagesList"></div>
+    </section>
+
     <!-- ─── RESERV ─── -->
     <section class="page" id="tab-reserv">
       <div class="page-head">
-        <h1 class="page-title">📋 예약 관리</h1>
+        <h1 class="page-title"><svg class="i"><use href="#i-clipboard"/></svg>예약 관리</h1>
         <p class="page-sub"><span id="resvCount">저장된 예약이 없습니다</span></p>
       </div>
       <div class="resv-grid" id="resvList"></div>
@@ -1272,6 +1317,9 @@ input,select,textarea{font-family:inherit;}
   <button class="bnav-btn" data-tab="compose" onclick="switchTab('compose')">
     <span class="bnav-ico"><svg class="i"><use href="#i-pencil"/></svg></span><span class="bnav-lbl">작성</span>
   </button>
+  <button class="bnav-btn" data-tab="templates" onclick="switchTab('templates')">
+    <span class="bnav-ico"><svg class="i"><use href="#i-stack"/></svg></span><span class="bnav-lbl">템플릿</span>
+  </button>
   <button class="bnav-btn" data-tab="reserv" onclick="switchTab('reserv')">
     <span class="bnav-ico"><svg class="i"><use href="#i-clipboard"/></svg></span><span class="bnav-lbl">예약</span>
   </button>
@@ -1299,7 +1347,7 @@ input,select,textarea{font-family:inherit;}
 <div class="toast" id="toast"></div>
 
 <script>
-const APP_VERSION='v1.5.8';
+const APP_VERSION='v1.5.9';
 const SK_SET='stay_msg_lite1_set_v1';
 const SK_TPL='stay_msg_lite1_tpl_v1';
 const SK_RES='stay_msg_lite1_res_v1';
@@ -1413,6 +1461,7 @@ function switchTab(name){
   window.scrollTo({top:0,behavior:'instant'});
   if(name==='reserv')renderReservations();
   if(name==='home')renderDashboard();
+  if(name==='templates')renderTemplatesPage();
 }
 
 function allTpls(s){return[...s.templates,...(customs[s.id]||[])];}
@@ -1444,12 +1493,12 @@ function getCurTpl(){
 function onTplChange(){
   curTplKey=document.getElementById('tplSelect').value;
   localStorage.setItem(SK_LAST,curTplKey);
-  document.getElementById('editArea').style.display='none';
   updateDelBtn();renderPreview();
 }
 function updateDelBtn(){
+  const btn=document.getElementById('delTplBtn');if(!btn)return;
   const cur=getCurTpl();
-  document.getElementById('delTplBtn').style.display=cur&&cur.isCustom?'':'none';
+  btn.style.display=cur&&cur.isCustom?'':'none';
 }
 function renderPreview(){
   const cur=getCurTpl();
@@ -1488,25 +1537,6 @@ function renderPreview(){
   }
 }
 
-function startEditTpl(){
-  const cur=getCurTpl();if(!cur)return;
-  document.getElementById('editArea').style.display='';
-  document.getElementById('editBody').value=cur.tpl.body;
-  document.getElementById('varChipArea').innerHTML=buildVarChips('editBody');
-  document.getElementById('editBody').focus();
-}
-function cancelEditTpl(){document.getElementById('editArea').style.display='none';}
-function saveEditTpl(){
-  const cur=getCurTpl();if(!cur)return;
-  const txt=document.getElementById('editBody').value;
-  if(cur.isCustom){
-    const ci=cur.idx-cur.stage.templates.length;
-    customs[cur.stage.id][ci].body=txt;
-  } else {cur.stage.templates[cur.idx].body=txt;}
-  saveTplStorage();
-  document.getElementById('editArea').style.display='none';
-  renderPreview();toast('저장됐어요 ✓');
-}
 function buildVarChips(taId){
   const vars=VAR_LIST.map(v=>`<button class="var-chip" onclick="insertAtCursor('${v}','${taId}')">${v}</button>`).join('');
   const emojis=EMOJI_LIST.map(e=>`<button class="emoji-chip" onclick="insertAtCursor('${e}','${taId}')">${e}</button>`).join('');
@@ -1525,30 +1555,151 @@ function insertAtCursor(v,taId){
   ta.value=ta.value.slice(0,s)+v+ta.value.slice(e);
   ta.selectionStart=ta.selectionEnd=s+v.length;ta.focus();
 }
-function addNewTemplate(){
-  const opts=STAGES.map((s,i)=>`${i+1}. ${s.icon} ${s.label}`).join('\n');
-  const choice=prompt('어느 단계에 추가할까요?\n\n'+opts+'\n\n번호 입력:');
-  const n=parseInt(choice);
-  if(!n||n<1||n>STAGES.length)return;
-  const s=STAGES[n-1];
-  const title=prompt('템플릿 제목:','새 템플릿');
-  if(!title)return;
-  (customs[s.id]=customs[s.id]||[]).push({title:title.trim(),body:'내용을 입력하세요.'});
+// ─────── TEMPLATES MANAGEMENT ───────
+let editingTplKey=null;
+
+function renderTemplatesPage(){
+  const host=document.getElementById('tplStagesList');if(!host)return;
+  host.innerHTML=STAGES.map(s=>{
+    const all=allTpls(s);
+    const rows=all.map((t,i)=>{
+      const key=`${s.id}:${i}`;
+      const isCustom=i>=s.templates.length;
+      const isOpen=editingTplKey===key;
+      const snippet=esc((t.body||'').replace(/\n+/g,' ').slice(0,80));
+      const safeKey=`'${key}'`;
+      const actions=[
+        `<button class="btn btn-outline btn-sm" onclick="event.stopPropagation();useTplFromManage(${safeKey})" title="작성에 사용"><svg class="i"><use href="#i-pencil"/></svg></button>`,
+        `<button class="btn btn-outline btn-sm" onclick="event.stopPropagation();duplicateTpl(${safeKey})" title="복제"><svg class="i"><use href="#i-copy"/></svg></button>`,
+        isCustom?`<button class="btn btn-destructive btn-sm" onclick="event.stopPropagation();deleteTplRow(${safeKey})" title="삭제"><svg class="i"><use href="#i-trash"/></svg></button>`:''
+      ].join('');
+      return `<div class="tpl-row${isOpen?' open':''}" data-key="${key}">
+        <div class="tpl-row-head" onclick="toggleTplRow(${safeKey})">
+          <span class="chev">▶</span>
+          <div style="flex:1;min-width:0;">
+            <div class="tpl-row-title">${esc(t.title)}${isCustom?'<span class="badge">사용자</span>':''}</div>
+            <div class="tpl-row-snippet">${snippet}</div>
+          </div>
+          <div class="tpl-row-actions">${actions}</div>
+        </div>
+        ${isOpen?renderTplEditor(key,t,isCustom):''}
+      </div>`;
+    }).join('');
+    return `<div class="tpl-stage">
+      <div class="tpl-stage-head">
+        <div class="label">
+          <span class="stage-ico">${s.icon}</span>
+          ${esc(s.label)}
+          <span class="count">· ${all.length}개</span>
+        </div>
+        <button class="btn btn-primary btn-sm" onclick="addTplInStage('${s.id}')"><svg class="i"><use href="#i-plus"/></svg>새 템플릿</button>
+      </div>
+      <div class="tpl-rows">${rows}</div>
+    </div>`;
+  }).join('');
+}
+
+function renderTplEditor(key,t,isCustom){
+  const titleId=`edt_title_${key.replace(':','_')}`;
+  const bodyId=`edt_body_${key.replace(':','_')}`;
+  const safeKey=`'${key}'`;
+  return `<div class="tpl-edit">
+    <div class="fi">
+      <label>제목</label>
+      <input class="input" type="text" id="${titleId}" value="${esc(t.title)}">
+    </div>
+    <div class="fi">
+      <label>내용</label>
+      <textarea id="${bodyId}">${esc(t.body)}</textarea>
+    </div>
+    <div id="varChipArea_${key.replace(':','_')}"></div>
+    <div class="tpl-edit-actions">
+      <button class="btn btn-outline" style="flex:1;" onclick="toggleTplRow(${safeKey})"><svg class="i"><use href="#i-xmark"/></svg>취소</button>
+      <button class="btn btn-primary" style="flex:1;" onclick="saveTplFromRow(${safeKey})"><svg class="i"><use href="#i-save"/></svg>저장</button>
+    </div>
+  </div>`;
+}
+
+function toggleTplRow(key){
+  editingTplKey=(editingTplKey===key)?null:key;
+  renderTemplatesPage();
+  if(editingTplKey){
+    const chipHost=document.getElementById('varChipArea_'+key.replace(':','_'));
+    const bodyId='edt_body_'+key.replace(':','_');
+    if(chipHost)chipHost.innerHTML=buildVarChips(bodyId);
+    const row=document.querySelector(`.tpl-row[data-key="${key}"]`);
+    if(row)row.scrollIntoView({behavior:'smooth',block:'nearest'});
+  }
+}
+
+function saveTplFromRow(key){
+  const [sid,idx]=key.split(':');
+  const s=STAGES.find(x=>x.id===sid);if(!s)return;
+  const i=+idx,isCustom=i>=s.templates.length;
+  const titleEl=document.getElementById('edt_title_'+key.replace(':','_'));
+  const bodyEl=document.getElementById('edt_body_'+key.replace(':','_'));
+  if(!titleEl||!bodyEl)return;
+  const newTitle=titleEl.value.trim()||'제목 없음';
+  const newBody=bodyEl.value;
+  if(isCustom){
+    const ci=i-s.templates.length;
+    customs[s.id][ci].title=newTitle;
+    customs[s.id][ci].body=newBody;
+  } else {
+    s.templates[i].title=newTitle;
+    s.templates[i].body=newBody;
+  }
+  saveTplStorage();buildTplSelect();
+  editingTplKey=null;
+  renderTemplatesPage();renderPreview();toast('저장됐어요 ✓');
+}
+
+function addTplInStage(stageId){
+  const s=STAGES.find(x=>x.id===stageId);if(!s)return;
+  (customs[s.id]=customs[s.id]||[]).push({title:'새 템플릿',body:'내용을 입력하세요.'});
   saveTplStorage();buildTplSelect();
   const newIdx=s.templates.length+customs[s.id].length-1;
-  curTplKey=`${s.id}:${newIdx}`;
-  document.getElementById('tplSelect').value=curTplKey;
-  localStorage.setItem(SK_LAST,curTplKey);
-  updateDelBtn();renderPreview();startEditTpl();
-  toast('템플릿이 추가됐어요 ＋');
+  editingTplKey=`${s.id}:${newIdx}`;
+  renderTemplatesPage();toast('템플릿이 추가됐어요 ＋');
 }
-function deleteCurTpl(){
-  const cur=getCurTpl();if(!cur||!cur.isCustom)return;
-  showConfirmModal('템플릿 삭제',`"${cur.tpl.title}" 템플릿을 삭제할까요?`,()=>{
-    const ci=cur.idx-cur.stage.templates.length;
-    customs[cur.stage.id].splice(ci,1);
-    saveTplStorage();buildTplSelect();renderPreview();toast('삭제됐어요');
+
+function duplicateTpl(key){
+  const [sid,idx]=key.split(':');
+  const s=STAGES.find(x=>x.id===sid);if(!s)return;
+  const all=allTpls(s);const src=all[+idx];if(!src)return;
+  (customs[s.id]=customs[s.id]||[]).push({title:src.title+' (복사본)',body:src.body});
+  saveTplStorage();buildTplSelect();
+  const newIdx=s.templates.length+customs[s.id].length-1;
+  editingTplKey=`${s.id}:${newIdx}`;
+  renderTemplatesPage();toast('복제됐어요 ✓');
+}
+
+function deleteTplRow(key){
+  const [sid,idx]=key.split(':');
+  const s=STAGES.find(x=>x.id===sid);if(!s)return;
+  const i=+idx;if(i<s.templates.length)return;
+  const ci=i-s.templates.length;
+  const name=customs[s.id][ci].title;
+  showConfirmModal('템플릿 삭제',`"${name}" 템플릿을 삭제할까요?`,()=>{
+    customs[s.id].splice(ci,1);
+    saveTplStorage();buildTplSelect();
+    if(editingTplKey===key)editingTplKey=null;
+    renderTemplatesPage();renderPreview();toast('삭제됐어요');
   });
+}
+
+function useTplFromManage(key){
+  curTplKey=key;
+  const sel=document.getElementById('tplSelect');if(sel)sel.value=key;
+  localStorage.setItem(SK_LAST,key);
+  updateDelBtn();renderPreview();
+  switchTab('compose');
+}
+
+function editCurTplInManagement(){
+  if(!curTplKey){switchTab('templates');return;}
+  editingTplKey=curTplKey;
+  switchTab('templates');
 }
 
 function copyMessage(){
