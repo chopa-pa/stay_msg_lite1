@@ -870,7 +870,7 @@ input,select,textarea{font-family:inherit;}
       <div class="sidebar-brand" onclick="switchTab('home')" role="button" tabindex="0" aria-label="홈으로">
         <div class="sidebar-logo">SM</div>
         <div class="sidebar-brand-text">
-          <div class="sidebar-brand-name">Stay_Msg_lite<span class="sidebar-brand-ver" id="appVer">v1.6.1</span></div>
+          <div class="sidebar-brand-name">Stay_Msg_lite<span class="sidebar-brand-ver" id="appVer">v1.6.2</span></div>
           <div class="sidebar-brand-sub">숙소 예약 문자</div>
         </div>
       </div>
@@ -909,7 +909,7 @@ input,select,textarea{font-family:inherit;}
       <div class="mheader-brand" onclick="switchTab('home')" role="button" tabindex="0" aria-label="홈으로">
         <div class="mheader-logo">SM</div>
         <div>
-          <div class="mheader-title">Stay_Msg_lite<span class="mheader-ver" id="appVerM">v1.6.1</span></div>
+          <div class="mheader-title">Stay_Msg_lite<span class="mheader-ver" id="appVerM">v1.6.2</span></div>
           <div class="mheader-sub">숙소 예약 문자</div>
         </div>
       </div>
@@ -1200,17 +1200,6 @@ input,select,textarea{font-family:inherit;}
 
           <div class="card">
             <div class="card-head">
-              <div class="card-head-title"><span class="ico"><svg class="i"><use href="#i-doc"/></svg></span>템플릿 선택</div>
-            </div>
-            <div class="card-body" style="padding-top:14px;">
-              <div class="tpl-select-wrap">
-                <select id="tplSelect" onchange="onTplChange()"></select>
-              </div>
-            </div>
-          </div>
-
-          <div class="card">
-            <div class="card-head">
               <div class="card-head-title"><span class="ico"><svg class="i"><use href="#i-user"/></svg></span>게스트 정보</div>
             </div>
             <div class="card-body">
@@ -1253,6 +1242,17 @@ input,select,textarea{font-family:inherit;}
                   <label>숙박 금액</label>
                   <input class="input" type="text" id="v_price" inputmode="numeric" placeholder="예: 150,000" onfocus="this.value=this.value.replace(/[^0-9]/g,'')" onblur="fmtPrice(this);renderPreview();" oninput="renderPreview()">
                 </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-head">
+              <div class="card-head-title"><span class="ico"><svg class="i"><use href="#i-doc"/></svg></span>템플릿 선택</div>
+            </div>
+            <div class="card-body" style="padding-top:14px;">
+              <div class="tpl-select-wrap">
+                <select id="tplSelect" onchange="onTplChange()"></select>
               </div>
             </div>
           </div>
@@ -1517,7 +1517,7 @@ input,select,textarea{font-family:inherit;}
 <div class="toast" id="toast"></div>
 
 <script>
-const APP_VERSION='v1.6.1';
+const APP_VERSION='v1.6.2';
 const SK_SET='stay_msg_lite1_set_v1';
 const SK_TPL='stay_msg_lite1_tpl_v1';
 const SK_RES='stay_msg_lite1_res_v1';
