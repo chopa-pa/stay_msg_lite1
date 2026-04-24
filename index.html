@@ -12,7 +12,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="StaySMS">
 <link rel="apple-touch-icon" href="./icon-192.png">
-<title>StaySMS · 숙소 예약 문자</title>
+<title>StayMsg-lite · 숙소 예약 문자</title>
 <link rel="manifest" href="./manifest.json">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
 <style>
@@ -100,7 +100,13 @@ input,select,textarea{font-family:inherit;}
   box-shadow:0 4px 12px rgba(16,185,129,0.3);
 }
 .sidebar-brand-text{display:flex;flex-direction:column;}
-.sidebar-brand-name{color:white;font-weight:700;font-size:14px;line-height:1;}
+.sidebar-brand-name{color:white;font-weight:700;font-size:14px;line-height:1;display:flex;align-items:center;gap:6px;}
+.sidebar-brand-ver{
+  font-size:9px;font-weight:700;letter-spacing:.02em;
+  padding:2px 6px;border-radius:10px;
+  background:rgba(16,185,129,0.22);color:#6ee7b7;
+  border:1px solid rgba(16,185,129,0.35);
+}
 .sidebar-brand-sub{color:var(--sidebar-fg-muted);font-size:11px;margin-top:3px;}
 
 .sidebar-nav{flex:1;padding:12px;display:flex;flex-direction:column;gap:2px;overflow-y:auto;}
@@ -152,7 +158,13 @@ input,select,textarea{font-family:inherit;}
   display:flex;align-items:center;justify-content:center;
   font-weight:800;font-size:14px;
 }
-.mheader-title{font-weight:700;font-size:15px;color:var(--fg);}
+.mheader-title{font-weight:700;font-size:15px;color:var(--fg);display:flex;align-items:center;gap:6px;}
+.mheader-ver{
+  font-size:9px;font-weight:700;letter-spacing:.02em;
+  padding:2px 6px;border-radius:10px;
+  background:var(--accent);color:var(--accent-fg);
+  border:1px solid rgba(16,185,129,0.3);
+}
 .mheader-sub{font-size:11px;color:var(--muted-fg);margin-top:1px;}
 .mheader-action{
   width:36px;height:36px;border-radius:var(--radius);
@@ -690,7 +702,7 @@ input,select,textarea{font-family:inherit;}
       <div class="sidebar-brand">
         <div class="sidebar-logo">S</div>
         <div class="sidebar-brand-text">
-          <div class="sidebar-brand-name">StaySMS</div>
+          <div class="sidebar-brand-name">StayMsg-lite<span class="sidebar-brand-ver" id="appVer">v1.5.1</span></div>
           <div class="sidebar-brand-sub">숙소 예약 문자</div>
         </div>
       </div>
@@ -726,7 +738,7 @@ input,select,textarea{font-family:inherit;}
       <div class="mheader-brand">
         <div class="mheader-logo">S</div>
         <div>
-          <div class="mheader-title">StaySMS</div>
+          <div class="mheader-title">StayMsg-lite<span class="mheader-ver" id="appVerM">v1.5.1</span></div>
           <div class="mheader-sub">숙소 예약 문자</div>
         </div>
       </div>
@@ -1247,6 +1259,7 @@ input,select,textarea{font-family:inherit;}
 <div class="toast" id="toast"></div>
 
 <script>
+const APP_VERSION='v1.5.1';
 const SK_SET='stay_msg_lite1_set_v1';
 const SK_TPL='stay_msg_lite1_tpl_v1';
 const SK_RES='stay_msg_lite1_res_v1';
@@ -1842,6 +1855,7 @@ document.addEventListener('keydown',e=>{
   if(e.key==='Enter'&&_cal.ci&&_cal.co&&document.getElementById('_calModal').innerHTML)_calConfirm();
 });
 
+['appVer','appVerM'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=APP_VERSION;});
 loadAll();loadReservations();fillSettingsFields();buildTplSelect();renderPreview();renderDashboard();
 document.getElementById('guideVarChips').innerHTML=VAR_LIST.map(v=>`<span class="var-chip" style="cursor:default;">${v}</span>`).join('');
 
