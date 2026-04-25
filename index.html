@@ -1758,7 +1758,7 @@ input,select,textarea{font-family:inherit;}
 <div class="toast" id="toast"></div>
 
 <script>
-const APP_VERSION='v2.2.8';
+const APP_VERSION='v2.2.9';
 const SK_SET='stay_msg_lite1_set_v1';
 const SK_TPL='stay_msg_lite1_tpl_v1';
 const SK_RES='stay_msg_lite1_res_v1';
@@ -2764,6 +2764,8 @@ function submitAddResv(){
   const dup=reservations.find(r=>r.id!==id&&r.name===name&&r.checkin===ci&&r.checkout===co);
   if(dup){toast('이미 같은 예약이 있어요');return;}
   const roomId=document.getElementById('ar_room').value;
+  const conflict=findCheckinConflict(roomId,ci,id||null);
+  if(conflict){toast(`같은 호실에 ${ci} 입실 예약이 이미 있어요`);return;}
   if(id){
     const r=reservations.find(x=>x.id===id);if(!r){closeAddResvModal();return;}
     r.name=name;
@@ -2795,12 +2797,40 @@ function submitAddResv(){
 let reservations=[];
 function loadReservations(){try{reservations=JSON.parse(localStorage.getItem(SK_RES)||'[]');}catch{reservations=[];}}
 function saveReservations(){localStorage.setItem(SK_RES,JSON.stringify(reservations));}
+const ROOM_COLORS=[
+  {bg:'#10b981',light:'#a7f3d0',fg:'#065f46'},
+  {bg:'#3b82f6',light:'#bfdbfe',fg:'#1e40af'},
+  {bg:'#f59e0b',light:'#fde68a',fg:'#92400e'},
+  {bg:'#ec4899',light:'#fbcfe8',fg:'#9d174d'},
+  {bg:'#8b5cf6',light:'#ddd6fe',fg:'#5b21b6'},
+  {bg:'#06b6d4',light:'#a5f3fc',fg:'#155e75'},
+  {bg:'#14b8a6',light:'#99f6e4',fg:'#115e59'},
+  {bg:'#f97316',light:'#fed7aa',fg:'#9a3412'}
+];
+function roomColor(roomId){
+  const rooms=(settings&&settings.rooms)||[];
+  let idx=rooms.findIndex(r=>r.id===roomId);
+  if(idx<0)idx=0;
+  return ROOM_COLORS[idx%ROOM_COLORS.length];
+}
+function findCheckinConflict(roomId,ci,excludeId){
+  if(!roomId||!ci)return null;
+  return reservations.find(r=>{
+    if(excludeId&&r.id===excludeId)return false;
+    if(!r.roomId||r.roomId!==roomId)return false;
+    return r.checkin===ci;
+  });
+}
 function saveReservation(){
   const name=document.getElementById('v_name').value.trim();
   const ci=document.getElementById('v_checkin').value;
   const co=document.getElementById('v_checkout').value;
   if(!name){toast('손님 이름을 입력하세요');return;}
   if(!ci||!co){toast('날짜를 선택하세요');return;}
+  const roomSel=document.getElementById('v_room');
+  const roomId=roomSel?roomSel.value:'';
+  const conflict=findCheckinConflict(roomId,ci);
+  if(conflict){toast(`같은 호실에 ${ci} 입실 예약이 이미 있어요`);return;}
   const exists=reservations.find(r=>r.name===name&&r.checkin===ci&&r.checkout===co);
   if(exists){toast('이미 저장된 예약이에요');return;}
   reservations.push({
@@ -2809,6 +2839,7 @@ function saveReservation(){
     checkin:ci,checkout:co,
     guests:document.getElementById('v_guests').value,
     price:document.getElementById('v_price').value,
+    roomId,
     createdAt:new Date().toISOString()
   });
   saveReservations();renderDashboard();toast('예약이 저장됐어요 💾');
@@ -2916,10 +2947,14 @@ function renderDashCal(){
       :'<small class="wd-lbl">주중</small>';
     const chips=dayRes.slice(0,3).map(r=>{
       const isCi=r.checkin===ds,isCo=r.checkout===ds;
-      const chipCls=isCi?'ci-day':(isCo?'co-day':'mid-day');
+      const c=roomColor(r.roomId);
+      const isMid=!isCi&&!isCo;
+      const bg=isMid?c.light:c.bg;
+      const fg=isMid?c.fg:'#fff';
+      const radius=isCi&&isCo?'6px':isCi?'6px 2px 2px 6px':isCo?'2px 6px 6px 2px':'0';
       const nm=(r.name||'손님').slice(0,4);
       const label=isCi?nm+' IN':isCo?nm+' OUT':'';
-      return `<div class="res-chip ${chipCls}">${esc(label)}</div>`;
+      return `<div class="res-chip" style="background:${bg};color:${fg};border-radius:${radius};">${esc(label)}</div>`;
     }).join('');
     const more=dayRes.length>3?`<div class="res-more">+${dayRes.length-3}</div>`:'';
     html+=`<div class="${cls}" onclick="dashCalDayClick('${ds}')">
