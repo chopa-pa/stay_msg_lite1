@@ -477,6 +477,20 @@ input,select,textarea{font-family:inherit;}
 }
 .emoji-chip:hover{background:var(--accent);border-color:var(--primary);}
 
+/* Name autocomplete combobox */
+.name-combo{position:relative;}
+.name-pop{
+  position:absolute;top:calc(100% + 4px);left:0;right:0;
+  background:var(--card);border:1px solid var(--border-strong);
+  border-radius:8px;box-shadow:0 6px 18px rgba(0,0,0,.10);
+  max-height:200px;overflow-y:auto;
+  z-index:1500;display:none;
+}
+.name-pop.open{display:block;}
+.name-pop-item{padding:9px 12px;cursor:pointer;font-size:14px;border-bottom:1px solid var(--border);}
+.name-pop-item:last-child{border-bottom:none;}
+.name-pop-item:hover{background:var(--accent-soft);}
+
 /* Action bar (bottom 4 buttons) */
 .action-bar{
   margin-top:16px;
@@ -1347,8 +1361,10 @@ input,select,textarea{font-family:inherit;}
               <div class="form-grid">
                 <div class="fi">
                   <label><span class="req">*</span>이름</label>
-                  <input class="input" type="text" id="v_name" placeholder="홍길동" list="nameSuggest" oninput="onNameInput(this)" onkeydown="if(event.key==='Enter')document.getElementById('v_phone').focus()" autocomplete="off">
-                  <datalist id="nameSuggest"></datalist>
+                  <div class="name-combo">
+                    <input class="input" type="text" id="v_name" placeholder="홍길동" oninput="onNameInput(this);openNamePop('v_name','namePop',false)" onfocus="openNamePop('v_name','namePop',false)" onblur="closeNamePop('namePop')" onkeydown="if(event.key==='Enter')document.getElementById('v_phone').focus()" autocomplete="off">
+                    <div class="name-pop" id="namePop"></div>
+                  </div>
                 </div>
                 <div class="fi">
                   <label>연락처</label>
@@ -1722,8 +1738,10 @@ input,select,textarea{font-family:inherit;}
     <div class="form-grid">
       <div class="fi">
         <label><span class="req">*</span>손님 이름</label>
-        <input class="input" type="text" id="ar_name" placeholder="홍길동" list="arNameSuggest" oninput="onArNameInput(this)" autocomplete="off">
-        <datalist id="arNameSuggest"></datalist>
+        <div class="name-combo">
+          <input class="input" type="text" id="ar_name" placeholder="홍길동" oninput="onArNameInput(this);openNamePop('ar_name','arNamePop',true)" onfocus="openNamePop('ar_name','arNamePop',true)" onblur="closeNamePop('arNamePop')" autocomplete="off">
+          <div class="name-pop" id="arNamePop"></div>
+        </div>
       </div>
       <div class="fi">
         <label>전화번호</label>
@@ -1767,7 +1785,7 @@ input,select,textarea{font-family:inherit;}
 <div class="toast" id="toast"></div>
 
 <script>
-const APP_VERSION='v2.3.1';
+const APP_VERSION='v2.3.2';
 const SK_SET='stay_msg_lite1_set_v1';
 const SK_TPL='stay_msg_lite1_tpl_v1';
 const SK_RES='stay_msg_lite1_res_v1';
@@ -2805,16 +2823,38 @@ function submitAddResv(){
 // ─────── RESERVATIONS ───────
 let reservations=[];
 function loadReservations(){try{reservations=JSON.parse(localStorage.getItem(SK_RES)||'[]');}catch{reservations=[];}}
-function saveReservations(){localStorage.setItem(SK_RES,JSON.stringify(reservations));buildNameSuggest();}
-function buildNameSuggest(){
-  const seen=new Set();
-  const names=[];
-  reservations.forEach(r=>{if(r.name&&!seen.has(r.name)){seen.add(r.name);names.push(r.name);}});
-  names.sort((a,b)=>a.localeCompare(b,'ko'));
-  const opts=names.map(n=>`<option value="${esc(n)}">`).join('');
-  ['nameSuggest','arNameSuggest'].forEach(id=>{
-    const el=document.getElementById(id);if(el)el.innerHTML=opts;
+function saveReservations(){localStorage.setItem(SK_RES,JSON.stringify(reservations));}
+let _namePopNames=[];
+function openNamePop(inputId,popId,isAr){
+  const input=document.getElementById(inputId);
+  const pop=document.getElementById(popId);
+  if(!input||!pop)return;
+  const q=input.value.trim().toLowerCase();
+  const seen=new Set();const names=[];
+  reservations.forEach(r=>{
+    if(r.name&&!seen.has(r.name)){
+      seen.add(r.name);
+      if(!q||r.name.toLowerCase().includes(q))names.push(r.name);
+    }
   });
+  if(!names.length){pop.classList.remove('open');return;}
+  names.sort((a,b)=>a.localeCompare(b,'ko'));
+  _namePopNames=names.slice(0,12);
+  pop.innerHTML=_namePopNames.map((n,i)=>
+    `<div class="name-pop-item" onmousedown="event.preventDefault();pickName(${i},'${inputId}','${popId}',${isAr})">${esc(n)}</div>`
+  ).join('');
+  pop.classList.add('open');
+}
+function pickName(i,inputId,popId,isAr){
+  const n=_namePopNames[i];
+  const input=document.getElementById(inputId);
+  if(!n||!input)return;
+  input.value=n;
+  document.getElementById(popId).classList.remove('open');
+  if(isAr)onArNameInput(input);else onNameInput(input);
+}
+function closeNamePop(popId){
+  setTimeout(()=>{const p=document.getElementById(popId);if(p)p.classList.remove('open');},150);
 }
 function findReservationByName(name){
   if(!name)return null;
@@ -3119,7 +3159,7 @@ document.addEventListener('keydown',e=>{
 });
 
 ['appVer','appVerM'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=APP_VERSION;});
-loadAll();loadReservations();loadHistory();fillSettingsFields();buildRoomSelect();buildTplSelect();renderPreview();renderDashboard();buildNameSuggest();
+loadAll();loadReservations();loadHistory();fillSettingsFields();buildRoomSelect();buildTplSelect();renderPreview();renderDashboard();
 document.getElementById('guideVarChips').innerHTML=VAR_LIST.map(v=>`<span class="var-chip" style="cursor:default;" onmouseenter="this.dataset.preview=varPreview('${v}')">${v}</span>`).join('');
 
 if('serviceWorker' in navigator){
