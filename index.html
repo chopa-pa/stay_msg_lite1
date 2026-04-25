@@ -1764,7 +1764,7 @@ input,select,textarea{font-family:inherit;}
 <div class="toast" id="toast"></div>
 
 <script>
-const APP_VERSION='v2.1.6';
+const APP_VERSION='v2.1.7';
 const SK_SET='stay_msg_lite1_set_v1';
 const SK_TPL='stay_msg_lite1_tpl_v1';
 const SK_RES='stay_msg_lite1_res_v1';
@@ -2713,7 +2713,15 @@ function delReservation(id,ev){
     saveReservations();renderDashboard();renderReservations();toast('삭제됐어요');
   });
 }
-function loadReservation(id){
+function pickStageKeyForDate(ds,ci,co){
+  if(!ds||!ci||!co)return null;
+  if(ds<ci)return 'precheckin:0';
+  if(ds===ci)return 'precheckin:1';
+  if(ds<co)return 'checkedin:0';
+  if(ds===co)return 'checkout:0';
+  return 'checkout:0';
+}
+function loadReservation(id,contextDate){
   const r=reservations.find(x=>x.id===id);if(!r)return;
   document.getElementById('v_name').value=r.name||'';
   document.getElementById('v_phone').value=r.phone||'';
@@ -2722,7 +2730,13 @@ function loadReservation(id){
   document.getElementById('v_guests').value=r.guests||'';
   document.getElementById('v_price').value=r.price||'';
   _cal.ci=r.checkin||null;_cal.co=r.checkout||null;
-  _updateDateDisplay();switchTab('compose');renderPreview();
+  _updateDateDisplay();switchTab('compose');
+  const sel=document.getElementById('tplSelect');
+  const key=pickStageKeyForDate(contextDate,r.checkin,r.checkout);
+  if(sel&&key&&sel.querySelector(`option[value="${key}"]`)){
+    sel.value=key;curTplKey=key;localStorage.setItem(SK_LAST,key);updateDelBtn();
+  }
+  renderPreview();
   toast(r.name+' 예약 불러왔어요 📋');
 }
 let _dashCal={y:new Date().getFullYear(),m:new Date().getMonth(),sel:null,ym:false};
@@ -2744,7 +2758,7 @@ function _dashYmPickerHtml(y,m){
 }
 function dashCalDayClick(ds){
   const dayRes=reservations.filter(r=>r.checkin&&r.checkout&&ds>=r.checkin&&ds<=r.checkout);
-  if(dayRes.length===1){loadReservation(dayRes[0].id);return;}
+  if(dayRes.length===1){loadReservation(dayRes[0].id,ds);return;}
   if(dayRes.length>1){_dashCal.sel=_dashCal.sel===ds?null:ds;renderDashCal();return;}
 }
 function renderDashCal(){
