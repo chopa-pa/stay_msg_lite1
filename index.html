@@ -1311,15 +1311,9 @@ input,select,textarea{font-family:inherit;}
 
     <!-- ─── COMPOSE ─── -->
     <section class="page" id="tab-compose">
-      <div class="page-head" style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap;">
-        <div style="flex:1;min-width:180px;">
-          <h1 class="page-title"><svg class="i"><use href="#i-pencil"/></svg>문자 작성</h1>
-          <p class="page-sub">게스트 정보를 입력하면 템플릿에 자동으로 채워집니다</p>
-        </div>
-        <div style="display:flex;align-items:center;gap:6px;flex-shrink:0;">
-          <button class="btn btn-outline btn-sm" onclick="clearForm()" title="입력 지우기"><svg class="i"><use href="#i-trash"/></svg>지우기</button>
-          <button class="btn-help" onclick="toggleHelp('compose')" aria-label="도움말"><svg class="i"><use href="#i-help"/></svg></button>
-        </div>
+      <div class="page-head">
+        <h1 class="page-title"><svg class="i"><use href="#i-pencil"/></svg>문자 작성<button class="btn-help" onclick="toggleHelp('compose')" aria-label="도움말"><svg class="i"><use href="#i-help"/></svg></button></h1>
+        <p class="page-sub">게스트 정보를 입력하면 템플릿에 자동으로 채워집니다</p>
       </div>
       <div class="help-panel" id="help-compose" style="display:none;">
         <h4><svg class="i"><use href="#i-message"/></svg>문자 작성 사용 방법</h4>
@@ -1340,8 +1334,9 @@ input,select,textarea{font-family:inherit;}
         <div class="compose-left">
 
           <div class="card">
-            <div class="card-head">
+            <div class="card-head" style="display:flex;align-items:center;justify-content:space-between;gap:8px;">
               <div class="card-head-title"><span class="ico"><svg class="i"><use href="#i-user"/></svg></span>게스트 정보</div>
+              <button class="btn btn-outline btn-sm" onclick="clearForm()" title="입력 지우기"><svg class="i"><use href="#i-trash"/></svg>지우기</button>
             </div>
             <div class="card-body">
               <div class="form-grid">
@@ -1769,7 +1764,7 @@ input,select,textarea{font-family:inherit;}
 <div class="toast" id="toast"></div>
 
 <script>
-const APP_VERSION='v2.3.5';
+const APP_VERSION='v2.3.6';
 const SK_SET='stay_msg_lite1_set_v1';
 const SK_TPL='stay_msg_lite1_tpl_v1';
 const SK_RES='stay_msg_lite1_res_v1';
