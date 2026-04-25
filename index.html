@@ -1304,21 +1304,21 @@ input,select,textarea{font-family:inherit;}
 
     <!-- ─── COMPOSE ─── -->
     <section class="page" id="tab-compose">
-      <div class="page-head" style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap;">
-        <div style="flex:1;min-width:180px;">
-          <h1 class="page-title"><svg class="i"><use href="#i-pencil"/></svg>문자 작성<button class="btn-help" onclick="toggleHelp('compose')" aria-label="도움말"><svg class="i"><use href="#i-help"/></svg></button></h1>
-          <p class="page-sub">게스트 정보를 입력하면 템플릿에 자동으로 채워집니다</p>
-        </div>
-        <div style="display:flex;gap:6px;flex-shrink:0;">
+      <div class="page-head" style="display:flex;align-items:flex-start;gap:12px;flex-wrap:wrap;">
+        <div style="display:flex;align-items:center;gap:6px;flex-shrink:0;">
+          <button class="btn-help" onclick="toggleHelp('compose')" aria-label="도움말"><svg class="i"><use href="#i-help"/></svg></button>
           <button class="btn btn-outline btn-sm" onclick="clearForm()" title="입력 지우기"><svg class="i"><use href="#i-trash"/></svg>지우기</button>
-          <button class="btn btn-outline btn-sm" onclick="saveReservation()" title="예약 저장"><svg class="i"><use href="#i-save"/></svg>예약 저장</button>
+        </div>
+        <div style="flex:1;min-width:180px;">
+          <h1 class="page-title"><svg class="i"><use href="#i-pencil"/></svg>문자 작성</h1>
+          <p class="page-sub">게스트 정보를 입력하면 템플릿에 자동으로 채워집니다</p>
         </div>
       </div>
       <div class="help-panel" id="help-compose" style="display:none;">
         <h4><svg class="i"><use href="#i-message"/></svg>문자 작성 사용 방법</h4>
         <ul>
-          <li><strong>① 숙소/호실</strong> — 보낼 대상 호실을 고르면 해당 와이파이·도어락이 자동 반영됩니다.</li>
-          <li><strong>② 게스트 정보</strong> — 이름과 연락처 입력. 연락처는 자동 하이픈.</li>
+          <li><strong>① 게스트 정보</strong> — 이름과 연락처 입력. 연락처는 자동 하이픈.</li>
+          <li><strong>② 숙소/호실</strong> — 보낼 대상 호실을 고르면 해당 와이파이·도어락이 자동 반영됩니다.</li>
           <li><strong>③ 체크인/체크아웃</strong> — 날짜 버튼을 눌러 입·퇴실을 한번에 선택. 인원·금액도 여기서.</li>
           <li><strong>④ 템플릿 선택</strong> — 단계별 템플릿을 고르면 우측 프리뷰에 실제 문자가 나타납니다.</li>
           <li><strong>{변수}</strong>는 <code>{이름}</code>, <code>{입실시간}</code>, <code>{호실명}</code>, <code>{와이파이이름}</code>, <code>{결제금액}</code> 등이 자동 치환됩니다.</li>
@@ -1334,19 +1334,6 @@ input,select,textarea{font-family:inherit;}
 
           <div class="card">
             <div class="card-head">
-              <div class="card-head-title"><span class="ico"><svg class="i"><use href="#i-house"/></svg></span>숙소 / 호실</div>
-            </div>
-            <div class="card-body" style="padding-top:14px;">
-              <div id="composePropName" style="font-weight:700;color:var(--fg);margin-bottom:8px;font-size:14px;"></div>
-              <select class="select" id="v_room" onchange="onRoomChange()"></select>
-              <div id="roomEmpty" style="display:none;color:var(--muted-fg);font-size:13px;padding:4px 0;">
-                등록된 호실이 없어요. <a href="#" onclick="switchTab('prop');return false;" style="color:var(--primary);font-weight:600;text-decoration:none;">숙소 프로필에서 호실 추가 →</a>
-              </div>
-            </div>
-          </div>
-
-          <div class="card">
-            <div class="card-head">
               <div class="card-head-title"><span class="ico"><svg class="i"><use href="#i-user"/></svg></span>게스트 정보</div>
             </div>
             <div class="card-body">
@@ -1359,6 +1346,19 @@ input,select,textarea{font-family:inherit;}
                   <label>연락처</label>
                   <input class="input" type="tel" id="v_phone" placeholder="010-0000-0000" oninput="fmtPhone(this)" maxlength="13">
                 </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-head">
+              <div class="card-head-title"><span class="ico"><svg class="i"><use href="#i-house"/></svg></span>숙소 / 호실</div>
+            </div>
+            <div class="card-body" style="padding-top:14px;">
+              <div id="composePropName" style="font-weight:700;color:var(--fg);margin-bottom:8px;font-size:14px;"></div>
+              <select class="select" id="v_room" onchange="onRoomChange()"></select>
+              <div id="roomEmpty" style="display:none;color:var(--muted-fg);font-size:13px;padding:4px 0;">
+                등록된 호실이 없어요. <a href="#" onclick="switchTab('prop');return false;" style="color:var(--primary);font-weight:600;text-decoration:none;">숙소 프로필에서 호실 추가 →</a>
               </div>
             </div>
           </div>
@@ -1421,9 +1421,10 @@ input,select,textarea{font-family:inherit;}
           </div>
 
           <div class="action-bar">
-            <button class="btn btn-outline" onclick="editCurTplInManagement()" title="현재 템플릿 편집"><svg class="i"><use href="#i-pencil"/></svg>템플릿 편집</button>
+            <button class="btn btn-outline" onclick="saveReservation()" title="예약 저장"><svg class="i"><use href="#i-save"/></svg>예약 저장</button>
             <button class="btn btn-outline" onclick="copyMessage()"><svg class="i"><use href="#i-copy"/></svg>텍스트 복사</button>
             <button class="btn btn-primary" onclick="openSmsApp()"><svg class="i"><use href="#i-iphone"/></svg>문자 앱 열기</button>
+            <button class="btn btn-outline" onclick="editCurTplInManagement()" title="현재 템플릿 편집"><svg class="i"><use href="#i-pencil"/></svg>템플릿 편집</button>
           </div>
         </div>
       </div>
@@ -1757,7 +1758,7 @@ input,select,textarea{font-family:inherit;}
 <div class="toast" id="toast"></div>
 
 <script>
-const APP_VERSION='v2.2.5';
+const APP_VERSION='v2.2.7';
 const SK_SET='stay_msg_lite1_set_v1';
 const SK_TPL='stay_msg_lite1_tpl_v1';
 const SK_RES='stay_msg_lite1_res_v1';
