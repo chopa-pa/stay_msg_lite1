@@ -1046,7 +1046,10 @@ input,select,textarea{font-family:inherit;}
         <span class="sidebar-link-icon"><svg class="i"><use href="#i-stack"/></svg></span>템플릿 관리
       </button>
       <button class="sidebar-link" data-tab="reserv" onclick="switchTab('reserv')">
-        <span class="sidebar-link-icon"><svg class="i"><use href="#i-clipboard"/></svg></span>예약/발송
+        <span class="sidebar-link-icon"><svg class="i"><use href="#i-clipboard"/></svg></span>예약
+      </button>
+      <button class="sidebar-link" data-tab="history" onclick="switchTab('history')">
+        <span class="sidebar-link-icon"><svg class="i"><use href="#i-clock"/></svg></span>발송 이력
       </button>
       <button class="sidebar-link" data-tab="prop" onclick="switchTab('prop')">
         <span class="sidebar-link-icon"><svg class="i"><use href="#i-house"/></svg></span>숙소 프로필
@@ -1149,35 +1152,6 @@ input,select,textarea{font-family:inherit;}
             <rect x="504" y="172" width="42" height="20" fill="#1a1410"/>
             <!-- Tiny window -->
             <rect x="528" y="178" width="6" height="6" fill="#fef3c7" opacity="0.8"/>
-          </g>
-
-          <!-- Tree branch (right edge, overhanging) -->
-          <g opacity="0.7" fill="none" stroke="#0a1f1b" stroke-linecap="round">
-            <!-- Trunk fragment -->
-            <path d="M 590 0 Q 585 40 582 80 Q 580 120 585 170" stroke-width="3"/>
-            <!-- Major branches reaching inward -->
-            <path d="M 582 30 Q 560 25 530 28" stroke-width="1.5"/>
-            <path d="M 582 60 Q 550 58 510 64" stroke-width="1.3"/>
-            <path d="M 583 90 Q 555 92 525 100" stroke-width="1.2"/>
-            <path d="M 584 130 Q 560 135 535 142" stroke-width="1"/>
-            <!-- Smaller twigs -->
-            <path d="M 560 25 Q 555 16 552 10" stroke-width="0.8"/>
-            <path d="M 560 25 Q 560 34 562 42" stroke-width="0.8"/>
-            <path d="M 540 62 Q 538 52 535 44" stroke-width="0.7"/>
-            <path d="M 540 62 Q 538 72 540 80" stroke-width="0.7"/>
-            <path d="M 525 100 Q 520 92 515 85" stroke-width="0.7"/>
-          </g>
-          <!-- Leaf clusters on branches -->
-          <g fill="#86efac" opacity="0.55">
-            <ellipse cx="545" cy="28" rx="6" ry="4"/>
-            <ellipse cx="528" cy="26" rx="5" ry="3.5"/>
-            <ellipse cx="553" cy="8" rx="4" ry="3"/>
-            <ellipse cx="522" cy="62" rx="6" ry="4"/>
-            <ellipse cx="538" cy="42" rx="4" ry="3"/>
-            <ellipse cx="510" cy="66" rx="4" ry="3"/>
-            <ellipse cx="535" cy="100" rx="5" ry="3.5"/>
-            <ellipse cx="520" cy="90" rx="4" ry="3"/>
-            <ellipse cx="545" cy="140" rx="4" ry="3"/>
           </g>
 
           <!-- Large foreground pine (bottom-left, framing) -->
@@ -1286,7 +1260,7 @@ input,select,textarea{font-family:inherit;}
 
         <div class="hero-content">
           <span class="hero-eyebrow"><svg class="i"><use href="#i-hand"/></svg>환영합니다</span>
-          <h1 class="hero-title">Stay_Msg<br>예약 문자를 빠르게 💬</h1>
+          <h1 class="hero-title"><span id="heroPropName">Stay_Msg</span><br>예약 문자를 빠르게 💬</h1>
           <p class="hero-sub">템플릿 + 게스트 정보만 있으면 정성 담긴 문자가 자동 완성됩니다.</p>
           <button type="button" class="hero-cta" onclick="switchTab('compose')"><svg class="i"><use href="#i-pencil"/></svg>새 문자 작성</button>
         </div>
@@ -1486,36 +1460,45 @@ input,select,textarea{font-family:inherit;}
     <!-- ─── RESERV ─── -->
     <section class="page" id="tab-reserv">
       <div class="page-head">
-        <h1 class="page-title"><svg class="i"><use href="#i-clipboard"/></svg>예약/발송<button class="btn-help" onclick="toggleHelp('reserv')" aria-label="도움말"><svg class="i"><use href="#i-help"/></svg></button></h1>
+        <h1 class="page-title"><svg class="i"><use href="#i-clipboard"/></svg>예약<button class="btn-help" onclick="toggleHelp('reserv')" aria-label="도움말"><svg class="i"><use href="#i-help"/></svg></button></h1>
         <p class="page-sub"><span id="resvCount">저장된 예약이 없습니다</span></p>
       </div>
       <div class="help-panel" id="help-reserv" style="display:none;">
-        <h4>📋 예약/발송 사용 방법</h4>
+        <h4>📋 예약 사용 방법</h4>
         <ul>
-          <li><strong>예약 목록 탭</strong> — 문자 작성 탭에서 <em>예약 저장</em>으로 보관한 게스트 예약을 관리합니다. 카드를 클릭하면 해당 예약이 문자 작성에 자동 로드돼요.</li>
-          <li><strong>발송 이력 탭</strong> — <em>문자 앱 열기</em>를 눌렀던 모든 발송 기록이 자동 저장됩니다.</li>
-          <li><strong>다시 보내기</strong> — 이력의 문자 내용 그대로 문자 앱이 다시 열려요.</li>
-          <li><strong>복사 / 삭제</strong> — 이력별 개별 조작, <em>전체 삭제</em>로 이력 초기화도 가능.</li>
+          <li><strong>새 예약 추가</strong> — 우측 상단 버튼으로 이름·전화·날짜·인원·금액을 직접 입력해 예약을 만들 수 있어요.</li>
+          <li><strong>문자 작성에서 저장</strong> — 작성 탭의 <em>예약 저장</em> 버튼으로도 예약이 추가됩니다.</li>
+          <li><strong>카드 클릭</strong> — 해당 예약이 문자 작성에 자동 로드돼요.</li>
           <li>예약 카드의 <strong>오늘 입실·퇴실·예정</strong> 라벨로 상태를 한눈에 확인.</li>
         </ul>
       </div>
 
-      <div class="subtabs" role="tablist">
-        <button class="subtab active" data-subtab="resv" onclick="switchResvSubtab('resv')"><svg class="i"><use href="#i-clipboard"/></svg>예약 목록</button>
-        <button class="subtab" data-subtab="history" onclick="switchResvSubtab('history')"><svg class="i"><use href="#i-clock"/></svg>발송 이력</button>
+      <div style="display:flex;justify-content:flex-end;margin-bottom:12px;">
+        <button class="btn btn-primary btn-sm" onclick="openAddResvModal()"><svg class="i"><use href="#i-plus"/></svg>새 예약 추가</button>
       </div>
 
-      <div id="resv-sub-resv" class="resv-sub active">
-        <div class="resv-grid" id="resvList"></div>
+      <div class="resv-grid" id="resvList"></div>
+    </section>
+
+    <!-- ─── HISTORY ─── -->
+    <section class="page" id="tab-history">
+      <div class="page-head">
+        <h1 class="page-title"><svg class="i"><use href="#i-clock"/></svg>발송 이력<button class="btn-help" onclick="toggleHelp('history')" aria-label="도움말"><svg class="i"><use href="#i-help"/></svg></button></h1>
+        <p class="page-sub">문자 앱을 열었던 모든 기록이 자동 저장됩니다</p>
+      </div>
+      <div class="help-panel" id="help-history" style="display:none;">
+        <h4>📨 발송 이력 사용 방법</h4>
+        <ul>
+          <li><strong>다시 보내기</strong> — 이력의 문자 내용 그대로 문자 앱이 다시 열려요.</li>
+          <li><strong>복사 / 삭제</strong> — 이력별 개별 조작, <em>전체 삭제</em>로 이력 초기화도 가능.</li>
+        </ul>
       </div>
 
-      <div id="resv-sub-history" class="resv-sub">
-        <div class="hist-head">
-          <span class="hist-count" id="histCount">0건</span>
-          <button class="btn btn-outline btn-sm" onclick="clearAllHistory()"><svg class="i"><use href="#i-trash"/></svg>전체 삭제</button>
-        </div>
-        <div class="hist-list" id="histList"></div>
+      <div class="hist-head">
+        <span class="hist-count" id="histCount">0건</span>
+        <button class="btn btn-outline btn-sm" onclick="clearAllHistory()"><svg class="i"><use href="#i-trash"/></svg>전체 삭제</button>
       </div>
+      <div class="hist-list" id="histList"></div>
     </section>
 
     <!-- ─── PROP (settings) ─── -->
@@ -1702,7 +1685,7 @@ input,select,textarea{font-family:inherit;}
     <span class="bnav-ico"><svg class="i"><use href="#i-stack"/></svg></span><span class="bnav-lbl">템플릿</span>
   </button>
   <button class="bnav-btn" data-tab="reserv" onclick="switchTab('reserv')">
-    <span class="bnav-ico"><svg class="i"><use href="#i-clipboard"/></svg></span><span class="bnav-lbl">예약/발송</span>
+    <span class="bnav-ico"><svg class="i"><use href="#i-clipboard"/></svg></span><span class="bnav-lbl">예약</span>
   </button>
   <button class="bnav-btn" data-tab="prop" onclick="switchTab('prop')">
     <span class="bnav-ico"><svg class="i"><use href="#i-house"/></svg></span><span class="bnav-lbl">숙소</span>
@@ -1721,11 +1704,55 @@ input,select,textarea{font-family:inherit;}
   </div>
 </div>
 
+<div class="modal-ov" id="addResvModal">
+  <div class="modal" style="max-width:420px;">
+    <h3 style="margin-bottom:14px;">새 예약 추가</h3>
+    <div class="form-grid">
+      <div class="fi">
+        <label><span class="req">*</span>손님 이름</label>
+        <input class="input" type="text" id="ar_name" placeholder="홍길동" autocomplete="off">
+      </div>
+      <div class="fi">
+        <label>전화번호</label>
+        <input class="input" type="tel" id="ar_phone" placeholder="010-0000-0000" oninput="fmtPhone(this)" maxlength="13">
+      </div>
+    </div>
+    <div class="form-grid" style="margin-top:10px;">
+      <div class="fi">
+        <label><span class="req">*</span>체크인</label>
+        <input class="input" type="date" id="ar_checkin">
+      </div>
+      <div class="fi">
+        <label><span class="req">*</span>체크아웃</label>
+        <input class="input" type="date" id="ar_checkout">
+      </div>
+    </div>
+    <div class="form-grid" style="margin-top:10px;">
+      <div class="fi">
+        <label>인원</label>
+        <select class="select" id="ar_guests">
+          <option value="">선택</option>
+          <option>1명</option><option>2명</option><option>3명</option><option>4명</option>
+          <option>5명</option><option>6명</option><option>7명</option><option>8명</option>
+        </select>
+      </div>
+      <div class="fi">
+        <label>금액</label>
+        <input class="input" type="text" id="ar_price" inputmode="numeric" placeholder="예: 150,000" onfocus="this.value=this.value.replace(/[^0-9]/g,'')" onblur="fmtPrice(this);">
+      </div>
+    </div>
+    <div class="modal-btns" style="margin-top:18px;">
+      <button class="btn btn-outline" onclick="closeAddResvModal()">취소</button>
+      <button class="btn btn-primary" onclick="submitAddResv()">저장</button>
+    </div>
+  </div>
+</div>
+
 <div id="_calModal"></div>
 <div class="toast" id="toast"></div>
 
 <script>
-const APP_VERSION='v2.0.2';
+const APP_VERSION='v2.1.0';
 const SK_SET='stay_msg_lite1_set_v1';
 const SK_TPL='stay_msg_lite1_tpl_v1';
 const SK_RES='stay_msg_lite1_res_v1';
@@ -1864,6 +1891,7 @@ function switchTab(name){
   if(name==='reserv')renderReservations();
   if(name==='home')renderDashboard();
   if(name==='templates')renderTemplatesPage();
+  if(name==='history')renderHistory();
 }
 
 function allTpls(s){return[...s.templates,...(customs[s.id]||[])];}
@@ -2553,8 +2581,8 @@ function addHistoryEntry(cur,body){
   });
   if(msgHistory.length>200)msgHistory.length=200;
   saveHistoryStorage();renderDashboard();
-  const sub=document.getElementById('resv-sub-history');
-  if(sub&&sub.classList.contains('active'))renderHistory();
+  const histPage=document.getElementById('tab-history');
+  if(histPage&&histPage.classList.contains('active'))renderHistory();
 }
 function deleteHistoryItem(id){
   msgHistory=msgHistory.filter(h=>h.id!==id);
@@ -2613,15 +2641,35 @@ function copyHistBody(id){
     const ta=document.createElement('textarea');ta.value=h.body;document.body.appendChild(ta);ta.select();document.execCommand('copy');ta.remove();toast('복사됐어요');
   });
 }
-function switchResvSubtab(name){
-  document.querySelectorAll('.resv-sub').forEach(e=>e.classList.remove('active'));
-  document.querySelectorAll('.subtab').forEach(e=>e.classList.remove('active'));
-  const sub=document.getElementById('resv-sub-'+name);if(sub)sub.classList.add('active');
-  const btn=document.querySelector('.subtab[data-subtab="'+name+'"]');if(btn)btn.classList.add('active');
-  if(name==='history')renderHistory();
-  if(name==='resv')renderReservations();
+function goToHistory(){switchTab('history');}
+
+function openAddResvModal(){
+  ['ar_name','ar_phone','ar_checkin','ar_checkout','ar_guests','ar_price'].forEach(id=>{document.getElementById(id).value='';});
+  document.getElementById('addResvModal').classList.add('open');
+  setTimeout(()=>document.getElementById('ar_name').focus(),50);
 }
-function goToHistory(){switchTab('reserv');setTimeout(()=>switchResvSubtab('history'),10);}
+function closeAddResvModal(){document.getElementById('addResvModal').classList.remove('open');}
+function submitAddResv(){
+  const name=document.getElementById('ar_name').value.trim();
+  const ci=document.getElementById('ar_checkin').value;
+  const co=document.getElementById('ar_checkout').value;
+  if(!name){toast('손님 이름을 입력하세요');return;}
+  if(!ci||!co){toast('체크인/체크아웃 날짜를 선택하세요');return;}
+  if(co<ci){toast('체크아웃은 체크인 이후여야 해요');return;}
+  const exists=reservations.find(r=>r.name===name&&r.checkin===ci&&r.checkout===co);
+  if(exists){toast('이미 같은 예약이 있어요');return;}
+  reservations.push({
+    id:'r'+Date.now(),name,
+    phone:document.getElementById('ar_phone').value,
+    checkin:ci,checkout:co,
+    guests:document.getElementById('ar_guests').value,
+    price:document.getElementById('ar_price').value,
+    createdAt:new Date().toISOString()
+  });
+  saveReservations();renderReservations();renderDashboard();
+  closeAddResvModal();
+  toast('예약이 추가됐어요 💾');
+}
 
 // ─────── RESERVATIONS ───────
 let reservations=[];
@@ -2741,6 +2789,8 @@ function renderDashboard(){
   document.getElementById('dashCiNum').textContent=ciList.length;
   document.getElementById('dashCoNum').textContent=coList.length;
   document.getElementById('dashTotalNum').textContent=reservations.length;
+  const heroEl=document.getElementById('heroPropName');
+  if(heroEl)heroEl.textContent=settings.name||'Stay_Msg';
 
   const now=new Date(today+'T00:00:00');
   const weekLater=new Date(now);weekLater.setDate(weekLater.getDate()+7);
