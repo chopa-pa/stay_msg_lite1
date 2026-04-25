@@ -1,4 +1,4 @@
-const CACHE_NAME = 'stay_msg_lite1-v72';
+const CACHE_NAME = 'stay_msg_lite1-v73';
 const ASSETS = ['./index.html', './manifest.json', './icon-192.png', './icon-512.png'];
 
 self.addEventListener('install', e => {
