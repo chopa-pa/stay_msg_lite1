@@ -487,21 +487,16 @@ input,select,textarea{font-family:inherit;}
 }
 
 /* ─────── DASHBOARD ─────── */
-.dash-head{
-  display:flex;align-items:flex-start;justify-content:space-between;
-  gap:12px;margin-bottom:18px;flex-wrap:wrap;
-}
-.dash-head-text{min-width:0;flex:1;}
+.dash-head{margin:18px 0 14px;}
+.dash-head-text{min-width:0;}
 .dash-greet{
-  font-size:24px;font-weight:800;letter-spacing:-0.02em;
-  color:var(--fg);line-height:1.2;margin:0 0 6px;
+  font-size:20px;font-weight:800;letter-spacing:-0.02em;
+  color:var(--fg);line-height:1.2;margin:0 0 4px;
 }
 .dash-sub{font-size:13px;color:var(--muted-fg);margin:0;}
-.dash-head-cta{flex-shrink:0;}
 @media(max-width:640px){
-  .dash-greet{font-size:20px;}
+  .dash-greet{font-size:17px;}
   .dash-sub{font-size:12px;}
-  .dash-head-cta{padding:8px 12px;font-size:13px;}
 }
 
 .stat-chips{
@@ -1090,12 +1085,305 @@ input,select,textarea{font-family:inherit;}
     <!-- ─── HOME ─── -->
     <section class="page active" id="tab-home">
 
+      
+      <div class="hero">
+        <!-- Misty mountain valley illustration (based on 솔숲 view) -->
+        <svg class="hero-bg" viewBox="0 0 600 200" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <defs>
+            <linearGradient id="hbSky" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#ffffff" stop-opacity="0.18"/>
+              <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+            </linearGradient>
+            <linearGradient id="hbMist" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#ffffff" stop-opacity="0.55"/>
+              <stop offset="100%" stop-color="#ffffff" stop-opacity="0.1"/>
+            </linearGradient>
+            <pattern id="hdot" width="14" height="14" patternUnits="userSpaceOnUse">
+              <circle cx="2" cy="2" r="0.9" fill="white" opacity="0.08"/>
+            </pattern>
+          </defs>
+
+          <!-- Ambient dots + sky wash -->
+          <rect width="600" height="200" fill="url(#hdot)"/>
+          <rect width="600" height="120" fill="url(#hbSky)"/>
+
+          <!-- Far mountains (palest, receding) -->
+          <path d="M 0 110 Q 70 78 140 95 T 280 82 Q 360 98 430 78 T 600 95 L 600 140 L 0 140 Z"
+                fill="#052e2a" opacity="0.18"/>
+
+          <!-- Low mist band 1 (between far and mid) -->
+          <path d="M 0 108 Q 120 100 260 106 T 520 104 Q 580 102 600 106 L 600 118 Q 500 114 380 118 T 140 116 Q 60 118 0 116 Z"
+                fill="url(#hbMist)" opacity="0.7"/>
+
+          <!-- Mid mountains (with subtle peaks) -->
+          <path d="M 0 135 Q 60 108 110 122 Q 170 88 240 115 Q 310 92 380 118 Q 450 98 510 120 Q 560 110 600 126 L 600 170 L 0 170 Z"
+                fill="#05322d" opacity="0.32"/>
+
+          <!-- Thick rolling fog in valley -->
+          <g opacity="0.85">
+            <path d="M 0 140 Q 80 128 160 138 Q 240 130 320 142 Q 400 134 480 144 Q 540 138 600 146 L 600 168 Q 520 158 420 162 Q 320 168 220 160 Q 120 166 0 160 Z"
+                  fill="#ffffff" opacity="0.55"/>
+            <path d="M 40 152 Q 140 144 260 154 Q 380 148 500 156 Q 560 152 600 156 L 600 170 Q 500 162 380 166 Q 260 170 140 164 Q 80 170 40 166 Z"
+                  fill="#ffffff" opacity="0.4"/>
+          </g>
+
+          <!-- Near mountains (darkest, with tree texture) -->
+          <path d="M 0 200 L 0 150 Q 50 135 100 145 Q 160 120 220 138 Q 290 112 350 135 Q 420 115 470 138 Q 530 125 600 140 L 600 200 Z"
+                fill="#04231f" opacity="0.48"/>
+
+          <!-- Pine ridge silhouettes on near mountain -->
+          <g fill="#04231f" opacity="0.62">
+            <polygon points="60,148 53,165 67,165"/>
+            <polygon points="60,140 55,152 65,152"/>
+            <polygon points="120,160 113,178 127,178"/>
+            <polygon points="120,153 115,165 125,165"/>
+            <polygon points="210,148 203,168 217,168"/>
+            <polygon points="340,150 333,170 347,170"/>
+            <polygon points="340,142 335,155 345,155"/>
+            <polygon points="420,158 413,178 427,178"/>
+          </g>
+
+          <!-- Cabin (bottom-right, pointed roof like photo) -->
+          <g opacity="0.85">
+            <!-- Roof -->
+            <polygon points="498,172 522,152 546,172" fill="#0b1917"/>
+            <polygon points="522,152 546,172 558,172 534,152" fill="#05100e"/>
+            <!-- Body -->
+            <rect x="504" y="172" width="42" height="20" fill="#1a1410"/>
+            <!-- Tiny window -->
+            <rect x="528" y="178" width="6" height="6" fill="#fef3c7" opacity="0.8"/>
+          </g>
+
+          <!-- Tree branch (right edge, overhanging) -->
+          <g opacity="0.7" fill="none" stroke="#0a1f1b" stroke-linecap="round">
+            <!-- Trunk fragment -->
+            <path d="M 590 0 Q 585 40 582 80 Q 580 120 585 170" stroke-width="3"/>
+            <!-- Major branches reaching inward -->
+            <path d="M 582 30 Q 560 25 530 28" stroke-width="1.5"/>
+            <path d="M 582 60 Q 550 58 510 64" stroke-width="1.3"/>
+            <path d="M 583 90 Q 555 92 525 100" stroke-width="1.2"/>
+            <path d="M 584 130 Q 560 135 535 142" stroke-width="1"/>
+            <!-- Smaller twigs -->
+            <path d="M 560 25 Q 555 16 552 10" stroke-width="0.8"/>
+            <path d="M 560 25 Q 560 34 562 42" stroke-width="0.8"/>
+            <path d="M 540 62 Q 538 52 535 44" stroke-width="0.7"/>
+            <path d="M 540 62 Q 538 72 540 80" stroke-width="0.7"/>
+            <path d="M 525 100 Q 520 92 515 85" stroke-width="0.7"/>
+          </g>
+          <!-- Leaf clusters on branches -->
+          <g fill="#86efac" opacity="0.55">
+            <ellipse cx="545" cy="28" rx="6" ry="4"/>
+            <ellipse cx="528" cy="26" rx="5" ry="3.5"/>
+            <ellipse cx="553" cy="8" rx="4" ry="3"/>
+            <ellipse cx="522" cy="62" rx="6" ry="4"/>
+            <ellipse cx="538" cy="42" rx="4" ry="3"/>
+            <ellipse cx="510" cy="66" rx="4" ry="3"/>
+            <ellipse cx="535" cy="100" rx="5" ry="3.5"/>
+            <ellipse cx="520" cy="90" rx="4" ry="3"/>
+            <ellipse cx="545" cy="140" rx="4" ry="3"/>
+          </g>
+
+          <!-- Large foreground pine (bottom-left, framing) -->
+          <g opacity="0.7">
+            <ellipse cx="20" cy="190" rx="35" ry="22" fill="#04231f"/>
+            <ellipse cx="35" cy="180" rx="28" ry="20" fill="#052e2a"/>
+            <ellipse cx="10" cy="175" rx="22" ry="16" fill="#052e2a"/>
+          </g>
+        </svg>
+
+        <!-- Mobile: Korean pine + mountain valley scene -->
+        <div class="hero-art hero-art-mobile">
+          <svg viewBox="0 0 340 200" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <!-- Soft sun halo -->
+            <circle cx="95" cy="55" r="34" fill="white" opacity="0.16"/>
+            <circle cx="95" cy="55" r="20" fill="white" opacity="0.22"/>
+            <!-- Wispy clouds -->
+            <g fill="white" opacity="0.32">
+              <ellipse cx="60" cy="28" rx="30" ry="2.5"/>
+              <ellipse cx="70" cy="36" rx="22" ry="2"/>
+              <ellipse cx="42" cy="42" rx="18" ry="1.8"/>
+              <ellipse cx="170" cy="32" rx="24" ry="2"/>
+            </g>
+            <!-- Far mountain ridge -->
+            <path d="M 0 128 L 28 108 L 60 120 L 95 102 L 130 116 L 165 104 L 200 118 L 235 106 L 270 120 L 305 112 L 340 122 L 340 200 L 0 200 Z"
+              fill="#04231c" opacity="0.45"/>
+            <!-- Mid mountain ridge -->
+            <path d="M 0 152 L 38 130 L 78 148 L 120 122 L 160 142 L 205 128 L 248 144 L 292 132 L 340 142 L 340 200 L 0 200 Z"
+              fill="#031812" opacity="0.65"/>
+            <!-- Near hills -->
+            <path d="M 0 178 L 48 168 L 105 176 L 165 162 L 225 172 L 285 165 L 340 170 L 340 200 L 0 200 Z"
+              fill="#010c08" opacity="0.85"/>
+            <!-- Tiny cabin silhouette nestled in hills -->
+            <g transform="translate(118,158)" opacity="0.9">
+              <rect x="0" y="4" width="16" height="9" fill="#0a0805"/>
+              <polygon points="-1,4 8,-1 17,4" fill="#05040a"/>
+              <rect x="6" y="8" width="2.5" height="5" fill="#1a100a"/>
+            </g>
+
+            <!-- Korean pine (소나무) sprawling from right -->
+            <!-- Trunk: twisted, leaning pattern -->
+            <path d="M 318 200 C 313 178, 322 158, 312 140 C 302 122, 316 104, 306 85 C 298 68, 310 50, 300 34"
+              stroke="#2b1608" stroke-width="7.5" fill="none" stroke-linecap="round"/>
+            <!-- Trunk bark highlight -->
+            <path d="M 316 190 C 312 172, 319 155, 311 140 C 304 125, 314 108, 306 90 C 300 75, 308 58, 301 40"
+              stroke="#5c3a22" stroke-width="2" fill="none" stroke-linecap="round" opacity="0.8"/>
+            <!-- Upper branch -->
+            <path d="M 304 62 C 286 60, 265 65, 248 70" stroke="#2b1608" stroke-width="3" fill="none" stroke-linecap="round"/>
+            <!-- Main sprawling mid branch (signature Korean pine) -->
+            <path d="M 308 95 C 278 92, 242 97, 205 105 C 180 110, 158 116, 142 122"
+              stroke="#2b1608" stroke-width="4" fill="none" stroke-linecap="round"/>
+            <!-- Secondary lower branch -->
+            <path d="M 312 128 C 288 131, 255 140, 222 152" stroke="#2b1608" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+            <!-- Small twigs -->
+            <path d="M 255 82 L 240 75 M 230 88 L 220 82" stroke="#2b1608" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+            <path d="M 195 108 L 182 102 M 170 114 L 158 108" stroke="#2b1608" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+
+            <!-- Foliage: dark base clusters -->
+            <g fill="#031a12">
+              <ellipse cx="298" cy="28" rx="22" ry="9"/>
+              <ellipse cx="278" cy="36" rx="17" ry="7"/>
+              <ellipse cx="258" cy="62" rx="22" ry="9"/>
+              <ellipse cx="235" cy="72" rx="18" ry="8"/>
+              <ellipse cx="278" cy="92" rx="24" ry="10"/>
+              <ellipse cx="240" cy="100" rx="26" ry="10"/>
+              <ellipse cx="200" cy="108" rx="22" ry="9"/>
+              <ellipse cx="162" cy="118" rx="20" ry="8"/>
+              <ellipse cx="262" cy="125" rx="22" ry="9"/>
+              <ellipse cx="228" cy="142" rx="20" ry="8"/>
+              <ellipse cx="200" cy="152" rx="16" ry="7"/>
+            </g>
+            <!-- Foliage: mid-green -->
+            <g fill="#065f46" opacity="0.78">
+              <ellipse cx="294" cy="24" rx="16" ry="5"/>
+              <ellipse cx="260" cy="58" rx="16" ry="5"/>
+              <ellipse cx="276" cy="87" rx="18" ry="5"/>
+              <ellipse cx="237" cy="95" rx="20" ry="5"/>
+              <ellipse cx="198" cy="103" rx="16" ry="5"/>
+              <ellipse cx="259" cy="120" rx="16" ry="5"/>
+              <ellipse cx="225" cy="137" rx="15" ry="4"/>
+            </g>
+            <!-- Foliage: bright highlights -->
+            <g fill="#10b981" opacity="0.5">
+              <ellipse cx="292" cy="21" rx="10" ry="2.5"/>
+              <ellipse cx="258" cy="55" rx="10" ry="2"/>
+              <ellipse cx="272" cy="84" rx="12" ry="2.5"/>
+              <ellipse cx="232" cy="92" rx="14" ry="2.5"/>
+              <ellipse cx="195" cy="100" rx="10" ry="2"/>
+              <ellipse cx="255" cy="117" rx="10" ry="2"/>
+            </g>
+          </svg>
+        </div>
+
+        <!-- Desktop: Clean message-bubbles composition -->
+        <div class="hero-art hero-art-desktop">
+          <svg viewBox="0 0 340 200" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <defs>
+              <linearGradient id="phScreen" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#ecfdf5"/>
+                <stop offset="100%" stop-color="#ffffff"/>
+              </linearGradient>
+              <linearGradient id="bblMe" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#ffffff"/>
+                <stop offset="100%" stop-color="#f0fdf4"/>
+              </linearGradient>
+              <filter id="softShadow" x="-20%" y="-20%" width="140%" height="140%">
+                <feGaussianBlur stdDeviation="3"/>
+              </filter>
+            </defs>
+
+            <!-- Decorative halo behind phone -->
+            <circle cx="220" cy="100" r="88" fill="white" opacity="0.10"/>
+            <circle cx="220" cy="100" r="64" fill="white" opacity="0.08"/>
+
+            <!-- Phone (tilted) -->
+            <g transform="translate(220,100) rotate(-10) translate(-55,-95)">
+              <!-- Shadow -->
+              <rect x="6" y="10" width="110" height="190" rx="22" fill="#000" opacity="0.18" filter="url(#softShadow)"/>
+              <!-- Frame -->
+              <rect x="0" y="0" width="110" height="190" rx="22" fill="#0f172a"/>
+              <rect x="4" y="4" width="102" height="182" rx="19" fill="#1e293b"/>
+              <!-- Screen -->
+              <rect x="6" y="6" width="98" height="178" rx="17" fill="url(#phScreen)"/>
+              <!-- Notch -->
+              <rect x="40" y="6" width="30" height="7" rx="3.5" fill="#0f172a"/>
+              <!-- Header -->
+              <rect x="14" y="22" width="44" height="6" rx="3" fill="#10b981"/>
+              <rect x="14" y="32" width="30" height="4" rx="2" fill="#cbd5e1"/>
+              <!-- Divider -->
+              <line x1="10" y1="44" x2="100" y2="44" stroke="#e2e8f0" stroke-width="1"/>
+
+              <!-- Incoming bubble -->
+              <g>
+                <rect x="14" y="54" width="60" height="22" rx="11" fill="#e2e8f0"/>
+                <rect x="20" y="62" width="36" height="3" rx="1.5" fill="#94a3b8"/>
+                <rect x="20" y="68" width="24" height="3" rx="1.5" fill="#94a3b8"/>
+              </g>
+
+              <!-- Outgoing bubble -->
+              <g>
+                <rect x="36" y="84" width="62" height="24" rx="12" fill="#10b981"/>
+                <rect x="44" y="92" width="36" height="3" rx="1.5" fill="white" opacity="0.9"/>
+                <rect x="44" y="98" width="46" height="3" rx="1.5" fill="white" opacity="0.9"/>
+              </g>
+
+              <!-- Incoming bubble 2 -->
+              <g>
+                <rect x="14" y="116" width="50" height="22" rx="11" fill="#e2e8f0"/>
+                <rect x="20" y="124" width="30" height="3" rx="1.5" fill="#94a3b8"/>
+                <rect x="20" y="130" width="22" height="3" rx="1.5" fill="#94a3b8"/>
+              </g>
+
+              <!-- Typing -->
+              <g transform="translate(36,148)">
+                <rect x="0" y="0" width="36" height="16" rx="8" fill="#10b981"/>
+                <circle cx="10" cy="8" r="2" fill="white"/>
+                <circle cx="18" cy="8" r="2" fill="white" opacity="0.7"/>
+                <circle cx="26" cy="8" r="2" fill="white" opacity="0.45"/>
+              </g>
+
+              <!-- Home indicator -->
+              <rect x="38" y="176" width="34" height="3" rx="1.5" fill="#cbd5e1"/>
+            </g>
+
+            <!-- Floating bubble 1 (top, left of phone) -->
+            <g transform="translate(118,26)">
+              <rect x="0" y="0" width="86" height="36" rx="18" fill="url(#bblMe)" opacity="0.98"/>
+              <polygon points="60,32 68,44 52,34" fill="url(#bblMe)" opacity="0.98"/>
+              <circle cx="16" cy="18" r="5" fill="#10b981"/>
+              <rect x="28" y="12" width="46" height="4" rx="2" fill="#065f46" opacity="0.7"/>
+              <rect x="28" y="20" width="34" height="3" rx="1.5" fill="#10b981" opacity="0.55"/>
+            </g>
+
+            <!-- Floating bubble 2 (bottom-left of phone) -->
+            <g transform="translate(100,140)">
+              <rect x="0" y="0" width="70" height="30" rx="15" fill="white" opacity="0.95"/>
+              <polygon points="52,26 60,36 44,28" fill="white" opacity="0.95"/>
+              <rect x="10" y="10" width="34" height="4" rx="2" fill="#10b981" opacity="0.7"/>
+              <rect x="10" y="18" width="24" height="3" rx="1.5" fill="#94a3b8"/>
+            </g>
+
+            <!-- Sparkles -->
+            <g fill="#ffffff" opacity="0.85">
+              <path d="M168 14 l2 6 6 2 -6 2 -2 6 -2 -6 -6 -2 6 -2 z"/>
+              <path d="M306 56 l1.4 4 4 1.4 -4 1.4 -1.4 4 -1.4 -4 -4 -1.4 4 -1.4 z"/>
+              <path d="M190 176 l1.2 3.5 3.5 1.2 -3.5 1.2 -1.2 3.5 -1.2 -3.5 -3.5 -1.2 3.5 -1.2 z"/>
+            </g>
+          </svg>
+        </div>
+
+        <div class="hero-content">
+          <span class="hero-eyebrow"><svg class="i"><use href="#i-hand"/></svg>환영합니다</span>
+          <h1 class="hero-title">Stay_Msg<br>예약 문자를 빠르게 💬</h1>
+          <p class="hero-sub">템플릿 + 게스트 정보만 있으면 정성 담긴 문자가 자동 완성됩니다.</p>
+          <button type="button" class="hero-cta" onclick="switchTab('compose')"><svg class="i"><use href="#i-pencil"/></svg>새 문자 작성</button>
+        </div>
+      </div>
+
       <div class="dash-head">
         <div class="dash-head-text">
-          <h1 class="dash-greet">안녕하세요, <span id="dashGreetName">호스트</span></h1>
+          <h2 class="dash-greet">안녕하세요, <span id="dashGreetName">호스트</span></h2>
           <p class="dash-sub" id="dashSubInfo">오늘 일정을 확인하세요</p>
         </div>
-        <button class="btn btn-primary dash-head-cta" onclick="switchTab('compose')"><svg class="i"><use href="#i-pencil"/></svg>새 문자</button>
       </div>
 
       <div class="stat-chips">
@@ -1531,7 +1819,7 @@ input,select,textarea{font-family:inherit;}
 <div class="toast" id="toast"></div>
 
 <script>
-const APP_VERSION='v2.0.0';
+const APP_VERSION='v2.0.1';
 const SK_SET='stay_msg_lite1_set_v1';
 const SK_TPL='stay_msg_lite1_tpl_v1';
 const SK_RES='stay_msg_lite1_res_v1';
