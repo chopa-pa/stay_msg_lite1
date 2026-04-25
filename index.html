@@ -635,6 +635,8 @@ input,select,textarea{font-family:inherit;}
   transition:border-color .15s,box-shadow .15s;
 }
 .resv-card:hover{border-color:var(--primary);box-shadow:var(--shadow);}
+.resv-card.hl{border-color:var(--primary);box-shadow:0 0 0 3px #d1fae5;animation:resvPulse 1.6s ease-out;}
+@keyframes resvPulse{0%{box-shadow:0 0 0 0 #6ee7b7;}60%{box-shadow:0 0 0 8px transparent;}100%{box-shadow:0 0 0 3px #d1fae5;}}
 .resv-card-main{flex:1;min-width:0;}
 .resv-card-name{
   font-size:15px;font-weight:700;color:var(--fg);
@@ -1752,7 +1754,7 @@ input,select,textarea{font-family:inherit;}
 <div class="toast" id="toast"></div>
 
 <script>
-const APP_VERSION='v2.1.9';
+const APP_VERSION='v2.2.0';
 const SK_SET='stay_msg_lite1_set_v1';
 const SK_TPL='stay_msg_lite1_tpl_v1';
 const SK_RES='stay_msg_lite1_res_v1';
@@ -2796,7 +2798,20 @@ function _dashYmPickerHtml(y,m){
 function dashCalDayClick(ds){
   const dayRes=reservations.filter(r=>r.checkin&&r.checkout&&ds>=r.checkin&&ds<=r.checkout);
   if(dayRes.length===1){loadReservation(dayRes[0].id,ds);return;}
-  if(dayRes.length>1){_dashCal.sel=_dashCal.sel===ds?null:ds;renderDashCal();return;}
+  if(dayRes.length>1){
+    _dashCal.sel=ds;
+    switchTab('reserv');
+    setTimeout(()=>{
+      const ids=new Set(dayRes.map(r=>r.id));
+      document.querySelectorAll('#resvList .resv-card').forEach(c=>{
+        const m=c.getAttribute('onclick')?.match(/loadReservation\('([^']+)'/);
+        if(m&&ids.has(m[1])){c.classList.add('hl');setTimeout(()=>c.classList.remove('hl'),2200);}
+      });
+      const first=document.querySelector('#resvList .resv-card.hl');
+      if(first)first.scrollIntoView({behavior:'smooth',block:'center'});
+    },80);
+    return;
+  }
 }
 function renderDashCal(){
   const host=document.getElementById('dashCalBody');if(!host)return;
