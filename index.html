@@ -620,6 +620,7 @@ input,select,textarea{font-family:inherit;}
 .tag-ci{background:var(--accent);color:var(--accent-fg);}
 .tag-co{background:#fef3c7;color:#b45309;}
 .tag-up{background:#dbeafe;color:#1d4ed8;}
+.tag-ch{background:#eef2ff;color:#4338ca;}
 .tag-today{background:var(--destructive-bg);color:var(--destructive);}
 .empty{
   text-align:center;padding:32px 16px;
@@ -1597,6 +1598,7 @@ input,select,textarea{font-family:inherit;}
           <li><strong>기본 요금</strong> — 숙소 프로필의 호실 카드에서 주중·주말 요금을 입력하세요.</li>
           <li><strong>상세 요금</strong> — 호실 카드의 <em>요금 상세 설정</em>에서 공휴일·기준인원·연박할인·기간요금을 설정할 수 있어요.</li>
           <li><strong>계산 순서</strong> — 특별기간 > 공휴일 > 주말(금·토) > 주중 순으로 하루씩 계산해 합산합니다.</li>
+          <li><strong>공휴일 전날</strong> — 숙박 요금은 "그날 밤" 기준이라 공휴일 전날 밤도 공휴일 요금으로 볼 수 있어요. 호실의 <em>공휴일 요금 적용</em>에서 당일+전날 / 전날만 / 당일만을 고르세요.</li>
           <li><strong>옵션 요금</strong> — 미취학아동·강아지·바베큐는 숙소 프로필의 <em>옵션 요금</em>에서 켜면 여기에 나타나요.</li>
         </ul>
       </div>
@@ -1948,6 +1950,19 @@ input,select,textarea{font-family:inherit;}
         <input class="input" type="text" id="ar_price" inputmode="numeric" placeholder="예: 150,000" onfocus="this.value=this.value.replace(/[^0-9]/g,'')" onblur="fmtPrice(this);">
       </div>
     </div>
+    <div class="form-grid" style="margin-top:10px;">
+      <div class="fi">
+        <label>예약 채널</label>
+        <select class="select" id="ar_channel">
+          <option value="">선택</option>
+          <option>네이버예약</option><option>에어비앤비</option><option>인스타 DM</option><option>전화</option><option>기타</option>
+        </select>
+      </div>
+      <div class="fi">
+        <label>메모</label>
+        <input class="input" type="text" id="ar_memo" placeholder="바비큐 · 반려견 등">
+      </div>
+    </div>
     <button class="btn btn-outline btn-sm" style="width:100%;margin-top:10px;" onclick="arAutoCalc()"><svg class="i"><use href="#i-dollar"/></svg>요금 자동 계산</button>
     <div id="arCalcInfo" style="display:none;margin-top:8px;"></div>
     <div class="modal-btns" style="margin-top:18px;">
@@ -1961,7 +1976,7 @@ input,select,textarea{font-family:inherit;}
 <div class="toast" id="toast"></div>
 
 <script>
-const APP_VERSION='v2.4.0';
+const APP_VERSION='v2.5.0';
 const SK_SET='stay_msg_lite1_set_v1';
 const SK_TPL='stay_msg_lite1_tpl_v1';
 const SK_RES='stay_msg_lite1_res_v1';
@@ -1980,39 +1995,32 @@ let curTplKey=null;
 const STAGES=[
   {id:'inquiry',icon:'💬',label:'문의',
    templates:[
-    {title:'기본 소개',body:`안녕하세요, {이름}님! 😊\n{숙소명}입니다.\n\n문의 주셔서 감사해요 🙏\n\n📍 위치: {숙소주소}\n💰 요금: 주중 {주중요금} / 주말 {주말요금}\n🅿️ 주차 가능\n\n날짜와 인원 알려주시면 바로 확인해 드릴게요 😊`},
-    {title:'가격·예약 안내',body:`{이름}님, 반갑습니다 🌿\n\n【 예약 안내 】\n• 입실: 오후 3시 이후\n• 퇴실: 오전 11시까지\n• 예약금: 숙박비의 50% 선입금\n• 계좌: {입금계좌}\n\n날짜와 인원 알려주시면 바로 확인해 드릴게요 😊`}
+    {title:'문의 답변',body:`안녕하세요, {숙소명}입니다.\n\n{입실시간} 입실, {퇴실시간} 퇴실 {박수}박 예약 가능합니다.\n\n* 요금은 평일(일~목) {주중요금} / 주말·공휴일 {주말요금}이며, 2박부터 1박당 30,000원 할인됩니다.\n* 가파른 지형이라 성인 2인까지 머물 수 있습니다. 영유아, 어린이는 동반할 수 없습니다.\n* 반려견은 소형견 1마리 동반 가능하며 숙박당 20,000원입니다. 예약 전에 견종과 성별을 알려주세요.\n\n예약을 원하시면 성함과 연락처를 남겨 주세요. 결제 안내를 드리겠습니다.`}
   ]},
   {id:'prebook',icon:'📋',label:'예약전',
    templates:[
-    {title:'날짜 확인 및 예약금 요청',body:`{이름}님, 좋은 소식이에요! 😊\n\n{입실시간} ~ {퇴실시간} ({인원수}) 예약 가능합니다 ✅\n\n【 예약금 입금 안내 】\n총 금액: {결제금액}\n예약금: {결제금액}의 50%\n계좌: {입금계좌}\n\n입금 확인 후 예약 확정 문자 드릴게요 🙏`},
-    {title:'날짜 불가 안내',body:`{이름}님, 안녕하세요 😔\n\n죄송하게도 {입실시간} ~ {퇴실시간}은 이미 예약된 날짜예요.\n\n다른 날짜로 원하신다면 말씀해 주세요.\n좋은 날에 꼭 뵙고 싶습니다 🍃`}
+    {title:'요금 및 결제 안내',body:`《{숙소명} 요금 및 결제 안내》\n\n아래 계좌로 입금해 주시면 예약이 완료됩니다.\n\n{입금계좌}\n{결제금액}\n\n*입실 {입실시간}\n  퇴실 {퇴실시간} {박수}박/{인원}\n\n* 반려견 동반이시면 입금 전에 견종과 성별을 알려주세요. (소형견 1마리, 숙박당 20,000원 추가)\n\n* 현금영수증 발급을 원하시면 입실 당일에 발급해 드립니다.\n\n* 카드 결제를 원하시면 네이버 예약에서 결제하실 수 있습니다.\n  https://booking.naver.com/booking/3/bizes/1759952\n\n* 취소 시 이용일 기준 4주 전까지 전액 환불, 1주 미만은 불가합니다. (단계별 규정은 프로필 하이라이트 「예약 방법」 참고 바랍니다)\n\n* 결제가 확인되면 <예약 확정 문자>를 보내드리니 성함과 연락처를 남겨 주세요.\n\n감사합니다. / {숙소명}`}
   ]},
   {id:'booked',icon:'✅',label:'예약확정',
    templates:[
-    {title:'예약 확정 안내',body:`{이름}님, 예약이 확정됐어요 🎉\n\n【 예약 내역 】\n📅 입실: {입실시간} 오후 3시 이후\n📅 퇴실: {퇴실시간} 오전 11시까지\n👥 인원: {인원수}\n💰 잔금: {결제금액} (입실 당일)\n\n좋은 시간 되실 거예요 🌿`},
-    {title:'예약 확정 + 취소 정책',body:`{이름}님, 예약 완료됐습니다 ✅\n\n입실 {입실시간} / 퇴실 {퇴실시간}\n인원 {인원수} | 총 금액 {결제금액}\n\n【 취소 정책 】\n• 7일 전: 전액 환불\n• 3~6일 전: 50% 환불\n• 2일 이내: 환불 불가\n\n문의: {연락처} 😊`}
+    {title:'예약 확정 안내',body:`《{숙소명} 예약 확정 안내》\n\n{이름}님\n입실 {입실시간}\n퇴실 {퇴실시간} {박수}박/{인원}\n결제 확인되어 예약 확정되었습니다.\n\n* 입실 오후 3시 30분 / 퇴실 오전 11시 30분\n\n* 바비큐(웨버 가스그릴)를 이용하시려면 미리 알려주세요. 20,000원 현장 결제, 밤 9시까지 가능합니다.\n\n* 반려견 동반이시면 견종과 성별을 답장으로 알려주세요.\n\n* 입실 당일 오전에 오시는 길과 입실 안내 문자를 드립니다.\n  그 외 별도의 안내 문자는 드리지 않습니다.\n\n* 궁금하신 점은 인스타그램 @stay.solsoop 하이라이트를 참고해 주시고, 추가로 궁금하신 점은 언제든지 문의 주세요.\n\n편히 쉬실 수 있도록 준비하겠습니다. / {숙소명}`}
   ]},
   {id:'precheckin',icon:'🗺️',label:'입실전',
    templates:[
-    {title:'입실 전날 안내',body:`{이름}님, 내일 뵙겠습니다 😊🌿\n\n📍 주소: {숙소주소}\n🚗 네이버지도 검색: {숙소명}\n🅿️ 마당 주차 가능\n\n궁금한 점 있으시면 편하게 문자 주세요! 🏡`},
-    {title:'당일 입실 안내',body:`{이름}님, 오늘 오시는 날이네요 🎊\n\n입실: 오후 3시 이후\n잔금: {결제금액} (현장 수령)\n\n【 도착하시면 】\n대문 비밀번호: {도어락비번}\n열쇠는 현관 안쪽에 있어요.\n\n솔숲의 맑은 공기 환영합니다 🌄`}
+    {title:'입실 안내 (당일 오전)',body:`《{숙소명} 입실 안내》\n\n오늘 솔숲에 오시는 것을 환영합니다.\n\n네비. "{숙소명}" 또는 "{숙소주소}"\n주차. 마당에 1대 주차하시면 됩니다.\n오시는 길. T맵에 주소를 치시면 숙소까지 안내됩니다. 산청대로에서 외송리 방면으로 빠져 둔철산로를 3.3km 오르다 좌회전, 삼거리를 지나 우회전해서 오르막길로 오시다가 하얀 집이 보이면 우회전해서 100m입니다.\n\n현관비번:  {전화뒷자리}*\n체크인:  pm 3:30\n체크아웃: am 11:30\nwifi:  {와이파이이름} (비밀번호 없음)\n\n* 셀프 조식 재료(빵, 요거트, 잼, 견과류, 커피, 유정란)가 준비되어 있으니 토스터와 드립포트로 천천히 드세요.\n\n* 바비큐는 처마 밑 공간에서 웨버 가스그릴로 하시면 됩니다. 숲이 가까워 숯불은 사용할 수 없습니다. 밤 9시까지 가능하고 20,000원은 현장에서 결제해 주세요. 비가 조금 오면 가능하지만 많이 오면 이용할 수 없습니다.\n\n* 실내는 금연이며 냄새가 배는 육류, 생선 조리는 불가합니다. 가구 이동은 삼가 주세요. 반려견은 침대 위에 올라가지 않게 부탁드립니다. 수컷은 매너벨트 착용이 필수이며, 암컷도 마킹을 하는 경우 기저귀 착용을 부탁드립니다.\n\n* 문의 010-3314-0079\n\n산이 보이는 자리에서 편히 쉬다 가시길 바랍니다. / {숙소명}`}
   ]},
   {id:'checkedin',icon:'🏡',label:'입실후',
    templates:[
-    {title:'체크인 완료 + 이용 안내',body:`{이름}님, 잘 도착하셨나요? 😊\n\n【 이용 안내 】\n🌡 에어컨·난방: 리모컨 사용\n🔥 바베큐: 마당에서 가능\n🧺 세탁기: 세탁실 이용 가능\n📶 와이파이: {와이파이이름} / {와이파이비번}\n🚭 실내 금연\n\n솔숲에서 좋은 추억 만드세요 🌲`},
-    {title:'주변 관광·맛집 안내',body:`{이름}님 안녕하세요 😊\n\n【 주변 추천 】\n🍽 식사: 근처 식당 이용 가능\n🛒 마트: 도보 이용 가능\n🌊 관광: 주변 관광지 추천\n\n불편한 점 있으시면 바로 연락 주세요!`}
+    {title:'바비큐 안내',body:`바비큐는 처마 밑 공간에서 웨버 가스그릴로 하시면 됩니다. 숲이 가까워 숯불은 사용할 수 없습니다.\n밤 9시까지 가능하고 20,000원은 현장에서 결제해 주세요. 비가 조금 오면 가능하지만 많이 오면 이용할 수 없습니다.\n\n필요하신 것이 있으면 언제든지 문의 주세요. / {숙소명}`}
   ]},
   {id:'checkout',icon:'🙏',label:'퇴실',
    templates:[
-    {title:'퇴실 감사 인사',body:`{이름}님, 이용해 주셔서 감사해요 🙏🌿\n\n즐거운 시간 되셨으면 좋겠어요.\n다음에 또 솔숲에 오시면 꼭 들러주세요 😊\n\n편안하게 잘 돌아가세요 🚗\n고맙습니다 ❤️`},
-    {title:'감사 + 후기 요청',body:`{이름}님, 머물다 가셔서 감사합니다 🙏\n\n네이버지도에 후기 남겨주시면 큰 힘이 돼요 ⭐\n\n다음에 오실 때는 단골 할인 드릴게요! 😊`},
-    {title:'퇴실 전날 알림',body:`{이름}님, 내일이 퇴실 날이네요 😊\n\n퇴실 시간: 내일 오전 11시\n\n【 퇴실 시 부탁드려요 】\n• 쓰레기 봉투에 담아 문 앞 배출\n• 열쇠 현관 안쪽에 걸어두기\n• 가스 밸브 잠금 확인\n\n함께해서 행복했어요 🌿`}
+    {title:'퇴실 안내 (당일 오전)',body:`《{숙소명} 퇴실 안내》\n\n편히 쉬셨는지요.\n퇴실 시간(am 11:30)까지 편안히 머무시길 바라며 인사드립니다.\n\n"안녕히 가세요."\n\n솔숲에서 쉬신 시간이 오래 힘이 되길 바랍니다.\n감사합니다. / {숙소명}\n\n\np.s\n감사의 마음을 담은 재방문 혜택을 안내합니다.\n기본 할인 5% + 리뷰 할인 5%가 있으니 특별한 날에 다시 찾아 주세요. (리뷰를 직접 올려 주시거나, 머무신 사진 2장을 보내 주시거나, 방명록을 남겨 주시면 됩니다.)`}
   ]}
 ];
 
-const VAR_LIST=['{이름}','{입실시간}','{퇴실시간}','{인원수}','{결제금액}','{연락처}','{숙소명}','{호실명}','{숙소주소}','{입금계좌}','{와이파이이름}','{와이파이비번}','{도어락비번}','{전화뒷자리}','{주중요금}','{주말요금}'];
-const VAR_ALIAS={'{입실}':'{입실시간}','{퇴실}':'{퇴실시간}','{인원}':'{인원수}','{금액}':'{결제금액}','{숙소}':'{숙소명}','{호실}':'{호실명}','{주소}':'{숙소주소}','{계좌}':'{입금계좌}','{와이파이}':'{와이파이이름}','{비번}':'{도어락비번}','{전번뒷자리}':'{전화뒷자리}'};
+const VAR_LIST=['{이름}','{입실시간}','{퇴실시간}','{박수}','{인원}','{인원수}','{결제금액}','{연락처}','{숙소명}','{호실명}','{숙소주소}','{입금계좌}','{와이파이이름}','{와이파이비번}','{도어락비번}','{전화뒷자리}','{주중요금}','{주말요금}'];
+const VAR_ALIAS={'{입실}':'{입실시간}','{퇴실}':'{퇴실시간}','{금액}':'{결제금액}','{숙소}':'{숙소명}','{호실}':'{호실명}','{주소}':'{숙소주소}','{계좌}':'{입금계좌}','{와이파이}':'{와이파이이름}','{비번}':'{도어락비번}','{전번뒷자리}':'{전화뒷자리}'};
 function applyVarAliases(s){if(!s)return s;let o=s;for(const k in VAR_ALIAS)o=o.split(k).join(VAR_ALIAS[k]);return o;}
 const EMOJI_LIST=['😊','🙏','✅','🎉','🌿','🏡','📅','👥','💰','🚗','🅿️','📶','🔥','🌊','⭐','❤️','😔','🍃','🌄','🌲','🛒','🍽️','🧺','🚭','📍','💬','📋','🎊','🐶','🐾','🗺️'];
 
@@ -2087,6 +2095,8 @@ function applyVars(raw){
     '{입실시간}':fmt(ci)||'{입실시간}',
     '{퇴실시간}':fmt(co)||'{퇴실시간}',
     '{인원수}':document.getElementById('v_guests').value||'{인원수}',
+    '{인원}':(()=>{const g=document.getElementById('v_guests').value.replace(/[^0-9]/g,'');return g?g+'인':'{인원}';})(),
+    '{박수}':(ci&&co&&co>ci)?String(Math.round((new Date(co+'T00:00:00')-new Date(ci+'T00:00:00'))/86400000)):'{박수}',
     '{결제금액}':document.getElementById('v_price').value||'{결제금액}',
     '{숙소명}':settings.name||'{숙소명}',
     '{호실명}':(getSelectedRoom()?.name)||'{호실명}',
@@ -2476,9 +2486,11 @@ const HOLIDAYS=(()=>{
    ['2026-02-16','설연휴'],['2026-02-17','설날'],['2026-02-18','설연휴'],
    ['2026-05-24','부처님오신날'],
    ['2026-09-24','추석연휴'],['2026-09-25','추석'],['2026-09-26','추석연휴'],
-   ['2027-02-06','설연휴'],['2027-02-07','설날'],['2027-02-08','설연휴'],
+   ['2026-03-02','대체공휴일'],['2026-05-25','대체공휴일'],['2026-08-17','대체공휴일'],['2026-10-05','대체공휴일'],
+   ['2027-02-06','설연휴'],['2027-02-07','설날'],['2027-02-08','설연휴'],['2027-02-09','대체공휴일'],
    ['2027-05-13','부처님오신날'],
    ['2027-09-14','추석연휴'],['2027-09-15','추석'],['2027-09-16','추석연휴'],
+   ['2027-08-16','대체공휴일'],['2027-10-04','대체공휴일'],['2027-10-11','대체공휴일'],['2027-12-27','대체공휴일'],
    ['2028-01-26','설연휴'],['2028-01-27','설날'],['2028-01-28','설연휴'],
    ['2028-05-02','부처님오신날'],
    ['2028-10-02','추석연휴'],['2028-10-03','추석'],['2028-10-04','추석연휴'],
@@ -2622,7 +2634,8 @@ function getDatesBetween(ci,co){
   while(d<end){out.push(`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`);d.setDate(d.getDate()+1);}
   return out;
 }
-// 하루 요금 판정: 기간(성수기>준성수기>특별>할인) > 공휴일 > 주말(금·토) > 주중
+function nextDay(ds){const d=new Date(ds+'T00:00:00');d.setDate(d.getDate()+1);return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;}
+// 하루 요금 판정: 기간(성수기>준성수기>특별>할인) > 공휴일(당일·전날, phMode) > 주말(금·토) > 주중
 function getDayTypeFor(room,ds){
   const dow=new Date(ds+'T00:00:00').getDay();
   const isWe=dow===5||dow===6;
@@ -2639,7 +2652,11 @@ function getDayTypeFor(room,ds){
     return{type:found.type,price:spWd||spWe,label:label+(spWe&&spWd?' 주중':'')};
   }
   const regHoli=parseNum(room.ph);
-  if(regHoli>0&&HOLIDAYS[ds])return{type:'holiday',price:regHoli,label:'공휴일'};
+  if(regHoli>0){
+    const mode=room.phMode||'both';
+    if(mode!=='eve'&&HOLIDAYS[ds])return{type:'holiday',price:regHoli,label:'공휴일'};
+    if(mode!=='day'&&HOLIDAYS[nextDay(ds)])return{type:'holiday',price:regHoli,label:'공휴일 전날'};
+  }
   return isWe?{type:'weekend',price:regWe,label:'주말'}:{type:'weekday',price:regWd,label:'주중'};
 }
 // 숙박 요금 계산: opts={guests,child,dog,bbq}
@@ -2722,7 +2739,7 @@ function migrateSettings(){
   }
   settings.rooms.forEach(r=>{
     if(r.pw==null)r.pw='';if(r.pwe==null)r.pwe='';
-    if(r.ph==null)r.ph='';
+    if(r.ph==null)r.ph='';if(!r.phMode)r.phMode='both';
     if(r.base==null)r.base='';if(r.max==null)r.max='';
     if(r.extraFee==null)r.extraFee='';
     if(r.discN==null)r.discN='';if(r.discType==null)r.discType='pct';
@@ -2928,6 +2945,7 @@ function _roomPricingHtml(r){
     <summary>요금 상세 설정 <span class="adv-sub">공휴일 · 인원 · 연박할인 · 기간요금</span></summary>
     <div class="form-grid" style="margin-top:10px;">
       <div class="fi"><label>공휴일 요금</label>${numInp('ri_ph_'+r.id,r.ph,'미설정 시 주말/주중 적용')}</div>
+      <div class="fi"><label>공휴일 요금 적용</label><select class="select" id="ri_phmode_${r.id}"><option value="both" ${(r.phMode||'both')==='both'?'selected':''}>당일 + 전날 밤</option><option value="eve" ${r.phMode==='eve'?'selected':''}>전날 밤만</option><option value="day" ${r.phMode==='day'?'selected':''}>당일 밤만</option></select></div>
       <div class="fi"><label>추가 인원 요금 (1인/박)</label>${numInp('ri_extra_'+r.id,r.extraFee,'예: 20,000')}</div>
       <div class="fi"><label>기준 인원</label><input class="input" type="number" id="ri_base_${r.id}" min="0" value="${esc(r.base||'')}" placeholder="예: 2"></div>
       <div class="fi"><label>최대 인원</label><input class="input" type="number" id="ri_max_${r.id}" min="0" value="${esc(r.max||'')}" placeholder="예: 4"></div>
@@ -2958,6 +2976,7 @@ function _readRoomPricing(r){
   const g=id=>document.getElementById(id);
   const v=id=>{const el=g(id);return el?el.value.trim():'';};
   r.ph=v('ri_ph_'+r.id);
+  r.phMode=g('ri_phmode_'+r.id)?g('ri_phmode_'+r.id).value:'both';
   r.extraFee=v('ri_extra_'+r.id);
   r.base=v('ri_base_'+r.id);
   r.max=v('ri_max_'+r.id);
@@ -3259,7 +3278,7 @@ function _fillArRoomSelect(selId){
   if(selId&&settings.rooms.find(x=>x.id===selId))sel.value=selId;
 }
 function openAddResvModal(){
-  ['ar_name','ar_phone','ar_checkin','ar_checkout','ar_guests','ar_price','ar_id'].forEach(id=>{document.getElementById(id).value='';});
+  ['ar_name','ar_phone','ar_checkin','ar_checkout','ar_guests','ar_price','ar_id','ar_channel','ar_memo'].forEach(id=>{document.getElementById(id).value='';});
   document.getElementById('arCalcInfo').style.display='none';
   _fillArRoomSelect();
   _updateDateDisplay('ar_checkin','ar_checkout','arDateRangeBtn');
@@ -3278,6 +3297,8 @@ function editResv(id,e){
   document.getElementById('ar_checkout').value=r.checkout||'';
   document.getElementById('ar_guests').value=r.guests||'';
   document.getElementById('ar_price').value=r.price||'';
+  document.getElementById('ar_channel').value=r.channel||'';
+  document.getElementById('ar_memo').value=r.memo||'';
   document.getElementById('arCalcInfo').style.display='none';
   _fillArRoomSelect(r.roomId||'');
   _updateDateDisplay('ar_checkin','ar_checkout','arDateRangeBtn');
@@ -3321,6 +3342,8 @@ function submitAddResv(){
     r.guests=document.getElementById('ar_guests').value;
     r.price=document.getElementById('ar_price').value;
     r.roomId=roomId;
+    r.channel=document.getElementById('ar_channel').value;
+    r.memo=document.getElementById('ar_memo').value.trim();
     saveReservations();renderReservations();renderDashboard();
     closeAddResvModal();
     toast('예약이 수정됐어요 ✓');
@@ -3332,6 +3355,8 @@ function submitAddResv(){
       guests:document.getElementById('ar_guests').value,
       price:document.getElementById('ar_price').value,
       roomId,
+      channel:document.getElementById('ar_channel').value,
+      memo:document.getElementById('ar_memo').value.trim(),
       createdAt:new Date().toISOString()
     });
     saveReservations();renderReservations();renderDashboard();
@@ -3527,9 +3552,12 @@ function renderDashCal(){
     const isSel=ds===_dashCal.sel;
     const isSun=dow===0,isSat=dow===6,isWe=dow===5||dow===6;
     const holi=HOLIDAYS[ds];
+    const _r0=settings.rooms&&settings.rooms[0];
+    const holiEve=!holi&&_r0&&parseNum(_r0.ph)>0&&(_r0.phMode||'both')!=='day'&&HOLIDAYS[nextDay(ds)];
     const dayRes=reservations.filter(r=>r.checkin&&r.checkout&&ds>=r.checkin&&ds<=r.checkout);
     const cls=['month-day',isSun?'sun':isSat?'sat':'',isToday?'today':'',isSel?'selected':'',holi?'holiday':''].filter(Boolean).join(' ');
     const dayLbl=holi?`<small class="holi-lbl">${holi}</small>`
+      :holiEve?'<small class="holi-lbl">공휴일 전날</small>'
       :isWe?'<small class="we-lbl">주말</small>'
       :isSun?'<small class="su-lbl">일</small>'
       :'<small class="wd-lbl">주중</small>';
@@ -3616,9 +3644,9 @@ function renderReservations(){
     return `
     <div class="resv-card" onclick="loadReservation('${r.id}')">
       <div class="resv-card-main">
-        <div class="resv-card-name">${esc(r.name)} ${tagHtml}</div>
+        <div class="resv-card-name">${esc(r.name)} ${tagHtml}${r.channel?' <span class="res-tag tag-ch">'+esc(r.channel)+'</span>':''}</div>
         <div class="resv-card-date">📅 ${r.checkin} ~ ${r.checkout}</div>
-        <div class="resv-card-extra">${r.guests?esc(r.guests):''}${r.phone?' · '+esc(r.phone):''}${r.price?' · '+esc(r.price):''}</div>
+        <div class="resv-card-extra">${r.guests?esc(r.guests):''}${r.phone?' · '+esc(r.phone):''}${r.price?' · '+esc(r.price):''}${r.memo?' · '+esc(r.memo):''}</div>
       </div>
       <div class="resv-card-actions">
         <button class="resv-card-edit" onclick="editResv('${r.id}',event)" title="수정"><svg class="i"><use href="#i-pencil"/></svg></button>
