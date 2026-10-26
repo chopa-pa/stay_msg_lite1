@@ -3722,8 +3722,8 @@ if('serviceWorker' in navigator){
 <script>
 // ─────── SUPABASE 동기화 (v3.0.0) ───────
 // 원리: 기존 localStorage는 캐시. 로그인 뒤 서버→캐시(sbPull), save* 뒤 캐시→서버(write-through).
-const SB_URL = localStorage.getItem('sb_url') || '__SB_URL__';
-const SB_ANON = localStorage.getItem('sb_anon') || '__SB_ANON__';
+const SB_URL = localStorage.getItem('sb_url') || 'https://yqzrxxepkxmxeukmsqeb.supabase.co';
+const SB_ANON = localStorage.getItem('sb_anon') || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlxenJ4eGVwa3hteGV1a21zcWViIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTMwMjM1MjgsImV4cCI6MjEwODU5OTUyOH0.outwfYIUJdGNKJ_Orw9GaiXX5MOCtnTUIy6FIqcdjbY';
 let sb = null, sbSyncing = false, sbResIds = new Set(), sbHistIds = new Set(), sbTimer = null, sbUserEmail = '';
 if (SB_URL.startsWith('http') && window.supabase) sb = window.supabase.createClient(SB_URL, SB_ANON);
 
