@@ -64,7 +64,7 @@
 ## 설계
 - [x] `supabase/schema.sql`: reservations · messages · app_settings(settings/tpl/periods jsonb), RLS = authenticated 전부, 가입 금지
 - [x] 봇이 프로젝트 생성(10-27, solsoop/yqzrxxepkxmxeukmsqeb Seoul Free), 키는 ~/.config/solsoop/supabase.env
-- [x] 봇: SQL Editor에서 schema.sql 실행(REST 200 확인), Allow new users 끔(422 확인), 사용자 1명(쵸파파) admin API로 추가 · [ ] 쵸파맘 계정(이메일 대기)
+- [x] 봇: SQL Editor에서 schema.sql 실행(REST 200 확인), Allow new users 끔(422 확인), 사용자 2명(쵸파파 lottopet·쵸파맘 leechopa01) admin API로 추가(gscmedc는 조합 계정이라 삭제)
 
 ## 앱 v3.0.0 (저장소 교체, 화면 유지)
 - [x] supabase-js 2.49.1 CDN, `SB_URL`/`SB_ANON` 주입 완료(eaf6aa5, 배포 확인 10-27)

@@ -58,3 +58,4 @@ PC 주력 + 폰 + 맥 봇 세 곳에서 같은 예약을 읽고 씀. 손님 전�
 - Auth 설정 페이지 URL은 `/auth/providers`(sign-in-up은 404). Allow new users 스위치 id `_r_42_-form-item` → 끔 → Save changes → 새로고침 false 확인 → signup API 422 `signup_disabled`.
 - 사용자는 admin API(`/auth/v1/admin/users`, email_confirm true)로 생성, 비밀번호 로그인 → access_token → RLS 읽기 200 확인. 비밀번호는 env 파일에만(APP_USER1_PASSWORD). 쵸파맘 이메일 미정.
 - push 거부: GitHub가 Pages 도메인 재저장 때 CNAME 삭제·재생성 커밋 2개 만듦(개행만 차이) → rebase 후 push. 배포 60초 뒤 msg.staysolsoop.kr에 새 URL 반영 확인.
+- 10-27 쵸파파 "gscmedc 계정은 내 계정이 아니야"(사회적협동조합 계정, Claude Code 로그인용일 뿐) → 삭제하고 lottopet@gmail.com(쵸파파)·leechopa01@gmail.com(쵸파맘) 2명 생성, 각각 로그인·읽기 200 확인. 이메일은 식별자일 뿐 메일 안 감. 계정 지도는 메모리 stay-solsoop-team 참고.
