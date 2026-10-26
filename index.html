@@ -1976,7 +1976,7 @@ input,select,textarea{font-family:inherit;}
 <div class="toast" id="toast"></div>
 
 <script>
-const APP_VERSION='v2.5.0';
+const APP_VERSION='v2.5.1';
 const SK_SET='stay_msg_lite1_set_v1';
 const SK_TPL='stay_msg_lite1_tpl_v1';
 const SK_RES='stay_msg_lite1_res_v1';
@@ -1995,7 +1995,7 @@ let curTplKey=null;
 const STAGES=[
   {id:'inquiry',icon:'💬',label:'문의',
    templates:[
-    {title:'문의 답변',body:`안녕하세요, {숙소명}입니다.\n\n{입실시간} 입실, {퇴실시간} 퇴실 {박수}박 예약 가능합니다.\n\n* 요금은 평일(일~목) {주중요금} / 주말·공휴일 {주말요금}이며, 2박부터 1박당 30,000원 할인됩니다.\n* 가파른 지형이라 성인 2인까지 머물 수 있습니다. 영유아, 어린이는 동반할 수 없습니다.\n* 반려견은 소형견 1마리 동반 가능하며 숙박당 20,000원입니다. 예약 전에 견종과 성별을 알려주세요.\n\n예약을 원하시면 성함과 연락처를 남겨 주세요. 결제 안내를 드리겠습니다.`}
+    {title:'문의 답변',body:`안녕하세요, {숙소명}입니다.\n\n{입실시간} 입실, {퇴실시간} 퇴실 {박수}박 예약 가능합니다.\n\n* 요금은 평일(일~목) {주중요금} / 금·토·공휴일 전날 {주말요금}이며, 2박부터 1박당 30,000원 할인됩니다.\n* 가파른 지형이라 성인 2인까지 머물 수 있습니다. 영유아, 어린이는 동반할 수 없습니다.\n* 반려견은 소형견 1마리 동반 가능하며 숙박당 20,000원입니다. 예약 전에 견종과 성별을 알려주세요.\n\n예약을 원하시면 성함과 연락처를 남겨 주세요. 결제 안내를 드리겠습니다.`}
   ]},
   {id:'prebook',icon:'📋',label:'예약전',
    templates:[
@@ -2653,7 +2653,7 @@ function getDayTypeFor(room,ds){
   }
   const regHoli=parseNum(room.ph);
   if(regHoli>0){
-    const mode=room.phMode||'both';
+    const mode=room.phMode||'eve';
     if(mode!=='eve'&&HOLIDAYS[ds])return{type:'holiday',price:regHoli,label:'공휴일'};
     if(mode!=='day'&&HOLIDAYS[nextDay(ds)])return{type:'holiday',price:regHoli,label:'공휴일 전날'};
   }
@@ -2739,7 +2739,7 @@ function migrateSettings(){
   }
   settings.rooms.forEach(r=>{
     if(r.pw==null)r.pw='';if(r.pwe==null)r.pwe='';
-    if(r.ph==null)r.ph='';if(!r.phMode)r.phMode='both';
+    if(r.ph==null)r.ph='';if(!r.phMode)r.phMode='eve';
     if(r.base==null)r.base='';if(r.max==null)r.max='';
     if(r.extraFee==null)r.extraFee='';
     if(r.discN==null)r.discN='';if(r.discType==null)r.discType='pct';
@@ -2945,7 +2945,7 @@ function _roomPricingHtml(r){
     <summary>요금 상세 설정 <span class="adv-sub">공휴일 · 인원 · 연박할인 · 기간요금</span></summary>
     <div class="form-grid" style="margin-top:10px;">
       <div class="fi"><label>공휴일 요금</label>${numInp('ri_ph_'+r.id,r.ph,'미설정 시 주말/주중 적용')}</div>
-      <div class="fi"><label>공휴일 요금 적용</label><select class="select" id="ri_phmode_${r.id}"><option value="both" ${(r.phMode||'both')==='both'?'selected':''}>당일 + 전날 밤</option><option value="eve" ${r.phMode==='eve'?'selected':''}>전날 밤만</option><option value="day" ${r.phMode==='day'?'selected':''}>당일 밤만</option></select></div>
+      <div class="fi"><label>공휴일 요금 적용</label><select class="select" id="ri_phmode_${r.id}"><option value="eve" ${(r.phMode||'eve')==='eve'?'selected':''}>전날 밤만 (다음 날 쉬는 밤)</option><option value="both" ${r.phMode==='both'?'selected':''}>당일 + 전날 밤</option><option value="day" ${r.phMode==='day'?'selected':''}>당일 밤만</option></select></div>
       <div class="fi"><label>추가 인원 요금 (1인/박)</label>${numInp('ri_extra_'+r.id,r.extraFee,'예: 20,000')}</div>
       <div class="fi"><label>기준 인원</label><input class="input" type="number" id="ri_base_${r.id}" min="0" value="${esc(r.base||'')}" placeholder="예: 2"></div>
       <div class="fi"><label>최대 인원</label><input class="input" type="number" id="ri_max_${r.id}" min="0" value="${esc(r.max||'')}" placeholder="예: 4"></div>
@@ -2976,7 +2976,7 @@ function _readRoomPricing(r){
   const g=id=>document.getElementById(id);
   const v=id=>{const el=g(id);return el?el.value.trim():'';};
   r.ph=v('ri_ph_'+r.id);
-  r.phMode=g('ri_phmode_'+r.id)?g('ri_phmode_'+r.id).value:'both';
+  r.phMode=g('ri_phmode_'+r.id)?g('ri_phmode_'+r.id).value:'eve';
   r.extraFee=v('ri_extra_'+r.id);
   r.base=v('ri_base_'+r.id);
   r.max=v('ri_max_'+r.id);
@@ -3553,7 +3553,7 @@ function renderDashCal(){
     const isSun=dow===0,isSat=dow===6,isWe=dow===5||dow===6;
     const holi=HOLIDAYS[ds];
     const _r0=settings.rooms&&settings.rooms[0];
-    const holiEve=!holi&&_r0&&parseNum(_r0.ph)>0&&(_r0.phMode||'both')!=='day'&&HOLIDAYS[nextDay(ds)];
+    const holiEve=!holi&&_r0&&parseNum(_r0.ph)>0&&(_r0.phMode||'eve')!=='day'&&HOLIDAYS[nextDay(ds)];
     const dayRes=reservations.filter(r=>r.checkin&&r.checkout&&ds>=r.checkin&&ds<=r.checkout);
     const cls=['month-day',isSun?'sun':isSat?'sat':'',isToday?'today':'',isSel?'selected':'',holi?'holiday':''].filter(Boolean).join(' ');
     const dayLbl=holi?`<small class="holi-lbl">${holi}</small>`
