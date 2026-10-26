@@ -1085,6 +1085,7 @@ input,select,textarea{font-family:inherit;}
   .page{padding:28px 32px 40px;}
 }
 </style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.1/dist/umd/supabase.min.js"></script>
 </head>
 <body>
 
@@ -1741,6 +1742,11 @@ input,select,textarea{font-family:inherit;}
         <button class="btn btn-outline" onclick="document.getElementById('importFile').click()"><svg class="i"><use href="#i-save"/></svg>가져오기</button>
       </div>
       <button class="btn btn-outline btn-block" onclick="installApp()"><svg class="i"><use href="#i-iphone"/></svg>홈 화면에 바로가기 추가</button>
+      <div class="btn-row-2" style="margin-top:10px;">
+        <button class="btn btn-outline" onclick="sbPull(true)">서버에서 새로고침</button>
+        <button class="btn btn-outline" onclick="sbLogout()">로그아웃</button>
+      </div>
+      <p class="adv-hint" id="sbStatus" style="margin:8px 0 0;"></p>
       <input type="file" id="importFile" accept=".json" style="display:none;" onchange="importData(this)">
 
       <div class="copyright">
@@ -1897,6 +1903,16 @@ input,select,textarea{font-family:inherit;}
 </nav>
 
 <!-- Modal -->
+<div class="modal-ov" id="loginModal" style="z-index:9999;">
+  <div class="modal" style="max-width:380px;">
+    <h3 style="margin-bottom:4px;">스테이솔숲 로그인</h3>
+    <p class="adv-hint" style="margin:0 0 14px;">예약·문자 데이터는 서버(Supabase)에 저장됩니다.</p>
+    <div class="fi"><label>이메일</label><input class="input" type="email" id="lg_email" autocomplete="username" onkeydown="if(event.key==='Enter')document.getElementById('lg_pw').focus()"></div>
+    <div class="fi" style="margin-top:10px;"><label>비밀번호</label><input class="input" type="password" id="lg_pw" autocomplete="current-password" onkeydown="if(event.key==='Enter')sbLogin()"></div>
+    <p id="lg_msg" style="margin:8px 0 0;font-size:13px;color:var(--destructive);min-height:18px;"></p>
+    <div class="modal-btns" style="margin-top:14px;"><button class="btn btn-primary" id="lg_btn" onclick="sbLogin()">로그인</button></div>
+  </div>
+</div>
 <div class="modal-ov" id="confirmModal">
   <div class="modal">
     <h3 id="confirmTitle"></h3>
@@ -1976,7 +1992,7 @@ input,select,textarea{font-family:inherit;}
 <div class="toast" id="toast"></div>
 
 <script>
-const APP_VERSION='v2.5.2';
+const APP_VERSION='v3.0.0';
 const SK_SET='stay_msg_lite1_set_v1';
 const SK_TPL='stay_msg_lite1_tpl_v1';
 const SK_RES='stay_msg_lite1_res_v1';
@@ -3701,6 +3717,136 @@ document.getElementById('guideVarChips').innerHTML=VAR_LIST.map(v=>`<span class=
 if('serviceWorker' in navigator){
   window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));
 }
+</script>
+
+<script>
+// ─────── SUPABASE 동기화 (v3.0.0) ───────
+// 원리: 기존 localStorage는 캐시. 로그인 뒤 서버→캐시(sbPull), save* 뒤 캐시→서버(write-through).
+const SB_URL = localStorage.getItem('sb_url') || '__SB_URL__';
+const SB_ANON = localStorage.getItem('sb_anon') || '__SB_ANON__';
+let sb = null, sbSyncing = false, sbResIds = new Set(), sbHistIds = new Set(), sbTimer = null, sbUserEmail = '';
+if (SB_URL.startsWith('http') && window.supabase) sb = window.supabase.createClient(SB_URL, SB_ANON);
+
+function sbStatus(msg){ const el=document.getElementById('sbStatus'); if(el) el.textContent = msg; }
+function sbShowLogin(show){ document.getElementById('loginModal').classList.toggle('open', !!show); }
+const resToRow = r => ({ id:r.id, name:r.name||'', phone:r.phone||'', checkin:r.checkin, checkout:r.checkout, guests:r.guests||'', price:r.price||'', room_id:r.roomId||'', channel:r.channel||'', memo:r.memo||'', status:'confirmed', created_at:r.createdAt||new Date().toISOString() });
+const rowToRes = x => ({ id:x.id, name:x.name, phone:x.phone, checkin:x.checkin, checkout:x.checkout, guests:x.guests, price:x.price, roomId:x.room_id, channel:x.channel, memo:x.memo, createdAt:x.created_at });
+const histToRow = h => ({ id:h.id, stage_id:h.stageId||'', stage_label:h.stageLabel||'', tpl_title:h.tplTitle||'', name:h.name||'', phone:h.phone||'', body:h.body||'', sent_by:'app', status:'sent', sent_at:h.at||new Date().toISOString() });
+const rowToHist = x => ({ id:x.id, at:x.sent_at, stageId:x.stage_id, stageLabel:x.stage_label, stageIcon:(STAGES.find(s=>s.id===x.stage_id)||{}).icon||'', tplTitle:x.tpl_title, name:x.name, phone:x.phone, body:x.body });
+
+async function sbLogin(){
+  if(!sb){ document.getElementById('lg_msg').textContent='서버 설정이 없습니다.'; return; }
+  const email=document.getElementById('lg_email').value.trim(), pw=document.getElementById('lg_pw').value;
+  const btn=document.getElementById('lg_btn'); btn.disabled=true; document.getElementById('lg_msg').textContent='';
+  const { error } = await sb.auth.signInWithPassword({ email, password: pw });
+  btn.disabled=false;
+  if(error){ document.getElementById('lg_msg').textContent='로그인 실패: 이메일·비밀번호를 확인하세요.'; return; }
+  document.getElementById('lg_pw').value='';
+  await sbAfterLogin();
+}
+async function sbLogout(){ if(sb) await sb.auth.signOut(); location.reload(); }
+async function sbAfterLogin(){
+  const { data } = await sb.auth.getUser(); sbUserEmail = data?.user?.email || '';
+  sbShowLogin(false); sbStatus('계정: '+sbUserEmail+' · 동기화 중…');
+  try { await sbPull(); } catch(e){ console.error(e); toast('서버에서 불러오기 실패'); sbStatus('계정: '+sbUserEmail+' · 서버 연결 실패(로컬 데이터 사용 중)'); }
+  if(sbTimer) clearInterval(sbTimer);
+  sbTimer = setInterval(()=>{ if(document.visibilityState==='visible') sbPull().catch(()=>{}); }, 60000);
+  document.addEventListener('visibilitychange', ()=>{ if(document.visibilityState==='visible') sbPull().catch(()=>{}); });
+}
+function sbRefreshUI(){
+  loadAll(); loadReservations(); loadHistory(); fillSettingsFields(); buildRoomSelect(); buildTplSelect(); renderPreview(); renderDashboard();
+  const rp=document.getElementById('tab-reserv'); if(rp&&rp.classList.contains('active')) renderReservations();
+  const hp=document.getElementById('tab-history'); if(hp&&hp.classList.contains('active')) renderHistory();
+}
+async function sbPull(manual){
+  if(!sb || sbSyncing) return;
+  sbSyncing = true;
+  try {
+    const [s, r, m] = await Promise.all([
+      sb.from('app_settings').select('key,value'),
+      sb.from('reservations').select('*').neq('status','cancelled'),
+      sb.from('messages').select('*').order('sent_at',{ascending:false}).limit(200)
+    ]);
+    if(s.error||r.error||m.error) throw (s.error||r.error||m.error);
+    const serverEmpty = !(s.data||[]).length && !(r.data||[]).length;
+    const localHas = !!(localStorage.getItem(SK_RES) && JSON.parse(localStorage.getItem(SK_RES)||'[]').length) || !!(localStorage.getItem(SK_SET) && (JSON.parse(localStorage.getItem(SK_SET)||'{}').name));
+    if(serverEmpty && localHas){
+      sbSyncing = false;
+      showConfirmModal('서버에 올리기', '서버가 비어 있습니다. 이 기기의 설정·템플릿·예약을 서버로 올릴까요? (한 번만)', ()=>sbPushAll().then(()=>toast('서버에 올렸어요 ☁️')).catch(()=>toast('올리기 실패')));
+      return;
+    }
+    const map = Object.fromEntries((s.data||[]).map(x=>[x.key,x.value]));
+    if(map.settings) localStorage.setItem(SK_SET, JSON.stringify(map.settings));
+    if(map.tpl) localStorage.setItem(SK_TPL, JSON.stringify(map.tpl));
+    if(map.periods) localStorage.setItem(SK_PER, JSON.stringify(map.periods));
+    const res = (r.data||[]).map(rowToRes); localStorage.setItem(SK_RES, JSON.stringify(res)); sbResIds = new Set(res.map(x=>x.id));
+    const hist = (m.data||[]).map(rowToHist); localStorage.setItem(SK_HIST, JSON.stringify(hist)); sbHistIds = new Set(hist.map(x=>x.id));
+    sbRefreshUI();
+    sbStatus('계정: '+sbUserEmail+' · 서버 동기화 '+new Date().toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit'}));
+    if(manual) toast('서버에서 새로고침 ✓');
+  } finally { sbSyncing = false; }
+}
+async function sbPushSettings(key, value){
+  if(!sb || sbSyncing || !sbUserEmail) return;
+  const { error } = await sb.from('app_settings').upsert({ key, value });
+  if(error){ console.error(error); toast('서버 저장 실패 — 인터넷 확인'); }
+}
+async function sbPushReservations(){
+  if(!sb || sbSyncing || !sbUserEmail) return;
+  const rows = reservations.map(resToRow);
+  const { error } = rows.length ? await sb.from('reservations').upsert(rows) : { error:null };
+  const gone = [...sbResIds].filter(id=>!reservations.find(r=>r.id===id));
+  if(gone.length) await sb.from('reservations').delete().in('id', gone);
+  if(error){ console.error(error); toast('서버 저장 실패 — 인터넷 확인'); return; }
+  sbResIds = new Set(reservations.map(r=>r.id));
+}
+async function sbPushHistory(){
+  if(!sb || sbSyncing || !sbUserEmail) return;
+  const rows = msgHistory.map(histToRow);
+  const { error } = rows.length ? await sb.from('messages').upsert(rows) : { error:null };
+  const gone = [...sbHistIds].filter(id=>!msgHistory.find(h=>h.id===id));
+  if(gone.length) await sb.from('messages').delete().in('id', gone);
+  if(error){ console.error(error); toast('서버 저장 실패 — 인터넷 확인'); return; }
+  sbHistIds = new Set(msgHistory.map(h=>h.id));
+}
+async function sbPushAll(){
+  if(!sb || !sbUserEmail) return;
+  await sbPushSettings('settings', JSON.parse(localStorage.getItem(SK_SET)||'{}'));
+  await sbPushSettings('tpl', JSON.parse(localStorage.getItem(SK_TPL)||'{}'));
+  await sbPushSettings('periods', JSON.parse(localStorage.getItem(SK_PER)||'[]'));
+  await sbPushReservations(); await sbPushHistory();
+  sbStatus('계정: '+sbUserEmail+' · 서버에 올림');
+}
+// 기존 저장 함수에 서버 쓰기 덧붙임
+const _saveReservations = saveReservations; saveReservations = function(){ _saveReservations(); sbPushReservations(); };
+const _saveSettings = saveSettings; saveSettings = function(){ _saveSettings(); sbPushSettings('settings', JSON.parse(localStorage.getItem(SK_SET)||'{}')); };
+const _saveTplStorage = saveTplStorage; saveTplStorage = function(){ _saveTplStorage(); sbPushSettings('tpl', JSON.parse(localStorage.getItem(SK_TPL)||'{}')); };
+const _savePeriodsStorage = savePeriodsStorage; savePeriodsStorage = function(){ _savePeriodsStorage(); sbPushSettings('periods', periods); };
+const _saveHistoryStorage = saveHistoryStorage; saveHistoryStorage = function(){ _saveHistoryStorage(); sbPushHistory(); };
+const _importData = importData; importData = function(input){
+  const file=input.files[0]; if(!file) return;
+  const reader=new FileReader();
+  reader.onload=async e=>{
+    try{
+      const data=JSON.parse(e.target.result);
+      if(data.settings)localStorage.setItem(SK_SET,JSON.stringify(data.settings));
+      if(data.tpl)localStorage.setItem(SK_TPL,JSON.stringify(data.tpl));
+      if(data.res)localStorage.setItem(SK_RES,JSON.stringify(data.res));
+      if(data.periods)localStorage.setItem(SK_PER,JSON.stringify(data.periods));
+      sbSyncing = true; try { sbRefreshUI(); } finally { sbSyncing = false; }
+      await sbPushAll();
+      toast('가져오기 완료 ✅ (서버 반영)');
+    }catch(err){ console.error(err); toast('파일이 올바르지 않아요 ❌'); }
+    input.value='';
+  };
+  reader.readAsText(file);
+};
+// 시작: 세션 있으면 바로, 없으면 로그인 화면. 서버 설정이 없으면(개발) 로컬 전용.
+(async()=>{
+  if(!sb){ sbShowLogin(false); sbStatus('서버 설정 없음 — 이 기기에만 저장'); return; }
+  const { data } = await sb.auth.getSession();
+  if(data?.session) await sbAfterLogin(); else sbShowLogin(true);
+})();
 </script>
 </body>
 </html>

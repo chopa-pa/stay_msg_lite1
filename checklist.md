@@ -58,3 +58,23 @@
 - [x] `node --check` + 브라우저 QA(요금 계산 12/24·12/31·설 연휴, 가져오기, 예약 채널 표시)
 - [x] 도움말에 공휴일 전날·채널 한 줄
 - [ ] 커밋 → push는 쵸파파 승인 뒤 (remote 토큰 제거 포함)
+
+# 2단계 — Supabase 공유 저장소 (v3.0.0, 2026-10-26 밤 착수)
+
+## 설계
+- [x] `supabase/schema.sql`: reservations · messages · app_settings(settings/tpl/periods jsonb), RLS = authenticated 전부, 가입 금지
+- [ ] 쵸파파: 프로젝트 생성(Seoul, Free) → URL·anon 키 전달, service_role 키는 ~/.config/solsoop/supabase.env
+- [ ] 쵸파파 또는 봇(service 키): SQL Editor에서 schema.sql 실행, Auth > Providers > Email 켬 · "Allow new users to sign up" 끔, Users에 2명 추가
+
+## 앱 v3.0.0 (저장소 교체, 화면 유지)
+- [ ] supabase-js v2 CDN 로드, `SB_URL`/`SB_ANON` 상수(빌드 시 채움)
+- [ ] 로그인 화면(이메일+비밀번호, 세션 유지, 로그아웃은 숙소 탭 맨 아래)
+- [ ] 동기화 계층: 로그인 후 서버 → localStorage 캐시로 내려받기(loadAll 재사용) / save* 함수 뒤에 서버 upsert(write-through) / 예약 삭제 → delete / 이력 → messages insert
+- [ ] 다른 기기 변경 반영: 탭 포커스 때 재조회 + 60초 주기(실시간 구독은 후순위)
+- [ ] 오프라인·실패 시 토스트 "저장 실패(인터넷 확인)" + 로컬 유지
+- [ ] 1회 이관: 로그인 뒤 서버가 비어 있고 로컬에 데이터 있으면 "서버로 올릴까요?" 1번 확인 → 업로드 (json 가져오기 → 서버 업로드 경로로 PC에서 1회)
+- [ ] APP_VERSION v3.0.0, sw v82, node --check, 브라우저 QA(로그인·PC/폰 교차 반영)
+
+## 봇 (3단계와 연결)
+- [ ] `~/dev/stay-solsoop/bot/` 수집기: 네이버 파트너센터·에어비앤비 → reservations upsert(source_id), 10분 launchd
+- [ ] 발송기: 알리고 LMS, 확정 즉시·입실 09:30·퇴실 09:30, messages 기록, 첫 달 미리보기 게이트
