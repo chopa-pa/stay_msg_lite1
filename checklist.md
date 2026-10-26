@@ -63,17 +63,17 @@
 
 ## 설계
 - [x] `supabase/schema.sql`: reservations · messages · app_settings(settings/tpl/periods jsonb), RLS = authenticated 전부, 가입 금지
-- [ ] 쵸파파: 프로젝트 생성(Seoul, Free) → URL·anon 키 전달, service_role 키는 ~/.config/solsoop/supabase.env
-- [ ] 쵸파파 또는 봇(service 키): SQL Editor에서 schema.sql 실행, Auth > Providers > Email 켬 · "Allow new users to sign up" 끔, Users에 2명 추가
+- [x] 봇이 프로젝트 생성(10-27, solsoop/yqzrxxepkxmxeukmsqeb Seoul Free), 키는 ~/.config/solsoop/supabase.env
+- [x] 봇: SQL Editor에서 schema.sql 실행(REST 200 확인), Allow new users 끔(422 확인), 사용자 1명(쵸파파) admin API로 추가 · [ ] 쵸파맘 계정(이메일 대기)
 
 ## 앱 v3.0.0 (저장소 교체, 화면 유지)
-- [ ] supabase-js v2 CDN 로드, `SB_URL`/`SB_ANON` 상수(빌드 시 채움)
-- [ ] 로그인 화면(이메일+비밀번호, 세션 유지, 로그아웃은 숙소 탭 맨 아래)
-- [ ] 동기화 계층: 로그인 후 서버 → localStorage 캐시로 내려받기(loadAll 재사용) / save* 함수 뒤에 서버 upsert(write-through) / 예약 삭제 → delete / 이력 → messages insert
-- [ ] 다른 기기 변경 반영: 탭 포커스 때 재조회 + 60초 주기(실시간 구독은 후순위)
-- [ ] 오프라인·실패 시 토스트 "저장 실패(인터넷 확인)" + 로컬 유지
-- [ ] 1회 이관: 로그인 뒤 서버가 비어 있고 로컬에 데이터 있으면 "서버로 올릴까요?" 1번 확인 → 업로드 (json 가져오기 → 서버 업로드 경로로 PC에서 1회)
-- [ ] APP_VERSION v3.0.0, sw v82, node --check, 브라우저 QA(로그인·PC/폰 교차 반영)
+- [x] supabase-js 2.49.1 CDN, `SB_URL`/`SB_ANON` 주입 완료(eaf6aa5, 배포 확인 10-27)
+- [x] 로그인 화면(이메일+비밀번호, 세션 유지, 로그아웃은 숙소 탭)
+- [x] 동기화 계층: 로그인 후 서버 → localStorage 캐시로 내려받기(loadAll 재사용) / save* 함수 뒤에 서버 upsert(write-through) / 예약 삭제 → delete / 이력 → messages insert
+- [x] 다른 기기 변경 반영: 탭 포커스 때 재조회 + 60초 주기(실시간 구독은 후순위)
+- [x] 오프라인·실패 시 토스트 "저장 실패(인터넷 확인)" + 로컬 유지
+- [x] 1회 이관(코드): 로그인 뒤 서버가 비어 있고 로컬에 데이터 있으면 "서버로 올릴까요?" 1번 확인 → 업로드 (json 가져오기 → 서버 업로드 경로로 PC에서 1회)
+- [x] APP_VERSION v3.0.0, sw v82, node --check 통과 · [ ] 브라우저 QA(쵸파파 PC 로그인 → 서버 올리기 → 폰 교차 확인)
 
 ## 봇 (3단계와 연결)
 - [ ] `~/dev/stay-solsoop/bot/` 수집기: 네이버 파트너센터·에어비앤비 → reservations upsert(source_id), 10분 launchd

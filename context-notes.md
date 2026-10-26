@@ -49,3 +49,12 @@ PC 주력 + 폰 + 맥 봇 세 곳에서 같은 예약을 읽고 씀. 손님 전�
 3. **동기화 방식 = 캐시 write-through**: 기존 코드의 localStorage를 캐시로 두고, 로그인 뒤 서버 → 캐시 채움, save* 뒤에 서버 upsert. 화면·함수 거의 안 건드림. 충돌은 "마지막 저장 우선"(사용자 둘뿐).
 4. **인증**: 이메일+비밀번호 2계정, 가입 차단. anon 키는 공개 키라 코드에 박아도 됨(RLS가 지킴). service_role 키는 봇 전용, 맥 env만.
 5. **봇 중복 방지**: source_id(네이버 예약번호/에어비앤비 코드) unique.
+
+## 2026-10-27 Supabase 프로젝트 봇이 직접 생성
+- 쵸파파 "니가 해봐라" → ego-browser(공간 35, 이미 로그인된 크롬 프로필)로 chopa-pa's Org에 `solsoop` 프로젝트 생성(Seoul, Free, Data API 켬, 자동 RLS 켬). 기존 프로젝트 1개는 gscmedc.org 허브(tqekuhtofvgzycstwdbz).
+- 폼 주의: 프로젝트명 fill이 기존값 뒤에 붙어 `staysolsoopsolsoop`가 됨 → focus+⌘A+type으로 교체. 지역은 「Need a specific region?」 눌러 listboxoption "Northeast Asia (Seoul)" 선택.
+- 키: 새 방식 publishable(sb_publishable_…)과 레거시 anon/service_role JWT 둘 다 있음. 앱은 supabase-js 2.49.1이라 **레거시 anon JWT** 주입(publishable 키 호환은 더 새 버전 필요). secret 키(sb_secret_)는 Reveal 버튼이 DOM 재생성돼 못 읽음 — 필요 없음(service_role로 충분).
+- SQL Editor: Monaco에 keyboard.paste로 붙이고 ⌘↵ → "Potential issue detected"(drop … if exists 때문) 모달 → Run query. innerText로는 가상화 때문에 확인 불가 → REST로 테이블 존재 확인(service 200, anon 200 []).
+- Auth 설정 페이지 URL은 `/auth/providers`(sign-in-up은 404). Allow new users 스위치 id `_r_42_-form-item` → 끔 → Save changes → 새로고침 false 확인 → signup API 422 `signup_disabled`.
+- 사용자는 admin API(`/auth/v1/admin/users`, email_confirm true)로 생성, 비밀번호 로그인 → access_token → RLS 읽기 200 확인. 비밀번호는 env 파일에만(APP_USER1_PASSWORD). 쵸파맘 이메일 미정.
+- push 거부: GitHub가 Pages 도메인 재저장 때 CNAME 삭제·재생성 커밋 2개 만듦(개행만 차이) → rebase 후 push. 배포 60초 뒤 msg.staysolsoop.kr에 새 URL 반영 확인.

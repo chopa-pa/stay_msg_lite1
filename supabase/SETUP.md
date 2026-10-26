@@ -1,23 +1,18 @@
-# Supabase 설정 순서 (쵸파파용, 2026-10-26)
+# Supabase 설정 (2026-10-27 봇이 완료)
 
-## 1. 프로젝트 만들기
-1. supabase.com → Start your project → GitHub(chopa-pa)로 로그인.
-2. New project → Name `staysolsoop` → Database password 「Generate」 → Region **Northeast Asia (Seoul)** → Free → Create. 2분 대기.
+## 현재 상태
+- 프로젝트 `solsoop` (ref `yqzrxxepkxmxeukmsqeb`, Northeast Asia Seoul, Free), 조직 chopa-pa's Org. 대시보드 https://supabase.com/dashboard/project/yqzrxxepkxmxeukmsqeb
+- `schema.sql` 실행 완료(reservations · messages · app_settings, RLS authenticated 전부). REST 확인: service 200, anon 200 빈 배열.
+- Auth: 「Allow new users to sign up」 끔(가입 시도 → 422 signup_disabled 확인). Confirm email 켜짐(사용자는 admin API로 확인 상태로 만듦).
+- 사용자 1: 쵸파파(gscmedc@gmail.com). 비밀번호는 맥 `~/.config/solsoop/supabase.env`의 `APP_USER1_PASSWORD`.
+- 키: URL·anon은 index.html에 주입(커밋 eaf6aa5). service_role·DB 비밀번호·publishable 키는 `~/.config/solsoop/supabase.env`(맥만, 드라이브·깃 금지).
 
-## 2. 키 전달
-- Project Settings(⚙) → API.
-- **Project URL**, **anon public** → 봇(채팅)에 전달. 공개 키라 괜찮음.
-- **service_role** → 채팅 금지. 맥 `~/.config/solsoop/supabase.env`의 `SUPABASE_SERVICE_KEY=` 뒤에 붙여넣기.
+## 남은 일
+- 쵸파맘 계정: 이메일 정해지면 봇이 admin API로 추가(아래 명령). 대시보드 Authentication → Users → Add user로도 가능(Auto Confirm 체크).
+- PC에서 https://msg.staysolsoop.kr 로그인 → "서버가 비어 있습니다. 올릴까요?" 확인(PC 데이터가 서버로 감). 폰은 로그인만.
 
-## 3. 표 만들기
-- 왼쪽 SQL Editor → New query → `supabase/schema.sql` 내용 전체 붙여넣기 → Run. "Success" 확인.
-  (봇이 service 키로 대신 실행할 수도 있음)
-
-## 4. 로그인 계정
-- Authentication → Providers → Email 켜짐 확인. 「Confirm email」 끔(초대 메일 안 받아도 되게).
-- Authentication → Sign In / Up → 「Allow new users to sign up」 **끔**.
-- Authentication → Users → Add user → Create new user → 이메일·비밀번호 입력(쵸파파 1명, 쵸파맘 1명). 「Auto Confirm User」 체크.
-
-## 5. 앱 연결(봇)
-- index.html의 `__SB_URL__`·`__SB_ANON__`을 실제 값으로 바꿔 push → msg.staysolsoop.kr 새로고침 → 로그인 화면.
-- PC에서 로그인 → "서버가 비어 있습니다. 올릴까요?" → 확인(이 기기 데이터가 서버로 감). 다른 기기는 로그인만 하면 같은 데이터.
+## 사용자 추가(봇용)
+```sh
+set -a; . ~/.config/solsoop/supabase.env; set +a
+curl -X POST "$SUPABASE_URL/auth/v1/admin/users" -H "apikey: $SUPABASE_SERVICE_KEY" -H "Authorization: Bearer $SUPABASE_SERVICE_KEY" -H "Content-Type: application/json" -d '{"email":"EMAIL","password":"PW","email_confirm":true}'
+```
