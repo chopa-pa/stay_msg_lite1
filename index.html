@@ -1992,7 +1992,7 @@ input,select,textarea{font-family:inherit;}
 <div class="toast" id="toast"></div>
 
 <script>
-const APP_VERSION='v3.1.0';
+const APP_VERSION='v3.1.1';
 const SK_SET='stay_msg_lite1_set_v1';
 const SK_TPL='stay_msg_lite1_tpl_v1';
 const SK_RES='stay_msg_lite1_res_v1';
@@ -3722,7 +3722,7 @@ if('serviceWorker' in navigator){
 </script>
 
 <script>
-// ─────── SUPABASE 동기화 (v3.1.0) ───────
+// ─────── SUPABASE 동기화 (v3.1.1) ───────
 // 원리: localStorage는 캐시. 로그인 뒤 서버→캐시(sbPull), 저장 함수 뒤 캐시→서버(write-through).
 // v3.1.0: 모든 서버 작업을 한 줄로 직렬화(sbRun), 실패는 기억해 두고 재시도(sbPending), 편집 중인 폼은 pull이 안 건드림(sbFormDirty),
 //         pull 도중 로컬 저장이 끼어들면 그 pull 결과는 버림(sbWriteGen), 세션은 onAuthStateChange로 추적.
@@ -3786,8 +3786,8 @@ function sbRefreshUI(withSettings){
 async function sbPull(manual){
   if(!sb || !sbUserEmail) return;
   return sbRun(async()=>{
-    if(sbHasPending()){ await sbRetryPending(); if(sbHasPending()){ if(manual) toast('먼저 저장 실패분을 올려야 해요 — 인터넷 확인'); return; } }
     const gen = sbWriteGen;
+    if(sbHasPending()){ await sbRetryPending(); if(sbHasPending() || gen !== sbWriteGen){ if(manual && sbHasPending()) toast('먼저 저장 실패분을 올려야 해요 — 인터넷 확인'); return; } }
     const [s, r, m] = await Promise.all([
       sb.from('app_settings').select('key,value'),
       sb.from('reservations').select('*').neq('status','cancelled'),
@@ -3819,21 +3819,33 @@ async function sbPull(manual){
 // ── 캐시 → 서버 (실제 작업: 큐 안에서만 호출) ──
 const SB_SET_KEYS = { settings:[SK_SET,'{}'], tpl:[SK_TPL,'{}'], periods:[SK_PER,'[]'] };
 async function _pushSettings(key){
-  const [sk, def] = SB_SET_KEYS[key];
+  const g = sbWriteGen, [sk, def] = SB_SET_KEYS[key];
   const { error } = await sb.from('app_settings').upsert({ key, value: JSON.parse(localStorage.getItem(sk)||def) });
   if(error){ sbFail(error); return false; }
-  sbPending[key] = false; return true;
+  if(g === sbWriteGen) sbPending[key] = false; // 올리는 사이 또 저장됐으면 pending 유지(다음 push가 올림)
+  return true;
 }
 async function _pushReservations(){
-  const rows = reservations.map(resToRow);
-  if(rows.length){ const { error } = await sb.from('reservations').upsert(rows); if(error){ if(String(error.code||'').startsWith('23')){ sbPending.res = false; toast(error.code==='23P01' ? '같은 날짜에 겹치는 예약이 서버에 이미 있어요 — 서버에서 새로고침으로 확인' : '서버가 예약을 거부했어요: '+(error.message||error.code)); return false; } sbFail(error); return false; } }
+  const g = sbWriteGen, rows = reservations.map(resToRow);
+  let rejected = [];
+  if(rows.length){
+    const { error } = await sb.from('reservations').upsert(rows);
+    if(error && String(error.code||'').startsWith('23')){
+      // 제약 위반(날짜 겹침 등)은 영구 오류 → 한 건씩 올려 멀쩡한 건 살리고 거부된 건만 알림
+      for(const row of rows){ const r = await sb.from('reservations').upsert(row); if(r.error) rejected.push({ row, code:r.error.code }); }
+      const names = rejected.map(x=>x.row.name||x.row.id).join(', ');
+      toast((rejected.some(x=>x.code==='23P01') ? '날짜가 겹쳐 서버가 거부한 예약: ' : '서버가 거부한 예약: ')+names+' — 저장 안 됨, 서버에서 새로고침으로 확인');
+    } else if(error){ sbFail(error); return false; }
+  }
   const cur = new Set(reservations.map(r=>r.id));
   const gone = [...sbResIds].filter(id=>!cur.has(id));
   if(gone.length){ const { error } = await sb.from('reservations').delete().in('id', gone); if(error){ sbFail(error); return false; } }
-  sbResIds = cur; sbPending.res = false; return true;
+  rejected.forEach(x=>cur.delete(x.row.id));
+  sbResIds = cur; if(g === sbWriteGen) sbPending.res = false;
+  return rejected.length === 0;
 }
 async function _pushHistory(){
-  const rows = msgHistory.map(histToRow);
+  const g = sbWriteGen, rows = msgHistory.map(histToRow);
   if(rows.length){ const { error } = await sb.from('messages').upsert(rows); if(error){ sbFail(error); return false; } }
   const cur = new Set(msgHistory.map(h=>h.id));
   // 200개 넘쳐서 밀려난(가장 오래된) 이력은 삭제가 아님 → 현재 목록의 가장 오래된 시각보다 뒤인 것만 '지운 것'으로 봄
@@ -3841,13 +3853,16 @@ async function _pushHistory(){
   const gone = [...sbHistIds].filter(id=>!cur.has(id) && (!oldest || (sbHistAt.get(id)||'') >= oldest));
   if(gone.length){ const { error } = await sb.from('messages').delete().in('id', gone); if(error){ sbFail(error); return false; } }
   gone.forEach(id=>{ sbHistIds.delete(id); sbHistAt.delete(id); });
-  cur.forEach(id=>sbHistIds.add(id)); sbPending.hist = false; return true;
+  msgHistory.forEach(h=>{ sbHistIds.add(h.id); sbHistAt.set(h.id, h.at||''); });
+  if(g === sbWriteGen) sbPending.hist = false; return true;
 }
 async function sbRetryPending(){
-  for(const k of ['settings','tpl','periods']) if(sbPending[k]) await _pushSettings(k);
-  if(sbPending.res) await _pushReservations();
-  if(sbPending.hist) await _pushHistory();
-  if(!sbHasPending()) sbStatus('계정: '+sbUserEmail+' · 서버 저장 '+sbNow());
+  let ok = true;
+  for(const k of ['settings','tpl','periods']) if(sbPending[k]) ok = (await _pushSettings(k)) && ok;
+  if(sbPending.res) ok = (await _pushReservations()) && ok;
+  if(sbPending.hist) ok = (await _pushHistory()) && ok;
+  if(!sbHasPending() && ok) sbStatus('계정: '+sbUserEmail+' · 서버 저장 '+sbNow());
+  return ok;
 }
 // 공개 함수: 큐에 넣고 바로 반환(저장 UI는 기다리지 않음)
 function sbPushSettings(key){ if(!sb || sbApplying) return; sbWriteGen++; sbPending[key] = true; if(!sbUserEmail) return; return sbRun(async()=>{ if(await _pushSettings(key)) sbStatus('계정: '+sbUserEmail+' · 서버 저장 '+sbNow()); }); }
@@ -3856,7 +3871,7 @@ function sbPushHistory(){ if(!sb || sbApplying) return; sbWriteGen++; sbPending.
 function sbPushAll(){
   if(!sb || !sbUserEmail) return Promise.resolve();
   sbWriteGen++; Object.keys(sbPending).forEach(k=>sbPending[k]=true);
-  return sbRun(async()=>{ await sbRetryPending(); if(sbHasPending()) throw new Error('push incomplete'); sbStatus('계정: '+sbUserEmail+' · 서버에 올림 '+sbNow()); });
+  return sbRun(async()=>{ const ok = await sbRetryPending(); if(!ok || sbHasPending()) throw new Error('push incomplete'); sbStatus('계정: '+sbUserEmail+' · 서버에 올림 '+sbNow()); });
 }
 // 기존 저장 함수에 서버 쓰기 덧붙임 (설정·호실·기간·초기화는 전부 persistSettings 경유)
 const _persistSettings = persistSettings; persistSettings = function(){ _persistSettings(); sbFormDirty = false; sbPushSettings('settings'); };

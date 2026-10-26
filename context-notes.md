@@ -81,3 +81,4 @@ PC 주력 + 폰 + 맥 봇 세 곳에서 같은 예약을 읽고 씀. 손님 전�
 - 스키마: btree_gist + `reservations_no_overlap`(confirmed만, room_id coalesce, [checkin,checkout)) + `reservations_dates_chk`. SQL editor에서 적용, REST로 겹침 23P01·역순 23514 거부 확인, 기존 5건 영향 없음.
 - 테스트: tests/sync_mock_supabase.js 모의 클라이언트(CDN 차단+주입)로 18 시나리오 PASS. 실서버 로그인 QA는 쵸파파.
 - 남김(후순위): 전체 목록 upsert → 변경분만(두 기기 동시 편집 시 상대 변경 되돌림, 사용자 2명이라 보류). 최초 업로드 비원자(서버 채워져 해당 없음).
+- 10-27 코덱스 후속 리뷰(reviews/2026-10-27_codex_v3.1.0-followup.md): 기존 10건 중 고침 4·일부 5·보류 1, 새 버그 P1 2·P2 1 → **v3.1.1**: ① 재시도 중 새 저장 덮임 — pull이 gen을 재시도 전에 잡고 변하면 중단, 각 push는 시작 gen과 같을 때만 pending 해제 ② 23xxx 배치 거부 시 한 건씩 재시도해 멀쩡한 건 저장·거부 건만 이름 토스트, sbRetryPending이 성공 여부 반환 → sbPushAll 실패 전파(가져오기 "서버 반영 실패" 표시) ③ _pushHistory가 올린 이력 시각을 sbHistAt에 기록. 모의 테스트 17 PASS(I·J·K 추가). 남은 일부 항목(공유 dirty 플래그가 다른 초안도 풀림, 전체 목록 upsert, 최초 업로드 원자성)은 사용자 2명 기준 보류.

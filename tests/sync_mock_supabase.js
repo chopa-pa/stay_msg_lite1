@@ -11,11 +11,12 @@
         order(){ return b; }, limit(n){ q.lim=n; return b; },
         upsert(rows){ q.op='upsert'; q.rows=Array.isArray(rows)?rows:[rows]; return b; },
         delete(){ q.op='delete'; return b; }, in(k,ids){ q.inIds=ids; return b; },
-        then(res){ res(exec()); }
+        then(res){ if(mock._delay) setTimeout(()=>res(exec()), mock._delay); else res(exec()); }
       };
       function exec(){
         mock._log.push(table+':'+q.op);
         if(mock._fail===q.op || mock._fail===table+':'+q.op) return {data:null,error:{message:'mock fail '+q.op,code:'MOCK'}};
+        if(q.op==='upsert' && mock._rejectId && q.rows.some(r=>r.id===mock._rejectId)) return {data:null,error:{message:'overlap',code:'23P01'}};
         const t=db[table]; const key = table==='app_settings'?'key':'id';
         if(q.op==='select'){ let rows=Object.values(t).filter(r=>q.filters.every(f=>f(r))); if(q.lim) rows=rows.slice(0,q.lim); return {data:JSON.parse(JSON.stringify(rows)),error:null}; }
         if(q.op==='upsert'){ q.rows.forEach(r=>{ t[r[key]]=JSON.parse(JSON.stringify(r)); }); return {data:null,error:null}; }
