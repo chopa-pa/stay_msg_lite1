@@ -77,7 +77,7 @@
 
 ## v3.1.0 — 코덱스 리뷰 반영 (2026-10-27 리뷰, GATE FAIL P1 7/P2 3, 전문 reviews/) — 구현·모의 테스트 18 PASS(tests/), sw v83
 - [x] 코덱스 후속 리뷰 → v3.1.1(재시도 중 저장 보호·거부 건 분리·이력 시각 기록), 모의 17 PASS, sw v84
-- [ ] 쵸파파 실기기 QA: PC 로그인 → 방 요금 수정 → 폰에서 1분 뒤 반영 확인 / 계좌 입력 중 1분 넘겨도 안 지워지는지
+- [x] 쵸파파 실기기 QA(10-27 "서버 동기화 시간 맞고 잘 된다")
 - [x] 방·설정 직접 저장 경로(saveRoomSingle/addRoom/saveRoom/deleteRoom/초기화/deletePeriod) → saveSettings 래퍼 경유
 - [x] pull 시 편집 중 폼 보호(dirty면 fillSettingsFields 건너뜀), 저장 중 pull 겹침 방지
 - [x] 삭제·upsert 결과 확인, 실패 시 토스트 + id 집합 갱신 안 함
