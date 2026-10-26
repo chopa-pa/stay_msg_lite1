@@ -75,14 +75,15 @@
 - [x] 1회 이관(코드): 로그인 뒤 서버가 비어 있고 로컬에 데이터 있으면 "서버로 올릴까요?" 1번 확인 → 업로드 (json 가져오기 → 서버 업로드 경로로 PC에서 1회)
 - [x] APP_VERSION v3.0.0, sw v82, node --check 통과 · [x] 데이터 서버 업로드(봇, service 키, 10-27) · [x] 아이패드 로그인·계좌 확인(쵸파파 10-27) · [ ] 솔숲 폰 로그인·교차 수정 확인 · [ ] 맥 PC 로그인
 
-## v3.1.0 — 코덱스 리뷰 반영 (2026-10-27 리뷰, GATE FAIL P1 7/P2 3, 전문 reviews/)
-- [ ] 방·설정 직접 저장 경로(saveRoomSingle/addRoom/saveRoom/deleteRoom/초기화/deletePeriod) → saveSettings 래퍼 경유
-- [ ] pull 시 편집 중 폼 보호(dirty면 fillSettingsFields 건너뜀), 저장 중 pull 겹침 방지
-- [ ] 삭제·upsert 결과 확인, 실패 시 토스트 + id 집합 갱신 안 함
-- [ ] onAuthStateChange로 세션 관리, getUser 실패 시 로그인 창 유지
-- [ ] resToRow status 고정 제거(서버 status 보존), rowToHist sent_by/status 보존
-- [ ] schema: 날짜 겹침 exclusion 제약(confirmed만)
-- [ ] 후순위: 전체 upsert → 변경분만, 이력 트림≠삭제
+## v3.1.0 — 코덱스 리뷰 반영 (2026-10-27 리뷰, GATE FAIL P1 7/P2 3, 전문 reviews/) — 구현·모의 테스트 18 PASS(tests/), sw v83
+- [ ] 쵸파파 실기기 QA: PC 로그인 → 방 요금 수정 → 폰에서 1분 뒤 반영 확인 / 계좌 입력 중 1분 넘겨도 안 지워지는지
+- [x] 방·설정 직접 저장 경로(saveRoomSingle/addRoom/saveRoom/deleteRoom/초기화/deletePeriod) → saveSettings 래퍼 경유
+- [x] pull 시 편집 중 폼 보호(dirty면 fillSettingsFields 건너뜀), 저장 중 pull 겹침 방지
+- [x] 삭제·upsert 결과 확인, 실패 시 토스트 + id 집합 갱신 안 함
+- [x] onAuthStateChange로 세션 관리, getUser 실패 시 로그인 창 유지
+- [x] resToRow status 고정 제거(서버 status 보존), rowToHist sent_by/status 보존
+- [x] schema: 날짜 겹침(적용 완료, 23P01·23514 확인) exclusion 제약(confirmed만)
+- [ ] 후순위: 전체 upsert → 변경분만 (이력 트림≠삭제는 sbHistAt로 처리함)
 
 ## 봇 (3단계와 연결)
 - [ ] `~/dev/stay-solsoop/bot/` 수집기: 네이버 파트너센터·에어비앤비 → reservations upsert(source_id), 10분 launchd

@@ -72,3 +72,12 @@ PC 주력 + 폰 + 맥 봇 세 곳에서 같은 예약을 읽고 씀. 손님 전�
 6. **[P1-5] 최초 업로드 비원자** — 서버가 이미 채워져 있어 지금은 해당 없음.
 7. **[P2-8] 이력 200개 트림을 서버 삭제로 해석**, **[P2-9] rowToHist가 sent_by/status 버림**(봇 기록 덮음), **[P2-10] 같은 날짜 중복 예약 DB 제약 없음**.
 판단: 사용자 2명·동시 편집 드묾이라 1·2·3·4·5(status)·P2-9·P2-10은 고칠 가치 있음(v3.1.0). 1(전체 upsert→개별 upsert+버전)·P2-8은 후순위.
+
+## 2026-10-27 v3.1.0 — 코덱스 리뷰 반영 구현
+- 베이스: `persistSettings()` 신설(2768), 사용자 저장 경로 6곳(saveSettings·deletePeriod·saveRoomSingle·addRoom·saveRoom·deleteRoom)+초기화가 이걸 경유. migrateSettings 안의 직접 쓰기는 hydration이라 그대로(서버 push 안 함).
+- 동기화 계층 재작성: `sbRun` 프라미스 큐로 pull/push 직렬화(sbSyncing 게이트 삭제 → 저장이 조용히 버려지던 원인 제거). `sbWriteGen`: pull이 읽는 사이 로컬 저장이 끼면 그 pull 결과 폐기. `sbPending{settings,tpl,periods,res,hist}`: 실패 기억 → 다음 pull 전에 재시도, 재시도 실패면 pull 안 함(로컬 보호). `sbFormDirty`: #tab-prop·#tab-templates input/change 시 true, 저장 함수가 false → dirty면 pull이 설정/템플릿/기간 캐시·폼을 안 건드림(예약·이력은 갱신). 세션: getSession(로컬)+onAuthStateChange, SIGNED_OUT이면 로그인 창. 로그아웃 상태 저장은 pending만 켜 두고 로그인 후 pull 때 올라감.
+- 매퍼: resToRow status 보존(봇 cancelled 되돌리기 방지), rowToHist/histToRow sent_by·status 보존. 이력 200개 트림은 `sbHistAt`(id→시각)으로 "현재 가장 오래된 것보다 오래된 id"는 삭제로 안 봄.
+- 예약 upsert가 23xxx(제약 위반)면 영구 오류로 보고 pending 해제 + 안내 토스트(23P01 = 날짜 겹침). 아니면 pending 유지 재시도.
+- 스키마: btree_gist + `reservations_no_overlap`(confirmed만, room_id coalesce, [checkin,checkout)) + `reservations_dates_chk`. SQL editor에서 적용, REST로 겹침 23P01·역순 23514 거부 확인, 기존 5건 영향 없음.
+- 테스트: tests/sync_mock_supabase.js 모의 클라이언트(CDN 차단+주입)로 18 시나리오 PASS. 실서버 로그인 QA는 쵸파파.
+- 남김(후순위): 전체 목록 upsert → 변경분만(두 기기 동시 편집 시 상대 변경 되돌림, 사용자 2명이라 보류). 최초 업로드 비원자(서버 채워져 해당 없음).

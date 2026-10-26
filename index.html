@@ -1992,7 +1992,7 @@ input,select,textarea{font-family:inherit;}
 <div class="toast" id="toast"></div>
 
 <script>
-const APP_VERSION='v3.0.0';
+const APP_VERSION='v3.1.0';
 const SK_SET='stay_msg_lite1_set_v1';
 const SK_TPL='stay_msg_lite1_tpl_v1';
 const SK_RES='stay_msg_lite1_res_v1';
@@ -2765,6 +2765,7 @@ function migrateSettings(){
   localStorage.setItem(SK_SET,JSON.stringify(settings));
 }
 function savePeriodsStorage(){localStorage.setItem(SK_PER,JSON.stringify(periods));}
+function persistSettings(){localStorage.setItem(SK_SET,JSON.stringify(settings));}
 function fillSettingsFields(){
   document.getElementById('cfg_name').value=settings.name||'';
   document.getElementById('cfg_addr').value=settings.addr||'';
@@ -2801,7 +2802,7 @@ function saveSettings(){
     const r=settings.rooms[0];
     if(!r.name||r.name===prevName)r.name=settings.name;
   }
-  localStorage.setItem(SK_SET,JSON.stringify(settings));
+  persistSettings();
   toast('저장됐어요 ✓');renderRoomsList();buildRoomSelect();renderPreview();
 }
 // ─────── 특별 기간 CRUD ───────
@@ -2874,7 +2875,7 @@ function deletePeriod(id){
     periods=periods.filter(p=>p.id!==id);
     settings.rooms.forEach(r=>{if(r.sp)delete r.sp[id];});
     savePeriodsStorage();
-    localStorage.setItem(SK_SET,JSON.stringify(settings));
+    persistSettings();
     renderPeriodList();renderRoomsList();toast('삭제됐어요');
   });
 }
@@ -2935,6 +2936,7 @@ function confirmResetSettings(){
     settings={name:'',addr:'',account:'',rooms:[]};
     localStorage.removeItem(SK_SET);
     migrateSettings();
+    persistSettings();
     fillSettingsFields();
     buildRoomSelect();toast('초기화됐어요');renderPreview();
   });
@@ -3089,7 +3091,7 @@ function saveRoomSingle(id){
   r.pwe=document.getElementById('ri_pwe_'+id).value.trim();
   _readRoomPricing(r);
   r.name=settings.name||r.name||'호실1';
-  localStorage.setItem(SK_SET,JSON.stringify(settings));
+  persistSettings();
   buildRoomSelect();renderPreview();
   toast('저장됐어요 💾');
 }
@@ -3119,7 +3121,7 @@ function addRoom(){
   const n=settings.rooms.length+1;
   const r={id:'r'+Date.now(),name:settings.name?settings.name+' '+n+'호':'호실'+n,wifi:'',wifipw:'',door:'',doorAuto:false,pw:'',pwe:'',ph:'',base:'',max:'',extraFee:'',discN:'',discType:'pct',discVal:'',disc2nd:false,sp:{}};
   settings.rooms.push(r);
-  localStorage.setItem(SK_SET,JSON.stringify(settings));
+  persistSettings();
   editingRoomId=r.id;
   renderRoomsList();buildRoomSelect();
 }
@@ -3134,7 +3136,7 @@ function saveRoom(id){
   r.pw=document.getElementById('ri_pw_'+id).value.trim();
   r.pwe=document.getElementById('ri_pwe_'+id).value.trim();
   _readRoomPricing(r);
-  localStorage.setItem(SK_SET,JSON.stringify(settings));
+  persistSettings();
   editingRoomId=null;
   renderRoomsList();buildRoomSelect();renderPreview();
   toast('저장됐어요 💾');
@@ -3142,7 +3144,7 @@ function saveRoom(id){
 function deleteRoom(id){
   showConfirmModal('호실 삭제','이 호실을 삭제할까요?',()=>{
     settings.rooms=settings.rooms.filter(x=>x.id!==id);
-    localStorage.setItem(SK_SET,JSON.stringify(settings));
+    persistSettings();
     editingRoomId=null;
     renderRoomsList();buildRoomSelect();renderPreview();toast('삭제됐어요');
   });
@@ -3720,108 +3722,147 @@ if('serviceWorker' in navigator){
 </script>
 
 <script>
-// ─────── SUPABASE 동기화 (v3.0.0) ───────
-// 원리: 기존 localStorage는 캐시. 로그인 뒤 서버→캐시(sbPull), save* 뒤 캐시→서버(write-through).
+// ─────── SUPABASE 동기화 (v3.1.0) ───────
+// 원리: localStorage는 캐시. 로그인 뒤 서버→캐시(sbPull), 저장 함수 뒤 캐시→서버(write-through).
+// v3.1.0: 모든 서버 작업을 한 줄로 직렬화(sbRun), 실패는 기억해 두고 재시도(sbPending), 편집 중인 폼은 pull이 안 건드림(sbFormDirty),
+//         pull 도중 로컬 저장이 끼어들면 그 pull 결과는 버림(sbWriteGen), 세션은 onAuthStateChange로 추적.
 const SB_URL = localStorage.getItem('sb_url') || 'https://yqzrxxepkxmxeukmsqeb.supabase.co';
 const SB_ANON = localStorage.getItem('sb_anon') || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlxenJ4eGVwa3hteGV1a21zcWViIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTMwMjM1MjgsImV4cCI6MjEwODU5OTUyOH0.outwfYIUJdGNKJ_Orw9GaiXX5MOCtnTUIy6FIqcdjbY';
-let sb = null, sbSyncing = false, sbResIds = new Set(), sbHistIds = new Set(), sbTimer = null, sbUserEmail = '';
+let sb = null, sbResIds = new Set(), sbHistIds = new Set(), sbHistAt = new Map(), sbTimer = null, sbUserEmail = '';
+let sbQueue = Promise.resolve(), sbWriteGen = 0, sbFormDirty = false, sbApplying = false;
+const sbPending = { settings:false, tpl:false, periods:false, res:false, hist:false };
 if (SB_URL.startsWith('http') && window.supabase) sb = window.supabase.createClient(SB_URL, SB_ANON);
 
+function sbRun(fn){ const p = sbQueue.then(fn, fn); sbQueue = p.catch(()=>{}); return p; }
+function sbHasPending(){ return Object.values(sbPending).some(Boolean); }
 function sbStatus(msg){ const el=document.getElementById('sbStatus'); if(el) el.textContent = msg; }
 function sbShowLogin(show){ document.getElementById('loginModal').classList.toggle('open', !!show); }
-const resToRow = r => ({ id:r.id, name:r.name||'', phone:r.phone||'', checkin:r.checkin, checkout:r.checkout, guests:r.guests||'', price:r.price||'', room_id:r.roomId||'', channel:r.channel||'', memo:r.memo||'', status:'confirmed', created_at:r.createdAt||new Date().toISOString() });
-const rowToRes = x => ({ id:x.id, name:x.name, phone:x.phone, checkin:x.checkin, checkout:x.checkout, guests:x.guests, price:x.price, roomId:x.room_id, channel:x.channel, memo:x.memo, createdAt:x.created_at });
-const histToRow = h => ({ id:h.id, stage_id:h.stageId||'', stage_label:h.stageLabel||'', tpl_title:h.tplTitle||'', name:h.name||'', phone:h.phone||'', body:h.body||'', sent_by:'app', status:'sent', sent_at:h.at||new Date().toISOString() });
-const rowToHist = x => ({ id:x.id, at:x.sent_at, stageId:x.stage_id, stageLabel:x.stage_label, stageIcon:(STAGES.find(s=>s.id===x.stage_id)||{}).icon||'', tplTitle:x.tpl_title, name:x.name, phone:x.phone, body:x.body });
+function sbNow(){ return new Date().toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit'}); }
+function sbFail(e){ console.error(e); toast('서버 저장 실패 — 인터넷 확인 (자동 재시도)'); sbStatus('계정: '+sbUserEmail+' · 저장 실패, 재시도 대기'); }
 
+const resToRow = r => ({ id:r.id, name:r.name||'', phone:r.phone||'', checkin:r.checkin, checkout:r.checkout, guests:r.guests||'', price:r.price||'', room_id:r.roomId||'', channel:r.channel||'', memo:r.memo||'', status:r.status||'confirmed', created_at:r.createdAt||new Date().toISOString() });
+const rowToRes = x => ({ id:x.id, name:x.name, phone:x.phone, checkin:x.checkin, checkout:x.checkout, guests:x.guests, price:x.price, roomId:x.room_id, channel:x.channel, memo:x.memo, status:x.status, createdAt:x.created_at });
+const histToRow = h => ({ id:h.id, stage_id:h.stageId||'', stage_label:h.stageLabel||'', tpl_title:h.tplTitle||'', name:h.name||'', phone:h.phone||'', body:h.body||'', sent_by:h.sentBy||'app', status:h.status||'sent', sent_at:h.at||new Date().toISOString() });
+const rowToHist = x => ({ id:x.id, at:x.sent_at, stageId:x.stage_id, stageLabel:x.stage_label, stageIcon:(STAGES.find(s=>s.id===x.stage_id)||{}).icon||'', tplTitle:x.tpl_title, name:x.name, phone:x.phone, body:x.body, sentBy:x.sent_by, status:x.status });
+
+// ── 로그인/세션 ──
 async function sbLogin(){
   if(!sb){ document.getElementById('lg_msg').textContent='서버 설정이 없습니다.'; return; }
   const email=document.getElementById('lg_email').value.trim(), pw=document.getElementById('lg_pw').value;
   const btn=document.getElementById('lg_btn'); btn.disabled=true; document.getElementById('lg_msg').textContent='';
-  const { error } = await sb.auth.signInWithPassword({ email, password: pw });
+  const { data, error } = await sb.auth.signInWithPassword({ email, password: pw });
   btn.disabled=false;
   if(error){ document.getElementById('lg_msg').textContent='로그인 실패: 이메일·비밀번호를 확인하세요.'; return; }
   document.getElementById('lg_pw').value='';
-  await sbAfterLogin();
+  await sbAfterLogin(data.session);
 }
 async function sbLogout(){ if(sb) await sb.auth.signOut(); location.reload(); }
-async function sbAfterLogin(){
-  const { data } = await sb.auth.getUser(); sbUserEmail = data?.user?.email || '';
+async function sbAfterLogin(session){
+  sbUserEmail = session?.user?.email || '';
+  if(!sbUserEmail){ sbShowLogin(true); return; }
   sbShowLogin(false); sbStatus('계정: '+sbUserEmail+' · 동기화 중…');
   try { await sbPull(); } catch(e){ console.error(e); toast('서버에서 불러오기 실패'); sbStatus('계정: '+sbUserEmail+' · 서버 연결 실패(로컬 데이터 사용 중)'); }
   if(sbTimer) clearInterval(sbTimer);
   sbTimer = setInterval(()=>{ if(document.visibilityState==='visible') sbPull().catch(()=>{}); }, 60000);
-  document.addEventListener('visibilitychange', ()=>{ if(document.visibilityState==='visible') sbPull().catch(()=>{}); });
 }
-function sbRefreshUI(){
-  loadAll(); loadReservations(); loadHistory(); fillSettingsFields(); buildRoomSelect(); buildTplSelect(); renderPreview(); renderDashboard();
+if(sb){
+  sb.auth.onAuthStateChange((event, session)=>{
+    sbUserEmail = session?.user?.email || '';
+    if(event==='SIGNED_OUT' || !sbUserEmail){ sbShowLogin(true); sbStatus('로그인이 필요합니다 — 이 기기에만 저장 중'); }
+  });
+  document.addEventListener('visibilitychange', ()=>{ if(document.visibilityState==='visible' && sbUserEmail) sbPull().catch(()=>{}); });
+  // 설정·템플릿 폼을 만지는 동안은 pull이 그 영역을 덮어쓰지 않음(저장하면 해제)
+  ['tab-prop','tab-templates'].forEach(id=>{ const el=document.getElementById(id); if(el){ el.addEventListener('input',()=>{sbFormDirty=true;}); el.addEventListener('change',()=>{sbFormDirty=true;}); } });
+}
+
+// ── 서버 → 캐시 ──
+function sbRefreshUI(withSettings){
+  loadAll(); loadReservations(); loadHistory();
+  if(withSettings){ fillSettingsFields(); buildRoomSelect(); buildTplSelect(); }
+  renderPreview(); renderDashboard();
   const rp=document.getElementById('tab-reserv'); if(rp&&rp.classList.contains('active')) renderReservations();
   const hp=document.getElementById('tab-history'); if(hp&&hp.classList.contains('active')) renderHistory();
 }
 async function sbPull(manual){
-  if(!sb || sbSyncing) return;
-  sbSyncing = true;
-  try {
+  if(!sb || !sbUserEmail) return;
+  return sbRun(async()=>{
+    if(sbHasPending()){ await sbRetryPending(); if(sbHasPending()){ if(manual) toast('먼저 저장 실패분을 올려야 해요 — 인터넷 확인'); return; } }
+    const gen = sbWriteGen;
     const [s, r, m] = await Promise.all([
       sb.from('app_settings').select('key,value'),
       sb.from('reservations').select('*').neq('status','cancelled'),
       sb.from('messages').select('*').order('sent_at',{ascending:false}).limit(200)
     ]);
     if(s.error||r.error||m.error) throw (s.error||r.error||m.error);
+    if(gen !== sbWriteGen) return; // 읽는 사이 로컬 저장이 끼어듦 → 이번 결과 버림(저장분이 먼저 올라가고 다음 주기에 다시 읽음)
     const serverEmpty = !(s.data||[]).length && !(r.data||[]).length;
     const localHas = !!(localStorage.getItem(SK_RES) && JSON.parse(localStorage.getItem(SK_RES)||'[]').length) || !!(localStorage.getItem(SK_SET) && (JSON.parse(localStorage.getItem(SK_SET)||'{}').name));
     if(serverEmpty && localHas){
-      sbSyncing = false;
       showConfirmModal('서버에 올리기', '서버가 비어 있습니다. 이 기기의 설정·템플릿·예약을 서버로 올릴까요? (한 번만)', ()=>sbPushAll().then(()=>toast('서버에 올렸어요 ☁️')).catch(()=>toast('올리기 실패')));
       return;
     }
     const map = Object.fromEntries((s.data||[]).map(x=>[x.key,x.value]));
-    if(map.settings) localStorage.setItem(SK_SET, JSON.stringify(map.settings));
-    if(map.tpl) localStorage.setItem(SK_TPL, JSON.stringify(map.tpl));
-    if(map.periods) localStorage.setItem(SK_PER, JSON.stringify(map.periods));
+    const withSettings = !sbFormDirty;
+    if(withSettings){
+      if(map.settings) localStorage.setItem(SK_SET, JSON.stringify(map.settings));
+      if(map.tpl) localStorage.setItem(SK_TPL, JSON.stringify(map.tpl));
+      if(map.periods) localStorage.setItem(SK_PER, JSON.stringify(map.periods));
+    }
     const res = (r.data||[]).map(rowToRes); localStorage.setItem(SK_RES, JSON.stringify(res)); sbResIds = new Set(res.map(x=>x.id));
-    const hist = (m.data||[]).map(rowToHist); localStorage.setItem(SK_HIST, JSON.stringify(hist)); sbHistIds = new Set(hist.map(x=>x.id));
-    sbRefreshUI();
-    sbStatus('계정: '+sbUserEmail+' · 서버 동기화 '+new Date().toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit'}));
+    const hist = (m.data||[]).map(rowToHist); localStorage.setItem(SK_HIST, JSON.stringify(hist)); sbHistIds = new Set(hist.map(x=>x.id)); sbHistAt = new Map(hist.map(x=>[x.id,x.at||'']));
+    sbApplying = true; try { sbRefreshUI(withSettings); } finally { sbApplying = false; }
+    sbStatus('계정: '+sbUserEmail+' · 서버 동기화 '+sbNow()+(withSettings?'':' (편집 중인 설정은 제외)'));
     if(manual) toast('서버에서 새로고침 ✓');
-  } finally { sbSyncing = false; }
+  });
 }
-async function sbPushSettings(key, value){
-  if(!sb || sbSyncing || !sbUserEmail) return;
-  const { error } = await sb.from('app_settings').upsert({ key, value });
-  if(error){ console.error(error); toast('서버 저장 실패 — 인터넷 확인'); }
+
+// ── 캐시 → 서버 (실제 작업: 큐 안에서만 호출) ──
+const SB_SET_KEYS = { settings:[SK_SET,'{}'], tpl:[SK_TPL,'{}'], periods:[SK_PER,'[]'] };
+async function _pushSettings(key){
+  const [sk, def] = SB_SET_KEYS[key];
+  const { error } = await sb.from('app_settings').upsert({ key, value: JSON.parse(localStorage.getItem(sk)||def) });
+  if(error){ sbFail(error); return false; }
+  sbPending[key] = false; return true;
 }
-async function sbPushReservations(){
-  if(!sb || sbSyncing || !sbUserEmail) return;
+async function _pushReservations(){
   const rows = reservations.map(resToRow);
-  const { error } = rows.length ? await sb.from('reservations').upsert(rows) : { error:null };
-  const gone = [...sbResIds].filter(id=>!reservations.find(r=>r.id===id));
-  if(gone.length) await sb.from('reservations').delete().in('id', gone);
-  if(error){ console.error(error); toast('서버 저장 실패 — 인터넷 확인'); return; }
-  sbResIds = new Set(reservations.map(r=>r.id));
+  if(rows.length){ const { error } = await sb.from('reservations').upsert(rows); if(error){ if(String(error.code||'').startsWith('23')){ sbPending.res = false; toast(error.code==='23P01' ? '같은 날짜에 겹치는 예약이 서버에 이미 있어요 — 서버에서 새로고침으로 확인' : '서버가 예약을 거부했어요: '+(error.message||error.code)); return false; } sbFail(error); return false; } }
+  const cur = new Set(reservations.map(r=>r.id));
+  const gone = [...sbResIds].filter(id=>!cur.has(id));
+  if(gone.length){ const { error } = await sb.from('reservations').delete().in('id', gone); if(error){ sbFail(error); return false; } }
+  sbResIds = cur; sbPending.res = false; return true;
 }
-async function sbPushHistory(){
-  if(!sb || sbSyncing || !sbUserEmail) return;
+async function _pushHistory(){
   const rows = msgHistory.map(histToRow);
-  const { error } = rows.length ? await sb.from('messages').upsert(rows) : { error:null };
-  const gone = [...sbHistIds].filter(id=>!msgHistory.find(h=>h.id===id));
-  if(gone.length) await sb.from('messages').delete().in('id', gone);
-  if(error){ console.error(error); toast('서버 저장 실패 — 인터넷 확인'); return; }
-  sbHistIds = new Set(msgHistory.map(h=>h.id));
+  if(rows.length){ const { error } = await sb.from('messages').upsert(rows); if(error){ sbFail(error); return false; } }
+  const cur = new Set(msgHistory.map(h=>h.id));
+  // 200개 넘쳐서 밀려난(가장 오래된) 이력은 삭제가 아님 → 현재 목록의 가장 오래된 시각보다 뒤인 것만 '지운 것'으로 봄
+  const oldest = msgHistory.length>=200 ? (msgHistory[msgHistory.length-1]?.at||'') : '';
+  const gone = [...sbHistIds].filter(id=>!cur.has(id) && (!oldest || (sbHistAt.get(id)||'') >= oldest));
+  if(gone.length){ const { error } = await sb.from('messages').delete().in('id', gone); if(error){ sbFail(error); return false; } }
+  gone.forEach(id=>{ sbHistIds.delete(id); sbHistAt.delete(id); });
+  cur.forEach(id=>sbHistIds.add(id)); sbPending.hist = false; return true;
 }
-async function sbPushAll(){
-  if(!sb || !sbUserEmail) return;
-  await sbPushSettings('settings', JSON.parse(localStorage.getItem(SK_SET)||'{}'));
-  await sbPushSettings('tpl', JSON.parse(localStorage.getItem(SK_TPL)||'{}'));
-  await sbPushSettings('periods', JSON.parse(localStorage.getItem(SK_PER)||'[]'));
-  await sbPushReservations(); await sbPushHistory();
-  sbStatus('계정: '+sbUserEmail+' · 서버에 올림');
+async function sbRetryPending(){
+  for(const k of ['settings','tpl','periods']) if(sbPending[k]) await _pushSettings(k);
+  if(sbPending.res) await _pushReservations();
+  if(sbPending.hist) await _pushHistory();
+  if(!sbHasPending()) sbStatus('계정: '+sbUserEmail+' · 서버 저장 '+sbNow());
 }
-// 기존 저장 함수에 서버 쓰기 덧붙임
+// 공개 함수: 큐에 넣고 바로 반환(저장 UI는 기다리지 않음)
+function sbPushSettings(key){ if(!sb || sbApplying) return; sbWriteGen++; sbPending[key] = true; if(!sbUserEmail) return; return sbRun(async()=>{ if(await _pushSettings(key)) sbStatus('계정: '+sbUserEmail+' · 서버 저장 '+sbNow()); }); }
+function sbPushReservations(){ if(!sb || sbApplying) return; sbWriteGen++; sbPending.res = true; if(!sbUserEmail) return; return sbRun(async()=>{ if(await _pushReservations()) sbStatus('계정: '+sbUserEmail+' · 서버 저장 '+sbNow()); }); }
+function sbPushHistory(){ if(!sb || sbApplying) return; sbWriteGen++; sbPending.hist = true; if(!sbUserEmail) return; return sbRun(async()=>{ if(await _pushHistory()) sbStatus('계정: '+sbUserEmail+' · 서버 저장 '+sbNow()); }); }
+function sbPushAll(){
+  if(!sb || !sbUserEmail) return Promise.resolve();
+  sbWriteGen++; Object.keys(sbPending).forEach(k=>sbPending[k]=true);
+  return sbRun(async()=>{ await sbRetryPending(); if(sbHasPending()) throw new Error('push incomplete'); sbStatus('계정: '+sbUserEmail+' · 서버에 올림 '+sbNow()); });
+}
+// 기존 저장 함수에 서버 쓰기 덧붙임 (설정·호실·기간·초기화는 전부 persistSettings 경유)
+const _persistSettings = persistSettings; persistSettings = function(){ _persistSettings(); sbFormDirty = false; sbPushSettings('settings'); };
+const _saveTplStorage = saveTplStorage; saveTplStorage = function(){ _saveTplStorage(); sbFormDirty = false; sbPushSettings('tpl'); };
+const _savePeriodsStorage = savePeriodsStorage; savePeriodsStorage = function(){ _savePeriodsStorage(); sbFormDirty = false; sbPushSettings('periods'); };
 const _saveReservations = saveReservations; saveReservations = function(){ _saveReservations(); sbPushReservations(); };
-const _saveSettings = saveSettings; saveSettings = function(){ _saveSettings(); sbPushSettings('settings', JSON.parse(localStorage.getItem(SK_SET)||'{}')); };
-const _saveTplStorage = saveTplStorage; saveTplStorage = function(){ _saveTplStorage(); sbPushSettings('tpl', JSON.parse(localStorage.getItem(SK_TPL)||'{}')); };
-const _savePeriodsStorage = savePeriodsStorage; savePeriodsStorage = function(){ _savePeriodsStorage(); sbPushSettings('periods', periods); };
 const _saveHistoryStorage = saveHistoryStorage; saveHistoryStorage = function(){ _saveHistoryStorage(); sbPushHistory(); };
 const _importData = importData; importData = function(input){
   const file=input.files[0]; if(!file) return;
@@ -3833,19 +3874,20 @@ const _importData = importData; importData = function(input){
       if(data.tpl)localStorage.setItem(SK_TPL,JSON.stringify(data.tpl));
       if(data.res)localStorage.setItem(SK_RES,JSON.stringify(data.res));
       if(data.periods)localStorage.setItem(SK_PER,JSON.stringify(data.periods));
-      sbSyncing = true; try { sbRefreshUI(); } finally { sbSyncing = false; }
+      sbApplying = true; try { sbRefreshUI(true); } finally { sbApplying = false; }
+      sbFormDirty = false;
       await sbPushAll();
       toast('가져오기 완료 ✅ (서버 반영)');
-    }catch(err){ console.error(err); toast('파일이 올바르지 않아요 ❌'); }
+    }catch(err){ console.error(err); toast(err && err.message==='push incomplete' ? '가져왔지만 서버 반영 실패 — 인터넷 확인 (자동 재시도)' : '파일이 올바르지 않아요 ❌'); }
     input.value='';
   };
   reader.readAsText(file);
 };
-// 시작: 세션 있으면 바로, 없으면 로그인 화면. 서버 설정이 없으면(개발) 로컬 전용.
+// 시작: 저장된 세션 있으면 바로(네트워크 불필요), 없으면 로그인 화면. 서버 설정이 없으면(개발) 로컬 전용.
 (async()=>{
   if(!sb){ sbShowLogin(false); sbStatus('서버 설정 없음 — 이 기기에만 저장'); return; }
   const { data } = await sb.auth.getSession();
-  if(data?.session) await sbAfterLogin(); else sbShowLogin(true);
+  if(data?.session) await sbAfterLogin(data.session); else sbShowLogin(true);
 })();
 </script>
 </body>

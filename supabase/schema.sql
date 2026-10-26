@@ -61,3 +61,12 @@ alter table app_settings enable row level security;
 drop policy if exists auth_all on reservations;  create policy auth_all on reservations  for all to authenticated using (true) with check (true);
 drop policy if exists auth_all on messages;      create policy auth_all on messages      for all to authenticated using (true) with check (true);
 drop policy if exists auth_all on app_settings;  create policy auth_all on app_settings  for all to authenticated using (true) with check (true);
+
+-- v3.1.0 (2026-10-27, 코덱스 리뷰 P2-10): 확정 예약끼리 날짜 겹침 금지 + 날짜 순서 검사
+create extension if not exists btree_gist;
+alter table reservations drop constraint if exists reservations_dates_chk;
+alter table reservations add constraint reservations_dates_chk check (checkout > checkin);
+alter table reservations drop constraint if exists reservations_no_overlap;
+alter table reservations add constraint reservations_no_overlap
+  exclude using gist (coalesce(room_id,'') with =, daterange(checkin, checkout, '[)') with &&)
+  where (status = 'confirmed');
