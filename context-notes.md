@@ -60,3 +60,4 @@ PC 주력 + 폰 + 맥 봇 세 곳에서 같은 예약을 읽고 씀. 손님 전�
 - push 거부: GitHub가 Pages 도메인 재저장 때 CNAME 삭제·재생성 커밋 2개 만듦(개행만 차이) → rebase 후 push. 배포 60초 뒤 msg.staysolsoop.kr에 새 URL 반영 확인.
 - 10-27 쵸파파 "gscmedc 계정은 내 계정이 아니야"(사회적협동조합 계정, Claude Code 로그인용일 뿐) → 삭제하고 lottopet@gmail.com(쵸파파)·leechopa01@gmail.com(쵸파맘) 2명 생성, 각각 로그인·읽기 200 확인. 이메일은 식별자일 뿐 메일 안 감. 계정 지도는 메모리 stay-solsoop-team 참고.
 - 10-27 쵸파파 "쵸파맘 계정도 그거 아냐" → leechopa01 삭제, 쵸파맘은 솔숲 공용 staysolsoop@gmail.com으로 생성(식별자일 뿐). 메모리의 'leechopa01=쵸파맘' 표기 틀림 → 수정.
+- 10-27 쵸파맘 계정 확정 withzoo2018@gmail.com(쵸파파 제공) → staysolsoop 삭제, 재생성·로그인 확인.
