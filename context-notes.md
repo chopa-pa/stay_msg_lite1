@@ -61,3 +61,14 @@ PC 주력 + 폰 + 맥 봇 세 곳에서 같은 예약을 읽고 씀. 손님 전�
 - 10-27 쵸파파 "gscmedc 계정은 내 계정이 아니야"(사회적협동조합 계정, Claude Code 로그인용일 뿐) → 삭제하고 lottopet@gmail.com(쵸파파)·leechopa01@gmail.com(쵸파맘) 2명 생성, 각각 로그인·읽기 200 확인. 이메일은 식별자일 뿐 메일 안 감. 계정 지도는 메모리 stay-solsoop-team 참고.
 - 10-27 쵸파파 "쵸파맘 계정도 그거 아냐" → leechopa01 삭제, 쵸파맘은 솔숲 공용 staysolsoop@gmail.com으로 생성(식별자일 뿐). 메모리의 'leechopa01=쵸파맘' 표기 틀림 → 수정.
 - 10-27 쵸파맘 계정 확정 withzoo2018@gmail.com(쵸파파 제공) → staysolsoop 삭제, 재생성·로그인 확인.
+
+## 2026-10-27 코덱스 리뷰(v3.0.0 Supabase 동기화 계층) — GATE FAIL, P1 7 / P2 3
+전문 `reviews/2026-10-27_codex_supabase-sync.md`. 요지(우리 상황 기준 우선순위):
+1. **[P1-3] 방 정보·설정 저장 경로 누락** — saveRoomSingle(3092)·addRoom(3122)·saveRoom(3137)·deleteRoom(3145)·설정 초기화·deletePeriod가 localStorage 직접 씀 → 래퍼 안 탐 → 요금·도어락 안내가 서버에 안 가고 다음 pull에 되돌아감. **실제 버그, 1순위.**
+2. **[P1-2/4] pull이 편집 중인 값 덮음** — sbPull 60초마다 fillSettingsFields → 입력 중인 계좌·요금 지워짐. 저장 중 pull 겹치면 저장분 유실.
+3. **[P1-6] 삭제 실패 무시** — delete 결과 안 보고 sbResIds 갱신 → 지운 예약 부활. push 에러 전부 삼킴.
+4. **[P1-7] 시작 시 getUser 실패하면 sbUserEmail 빈 채 로그인 창 닫힘** → 이후 push 전부 무시(pull은 됨). onAuthStateChange 미사용.
+5. **[P1-1] 저장 = 전체 목록 upsert** → 두 기기 동시 편집 시 상대 변경 되돌림, 봇이 cancelled로 바꾼 걸 confirmed로 되돌림(resToRow status 고정).
+6. **[P1-5] 최초 업로드 비원자** — 서버가 이미 채워져 있어 지금은 해당 없음.
+7. **[P2-8] 이력 200개 트림을 서버 삭제로 해석**, **[P2-9] rowToHist가 sent_by/status 버림**(봇 기록 덮음), **[P2-10] 같은 날짜 중복 예약 DB 제약 없음**.
+판단: 사용자 2명·동시 편집 드묾이라 1·2·3·4·5(status)·P2-9·P2-10은 고칠 가치 있음(v3.1.0). 1(전체 upsert→개별 upsert+버전)·P2-8은 후순위.

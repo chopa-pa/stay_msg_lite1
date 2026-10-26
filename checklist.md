@@ -75,6 +75,15 @@
 - [x] 1회 이관(코드): 로그인 뒤 서버가 비어 있고 로컬에 데이터 있으면 "서버로 올릴까요?" 1번 확인 → 업로드 (json 가져오기 → 서버 업로드 경로로 PC에서 1회)
 - [x] APP_VERSION v3.0.0, sw v82, node --check 통과 · [x] 데이터 서버 업로드(봇, service 키, 10-27) · [x] 아이패드 로그인·계좌 확인(쵸파파 10-27) · [ ] 솔숲 폰 로그인·교차 수정 확인 · [ ] 맥 PC 로그인
 
+## v3.1.0 — 코덱스 리뷰 반영 (2026-10-27 리뷰, GATE FAIL P1 7/P2 3, 전문 reviews/)
+- [ ] 방·설정 직접 저장 경로(saveRoomSingle/addRoom/saveRoom/deleteRoom/초기화/deletePeriod) → saveSettings 래퍼 경유
+- [ ] pull 시 편집 중 폼 보호(dirty면 fillSettingsFields 건너뜀), 저장 중 pull 겹침 방지
+- [ ] 삭제·upsert 결과 확인, 실패 시 토스트 + id 집합 갱신 안 함
+- [ ] onAuthStateChange로 세션 관리, getUser 실패 시 로그인 창 유지
+- [ ] resToRow status 고정 제거(서버 status 보존), rowToHist sent_by/status 보존
+- [ ] schema: 날짜 겹침 exclusion 제약(confirmed만)
+- [ ] 후순위: 전체 upsert → 변경분만, 이력 트림≠삭제
+
 ## 봇 (3단계와 연결)
 - [ ] `~/dev/stay-solsoop/bot/` 수집기: 네이버 파트너센터·에어비앤비 → reservations upsert(source_id), 10분 launchd
 - [ ] 발송기: 알리고 LMS, 확정 즉시·입실 09:30·퇴실 09:30, messages 기록, 첫 달 미리보기 게이트
