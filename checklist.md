@@ -86,6 +86,9 @@
 - [x] schema: 날짜 겹침(적용 완료, 23P01·23514 확인) exclusion 제약(confirmed만)
 - [ ] 후순위: 전체 upsert → 변경분만 (이력 트림≠삭제는 sbHistAt로 처리함)
 
+## v3.2.0 — 자동 문자 승인 카드 (2026-10-27)
+- [x] 홈 카드: 작업 목록·본문 보기·승인/승인 취소/건너뛰기, 숙소 탭 봇 상태줄, 모의 8 PASS, sw v85
+
 ## 봇 (3단계와 연결)
 - [ ] `~/dev/stay-solsoop/bot/` 수집기: 네이버 파트너센터·에어비앤비 → reservations upsert(source_id), 10분 launchd
 - [ ] 발송기: 알리고 LMS, 확정 즉시·입실 09:30·퇴실 09:30, messages 기록, 첫 달 미리보기 게이트

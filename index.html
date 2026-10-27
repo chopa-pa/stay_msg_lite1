@@ -1353,6 +1353,14 @@ input,select,textarea{font-family:inherit;}
         </div>
       </div>
 
+      <div class="card" id="botJobsCard" style="display:none;">
+        <div class="card-head">
+          <div class="card-head-title"><span class="ico">🤖</span>자동 문자 <span id="botJobsCount" style="margin-left:6px;font-size:12px;color:var(--muted-fg);"></span></div>
+        </div>
+        <p class="adv-hint" id="botJobsHint" style="margin:0 0 8px;">봇이 만든 문자입니다. 승인한 것만 예정일 아침에 자동 발송됩니다.</p>
+        <div class="res-list" id="botJobsList"></div>
+      </div>
+
       <div class="card cal-card">
         <div class="cal-page-head">
           <button class="cal-page-title" id="dashCalLabel" onclick="dashCalYmToggle()">2026년 4월</button>
@@ -1992,7 +2000,7 @@ input,select,textarea{font-family:inherit;}
 <div class="toast" id="toast"></div>
 
 <script>
-const APP_VERSION='v3.1.1';
+const APP_VERSION='v3.2.0';
 const SK_SET='stay_msg_lite1_set_v1';
 const SK_TPL='stay_msg_lite1_tpl_v1';
 const SK_RES='stay_msg_lite1_res_v1';
@@ -3735,6 +3743,45 @@ if (SB_URL.startsWith('http') && window.supabase) sb = window.supabase.createCli
 
 function sbRun(fn){ const p = sbQueue.then(fn, fn); sbQueue = p.catch(()=>{}); return p; }
 function sbHasPending(){ return Object.values(sbPending).some(Boolean); }
+let sbBotState = null, sbJobs = [];
+const SB_STAGE = { booked:'예약확정', precheckin:'입실안내', checkout:'퇴실안내' };
+const SB_JOB_STATUS = { pending:['승인 대기','warn'], approved:['승인됨 · 예정일 아침 발송',''], blocked:['발송 불가','warn'], missed:['시간 놓침 · 수동 발송','warn'], unknown:['결과 불명 · 솔라피 확인','warn'], failed:['발송 실패','warn'] };
+function sbBotLine(){
+  if(!sbBotState || !sbBotState.last_run_at) return '';
+  const t = s => s ? new Date(s).toLocaleString('ko-KR',{month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'}) : '없음';
+  const nv = sbBotState.naver||{};
+  return ' · 봇 '+t(sbBotState.last_run_at)+(sbBotState.mode==='live'?' (자동 발송)':' (미리보기)')+' · 네이버 수집 '+(nv.error?'실패: '+nv.error:t(nv.ok_at));
+}
+function sbRenderJobs(jobs){
+  sbJobs = jobs; const card=document.getElementById('botJobsCard'), host=document.getElementById('botJobsList'); if(!card||!host) return;
+  if(!jobs.length){ card.style.display='none'; return; }
+  card.style.display='';
+  document.getElementById('botJobsCount').textContent = jobs.filter(x=>x.status==='pending').length+'건 승인 대기';
+  const fp = p => p && p.length===11 ? p.slice(0,3)+'-'+p.slice(3,7)+'-'+p.slice(7) : (p||'-');
+  host.innerHTML = jobs.map(x=>{
+    const r = reservations.find(q=>q.id===x.reservation_id) || {};
+    const [lbl, cls] = SB_JOB_STATUS[x.status] || [x.status,''];
+    const can = x.status==='pending' || x.status==='approved';
+    return `<div class="res-item" style="flex-direction:column;align-items:stretch;gap:6px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;">
+        <div><strong>${esc(r.name||x.reservation_id)}</strong> · ${SB_STAGE[x.stage_id]||x.stage_id} · ${esc(x.scheduled_date)} → ${esc(fp(x.phone))}</div>
+        <span class="adv-hint" style="margin:0;${cls?'color:#b45309;':''}">${esc(lbl)}${x.result?' · '+esc(x.result):''}</span>
+      </div>
+      <details><summary class="adv-hint" style="cursor:pointer;margin:0;">본문 보기</summary><pre style="white-space:pre-wrap;font:inherit;font-size:13px;margin:6px 0 0;">${esc(x.body)}</pre></details>
+      ${can?`<div style="display:flex;gap:6px;">${x.status==='pending'?`<button class="btn btn-primary btn-sm" onclick="sbJobSet(${x.id},'approved')">승인</button>`:`<button class="btn btn-outline btn-sm" onclick="sbJobSet(${x.id},'pending')">승인 취소</button>`}<button class="btn btn-outline btn-sm" onclick="sbJobSet(${x.id},'skipped')">건너뛰기(수동 발송)</button></div>`:''}
+    </div>`;
+  }).join('');
+}
+async function sbJobSet(id, status){
+  if(!sb || !sbUserEmail) return;
+  const upd = status==='approved' ? { status, approved_by: sbUserEmail, approved_at: new Date().toISOString() } : { status, approved_by:null, approved_at:null };
+  const from = status==='approved' ? 'pending' : (status==='pending' ? 'approved' : null);
+  let q = sb.from('sms_jobs').update(upd).eq('id', id); if(from) q = q.eq('status', from);
+  const { data, error } = await q.select();
+  if(error || !data || !data.length){ toast('처리 실패 — 새로고침 뒤 다시'); return; }
+  toast(status==='approved'?'승인됐어요 — 예정일 아침에 자동 발송':(status==='skipped'?'건너뜀 — 앱에서 직접 보내세요':'승인 취소'));
+  sbPull(true).catch(()=>{});
+}
 function sbStatus(msg){ const el=document.getElementById('sbStatus'); if(el) el.textContent = msg; }
 function sbShowLogin(show){ document.getElementById('loginModal').classList.toggle('open', !!show); }
 function sbNow(){ return new Date().toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit'}); }
@@ -3788,12 +3835,14 @@ async function sbPull(manual){
   return sbRun(async()=>{
     const gen = sbWriteGen;
     if(sbHasPending()){ await sbRetryPending(); if(sbHasPending() || gen !== sbWriteGen){ if(manual && sbHasPending()) toast('먼저 저장 실패분을 올려야 해요 — 인터넷 확인'); return; } }
-    const [s, r, m] = await Promise.all([
+    const [s, r, m, j] = await Promise.all([
       sb.from('app_settings').select('key,value'),
       sb.from('reservations').select('*').neq('status','cancelled'),
-      sb.from('messages').select('*').order('sent_at',{ascending:false}).limit(200)
+      sb.from('messages').select('*').order('sent_at',{ascending:false}).limit(200),
+      sb.from('sms_jobs').select('*').in('status',['pending','approved','blocked','missed','unknown','failed']).order('scheduled_date')
     ]);
     if(s.error||r.error||m.error) throw (s.error||r.error||m.error);
+    if(j.error) console.error(j.error);
     if(gen !== sbWriteGen) return; // 읽는 사이 로컬 저장이 끼어듦 → 이번 결과 버림(저장분이 먼저 올라가고 다음 주기에 다시 읽음)
     const serverEmpty = !(s.data||[]).length && !(r.data||[]).length;
     const localHas = !!(localStorage.getItem(SK_RES) && JSON.parse(localStorage.getItem(SK_RES)||'[]').length) || !!(localStorage.getItem(SK_SET) && (JSON.parse(localStorage.getItem(SK_SET)||'{}').name));
@@ -3811,7 +3860,8 @@ async function sbPull(manual){
     const res = (r.data||[]).map(rowToRes); localStorage.setItem(SK_RES, JSON.stringify(res)); sbResIds = new Set(res.map(x=>x.id));
     const hist = (m.data||[]).map(rowToHist); localStorage.setItem(SK_HIST, JSON.stringify(hist)); sbHistIds = new Set(hist.map(x=>x.id)); sbHistAt = new Map(hist.map(x=>[x.id,x.at||'']));
     sbApplying = true; try { sbRefreshUI(withSettings); } finally { sbApplying = false; }
-    sbStatus('계정: '+sbUserEmail+' · 서버 동기화 '+sbNow()+(withSettings?'':' (편집 중인 설정은 제외)'));
+    sbBotState = map.bot_state || null; sbRenderJobs(j.data||[]);
+    sbStatus('계정: '+sbUserEmail+' · 서버 동기화 '+sbNow()+(withSettings?'':' (편집 중인 설정은 제외)')+sbBotLine());
     if(manual) toast('서버에서 새로고침 ✓');
   });
 }
