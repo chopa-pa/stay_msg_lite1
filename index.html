@@ -254,6 +254,12 @@ input,select,textarea{font-family:inherit;}
 /* ─────── SF-style SVG icons ─────── */
 .i{width:1em;height:1em;display:inline-block;vertical-align:-0.14em;stroke:currentColor;fill:none;flex-shrink:0;overflow:visible;}
 .sidebar-link-icon .i,.bnav-ico .i{width:20px;height:20px;}
+.sidebar-group{padding:14px 14px 4px;font-size:11px;font-weight:700;letter-spacing:.08em;color:var(--sidebar-fg-muted);text-transform:uppercase;}
+.sidebar-link.sub{padding-left:22px;}
+.subtabs{display:flex;gap:6px;margin:0 0 14px;padding:4px;background:var(--muted);border-radius:12px;}
+.subtabs button{flex:1;border:none;background:transparent;border-radius:9px;padding:8px 10px;font-size:13px;font-weight:600;color:var(--muted-fg);cursor:pointer;}
+.subtabs button.active{background:var(--card);color:var(--fg);box-shadow:0 1px 3px rgba(0,0,0,.08);}
+@media(min-width:1024px){.subtabs{display:none;}}
 .stat-ico .i{width:24px;height:24px;}
 .card-head-title .ico .i,.guide-group-title .ico .i{width:18px;height:18px;}
 .mheader-action .i{width:22px;height:22px;}
@@ -1143,25 +1149,28 @@ input,select,textarea{font-family:inherit;}
       <button class="sidebar-link active" data-tab="home" onclick="switchTab('home')">
         <span class="sidebar-link-icon"><svg class="i"><use href="#i-home"/></svg></span>대시보드
       </button>
-      <button class="sidebar-link" data-tab="compose" onclick="switchTab('compose')">
+      <div class="sidebar-group">문자</div>
+      <button class="sidebar-link sub" data-tab="compose" onclick="switchTab('compose')">
         <span class="sidebar-link-icon"><svg class="i"><use href="#i-pencil"/></svg></span>문자 작성
       </button>
-      <button class="sidebar-link" data-tab="templates" onclick="switchTab('templates')">
+      <button class="sidebar-link sub" data-tab="templates" onclick="switchTab('templates')">
         <span class="sidebar-link-icon"><svg class="i"><use href="#i-stack"/></svg></span>템플릿 관리
       </button>
-      <button class="sidebar-link" data-tab="reserv" onclick="switchTab('reserv')">
-        <span class="sidebar-link-icon"><svg class="i"><use href="#i-clipboard"/></svg></span>예약 관리
-      </button>
-      <button class="sidebar-link" data-tab="price" onclick="switchTab('price')">
-        <span class="sidebar-link-icon"><svg class="i"><use href="#i-dollar"/></svg></span>요금 계산
-      </button>
-      <button class="sidebar-link" data-tab="history" onclick="switchTab('history')">
+      <button class="sidebar-link sub" data-tab="history" onclick="switchTab('history')">
         <span class="sidebar-link-icon"><svg class="i"><use href="#i-clock"/></svg></span>발송 이력
       </button>
-      <button class="sidebar-link" data-tab="prop" onclick="switchTab('prop')">
+      <div class="sidebar-group">예약</div>
+      <button class="sidebar-link sub" data-tab="reserv" onclick="switchTab('reserv')">
+        <span class="sidebar-link-icon"><svg class="i"><use href="#i-clipboard"/></svg></span>예약 관리
+      </button>
+      <button class="sidebar-link sub" data-tab="price" onclick="switchTab('price')">
+        <span class="sidebar-link-icon"><svg class="i"><use href="#i-dollar"/></svg></span>요금 계산
+      </button>
+      <div class="sidebar-group">설정</div>
+      <button class="sidebar-link sub" data-tab="prop" onclick="switchTab('prop')">
         <span class="sidebar-link-icon"><svg class="i"><use href="#i-house"/></svg></span>숙소 프로필
       </button>
-      <button class="sidebar-link" data-tab="guide" onclick="switchTab('guide')">
+      <button class="sidebar-link sub" data-tab="guide" onclick="switchTab('guide')">
         <span class="sidebar-link-icon"><svg class="i"><use href="#i-book"/></svg></span>도움말
       </button>
     </nav>
@@ -1890,23 +1899,17 @@ input,select,textarea{font-family:inherit;}
 
 <!-- Bottom nav (mobile) -->
 <nav class="bnav">
-  <button class="bnav-btn active" data-tab="home" onclick="switchTab('home')">
+  <button class="bnav-btn active" data-group="home" onclick="switchTab('home')">
     <span class="bnav-ico"><svg class="i"><use href="#i-home"/></svg></span><span class="bnav-lbl">홈</span>
   </button>
-  <button class="bnav-btn" data-tab="compose" onclick="switchTab('compose')">
-    <span class="bnav-ico"><svg class="i"><use href="#i-pencil"/></svg></span><span class="bnav-lbl">작성</span>
+  <button class="bnav-btn" data-group="msg" onclick="switchTab(lastTabOf('msg'))">
+    <span class="bnav-ico"><svg class="i"><use href="#i-pencil"/></svg></span><span class="bnav-lbl">문자</span>
   </button>
-  <button class="bnav-btn" data-tab="templates" onclick="switchTab('templates')">
-    <span class="bnav-ico"><svg class="i"><use href="#i-stack"/></svg></span><span class="bnav-lbl">템플릿</span>
-  </button>
-  <button class="bnav-btn" data-tab="reserv" onclick="switchTab('reserv')">
+  <button class="bnav-btn" data-group="res" onclick="switchTab(lastTabOf('res'))">
     <span class="bnav-ico"><svg class="i"><use href="#i-clipboard"/></svg></span><span class="bnav-lbl">예약</span>
   </button>
-  <button class="bnav-btn" data-tab="price" onclick="switchTab('price')">
-    <span class="bnav-ico"><svg class="i"><use href="#i-dollar"/></svg></span><span class="bnav-lbl">요금</span>
-  </button>
-  <button class="bnav-btn" data-tab="prop" onclick="switchTab('prop')">
-    <span class="bnav-ico"><svg class="i"><use href="#i-house"/></svg></span><span class="bnav-lbl">숙소</span>
+  <button class="bnav-btn" data-group="set" onclick="switchTab(lastTabOf('set'))">
+    <span class="bnav-ico"><svg class="i"><use href="#i-house"/></svg></span><span class="bnav-lbl">설정</span>
   </button>
 </nav>
 
@@ -2000,7 +2003,7 @@ input,select,textarea{font-family:inherit;}
 <div class="toast" id="toast"></div>
 
 <script>
-const APP_VERSION='v3.2.0';
+const APP_VERSION='v3.3.0';
 const SK_SET='stay_msg_lite1_set_v1';
 const SK_TPL='stay_msg_lite1_tpl_v1';
 const SK_RES='stay_msg_lite1_res_v1';
@@ -2142,12 +2145,26 @@ function toggleHelp(name){
   el.style.display=el.style.display==='none'?'':'none';
 }
 
+const TAB_GROUPS={home:{tabs:['home']},msg:{tabs:['compose','templates','history'],labels:['작성','템플릿','발송 이력']},res:{tabs:['reserv','price'],labels:['예약 관리','요금 계산']},set:{tabs:['prop','guide'],labels:['숙소','도움말']}};
+const _lastTab={};
+function groupOf(name){return Object.keys(TAB_GROUPS).find(g=>TAB_GROUPS[g].tabs.includes(name))||'home';}
+function lastTabOf(g){return _lastTab[g]||TAB_GROUPS[g].tabs[0];}
+function renderSubtabs(name){
+  document.querySelectorAll('.subtabs').forEach(e=>e.remove());
+  const g=groupOf(name), grp=TAB_GROUPS[g]; if(!grp.labels) return;
+  const page=document.getElementById('tab-'+name); if(!page) return;
+  const el=document.createElement('div'); el.className='subtabs';
+  el.innerHTML=grp.tabs.map((t,i)=>`<button class="${t===name?'active':''}" onclick="switchTab('${t}')">${grp.labels[i]}</button>`).join('');
+  page.insertBefore(el,page.firstElementChild);
+}
 function switchTab(name){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.bnav-btn,.sidebar-link').forEach(b=>b.classList.remove('active'));
   const page=document.getElementById('tab-'+name);
   if(page)page.classList.add('active');
-  document.querySelectorAll('.bnav-btn[data-tab="'+name+'"],.sidebar-link[data-tab="'+name+'"]').forEach(b=>b.classList.add('active'));
+  const g=groupOf(name); _lastTab[g]=name;
+  document.querySelectorAll('.bnav-btn[data-group="'+g+'"],.sidebar-link[data-tab="'+name+'"]').forEach(b=>b.classList.add('active'));
+  renderSubtabs(name);
   window.scrollTo({top:0,behavior:'instant'});
   if(name==='reserv')renderReservations();
   if(name==='home')renderDashboard();

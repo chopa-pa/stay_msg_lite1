@@ -87,3 +87,6 @@ PC 주력 + 폰 + 맥 봇 세 곳에서 같은 예약을 읽고 씀. 손님 전�
 - 홈 달력 위 `#botJobsCard`: sms_jobs(pending/approved/blocked/missed/unknown/failed)를 pull 때 같이 읽어 목록. 「승인」= status pending→approved(조건부 update, approved_by=로그인 이메일), 「승인 취소」= approved→pending, 「건너뛰기」= skipped(앱에서 수동 발송). 봇은 approved만 예정일 발송 창에 보냄.
 - 숙소 탭 상태줄에 봇 마지막 실행·모드(미리보기/자동)·네이버 수집 시각(bot_state) 표시.
 - 모의 테스트에 sms_jobs·update().eq().select() 추가, 8 PASS. 봇 코드는 `~/dev/stay-solsoop/bot/`(PLAN.md 참고).
+
+## 2026-10-27 v3.3.0 — 메뉴 2단계 묶음 (쵸파파 "대카테고리 밑에 중카테고리")
+- 홈 / 문자(작성·템플릿·발송 이력) / 예약(예약 관리·요금 계산) / 설정(숙소·도움말). PC 사이드바는 `.sidebar-group` 제목 + 들여쓴 링크, 폰 하단바는 4개(`data-group`), 묶음 페이지 맨 위에 `.subtabs`(PC에선 숨김). 묶음별 마지막 탭 기억(`_lastTab`). 모의 10 PASS.
