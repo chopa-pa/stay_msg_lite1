@@ -1140,7 +1140,7 @@ input,select,textarea{font-family:inherit;}
       <div class="sidebar-brand" onclick="switchTab('home')" role="button" tabindex="0" aria-label="홈으로">
         <div class="sidebar-logo">SM</div>
         <div class="sidebar-brand-text">
-          <div class="sidebar-brand-name">Stay_Msg Pro<span class="sidebar-brand-ver" id="appVer">v1.1.0</span></div>
+          <div class="sidebar-brand-name">Stay_Msg Pro<span class="sidebar-brand-ver" id="appVer">v1.2.0</span></div>
           <div class="sidebar-brand-sub">숙소 예약 문자</div>
         </div>
       </div>
@@ -1188,7 +1188,7 @@ input,select,textarea{font-family:inherit;}
       <div class="mheader-brand" onclick="switchTab('home')" role="button" tabindex="0" aria-label="홈으로">
         <div class="mheader-logo">SM</div>
         <div>
-          <div class="mheader-title">Stay_Msg Pro<span class="mheader-ver" id="appVerM">v1.1.0</span></div>
+          <div class="mheader-title">Stay_Msg Pro<span class="mheader-ver" id="appVerM">v1.2.0</span></div>
           <div class="mheader-sub">숙소 예약 문자</div>
         </div>
       </div>
@@ -1553,7 +1553,7 @@ input,select,textarea{font-family:inherit;}
           <li><strong>추가</strong> — 각 단계의 <em>+ 템플릿 추가</em>를 눌러 새 문자를 만듭니다.</li>
           <li><strong>편집</strong> — 템플릿 제목 행을 클릭하면 펼쳐지고, 제목·본문을 수정 후 <em>저장</em>.</li>
           <li><strong>복제</strong> — 비슷한 문자를 빠르게 만들 때 사용 (해당 단계에 복사본 추가).</li>
-          <li><strong>사용 가능한 변수</strong>: <code>{이름}</code> <code>{입실시간}</code> <code>{퇴실시간}</code> <code>{인원수}</code> <code>{결제금액}</code> <code>{연락처}</code> <code>{숙소명}</code> <code>{호실명}</code> <code>{숙소주소}</code> <code>{입금계좌}</code> <code>{와이파이이름}</code> <code>{와이파이비번}</code> <code>{도어락비번}</code> <code>{주중요금}</code> <code>{주말요금}</code></li>
+          <li><strong>사용 가능한 변수</strong>: <code>{이름}</code> <code>{입실시간}</code> <code>{퇴실시간}</code> <code>{인원수}</code> <code>{결제금액}</code> <code>{연락처}</code> <code>{숙소명}</code> <code>{호실명}</code> <code>{숙소주소}</code> <code>{입금계좌}</code> <code>{와이파이이름}</code> <code>{와이파이비번}</code> <code>{도어락비번}</code> <code>{주중요금}</code> <code>{주말요금}</code> <code>{반려견}</code>(예약 메모에 반려견이 있으면 「동반 확인했습니다」, 없으면 「동반이시면」 문장)</li>
           <li>변경 사항은 즉시 <strong>문자 작성</strong>에도 반영됩니다.</li>
         </ul>
       </div>
@@ -2003,7 +2003,7 @@ input,select,textarea{font-family:inherit;}
 <div class="toast" id="toast"></div>
 
 <script>
-const APP_VERSION='v1.1.0'; // Pro (2026-10-27 lite v3.3.0에서 이름·버전 리셋)
+const APP_VERSION='v1.2.0'; // Pro (2026-10-27 lite v3.3.0에서 이름·버전 리셋)
 const SK_SET='stay_msg_lite1_set_v1';
 const SK_TPL='stay_msg_lite1_tpl_v1';
 const SK_RES='stay_msg_lite1_res_v1';
@@ -2030,7 +2030,7 @@ const STAGES=[
   ]},
   {id:'booked',icon:'✅',label:'예약확정',
    templates:[
-    {title:'예약 확정 안내',body:`《{숙소명} 예약 확정 안내》\n\n{이름}님\n입실 {입실시간}\n퇴실 {퇴실시간} {박수}박/{인원}\n결제 확인되어 예약 확정되었습니다.\n\n* 입실 오후 3시 30분 / 퇴실 오전 11시 30분\n\n* 바비큐(웨버 가스그릴)를 이용하시려면 미리 알려주세요. 20,000원 현장 결제, 밤 9시까지 가능합니다.\n\n* 반려견 동반이시면 견종과 성별을 답장으로 알려주세요.\n\n* 입실 당일 오전에 오시는 길과 입실 안내 문자를 드립니다.\n  그 외 별도의 안내 문자는 드리지 않습니다.\n\n* 궁금하신 점은 인스타그램 @stay.solsoop 하이라이트를 참고해 주시고, 추가로 궁금하신 점은 언제든지 문의 주세요.\n\n편히 쉬실 수 있도록 준비하겠습니다. / {숙소명}`}
+    {title:'예약 확정 안내',body:`《{숙소명} 예약 확정 안내》\n\n{이름}님\n입실 {입실시간}\n퇴실 {퇴실시간} {박수}박/{인원}\n결제 확인되어 예약 확정되었습니다.\n\n* 입실 오후 3시 30분 / 퇴실 오전 11시 30분\n\n* 바비큐(웨버 가스그릴)를 이용하시려면 미리 알려주세요. 20,000원 현장 결제, 밤 9시까지 가능합니다.\n\n* {반려견}\n\n* 입실 당일 오전에 오시는 길과 입실 안내 문자를 드립니다.\n  그 외 별도의 안내 문자는 드리지 않습니다.\n\n* 궁금하신 점은 인스타그램 @stay.solsoop 하이라이트를 참고해 주시고, 추가로 궁금하신 점은 언제든지 문의 주세요.\n\n편히 쉬실 수 있도록 준비하겠습니다. / {숙소명}`}
   ]},
   {id:'precheckin',icon:'🗺️',label:'입실전',
    templates:[
@@ -2046,7 +2046,7 @@ const STAGES=[
   ]}
 ];
 
-const VAR_LIST=['{이름}','{입실시간}','{퇴실시간}','{박수}','{인원}','{인원수}','{결제금액}','{연락처}','{숙소명}','{호실명}','{숙소주소}','{입금계좌}','{와이파이이름}','{와이파이비번}','{도어락비번}','{전화뒷자리}','{주중요금}','{주말요금}'];
+const VAR_LIST=['{이름}','{입실시간}','{퇴실시간}','{박수}','{인원}','{인원수}','{결제금액}','{연락처}','{숙소명}','{호실명}','{숙소주소}','{입금계좌}','{와이파이이름}','{와이파이비번}','{도어락비번}','{전화뒷자리}','{주중요금}','{주말요금}','{반려견}'];
 const VAR_ALIAS={'{입실}':'{입실시간}','{퇴실}':'{퇴실시간}','{금액}':'{결제금액}','{숙소}':'{숙소명}','{호실}':'{호실명}','{주소}':'{숙소주소}','{계좌}':'{입금계좌}','{와이파이}':'{와이파이이름}','{비번}':'{도어락비번}','{전번뒷자리}':'{전화뒷자리}'};
 function applyVarAliases(s){if(!s)return s;let o=s;for(const k in VAR_ALIAS)o=o.split(k).join(VAR_ALIAS[k]);return o;}
 const EMOJI_LIST=['😊','🙏','✅','🎉','🌿','🏡','📅','👥','💰','🚗','🅿️','📶','🔥','🌊','⭐','❤️','😔','🍃','🌄','🌲','🛒','🍽️','🧺','🚭','📍','💬','📋','🎊','🐶','🐾','🗺️'];
@@ -2110,6 +2110,8 @@ function varPreview(v){
     return one.length>60?one.slice(0,60)+'…':one;
   }catch(e){return '(비어 있음)';}
 }
+let _composeMemo='';  // 예약에서 불러온 메모(반려견 옵션 판단용). 봇 templates.py dogLine과 같은 규칙
+function dogLine(memo){return /반려견|강아지|소형견/.test(memo||'')?'반려견 동반 확인했습니다. 견종과 성별을 답장으로 알려주세요.':'반려견 동반이시면 견종과 성별을 답장으로 알려주세요.';}
 function applyVars(raw){
   raw=applyVarAliases(raw);
   const ci=document.getElementById('v_checkin').value;
@@ -2135,6 +2137,7 @@ function applyVars(raw){
     '{도어락비번}':(()=>{const r=getSelectedRoom();if(r&&r.doorAuto){const p=document.getElementById('v_phone').value.replace(/\D/g,'');return p.length>=4?p.slice(-4):'{도어락비번}';}return (r?.door)||'{도어락비번}';})(),
     '{주중요금}':fmtPriceVal(getSelectedRoom()?.pw)||'{주중요금}',
     '{주말요금}':fmtPriceVal(getSelectedRoom()?.pwe)||'{주말요금}',
+    '{반려견}':dogLine(_composeMemo),
   };
   return raw.replace(/\{[^}]+\}/g,m=>map[m]!==undefined?map[m]:m);
 }
@@ -2502,6 +2505,7 @@ function openSmsApp(){
   window.location.href=`sms:${phone}${/iPhone|iPad/.test(navigator.userAgent)?'&':'?'}body=${encodeURIComponent(text)}`;
 }
 function clearForm(){
+  _composeMemo='';
   document.getElementById('v_name').value='';
   document.getElementById('v_phone').value='';
   document.getElementById('v_checkin').value='';
@@ -3518,6 +3522,7 @@ function pickStageKeyForDate(ds,ci,co){
 }
 function loadReservation(id,contextDate){
   const r=reservations.find(x=>x.id===id);if(!r)return;
+  _composeMemo=r.memo||'';
   document.getElementById('v_name').value=r.name||'';
   document.getElementById('v_phone').value=r.phone||'';
   document.getElementById('v_checkin').value=r.checkin||'';
