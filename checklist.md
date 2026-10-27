@@ -92,6 +92,9 @@
 ## v3.3.0 — 메뉴 묶음 (2026-10-27)
 - [x] 홈/문자/예약/설정 2단계 메뉴, 폰 서브탭, 모의 10 PASS, sw v86
 
+## Pro v1.0.0 — 이름·버전 리셋 (2026-10-27)
+- [x] Stay_Msg Pro v1.0.0, sw v87, manifest name
+
 ## 봇 (3단계와 연결)
 - [ ] `~/dev/stay-solsoop/bot/` 수집기: 네이버 파트너센터·에어비앤비 → reservations upsert(source_id), 10분 launchd
 - [ ] 발송기: 알리고 LMS, 확정 즉시·입실 09:30·퇴실 09:30, messages 기록, 첫 달 미리보기 게이트
