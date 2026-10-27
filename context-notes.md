@@ -93,3 +93,6 @@ PC 주력 + 폰 + 맥 봇 세 곳에서 같은 예약을 읽고 씀. 손님 전�
 
 ## 2026-10-27 Stay_Msg Pro v1.0.0 (이름·버전 리셋)
 - 쵸파파 "다 구현되면 프로로 바꾸고 버전 1.0부터". 2차(채널 날짜 막기)까지 완료 → 표시명 Stay_Msg Pro, APP_VERSION v1.0.0, title·manifest name·사이드바·모바일 헤더. 저장소명·URL(msg.staysolsoop.kr)·localStorage 키(stay_msg_lite1_*)는 그대로(데이터 호환). lite 계보: v2.5.x(솔숲 맞춤) → v3.0(Supabase) → v3.1(코덱스 수정) → v3.2(승인 카드) → v3.3(메뉴 묶음) → Pro v1.0.0.
+
+## 2026-10-27 Pro v1.1.0 — 봇 문자 본문 수정
+- 승인 카드 「본문 수정」 → textarea → 저장: sms_jobs {body, body_hash(SHA-1 앞 16, 파이썬 h()와 동일 확인), custom:true, status pending}. 미치환 {변수} 남으면 저장 거부. 봇(dispatch)은 custom이면 템플릿 재렌더 비교를 건너뛰고 번호·날짜·예약 상태만 재확인. 모의 5 PASS.
