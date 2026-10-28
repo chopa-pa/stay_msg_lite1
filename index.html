@@ -1163,7 +1163,7 @@ input,select,textarea{font-family:inherit;}
       <div class="sidebar-brand" onclick="switchTab('home')" role="button" tabindex="0" aria-label="홈으로">
         <div class="sidebar-logo">SM</div>
         <div class="sidebar-brand-text">
-          <div class="sidebar-brand-name">Stay_Msg Pro<span class="sidebar-brand-ver" id="appVer">v1.4.0</span></div>
+          <div class="sidebar-brand-name">Stay_Msg Pro<span class="sidebar-brand-ver" id="appVer">v1.4.1</span></div>
           <div class="sidebar-brand-sub">숙소 예약 문자</div>
         </div>
       </div>
@@ -1214,7 +1214,7 @@ input,select,textarea{font-family:inherit;}
       <div class="mheader-brand" onclick="switchTab('home')" role="button" tabindex="0" aria-label="홈으로">
         <div class="mheader-logo">SM</div>
         <div>
-          <div class="mheader-title">Stay_Msg Pro<span class="mheader-ver" id="appVerM">v1.4.0</span></div>
+          <div class="mheader-title">Stay_Msg Pro<span class="mheader-ver" id="appVerM">v1.4.1</span></div>
           <div class="mheader-sub">숙소 예약 문자</div>
         </div>
       </div>
@@ -2049,7 +2049,7 @@ input,select,textarea{font-family:inherit;}
 <div class="toast" id="toast"></div>
 
 <script>
-const APP_VERSION='v1.4.0'; // Pro (2026-10-27 lite v3.3.0에서 이름·버전 리셋)
+const APP_VERSION='v1.4.1'; // Pro (2026-10-27 lite v3.3.0에서 이름·버전 리셋)
 const SK_SET='stay_msg_lite1_set_v1';
 const SK_TPL='stay_msg_lite1_tpl_v1';
 const SK_RES='stay_msg_lite1_res_v1';
@@ -3754,8 +3754,9 @@ function renderDashboard(){
 }
 // ─────── GUESTS (고객 관리) ───────
 let guestNotes = {};   // reservation_id → {dog,bbq,review,note}
-const GUEST_DOG_RE = /반려견|강아지|소형견/;
+const GUEST_DOG_RE = /반려견|강아지|소형견/, GUEST_BBQ_RE = /바비큐\s*(○|o|✓|예|있음|신청|이용)/i;
 function guestDog(r){ const n = guestNotes[r.id]; return (n && n.dog !== null && n.dog !== undefined) ? {on:!!n.dog, auto:false} : {on:GUEST_DOG_RE.test(r.memo||''), auto:true}; }
+function guestBbq(r){ const n = guestNotes[r.id]; return (n && n.bbq !== null && n.bbq !== undefined) ? {on:!!n.bbq, auto:false} : {on:GUEST_BBQ_RE.test(r.memo||''), auto:true}; }
 function guestVisitMap(){ const m = {}; reservations.forEach(r=>{ const k=(r.phone||'').replace(/\D/g,''); if(!k) return; (m[k]=m[k]||[]).push(r.checkin); }); return m; }
 function renderGuests(){
   const tbl=document.getElementById('guestTable'); if(!tbl) return;
@@ -3766,7 +3767,7 @@ function renderGuests(){
   if(!rows.length){ tbl.innerHTML='<tr><td><div class="empty"><span class="emoji">👤</span>표시할 고객이 없어요</div></td></tr>'; return; }
   const canEdit = !!(sb && sbUserEmail);
   tbl.innerHTML = '<thead><tr><th>이름</th><th>전화번호</th><th>숙박일</th><th class="c">반려견</th><th class="c">바비큐</th><th class="c">리뷰</th><th>방문</th><th>메모</th></tr></thead><tbody>' + rows.map(r=>{
-    const n=guestNotes[r.id]||{}, d=guestDog(r);
+    const n=guestNotes[r.id]||{}, d=guestDog(r), bq=guestBbq(r);
     const k=(r.phone||'').replace(/\D/g,''), list=(visits[k]||[]).slice().sort(), nth=k ? list.indexOf(r.checkin)+1 : 1, total=k ? list.length : 1;
     const nights=Math.round((new Date(r.checkout)-new Date(r.checkin))/86400000);
     const chk=(field,on,auto)=>`<button class="gchk${on?(auto?' auto':' on'):''}" ${canEdit?'':'disabled'} onclick="guestToggle('${r.id}','${field}')" title="${auto?'메모로 자동 판단':''}">✓</button>`;
@@ -3775,7 +3776,7 @@ function renderGuests(){
       <td>${esc(r.phone||'')}</td>
       <td>${r.checkin} ~ ${r.checkout}<div class="gsub">${nights}박</div></td>
       <td class="c">${chk('dog',d.on,d.auto)}</td>
-      <td class="c">${chk('bbq',!!n.bbq,false)}</td>
+      <td class="c">${chk('bbq',bq.on,bq.auto)}</td>
       <td class="c">${chk('review',!!n.review,false)}</td>
       <td><span class="gvisit${total>1?'':' one'}">${nth}회${total>1?' / '+total:''}</span></td>
       <td><div class="gmemo" title="${esc(r.memo||'')}">${esc(r.memo||'')}</div></td>
@@ -3786,8 +3787,8 @@ async function guestToggle(resId, field){
   if(!(sb && sbUserEmail)){ toast('로그인 후 표시할 수 있어요'); return; }
   const r = reservations.find(x=>x.id===resId); if(!r) return;
   const cur = guestNotes[resId] || {};
-  const next = { reservation_id: resId, dog: (cur.dog===null||cur.dog===undefined)?guestDog(r).on:cur.dog, bbq: !!cur.bbq, review: !!cur.review, note: cur.note||null, updated_by: sbUserEmail, updated_at: new Date().toISOString() };
-  next[field] = !(field==='dog' ? guestDog(r).on : !!cur[field]);
+  const next = { reservation_id: resId, dog: guestDog(r).on, bbq: guestBbq(r).on, review: !!cur.review, note: cur.note||null, updated_by: sbUserEmail, updated_at: new Date().toISOString() };
+  next[field] = !next[field];
   const { error } = await sb.from('guest_notes').upsert(next);
   if(error){ console.error(error); toast('저장 실패 — 인터넷 확인'); return; }
   guestNotes[resId] = next; renderGuests();
