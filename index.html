@@ -735,6 +735,10 @@ input,select,textarea{font-family:inherit;}
 }
 .hist-item-body:not(.open)::after{content:'';position:absolute;left:0;right:0;bottom:0;height:22px;background:linear-gradient(transparent,var(--soft));}
 .hist-item-body.open{max-height:none;}
+.hist-deliv{font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;flex-shrink:0;}
+.hist-deliv.sending{background:#fef3c7;color:#b45309;}
+.hist-deliv.late{background:var(--destructive-bg);color:var(--destructive);}
+.hist-deliv.ok{background:var(--accent);color:var(--accent-fg);}
 .hist-item-actions{display:flex;gap:6px;margin-top:10px;flex-wrap:wrap;}
 .hist-item-actions .btn{padding:6px 11px;font-size:12px;}
 .hist-empty{
@@ -1142,7 +1146,7 @@ input,select,textarea{font-family:inherit;}
       <div class="sidebar-brand" onclick="switchTab('home')" role="button" tabindex="0" aria-label="홈으로">
         <div class="sidebar-logo">SM</div>
         <div class="sidebar-brand-text">
-          <div class="sidebar-brand-name">Stay_Msg Pro<span class="sidebar-brand-ver" id="appVer">v1.2.3</span></div>
+          <div class="sidebar-brand-name">Stay_Msg Pro<span class="sidebar-brand-ver" id="appVer">v1.3.0</span></div>
           <div class="sidebar-brand-sub">숙소 예약 문자</div>
         </div>
       </div>
@@ -1190,7 +1194,7 @@ input,select,textarea{font-family:inherit;}
       <div class="mheader-brand" onclick="switchTab('home')" role="button" tabindex="0" aria-label="홈으로">
         <div class="mheader-logo">SM</div>
         <div>
-          <div class="mheader-title">Stay_Msg Pro<span class="mheader-ver" id="appVerM">v1.2.3</span></div>
+          <div class="mheader-title">Stay_Msg Pro<span class="mheader-ver" id="appVerM">v1.3.0</span></div>
           <div class="mheader-sub">숙소 예약 문자</div>
         </div>
       </div>
@@ -2005,7 +2009,7 @@ input,select,textarea{font-family:inherit;}
 <div class="toast" id="toast"></div>
 
 <script>
-const APP_VERSION='v1.2.3'; // Pro (2026-10-27 lite v3.3.0에서 이름·버전 리셋)
+const APP_VERSION='v1.3.0'; // Pro (2026-10-27 lite v3.3.0에서 이름·버전 리셋)
 const SK_SET='stay_msg_lite1_set_v1';
 const SK_TPL='stay_msg_lite1_tpl_v1';
 const SK_RES='stay_msg_lite1_res_v1';
@@ -3294,6 +3298,7 @@ function renderHistory(){
         <div class="hist-item-meta">
           <span class="hist-item-stage">${esc(h.stageLabel||'')}</span>
           <span class="hist-item-tpl">${esc(h.tplTitle||'')}</span>
+          ${histDeliv(h)}
         </div>
         <span class="hist-item-time">${fmtHistTime(h.at)}</span>
       </div>
@@ -3301,6 +3306,7 @@ function renderHistory(){
       <div class="hist-item-body" id="hb_${h.id}">${esc(h.body||'')}</div>
       <div class="hist-item-actions">
         <button class="btn btn-outline btn-sm" onclick="toggleHistBody('${h.id}',this)"><svg class="i"><use href="#i-doc"/></svg><span>본문 보기</span></button>
+        ${histNeedsResend(h)?`<button class="btn btn-primary btn-sm" onclick="sbJobResend('${h.id}')"><svg class="i"><use href="#i-sync"/></svg>봇으로 다시 보내기</button>`:''}
         <button class="btn btn-outline btn-sm" onclick="resendHistory('${h.id}')"><svg class="i"><use href="#i-iphone"/></svg>다시 보내기</button>
         <button class="btn btn-outline btn-sm" onclick="copyHistBody('${h.id}')"><svg class="i"><use href="#i-copy"/></svg>복사</button>
         <button class="btn btn-destructive btn-sm" onclick="deleteHistoryItem('${h.id}')"><svg class="i"><use href="#i-trash"/></svg></button>
@@ -3314,6 +3320,26 @@ function resendHistory(id){
   if(msgHistory.length>200)msgHistory.length=200;
   saveHistoryStorage();renderHistory();renderDashboard();
   window.location.href=`sms:${phone}${/iPhone|iPad/.test(navigator.userAgent)?'&':'?'}body=${encodeURIComponent(h.body)}`;
+}
+// 봇 발송 이력의 전달 상태. status: sent=통신사 전송 중, delivered=단말 도착, failed=실패(또는 재발송으로 닫힘)
+function histMins(h){return Math.floor((Date.now()-new Date(h.at||0).getTime())/60000);}
+function histDeliv(h){
+  if(h.sentBy!=='bot')return '';
+  if(h.status==='delivered')return '<span class="hist-deliv ok">전달 완료</span>';
+  if(h.status==='failed')return '<span class="hist-deliv late">전달 실패</span>';
+  const m=histMins(h);
+  return m>60?`<span class="hist-deliv late">전송 중 ${m}분 · 지연</span>`:`<span class="hist-deliv sending">전송 중 ${m}분</span>`;
+}
+function histNeedsResend(h){return h.sentBy==='bot'&&/^bot\d+/.test(h.id)&&(h.status==='failed'||(h.status==='sent'&&histMins(h)>60));}
+async function sbJobResend(histId){
+  if(!sb||!sbUserEmail){toast('로그인 필요');return;}
+  const jobId=(histId.match(/^bot(\d+)/)||[])[1];if(!jobId)return;
+  showConfirmModal('봇으로 다시 보내기','같은 문자를 봇이 다시 보내요(승인 상태로 바뀌고 10분 안에 발송, 08~21시).\n먼저 보낸 문자가 늦게 도착하면 두 번 받을 수 있어요.',async()=>{
+    const today=new Date(Date.now()+9*3600e3).toISOString().slice(0,10);
+    const {data,error}=await sb.from('sms_jobs').update({status:'approved',approved_by:sbUserEmail,approved_at:new Date().toISOString(),provider_id:null,result:'재발송 요청',scheduled_date:today}).eq('id',jobId).eq('status','sent').select();
+    if(error||!data||!data.length){toast('처리 실패 — 새로고침 뒤 다시');return;}
+    toast('재발송 승인 — 봇이 10분 안에 보내요');sbPull(true).catch(()=>{});
+  });
 }
 function toggleHistBody(id,btn){
   const el=document.getElementById('hb_'+id);if(!el)return;
