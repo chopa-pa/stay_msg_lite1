@@ -733,6 +733,8 @@ input,select,textarea{font-family:inherit;}
   max-height:60px;overflow:hidden;position:relative;
   white-space:pre-wrap;word-break:break-word;
 }
+.hist-item-body:not(.open)::after{content:'';position:absolute;left:0;right:0;bottom:0;height:22px;background:linear-gradient(transparent,var(--soft));}
+.hist-item-body.open{max-height:none;}
 .hist-item-actions{display:flex;gap:6px;margin-top:10px;flex-wrap:wrap;}
 .hist-item-actions .btn{padding:6px 11px;font-size:12px;}
 .hist-empty{
@@ -1140,7 +1142,7 @@ input,select,textarea{font-family:inherit;}
       <div class="sidebar-brand" onclick="switchTab('home')" role="button" tabindex="0" aria-label="홈으로">
         <div class="sidebar-logo">SM</div>
         <div class="sidebar-brand-text">
-          <div class="sidebar-brand-name">Stay_Msg Pro<span class="sidebar-brand-ver" id="appVer">v1.2.2</span></div>
+          <div class="sidebar-brand-name">Stay_Msg Pro<span class="sidebar-brand-ver" id="appVer">v1.2.3</span></div>
           <div class="sidebar-brand-sub">숙소 예약 문자</div>
         </div>
       </div>
@@ -1188,7 +1190,7 @@ input,select,textarea{font-family:inherit;}
       <div class="mheader-brand" onclick="switchTab('home')" role="button" tabindex="0" aria-label="홈으로">
         <div class="mheader-logo">SM</div>
         <div>
-          <div class="mheader-title">Stay_Msg Pro<span class="mheader-ver" id="appVerM">v1.2.2</span></div>
+          <div class="mheader-title">Stay_Msg Pro<span class="mheader-ver" id="appVerM">v1.2.3</span></div>
           <div class="mheader-sub">숙소 예약 문자</div>
         </div>
       </div>
@@ -2003,7 +2005,7 @@ input,select,textarea{font-family:inherit;}
 <div class="toast" id="toast"></div>
 
 <script>
-const APP_VERSION='v1.2.2'; // Pro (2026-10-27 lite v3.3.0에서 이름·버전 리셋)
+const APP_VERSION='v1.2.3'; // Pro (2026-10-27 lite v3.3.0에서 이름·버전 리셋)
 const SK_SET='stay_msg_lite1_set_v1';
 const SK_TPL='stay_msg_lite1_tpl_v1';
 const SK_RES='stay_msg_lite1_res_v1';
@@ -3296,8 +3298,9 @@ function renderHistory(){
         <span class="hist-item-time">${fmtHistTime(h.at)}</span>
       </div>
       <div class="hist-item-name">${esc(h.name||'이름 없음')}${h.phone?' · '+esc(h.phone):''}</div>
-      <div class="hist-item-body">${esc((h.body||'').slice(0,160))}${(h.body||'').length>160?'…':''}</div>
+      <div class="hist-item-body" id="hb_${h.id}">${esc(h.body||'')}</div>
       <div class="hist-item-actions">
+        <button class="btn btn-outline btn-sm" onclick="toggleHistBody('${h.id}',this)"><svg class="i"><use href="#i-doc"/></svg><span>본문 보기</span></button>
         <button class="btn btn-outline btn-sm" onclick="resendHistory('${h.id}')"><svg class="i"><use href="#i-iphone"/></svg>다시 보내기</button>
         <button class="btn btn-outline btn-sm" onclick="copyHistBody('${h.id}')"><svg class="i"><use href="#i-copy"/></svg>복사</button>
         <button class="btn btn-destructive btn-sm" onclick="deleteHistoryItem('${h.id}')"><svg class="i"><use href="#i-trash"/></svg></button>
@@ -3311,6 +3314,11 @@ function resendHistory(id){
   if(msgHistory.length>200)msgHistory.length=200;
   saveHistoryStorage();renderHistory();renderDashboard();
   window.location.href=`sms:${phone}${/iPhone|iPad/.test(navigator.userAgent)?'&':'?'}body=${encodeURIComponent(h.body)}`;
+}
+function toggleHistBody(id,btn){
+  const el=document.getElementById('hb_'+id);if(!el)return;
+  const open=el.classList.toggle('open');
+  const t=btn.querySelector('span');if(t)t.textContent=open?'접기':'본문 보기';
 }
 function copyHistBody(id){
   const h=msgHistory.find(x=>x.id===id);if(!h)return;
