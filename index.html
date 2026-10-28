@@ -635,6 +635,23 @@ input,select,textarea{font-family:inherit;}
 .empty .emoji{font-size:28px;display:block;margin-bottom:8px;opacity:0.6;}
 
 /* ─────── RESV LIST ─────── */
+.guest-tools{display:flex;gap:8px;margin-bottom:12px;}
+.guest-tools .input{max-width:320px;}
+.guest-wrap{overflow-x:auto;background:var(--card);border:1px solid var(--border);border-radius:var(--radius-lg);box-shadow:var(--shadow-sm);}
+.guest-tbl{width:100%;border-collapse:collapse;font-size:13px;min-width:640px;}
+.guest-tbl th{position:sticky;top:0;background:var(--muted);color:var(--muted-fg);font-weight:600;font-size:12px;text-align:left;padding:10px 12px;border-bottom:1px solid var(--border);white-space:nowrap;}
+.guest-tbl td{padding:10px 12px;border-bottom:1px solid var(--border);vertical-align:middle;white-space:nowrap;}
+.guest-tbl tr:last-child td{border-bottom:none;}
+.guest-tbl td.c{text-align:center;}
+.guest-tbl .gname{font-weight:600;color:var(--fg);}
+.guest-tbl .gsub{font-size:11px;color:var(--muted-fg);}
+.guest-tbl .gvisit{display:inline-block;padding:2px 8px;border-radius:999px;background:var(--accent);color:var(--accent-fg);font-size:11px;font-weight:600;}
+.guest-tbl .gvisit.one{background:var(--muted);color:var(--muted-fg);}
+.gchk{width:26px;height:26px;border-radius:7px;border:1px solid var(--border-strong);background:var(--card);cursor:pointer;font-size:14px;line-height:24px;padding:0;color:transparent;}
+.gchk.on{background:var(--primary);border-color:var(--primary);color:#fff;}
+.gchk.auto{background:var(--accent);border-color:var(--accent);color:var(--accent-fg);}
+.gchk:disabled{cursor:default;opacity:.6;}
+.guest-tbl .gmemo{max-width:220px;overflow:hidden;text-overflow:ellipsis;color:var(--muted-fg);font-size:12px;}
 .resv-grid{
   display:grid;grid-template-columns:1fr;gap:10px;
 }
@@ -1146,7 +1163,7 @@ input,select,textarea{font-family:inherit;}
       <div class="sidebar-brand" onclick="switchTab('home')" role="button" tabindex="0" aria-label="홈으로">
         <div class="sidebar-logo">SM</div>
         <div class="sidebar-brand-text">
-          <div class="sidebar-brand-name">Stay_Msg Pro<span class="sidebar-brand-ver" id="appVer">v1.3.1</span></div>
+          <div class="sidebar-brand-name">Stay_Msg Pro<span class="sidebar-brand-ver" id="appVer">v1.4.0</span></div>
           <div class="sidebar-brand-sub">숙소 예약 문자</div>
         </div>
       </div>
@@ -1168,6 +1185,9 @@ input,select,textarea{font-family:inherit;}
       <div class="sidebar-group">예약</div>
       <button class="sidebar-link sub" data-tab="reserv" onclick="switchTab('reserv')">
         <span class="sidebar-link-icon"><svg class="i"><use href="#i-clipboard"/></svg></span>예약 관리
+      </button>
+      <button class="sidebar-link sub" data-tab="guests" onclick="switchTab('guests')">
+        <span class="sidebar-link-icon"><svg class="i"><use href="#i-user"/></svg></span>고객 관리
       </button>
       <button class="sidebar-link sub" data-tab="price" onclick="switchTab('price')">
         <span class="sidebar-link-icon"><svg class="i"><use href="#i-dollar"/></svg></span>요금 계산
@@ -1194,7 +1214,7 @@ input,select,textarea{font-family:inherit;}
       <div class="mheader-brand" onclick="switchTab('home')" role="button" tabindex="0" aria-label="홈으로">
         <div class="mheader-logo">SM</div>
         <div>
-          <div class="mheader-title">Stay_Msg Pro<span class="mheader-ver" id="appVerM">v1.3.1</span></div>
+          <div class="mheader-title">Stay_Msg Pro<span class="mheader-ver" id="appVerM">v1.4.0</span></div>
           <div class="mheader-sub">숙소 예약 문자</div>
         </div>
       </div>
@@ -1587,6 +1607,26 @@ input,select,textarea{font-family:inherit;}
       </div>
 
       <div class="resv-grid" id="resvList"></div>
+    </section>
+
+    <!-- ─── GUESTS (고객 관리) ─── -->
+    <section class="page" id="tab-guests">
+      <div class="page-head">
+        <h1 class="page-title"><svg class="i"><use href="#i-user"/></svg>고객 관리<button class="btn-help" onclick="toggleHelp('guests')" aria-label="도움말"><svg class="i"><use href="#i-help"/></svg></button></h1>
+        <p class="page-sub"><span id="guestCount">예약이 없습니다</span></p>
+      </div>
+      <div class="help-panel" id="help-guests" style="display:none;">
+        <h4><svg class="i"><use href="#i-user"/></svg>고객 관리 사용 방법</h4>
+        <ul>
+          <li><strong>한 줄 = 예약 한 건</strong> — 이름·전화·숙박일은 예약 관리에서 자동으로 옵니다. 같은 전화번호면 <em>방문 N회</em>로 묶어 셉니다.</li>
+          <li><strong>반려견 · 바비큐 · 리뷰</strong> — 칸을 누르면 바로 저장됩니다(로그인 상태에서만). 반려견은 표시 안 해도 예약 메모에 반려견이 있으면 자동으로 ✓.</li>
+          <li><strong>검색</strong> — 이름이나 전화번호 일부로 찾습니다.</li>
+        </ul>
+      </div>
+      <div class="guest-tools">
+        <input class="input" id="guestSearch" placeholder="이름 · 전화번호 검색" oninput="renderGuests()">
+      </div>
+      <div class="guest-wrap"><table class="guest-tbl" id="guestTable"></table></div>
     </section>
 
     <!-- ─── HISTORY ─── -->
@@ -2009,7 +2049,7 @@ input,select,textarea{font-family:inherit;}
 <div class="toast" id="toast"></div>
 
 <script>
-const APP_VERSION='v1.3.1'; // Pro (2026-10-27 lite v3.3.0에서 이름·버전 리셋)
+const APP_VERSION='v1.4.0'; // Pro (2026-10-27 lite v3.3.0에서 이름·버전 리셋)
 const SK_SET='stay_msg_lite1_set_v1';
 const SK_TPL='stay_msg_lite1_tpl_v1';
 const SK_RES='stay_msg_lite1_res_v1';
@@ -2156,7 +2196,7 @@ function toggleHelp(name){
   el.style.display=el.style.display==='none'?'':'none';
 }
 
-const TAB_GROUPS={home:{tabs:['home']},msg:{tabs:['compose','templates','history'],labels:['작성','템플릿','발송 이력']},res:{tabs:['reserv','price'],labels:['예약 관리','요금 계산']},set:{tabs:['prop','guide'],labels:['숙소','도움말']}};
+const TAB_GROUPS={home:{tabs:['home']},msg:{tabs:['compose','templates','history'],labels:['작성','템플릿','발송 이력']},res:{tabs:['reserv','guests','price'],labels:['예약 관리','고객','요금 계산']},set:{tabs:['prop','guide'],labels:['숙소','도움말']}};
 const _lastTab={};
 function groupOf(name){return Object.keys(TAB_GROUPS).find(g=>TAB_GROUPS[g].tabs.includes(name))||'home';}
 function lastTabOf(g){return _lastTab[g]||TAB_GROUPS[g].tabs[0];}
@@ -2178,6 +2218,7 @@ function switchTab(name){
   renderSubtabs(name);
   window.scrollTo({top:0,behavior:'instant'});
   if(name==='reserv')renderReservations();
+  if(name==='guests')renderGuests();
   if(name==='home')renderDashboard();
   if(name==='templates')renderTemplatesPage();
   if(name==='history')renderHistory();
@@ -3711,6 +3752,46 @@ function renderDashboard(){
     }
   }
 }
+// ─────── GUESTS (고객 관리) ───────
+let guestNotes = {};   // reservation_id → {dog,bbq,review,note}
+const GUEST_DOG_RE = /반려견|강아지|소형견/;
+function guestDog(r){ const n = guestNotes[r.id]; return (n && n.dog !== null && n.dog !== undefined) ? {on:!!n.dog, auto:false} : {on:GUEST_DOG_RE.test(r.memo||''), auto:true}; }
+function guestVisitMap(){ const m = {}; reservations.forEach(r=>{ const k=(r.phone||'').replace(/\D/g,''); if(!k) return; (m[k]=m[k]||[]).push(r.checkin); }); return m; }
+function renderGuests(){
+  const tbl=document.getElementById('guestTable'); if(!tbl) return;
+  const q=(document.getElementById('guestSearch').value||'').trim().toLowerCase(), qd=q.replace(/\D/g,'');
+  const visits=guestVisitMap();
+  const rows=[...reservations].filter(r=>!q || (r.name||'').toLowerCase().includes(q) || (qd && (r.phone||'').replace(/\D/g,'').includes(qd))).sort((a,b)=>b.checkin.localeCompare(a.checkin));
+  document.getElementById('guestCount').textContent = reservations.length ? `예약 ${reservations.length}건 · 고객 ${Object.keys(visits).length}명` : '예약이 없습니다';
+  if(!rows.length){ tbl.innerHTML='<tr><td><div class="empty"><span class="emoji">👤</span>표시할 고객이 없어요</div></td></tr>'; return; }
+  const canEdit = !!(sb && sbUserEmail);
+  tbl.innerHTML = '<thead><tr><th>이름</th><th>전화번호</th><th>숙박일</th><th class="c">반려견</th><th class="c">바비큐</th><th class="c">리뷰</th><th>방문</th><th>메모</th></tr></thead><tbody>' + rows.map(r=>{
+    const n=guestNotes[r.id]||{}, d=guestDog(r);
+    const k=(r.phone||'').replace(/\D/g,''), list=(visits[k]||[]).slice().sort(), nth=k ? list.indexOf(r.checkin)+1 : 1, total=k ? list.length : 1;
+    const nights=Math.round((new Date(r.checkout)-new Date(r.checkin))/86400000);
+    const chk=(field,on,auto)=>`<button class="gchk${on?(auto?' auto':' on'):''}" ${canEdit?'':'disabled'} onclick="guestToggle('${r.id}','${field}')" title="${auto?'메모로 자동 판단':''}">✓</button>`;
+    return `<tr>
+      <td><div class="gname">${esc(r.name)}</div><div class="gsub">${r.channel?esc(r.channel):''}${r.guests?' · '+esc(r.guests):''}</div></td>
+      <td>${esc(r.phone||'')}</td>
+      <td>${r.checkin} ~ ${r.checkout}<div class="gsub">${nights}박</div></td>
+      <td class="c">${chk('dog',d.on,d.auto)}</td>
+      <td class="c">${chk('bbq',!!n.bbq,false)}</td>
+      <td class="c">${chk('review',!!n.review,false)}</td>
+      <td><span class="gvisit${total>1?'':' one'}">${nth}회${total>1?' / '+total:''}</span></td>
+      <td><div class="gmemo" title="${esc(r.memo||'')}">${esc(r.memo||'')}</div></td>
+    </tr>`;
+  }).join('') + '</tbody>';
+}
+async function guestToggle(resId, field){
+  if(!(sb && sbUserEmail)){ toast('로그인 후 표시할 수 있어요'); return; }
+  const r = reservations.find(x=>x.id===resId); if(!r) return;
+  const cur = guestNotes[resId] || {};
+  const next = { reservation_id: resId, dog: (cur.dog===null||cur.dog===undefined)?guestDog(r).on:cur.dog, bbq: !!cur.bbq, review: !!cur.review, note: cur.note||null, updated_by: sbUserEmail, updated_at: new Date().toISOString() };
+  next[field] = !(field==='dog' ? guestDog(r).on : !!cur[field]);
+  const { error } = await sb.from('guest_notes').upsert(next);
+  if(error){ console.error(error); toast('저장 실패 — 인터넷 확인'); return; }
+  guestNotes[resId] = next; renderGuests();
+}
 function renderReservations(){
   const list=document.getElementById('resvList');
   const today=getTodayStr();
@@ -3908,11 +3989,12 @@ async function sbPull(manual){
   return sbRun(async()=>{
     const gen = sbWriteGen;
     if(sbHasPending()){ await sbRetryPending(); if(sbHasPending() || gen !== sbWriteGen){ if(manual && sbHasPending()) toast('먼저 저장 실패분을 올려야 해요 — 인터넷 확인'); return; } }
-    const [s, r, m, j] = await Promise.all([
+    const [s, r, m, j, gn] = await Promise.all([
       sb.from('app_settings').select('key,value'),
       sb.from('reservations').select('*').neq('status','cancelled'),
       sb.from('messages').select('*').order('sent_at',{ascending:false}).limit(200),
-      sb.from('sms_jobs').select('*').in('status',['pending','approved','blocked','missed','unknown','failed']).order('scheduled_date')
+      sb.from('sms_jobs').select('*').in('status',['pending','approved','blocked','missed','unknown','failed']).order('scheduled_date'),
+      sb.from('guest_notes').select('*')
     ]);
     if(s.error||r.error||m.error) throw (s.error||r.error||m.error);
     if(j.error) console.error(j.error);
@@ -3934,6 +4016,7 @@ async function sbPull(manual){
     const hist = (m.data||[]).map(rowToHist); localStorage.setItem(SK_HIST, JSON.stringify(hist)); sbHistIds = new Set(hist.map(x=>x.id)); sbHistAt = new Map(hist.map(x=>[x.id,x.at||'']));
     sbApplying = true; try { sbRefreshUI(withSettings); } finally { sbApplying = false; }
     sbBotState = map.bot_state || null; sbRenderJobs(j.data||[]);
+    if(gn.error) console.error(gn.error); else { guestNotes = Object.fromEntries((gn.data||[]).map(x=>[x.reservation_id,x])); const gp=document.getElementById('tab-guests'); if(gp&&gp.classList.contains('active')) renderGuests(); }
     sbStatus('계정: '+sbUserEmail+' · 서버 동기화 '+sbNow()+(withSettings?'':' (편집 중인 설정은 제외)')+sbBotLine());
     if(manual) toast('서버에서 새로고침 ✓');
   });
