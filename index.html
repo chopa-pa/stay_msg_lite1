@@ -1163,7 +1163,7 @@ input,select,textarea{font-family:inherit;}
       <div class="sidebar-brand" onclick="switchTab('home')" role="button" tabindex="0" aria-label="홈으로">
         <div class="sidebar-logo">SM</div>
         <div class="sidebar-brand-text">
-          <div class="sidebar-brand-name">Stay_Msg Pro<span class="sidebar-brand-ver" id="appVer">v1.5.3</span></div>
+          <div class="sidebar-brand-name">Stay_Msg Pro<span class="sidebar-brand-ver" id="appVer">v1.5.4</span></div>
           <div class="sidebar-brand-sub">숙소 예약 문자</div>
         </div>
       </div>
@@ -1214,7 +1214,7 @@ input,select,textarea{font-family:inherit;}
       <div class="mheader-brand" onclick="switchTab('home')" role="button" tabindex="0" aria-label="홈으로">
         <div class="mheader-logo">SM</div>
         <div>
-          <div class="mheader-title">Stay_Msg Pro<span class="mheader-ver" id="appVerM">v1.5.3</span></div>
+          <div class="mheader-title">Stay_Msg Pro<span class="mheader-ver" id="appVerM">v1.5.4</span></div>
           <div class="mheader-sub">숙소 예약 문자</div>
         </div>
       </div>
@@ -1391,9 +1391,13 @@ input,select,textarea{font-family:inherit;}
       <div class="card" id="botJobsCard" style="display:none;">
         <div class="card-head">
           <div class="card-head-title"><span class="ico">🤖</span>자동 문자 <span id="botJobsCount" style="margin-left:6px;font-size:12px;color:var(--muted-fg);"></span></div>
+          <button type="button" class="btn btn-outline btn-sm" id="botJobsToggle" onclick="toggleBotJobs()">펼치기</button>
         </div>
-        <p class="adv-hint" id="botJobsHint" style="margin:0 0 8px;">봇이 만든 문자입니다. 승인한 것만 예정일 아침에 자동 발송됩니다.</p>
-        <div class="res-list" id="botJobsList"></div>
+        <!-- 11-01 쵸파파: 자동 문자 목록이 길어 홈이 밀림 → 기본 접힘, 버튼으로 펼침(선택은 이 기기에 기억) -->
+        <div id="botJobsBody" style="display:none;">
+          <p class="adv-hint" id="botJobsHint" style="margin:0 0 8px;">봇이 만든 문자입니다. 승인한 것만 예정일 아침에 자동 발송됩니다.</p>
+          <div class="res-list" id="botJobsList"></div>
+        </div>
       </div>
 
       <div class="card cal-card">
@@ -2049,7 +2053,7 @@ input,select,textarea{font-family:inherit;}
 <div class="toast" id="toast"></div>
 
 <script>
-const APP_VERSION='v1.5.3'; // Pro (2026-10-27 lite v3.3.0에서 이름·버전 리셋)
+const APP_VERSION='v1.5.4'; // Pro (2026-10-27 lite v3.3.0에서 이름·버전 리셋)
 const SK_SET='stay_msg_lite1_set_v1';
 const SK_TPL='stay_msg_lite1_tpl_v1';
 const SK_RES='stay_msg_lite1_res_v1';
@@ -2206,6 +2210,13 @@ function applyVars(raw){
 }
 function smsBytes(s){let b=0;for(const ch of s){b+=(ch.charCodeAt(0)>127)?2:1;}return b;}
 
+function toggleBotJobs(force){
+  const body=document.getElementById('botJobsBody'), btn=document.getElementById('botJobsToggle');
+  const open = force!==undefined ? force : body.style.display==='none';
+  body.style.display = open ? '' : 'none'; btn.textContent = open ? '접기' : '펼치기';
+  try{ localStorage.setItem('botJobsOpen', open ? '1' : '0'); }catch(e){}
+}
+try{ if(localStorage.getItem('botJobsOpen')==='1') document.addEventListener('DOMContentLoaded', ()=>toggleBotJobs(true)); }catch(e){}
 function toggleHelp(name){
   const el=document.getElementById('help-'+name);if(!el)return;
   el.style.display=el.style.display==='none'?'':'none';
