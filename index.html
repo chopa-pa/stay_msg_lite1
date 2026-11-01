@@ -1175,7 +1175,7 @@ input,select,textarea{font-family:inherit;}
       <div class="sidebar-brand" onclick="switchTab('home')" role="button" tabindex="0" aria-label="홈으로">
         <div class="sidebar-logo">SM</div>
         <div class="sidebar-brand-text">
-          <div class="sidebar-brand-name">Stay_Msg Pro<span class="sidebar-brand-ver" id="appVer">v1.8.1</span></div>
+          <div class="sidebar-brand-name">Stay_Msg Pro<span class="sidebar-brand-ver" id="appVer">v1.8.2</span></div>
           <div class="sidebar-brand-sub">숙소 예약 문자</div>
         </div>
       </div>
@@ -1205,8 +1205,8 @@ input,select,textarea{font-family:inherit;}
         <span class="sidebar-link-icon"><svg class="i"><use href="#i-dollar"/></svg></span>요금 계산
       </button>
       <div class="sidebar-group">통계</div>
-      <button class="sidebar-link sub" data-tab="st_sales" onclick="switchTab('st_sales')"><span class="sidebar-link-icon"><svg class="i"><use href="#i-dollar"/></svg></span>매출</button>
-      <button class="sidebar-link sub" data-tab="st_guest" onclick="switchTab('st_guest')"><span class="sidebar-link-icon"><svg class="i"><use href="#i-user"/></svg></span>손님</button>
+      <button class="sidebar-link sub" data-tab="st_sales" onclick="switchTab('st_sales')"><span class="sidebar-link-icon"><svg class="i"><use href="#i-chart"/></svg></span>매출</button>
+      <button class="sidebar-link sub" data-tab="st_guest" onclick="switchTab('st_guest')"><span class="sidebar-link-icon"><svg class="i"><use href="#i-user"/></svg></span>고객</button>
       <button class="sidebar-link sub" data-tab="st_naver" onclick="switchTab('st_naver')"><span class="sidebar-link-icon"><svg class="i"><use href="#i-clipboard"/></svg></span>네이버 유입</button>
       <button class="sidebar-link sub" data-tab="st_read" onclick="switchTab('st_read')"><span class="sidebar-link-icon"><svg class="i"><use href="#i-help"/></svg></span>분석</button>
       <div class="sidebar-group">설정</div>
@@ -1231,7 +1231,7 @@ input,select,textarea{font-family:inherit;}
       <div class="mheader-brand" onclick="switchTab('home')" role="button" tabindex="0" aria-label="홈으로">
         <div class="mheader-logo">SM</div>
         <div>
-          <div class="mheader-title">Stay_Msg Pro<span class="mheader-ver" id="appVerM">v1.8.1</span></div>
+          <div class="mheader-title">Stay_Msg Pro<span class="mheader-ver" id="appVerM">v1.8.2</span></div>
           <div class="mheader-sub">숙소 예약 문자</div>
         </div>
       </div>
@@ -1651,7 +1651,7 @@ input,select,textarea{font-family:inherit;}
 
     <!-- ─── STATS (v1.8.0, 2026-11-01): 대분류 ─── -->
     <section class="page" id="tab-st_sales">
-      <div class="page-head"><h1 class="page-title"><svg class="i"><use href="#i-dollar"/></svg>매출<button class="btn-help" onclick="toggleHelp('stats')" aria-label="도움말"><svg class="i"><use href="#i-help"/></svg></button></h1><p class="page-sub" id="stSalesSub">확정 예약 기준</p></div>
+      <div class="page-head"><h1 class="page-title"><svg class="i"><use href="#i-chart"/></svg>매출<button class="btn-help" onclick="toggleHelp('stats')" aria-label="도움말"><svg class="i"><use href="#i-help"/></svg></button></h1><p class="page-sub" id="stSalesSub">확정 예약 기준</p></div>
       <div class="help-panel" id="help-stats" style="display:none;"><h4>통계 읽는 법</h4><ul>
         <li><strong>매출</strong> — 확정 예약의 결제금액 합. 취소 제외. 월은 <em>입실일</em> 기준. 에어비앤비는 수수료 반영가라 채널별로 따로. 반려견·바비큐 추가금은 결제금액에 없으면 빠집니다.</li>
         <li><strong>점유율</strong> — 그 달에 손님이 자는 밤 수 ÷ 그 달 일수. 미래 달은 지금까지 예약된 밤 기준.</li>
@@ -1660,7 +1660,7 @@ input,select,textarea{font-family:inherit;}
       <div id="stSales"></div>
     </section>
     <section class="page" id="tab-st_guest">
-      <div class="page-head"><h1 class="page-title"><svg class="i"><use href="#i-user"/></svg>손님</h1><p class="page-sub">누가 오고, 누가 보나</p></div>
+      <div class="page-head"><h1 class="page-title"><svg class="i"><use href="#i-user"/></svg>고객</h1><p class="page-sub">누가 오고, 누가 보나</p></div>
       <div id="stGuest"></div>
     </section>
     <section class="page" id="tab-st_naver">
@@ -1999,7 +1999,7 @@ input,select,textarea{font-family:inherit;}
     <span class="bnav-ico"><svg class="i"><use href="#i-clipboard"/></svg></span><span class="bnav-lbl">예약</span>
   </button>
   <button class="bnav-btn" data-group="stats" onclick="switchTab(lastTabOf('stats'))">
-    <span class="bnav-ico"><svg class="i"><use href="#i-dollar"/></svg></span><span class="bnav-lbl">통계</span>
+    <span class="bnav-ico"><svg class="i"><use href="#i-chart"/></svg></span><span class="bnav-lbl">통계</span>
   </button>
   <button class="bnav-btn" data-group="set" onclick="switchTab(lastTabOf('set'))">
     <span class="bnav-ico"><svg class="i"><use href="#i-house"/></svg></span><span class="bnav-lbl">설정</span>
@@ -2096,7 +2096,7 @@ input,select,textarea{font-family:inherit;}
 <div class="toast" id="toast"></div>
 
 <script>
-const APP_VERSION='v1.8.1'; // Pro (2026-10-27 lite v3.3.0에서 이름·버전 리셋)
+const APP_VERSION='v1.8.2'; // Pro (2026-10-27 lite v3.3.0에서 이름·버전 리셋)
 const SK_SET='stay_msg_lite1_set_v1';
 const SK_TPL='stay_msg_lite1_tpl_v1';
 const SK_RES='stay_msg_lite1_res_v1';
@@ -2265,7 +2265,7 @@ function toggleHelp(name){
   el.style.display=el.style.display==='none'?'':'none';
 }
 
-const TAB_GROUPS={home:{tabs:['home']},msg:{tabs:['compose','templates','history'],labels:['작성','템플릿','발송 이력']},res:{tabs:['reserv','guests','price'],labels:['예약 관리','고객','요금 계산']},stats:{tabs:['st_sales','st_guest','st_naver','st_read'],labels:['매출','손님','네이버 유입','분석']},set:{tabs:['prop','guide'],labels:['숙소','도움말']}};
+const TAB_GROUPS={home:{tabs:['home']},msg:{tabs:['compose','templates','history'],labels:['작성','템플릿','발송 이력']},res:{tabs:['reserv','guests','price'],labels:['예약 관리','고객','요금 계산']},stats:{tabs:['st_sales','st_guest','st_naver','st_read'],labels:['매출','고객','네이버 유입','분석']},set:{tabs:['prop','guide'],labels:['숙소','도움말']}};
 const _lastTab={};
 function groupOf(name){return Object.keys(TAB_GROUPS).find(g=>TAB_GROUPS[g].tabs.includes(name))||'home';}
 function lastTabOf(g){return _lastTab[g]||TAB_GROUPS[g].tabs[0];}
