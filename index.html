@@ -1168,7 +1168,7 @@ input,select,textarea{font-family:inherit;}
       <div class="sidebar-brand" onclick="switchTab('home')" role="button" tabindex="0" aria-label="홈으로">
         <div class="sidebar-logo">SM</div>
         <div class="sidebar-brand-text">
-          <div class="sidebar-brand-name">Stay_Msg Pro<span class="sidebar-brand-ver" id="appVer">v1.6.1</span></div>
+          <div class="sidebar-brand-name">Stay_Msg Pro<span class="sidebar-brand-ver" id="appVer">v1.7.0</span></div>
           <div class="sidebar-brand-sub">숙소 예약 문자</div>
         </div>
       </div>
@@ -1222,7 +1222,7 @@ input,select,textarea{font-family:inherit;}
       <div class="mheader-brand" onclick="switchTab('home')" role="button" tabindex="0" aria-label="홈으로">
         <div class="mheader-logo">SM</div>
         <div>
-          <div class="mheader-title">Stay_Msg Pro<span class="mheader-ver" id="appVerM">v1.6.1</span></div>
+          <div class="mheader-title">Stay_Msg Pro<span class="mheader-ver" id="appVerM">v1.7.0</span></div>
           <div class="mheader-sub">숙소 예약 문자</div>
         </div>
       </div>
@@ -1655,6 +1655,10 @@ input,select,textarea{font-family:inherit;}
         </ul>
       </div>
       <div class="stat-grid" id="statKpi"></div>
+      <div class="card"><div class="card-head"><div class="card-head-title">분석</div><span class="adv-hint" id="statReadHint" style="margin:0;"></span></div>
+        <ul id="statRead" style="margin:0;padding-left:18px;font-size:14px;line-height:1.6;"></ul>
+        <div id="statNote" style="display:none;margin-top:12px;padding:12px 14px;background:var(--muted);border-radius:10px;font-size:14px;line-height:1.6;white-space:pre-wrap;"></div>
+      </div>
       <div class="card"><div class="card-head"><div class="card-head-title">월별 매출 · 점유율</div></div><div class="guest-wrap"><table class="guest-tbl" id="statMonths"></table></div></div>
       <div class="card"><div class="card-head"><div class="card-head-title">네이버 유입 — 어떻게 들어왔나 (최근 30일 합)</div><span class="adv-hint" id="statMixHint" style="margin:0;"></span></div><div class="stat-grid" id="statMix"></div></div>
       <div class="card"><div class="card-head"><div class="card-head-title">네이버 유입 (최근 14일)</div><span class="adv-hint" id="statNaverHint" style="margin:0;"></span></div><div class="guest-wrap"><table class="guest-tbl" id="statNaver"></table></div></div>
@@ -2080,7 +2084,7 @@ input,select,textarea{font-family:inherit;}
 <div class="toast" id="toast"></div>
 
 <script>
-const APP_VERSION='v1.6.1'; // Pro (2026-10-27 lite v3.3.0에서 이름·버전 리셋)
+const APP_VERSION='v1.7.0'; // Pro (2026-10-27 lite v3.3.0에서 이름·버전 리셋)
 const SK_SET='stay_msg_lite1_set_v1';
 const SK_TPL='stay_msg_lite1_tpl_v1';
 const SK_RES='stay_msg_lite1_res_v1';
@@ -3813,7 +3817,7 @@ function guestDog(r){ const n = guestNotes[r.id]; return (n && n.dog !== null &&
 function guestBbq(r){ const n = guestNotes[r.id]; return (n && n.bbq !== null && n.bbq !== undefined) ? {on:!!n.bbq, auto:false} : {on:GUEST_BBQ_RE.test(r.memo||''), auto:true}; }
 function guestVisitMap(){ const m = {}; reservations.forEach(r=>{ const k=(r.phone||'').replace(/\D/g,''); if(!k) return; (m[k]=m[k]||[]).push(r.checkin); }); return m; }
 // ── 통계(v1.6.0): 확정 예약 → 월별 매출·박수·점유율·채널, place_stats → 네이버 유입 ──
-let placeStats = null;
+let placeStats = null, statsNote = null;
 function statYmd(d){ return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }   // toISOString은 UTC라 날짜가 하루 밀림
 function statChannel(c){ c=c||''; return c.startsWith('네이버') ? '네이버' : (c.includes('에어비앤비') || /airbnb/i.test(c) ? '에어비앤비' : '기타'); }
 function statMonthly(){
@@ -3848,8 +3852,38 @@ function renderStats(){
     <td class="r">${x.cnt}</td><td class="r">${x.nights}</td><td class="r">${Math.round(x.nights/days(x.ym)*100)}%</td>
     <td><span class="stat-bar" style="width:${Math.round(x.rev/max*120)}px"></span>${won(x.rev)}</td>
     <td class="r">${won(x.ch.네이버)}</td><td class="r">${won(x.ch.에어비앤비)}</td><td class="r">${won(x.ch.기타)}</td></tr>`).join('') + '</tbody>';
+  renderStatRead(placeStats||[]);
   renderNaverStats();
-  if(sb && placeStats===null){ placeStats=[]; sb.from('place_stats').select('*').order('date',{ascending:false}).limit(30).then(({data,error})=>{ if(error){ console.error(error); document.getElementById('statNaverHint').textContent='불러오기 실패(로그인 확인)'; return; } placeStats=data||[]; renderNaverStats(); }); }
+  if(sb && statsNote===null){ statsNote={}; sb.from('app_settings').select('value').eq('key','stats_note').maybeSingle().then(({data})=>{ statsNote=(data&&data.value)||{}; renderStatRead(placeStats||[]); }); }
+  if(sb && placeStats===null){ placeStats=[]; sb.from('place_stats').select('*').order('date',{ascending:false}).limit(30).then(({data,error})=>{ if(error){ console.error(error); document.getElementById('statNaverHint').textContent='불러오기 실패(로그인 확인)'; return; } placeStats=data||[]; renderStatRead(placeStats); renderNaverStats(); }); }
+}
+function renderStatRead(rows){
+  const ul=document.getElementById('statRead'), hint=document.getElementById('statReadHint'), noteEl=document.getElementById('statNote'); if(!ul) return;
+  const out=[]; const pct=(a,b)=>b?Math.round(a/b*100):0;
+  // 예약(앱 데이터)
+  const m=statMonthly(), thisYm=statYmd(new Date()).slice(0,7), days=ym=>new Date(+ym.slice(0,4),+ym.slice(5,7),0).getDate();
+  const cur=m.find(x=>x.ym===thisYm), prevYm=(()=>{const d=new Date(+thisYm.slice(0,4),+thisYm.slice(5,7)-2,1);return statYmd(d).slice(0,7);})(), prev=m.find(x=>x.ym===prevYm);
+  if(cur){ const occ=pct(cur.nights,days(thisYm)); let t=`이번 달 예약 ${cur.cnt}건 · ${cur.nights}박, 점유율 ${occ}%`; if(prev&&prev.nights) t+=` (지난달 ${pct(prev.nights,days(prevYm))}%)`; const fut=m.filter(x=>x.ym>thisYm).reduce((a,x)=>a+x.cnt,0); if(fut) t+=`. 다음 달 이후 ${fut}건 잡혀 있음`; out.push(t+'.'); }
+  const confirmed=reservations.filter(r=>(r.status||'confirmed')==='confirmed'); const chCnt={};
+  confirmed.forEach(r=>{const c=statChannel(r.channel);chCnt[c]=(chCnt[c]||0)+1;});
+  if(confirmed.length){ const top=Object.entries(chCnt).sort((a,b)=>b[1]-a[1]); out.push(`예약 ${confirmed.length}건 중 ${top.map(([k,v])=>`${k} ${v}`).join(' · ')}.`); }
+  // 네이버 유입(place_stats)
+  if(rows&&rows.length){
+    const asc=[...rows].sort((a,b)=>a.date.localeCompare(b.date)); const last7=asc.slice(-7), prev7=asc.slice(-14,-7);
+    const avg=a=>a.length?a.reduce((x,r)=>x+(r.inflow||0),0)/a.length:0; const a7=avg(last7), p7=avg(prev7);
+    let t=`네이버 플레이스 유입 최근 7일 하루 ${Math.round(a7)}회`; if(prev7.length) t+= p7? ` — 그 전 7일(${Math.round(p7)})보다 ${a7>=p7?'+':''}${pct(a7-p7,p7)}%`:''; out.push(t+'.');
+    const tot=asc.reduce((a,r)=>a+(r.inflow||0),0); let brand=0, region=0, map=0;
+    asc.forEach(r=>{ const n=r.inflow||0; (r.keywords||[]).forEach(k=>{ if(/솔숲/.test(k.name)) brand+=k.pct/100*n; else if(/산청|하동|지리산|민박|펜션|독채|스테이/.test(k.name)) region+=k.pct/100*n; }); (r.channels||[]).forEach(c=>{ if(/지도/.test(c.name)) map+=c.pct/100*n; }); });
+    if(tot){ out.push(`검색어의 ${pct(brand,tot)}%가 「스테이솔숲」 이름 검색, 지역·일반 검색어는 ${pct(region,tot)}%. 지도에서 들어온 비율 ${pct(map,tot)}% — 대부분 이름을 알고 찾아오는 손님.`); if(pct(region,tot)<25) out.push('모르는 사람이 걸리는 검색어(산청 민박·산청 스테이·독채)가 적음. 플레이스 소개글·새소식에 그 말이 있어야 새 손님이 생김.'); }
+    const bk=asc.filter(r=>r.bk_inflow!=null); if(bk.length){ const bi=bk.reduce((a,r)=>a+(r.bk_inflow||0),0), ba=bk.reduce((a,r)=>a+(r.bk_applied||0),0), binf=bk.reduce((a,r)=>a+(r.inflow||0),0);
+      out.push(`플레이스를 본 사람 중 ${pct(bi,binf)}%가 예약 페이지까지, 그중 ${pct(ba,bi)}%가 신청(${ba}건). ${bi&&ba?`예약 페이지 ${Math.round(bi/ba)}명당 1명 신청.`:''}`);
+      let zero=0; for(let i=asc.length-1;i>=0;i--){ if(asc[i].bk_inflow==null) break; if((asc[i].bk_applied||0)>0) break; zero++; } if(zero>=3) out.push(`최근 ${zero}일 연속 신청 0 — 오픈 공지 효과가 끝난 신호. 릴스·블로그로 다음 파도를 만들 때.`); }
+    let f=0,mm=0,age={}; asc.forEach(r=>{ const n=r.inflow||0; if(r.gender){ f+=r.gender.female/100*n; mm+=r.gender.male/100*n; Object.entries(r.age||{}).forEach(([a,v])=>{ age[a]=(age[a]||0)+((v.f||0)/100*r.gender.female/100+(v.m||0)/100*r.gender.male/100)*n; }); } });
+    const ta=Object.entries(age).sort((a,b)=>b[1]-a[1]); if(f+mm) out.push(`보는 사람은 여 ${pct(f,f+mm)}% · 남 ${pct(mm,f+mm)}%, ${ta.slice(0,2).map(([a,v])=>`${a} ${pct(v,f+mm)}%`).join(' · ')}.`);
+  } else out.push('네이버 유입 자료가 아직 없어요(봇이 아침 7시 이후 모읍니다).');
+  ul.innerHTML = out.map(t=>`<li>${esc(t)}</li>`).join('');
+  hint.textContent = '자동 읽기 · 숫자에서 바로 계산';
+  if(statsNote&&statsNote.text){ noteEl.style.display=''; noteEl.textContent = `봇 메모 (${statsNote.date||''})\n${statsNote.text}`; } else noteEl.style.display='none';
 }
 function renderNaverMix(rows){
   const box=document.getElementById('statMix'), hint=document.getElementById('statMixHint'); if(!box) return;
