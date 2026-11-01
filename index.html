@@ -643,7 +643,14 @@ input,select,textarea{font-family:inherit;}
 .stat-tile{background:var(--card,#fff);border:1px solid var(--border);border-radius:12px;padding:12px 14px;}
 .stat-tile .k{font-size:12px;color:var(--muted-fg);}.stat-tile .v{font-size:20px;font-weight:700;color:var(--fg);margin-top:2px;}.stat-tile .s{font-size:11px;color:var(--muted-fg);margin-top:2px;}
 .guest-tbl td.r,.guest-tbl th.r{text-align:right;}
-.stat-bar{display:inline-block;height:8px;background:var(--primary,#2f6b4f);border-radius:4px;vertical-align:middle;margin-right:6px;opacity:.8;}
+.chart{padding:4px 0 2px;}
+.ch-legend{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:12px;color:var(--fg-2);margin-top:6px;}.ch-legend.v{flex-direction:column;gap:4px;}
+.ch-legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px;vertical-align:-1px;}
+.donut{display:flex;align-items:center;gap:16px;}.donut-row{margin-bottom:10px;}
+.hbars{display:flex;flex-direction:column;gap:6px;}.hb{display:grid;grid-template-columns:minmax(80px,30%) 1fr 56px;align-items:center;gap:8px;font-size:13px;}
+.hb-l{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--fg-2);}.hb-t{height:10px;background:var(--muted);border-radius:5px;overflow:hidden;}.hb-t i{display:block;height:100%;border-radius:5px;}.hb-v{text-align:right;color:var(--muted-fg);font-size:12px;}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:12px;}@media(max-width:720px){.two{grid-template-columns:1fr;}}
+.two .card{margin:0 0 12px;}
 .guest-tbl th{position:sticky;top:0;background:var(--muted);color:var(--muted-fg);font-weight:600;font-size:12px;text-align:left;padding:10px 12px;border-bottom:1px solid var(--border);white-space:nowrap;}
 .guest-tbl td{padding:10px 12px;border-bottom:1px solid var(--border);vertical-align:middle;white-space:nowrap;}
 .guest-tbl tr:last-child td{border-bottom:none;}
@@ -1168,7 +1175,7 @@ input,select,textarea{font-family:inherit;}
       <div class="sidebar-brand" onclick="switchTab('home')" role="button" tabindex="0" aria-label="홈으로">
         <div class="sidebar-logo">SM</div>
         <div class="sidebar-brand-text">
-          <div class="sidebar-brand-name">Stay_Msg Pro<span class="sidebar-brand-ver" id="appVer">v1.7.1</span></div>
+          <div class="sidebar-brand-name">Stay_Msg Pro<span class="sidebar-brand-ver" id="appVer">v1.8.0</span></div>
           <div class="sidebar-brand-sub">숙소 예약 문자</div>
         </div>
       </div>
@@ -1197,9 +1204,11 @@ input,select,textarea{font-family:inherit;}
       <button class="sidebar-link sub" data-tab="price" onclick="switchTab('price')">
         <span class="sidebar-link-icon"><svg class="i"><use href="#i-dollar"/></svg></span>요금 계산
       </button>
-      <button class="sidebar-link sub" data-tab="stats" onclick="switchTab('stats')">
-        <span class="sidebar-link-icon"><svg class="i"><use href="#i-clipboard"/></svg></span>통계
-      </button>
+      <div class="sidebar-group">통계</div>
+      <button class="sidebar-link sub" data-tab="st_sales" onclick="switchTab('st_sales')"><span class="sidebar-link-icon"><svg class="i"><use href="#i-dollar"/></svg></span>매출</button>
+      <button class="sidebar-link sub" data-tab="st_guest" onclick="switchTab('st_guest')"><span class="sidebar-link-icon"><svg class="i"><use href="#i-user"/></svg></span>손님</button>
+      <button class="sidebar-link sub" data-tab="st_naver" onclick="switchTab('st_naver')"><span class="sidebar-link-icon"><svg class="i"><use href="#i-clipboard"/></svg></span>네이버 유입</button>
+      <button class="sidebar-link sub" data-tab="st_read" onclick="switchTab('st_read')"><span class="sidebar-link-icon"><svg class="i"><use href="#i-help"/></svg></span>분석</button>
       <div class="sidebar-group">설정</div>
       <button class="sidebar-link sub" data-tab="prop" onclick="switchTab('prop')">
         <span class="sidebar-link-icon"><svg class="i"><use href="#i-house"/></svg></span>숙소 프로필
@@ -1222,7 +1231,7 @@ input,select,textarea{font-family:inherit;}
       <div class="mheader-brand" onclick="switchTab('home')" role="button" tabindex="0" aria-label="홈으로">
         <div class="mheader-logo">SM</div>
         <div>
-          <div class="mheader-title">Stay_Msg Pro<span class="mheader-ver" id="appVerM">v1.7.1</span></div>
+          <div class="mheader-title">Stay_Msg Pro<span class="mheader-ver" id="appVerM">v1.8.0</span></div>
           <div class="mheader-sub">숙소 예약 문자</div>
         </div>
       </div>
@@ -1640,28 +1649,28 @@ input,select,textarea{font-family:inherit;}
       <div class="guest-wrap"><table class="guest-tbl" id="guestTable"></table></div>
     </section>
 
-    <!-- ─── STATS (v1.6.0, 2026-11-01) ─── -->
-    <section class="page" id="tab-stats">
-      <div class="page-head">
-        <h1 class="page-title"><svg class="i"><use href="#i-clipboard"/></svg>통계<button class="btn-help" onclick="toggleHelp('stats')" aria-label="도움말"><svg class="i"><use href="#i-help"/></svg></button></h1>
-        <p class="page-sub" id="statsSub">확정 예약 기준</p>
-      </div>
-      <div class="help-panel" id="help-stats" style="display:none;">
-        <h4><svg class="i"><use href="#i-clipboard"/></svg>통계 읽는 법</h4>
-        <ul>
-          <li><strong>매출</strong> — 확정 예약의 결제금액 합. 취소 제외. 월은 <em>입실일</em> 기준. 에어비앤비는 수수료 반영가라 채널별로 따로 보입니다. 반려견·바비큐 추가금은 결제금액에 없으면 빠집니다.</li>
-          <li><strong>점유율</strong> — 그 달에 손님이 자는 밤 수 ÷ 그 달 일수. 미래 달은 지금까지 예약된 밤 기준.</li>
-          <li><strong>네이버 유입</strong> — 봇이 매일 아침 스마트플레이스 통계에서 가져옵니다(전날까지). 유입 = 플레이스를 본 수, 신청 = 예약 신청 수.</li>
-        </ul>
-      </div>
-      <div class="stat-grid" id="statKpi"></div>
-      <div class="card"><div class="card-head"><div class="card-head-title">분석</div><span class="adv-hint" id="statReadHint" style="margin:0;"></span></div>
-        <ul id="statRead" style="margin:0;padding-left:18px;font-size:14px;line-height:1.6;"></ul>
-        <div id="statNote" style="display:none;margin-top:12px;padding:12px 14px;background:var(--muted);border-radius:10px;font-size:14px;line-height:1.6;white-space:pre-wrap;"></div>
-      </div>
-      <div class="card"><div class="card-head"><div class="card-head-title">월별 매출 · 점유율</div></div><div class="guest-wrap"><table class="guest-tbl" id="statMonths"></table></div></div>
-      <div class="card"><div class="card-head"><div class="card-head-title">네이버 유입 — 어떻게 들어왔나 (최근 30일 합)</div><span class="adv-hint" id="statMixHint" style="margin:0;"></span></div><div class="stat-grid" id="statMix"></div></div>
-      <div class="card"><div class="card-head"><div class="card-head-title">네이버 유입 (최근 14일)</div><span class="adv-hint" id="statNaverHint" style="margin:0;"></span></div><div class="guest-wrap"><table class="guest-tbl" id="statNaver"></table></div></div>
+    <!-- ─── STATS (v1.8.0, 2026-11-01): 대분류 ─── -->
+    <section class="page" id="tab-st_sales">
+      <div class="page-head"><h1 class="page-title"><svg class="i"><use href="#i-dollar"/></svg>매출<button class="btn-help" onclick="toggleHelp('stats')" aria-label="도움말"><svg class="i"><use href="#i-help"/></svg></button></h1><p class="page-sub" id="stSalesSub">확정 예약 기준</p></div>
+      <div class="help-panel" id="help-stats" style="display:none;"><h4>통계 읽는 법</h4><ul>
+        <li><strong>매출</strong> — 확정 예약의 결제금액 합. 취소 제외. 월은 <em>입실일</em> 기준. 에어비앤비는 수수료 반영가라 채널별로 따로. 반려견·바비큐 추가금은 결제금액에 없으면 빠집니다.</li>
+        <li><strong>점유율</strong> — 그 달에 손님이 자는 밤 수 ÷ 그 달 일수. 미래 달은 지금까지 예약된 밤 기준.</li>
+        <li><strong>네이버 유입</strong> — 봇이 매일 아침 스마트플레이스 통계에서 가져옵니다(전날까지). 유입 = 플레이스를 본 수, 예약 페이지 = 예약 화면까지 온 수, 신청 = 예약 신청.</li>
+        <li><strong>그래프</strong> — 막대·점에 마우스를 올리면(폰은 길게) 숫자가 보입니다.</li></ul></div>
+      <div id="stSales"></div>
+    </section>
+    <section class="page" id="tab-st_guest">
+      <div class="page-head"><h1 class="page-title"><svg class="i"><use href="#i-user"/></svg>손님</h1><p class="page-sub">누가 오고, 누가 보나</p></div>
+      <div id="stGuest"></div>
+    </section>
+    <section class="page" id="tab-st_naver">
+      <div class="page-head"><h1 class="page-title"><svg class="i"><use href="#i-clipboard"/></svg>네이버 유입</h1><p class="page-sub">스마트플레이스 통계 · 봇이 매일 수집</p></div>
+      <div id="stNaver"></div>
+    </section>
+    <section class="page" id="tab-st_read">
+      <div class="page-head"><h1 class="page-title"><svg class="i"><use href="#i-help"/></svg>분석</h1><p class="page-sub">숫자에서 바로 읽은 것 + 봇 메모</p></div>
+      <div class="card"><div class="card-head"><div class="card-head-title">자동 읽기</div></div><ul id="statRead" style="margin:0;padding-left:18px;font-size:14px;line-height:1.6;"></ul>
+        <div id="statNote" style="display:none;margin-top:12px;padding:12px 14px;background:var(--muted);border-radius:10px;font-size:14px;line-height:1.6;white-space:pre-wrap;"></div></div>
     </section>
 
     <!-- ─── HISTORY ─── -->
@@ -1989,6 +1998,9 @@ input,select,textarea{font-family:inherit;}
   <button class="bnav-btn" data-group="res" onclick="switchTab(lastTabOf('res'))">
     <span class="bnav-ico"><svg class="i"><use href="#i-clipboard"/></svg></span><span class="bnav-lbl">예약</span>
   </button>
+  <button class="bnav-btn" data-group="stats" onclick="switchTab(lastTabOf('stats'))">
+    <span class="bnav-ico"><svg class="i"><use href="#i-dollar"/></svg></span><span class="bnav-lbl">통계</span>
+  </button>
   <button class="bnav-btn" data-group="set" onclick="switchTab(lastTabOf('set'))">
     <span class="bnav-ico"><svg class="i"><use href="#i-house"/></svg></span><span class="bnav-lbl">설정</span>
   </button>
@@ -2084,7 +2096,7 @@ input,select,textarea{font-family:inherit;}
 <div class="toast" id="toast"></div>
 
 <script>
-const APP_VERSION='v1.7.1'; // Pro (2026-10-27 lite v3.3.0에서 이름·버전 리셋)
+const APP_VERSION='v1.8.0'; // Pro (2026-10-27 lite v3.3.0에서 이름·버전 리셋)
 const SK_SET='stay_msg_lite1_set_v1';
 const SK_TPL='stay_msg_lite1_tpl_v1';
 const SK_RES='stay_msg_lite1_res_v1';
@@ -2253,7 +2265,7 @@ function toggleHelp(name){
   el.style.display=el.style.display==='none'?'':'none';
 }
 
-const TAB_GROUPS={home:{tabs:['home']},msg:{tabs:['compose','templates','history'],labels:['작성','템플릿','발송 이력']},res:{tabs:['reserv','guests','price','stats'],labels:['예약 관리','고객','요금 계산','통계']},set:{tabs:['prop','guide'],labels:['숙소','도움말']}};
+const TAB_GROUPS={home:{tabs:['home']},msg:{tabs:['compose','templates','history'],labels:['작성','템플릿','발송 이력']},res:{tabs:['reserv','guests','price'],labels:['예약 관리','고객','요금 계산']},stats:{tabs:['st_sales','st_guest','st_naver','st_read'],labels:['매출','손님','네이버 유입','분석']},set:{tabs:['prop','guide'],labels:['숙소','도움말']}};
 const _lastTab={};
 function groupOf(name){return Object.keys(TAB_GROUPS).find(g=>TAB_GROUPS[g].tabs.includes(name))||'home';}
 function lastTabOf(g){return _lastTab[g]||TAB_GROUPS[g].tabs[0];}
@@ -2280,7 +2292,7 @@ function switchTab(name){
   if(name==='templates')renderTemplatesPage();
   if(name==='history')renderHistory();
   if(name==='price')renderPricePage();
-  if(name==='stats')renderStats();
+  if(name.startsWith('st_'))renderStatsPage(name);
 }
 
 function allTpls(s){return[...s.templates,...(customs[s.id]||[])];}
@@ -3816,107 +3828,146 @@ const GUEST_DOG_RE = /반려견|강아지|소형견/, GUEST_BBQ_RE = /바비큐\
 function guestDog(r){ const n = guestNotes[r.id]; return (n && n.dog !== null && n.dog !== undefined) ? {on:!!n.dog, auto:false} : {on:GUEST_DOG_RE.test(r.memo||''), auto:true}; }
 function guestBbq(r){ const n = guestNotes[r.id]; return (n && n.bbq !== null && n.bbq !== undefined) ? {on:!!n.bbq, auto:false} : {on:GUEST_BBQ_RE.test(r.memo||''), auto:true}; }
 function guestVisitMap(){ const m = {}; reservations.forEach(r=>{ const k=(r.phone||'').replace(/\D/g,''); if(!k) return; (m[k]=m[k]||[]).push(r.checkin); }); return m; }
-// ── 통계(v1.6.0): 확정 예약 → 월별 매출·박수·점유율·채널, place_stats → 네이버 유입 ──
+// ── 통계 (v1.8.0, 2026-11-01): 대분류 — 매출 / 손님 / 네이버 유입 / 분석. 차트는 SVG 직접(라이브러리 없음), hover는 <title> ──
 let placeStats = null, statsNote = null, statsCancelled = null;   // 취소 예약은 앱 목록(reservations)에 없어 통계용으로 따로 읽음
+const ST_COL = { 네이버:'#2a78d6', 에어비앤비:'#eb6834', 기타:'#1baf7a', seq:'#2a78d6', seq2:'#86b6ef', f:'#e87ba4', m:'#2a78d6' };   // dataviz 검증 팔레트(슬롯 1·2·3, 5)
+const won = v => v ? v.toLocaleString('ko-KR')+'원' : '0원', wonK = v => v>=10000 ? Math.round(v/10000)+'만' : String(v);
+const pct = (a,b) => b ? Math.round(a/b*100) : 0;
+const daysIn = ym => new Date(+ym.slice(0,4), +ym.slice(5,7), 0).getDate();
+const DOWS = ['일','월','화','수','목','금','토'];
 function statYmd(d){ return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }   // toISOString은 UTC라 날짜가 하루 밀림
 function statChannel(c){ c=c||''; return c.startsWith('네이버') ? '네이버' : (c.includes('에어비앤비') || /airbnb/i.test(c) ? '에어비앤비' : '기타'); }
+function statConfirmed(){ return reservations.filter(r => (r.status||'confirmed')==='confirmed' && r.checkin && r.checkout && r.checkout>r.checkin); }
+function statNights(r){ return Math.round((new Date(r.checkout+'T00:00:00')-new Date(r.checkin+'T00:00:00'))/86400000); }
 function statMonthly(){
   const m = {};
   const add = (ym) => m[ym] || (m[ym] = { ym, cnt:0, nights:0, rev:0, cancel:0, ch:{네이버:0,에어비앤비:0,기타:0} });
   (statsCancelled||[]).forEach(r=>{ if(r.checkin) add(r.checkin.slice(0,7)).cancel++; });
-  reservations.filter(r => (r.status||'confirmed')==='confirmed' && r.checkin && r.checkout && r.checkout>r.checkin).forEach(r => {
-    const ym = r.checkin.slice(0,7), row = add(ym); row.cnt++; const rev = parseNum(r.price); row.rev += rev; row.ch[statChannel(r.channel)] += rev;
+  statConfirmed().forEach(r => {
+    const row = add(r.checkin.slice(0,7)); row.cnt++; const rev = parseNum(r.price); row.rev += rev; row.ch[statChannel(r.channel)] += rev;
     for(let d=new Date(r.checkin+'T00:00:00'); statYmd(d)<r.checkout; d.setDate(d.getDate()+1)){ add(statYmd(d).slice(0,7)).nights++; }
   });
   add(statYmd(new Date()).slice(0,7));
   return Object.values(m).sort((a,b)=>b.ym.localeCompare(a.ym));
 }
-function renderStats(){
-  const kpi=document.getElementById('statKpi'), tbl=document.getElementById('statMonths'); if(!kpi||!tbl) return;
-  const rows = statMonthly(), thisYm = statYmd(new Date()).slice(0,7);
-  const won = v => v ? v.toLocaleString('ko-KR')+'원' : '0원';
-  const days = ym => new Date(+ym.slice(0,4), +ym.slice(5,7), 0).getDate();
-  const cur = rows.find(x=>x.ym===thisYm) || {cnt:0,nights:0,rev:0};
-  const year = rows.filter(x=>x.ym.startsWith(thisYm.slice(0,4)) && x.ym<=thisYm);
-  const yrev = year.reduce((a,x)=>a+x.rev,0), ycnt = year.reduce((a,x)=>a+x.cnt,0), ynights = year.reduce((a,x)=>a+x.nights,0);
-  const future = rows.filter(x=>x.ym>thisYm);
-  kpi.innerHTML = [
-    ['이번 달 매출', won(cur.rev), `${cur.cnt}건 · ${cur.nights}박 · 점유 ${Math.round(cur.nights/days(thisYm)*100)}%`],
-    ['올해 매출', won(yrev), `${ycnt}건 · ${ynights}박`],
-    ['평균 1박 단가', won(ynights?Math.round(yrev/ynights):0), '올해 매출 ÷ 박수'],
-    ['예정(다음 달 이후)', won(future.reduce((a,x)=>a+x.rev,0)), `${future.reduce((a,x)=>a+x.cnt,0)}건 · ${future.reduce((a,x)=>a+x.nights,0)}박`],
-    ['취소', `${(statsCancelled||[]).length}건`, (()=>{const c=(statsCancelled||[]).length, t=c+reservations.filter(r=>(r.status||'confirmed')==='confirmed').length; return t?`전체 예약의 ${Math.round(c/t*100)}%`:'';})()],
-  ].map(([k,v,s])=>`<div class="stat-tile"><div class="k">${k}</div><div class="v">${v}</div><div class="s">${s}</div></div>`).join('');
-  document.getElementById('statsSub').textContent = `확정 예약 ${reservations.filter(r=>(r.status||'confirmed')==='confirmed').length}건 기준 · 입실일 기준 월 집계`;
-  const max = Math.max(1, ...rows.map(x=>x.rev));
-  tbl.innerHTML = '<thead><tr><th>월</th><th class="r">건수</th><th class="r">취소</th><th class="r">박수</th><th class="r">점유율</th><th>매출</th><th class="r">네이버</th><th class="r">에어비앤비</th><th class="r">기타</th></tr></thead><tbody>' + rows.map(x=>`<tr>
-    <td><div class="gname">${x.ym.replace('-','.')}${x.ym>thisYm?' <span class="gsub">예정</span>':(x.ym===thisYm?' <span class="gsub">이번 달</span>':'')}</div></td>
-    <td class="r">${x.cnt}</td><td class="r">${x.cancel||''}</td><td class="r">${x.nights}</td><td class="r">${Math.round(x.nights/days(x.ym)*100)}%</td>
-    <td><span class="stat-bar" style="width:${Math.round(x.rev/max*120)}px"></span>${won(x.rev)}</td>
-    <td class="r">${won(x.ch.네이버)}</td><td class="r">${won(x.ch.에어비앤비)}</td><td class="r">${won(x.ch.기타)}</td></tr>`).join('') + '</tbody>';
-  renderStatRead(placeStats||[]);
-  renderNaverStats();
-  if(sb && statsCancelled===null){ statsCancelled=[]; sb.from('reservations').select('id,checkin,checkout,channel,price,created_at,updated_at').eq('status','cancelled').then(({data,error})=>{ if(error){console.error(error);return;} statsCancelled=data||[]; renderStats(); }); }
-  if(sb && statsNote===null){ statsNote={}; sb.from('app_settings').select('value').eq('key','stats_note').maybeSingle().then(({data})=>{ statsNote=(data&&data.value)||{}; renderStatRead(placeStats||[]); }); }
-  if(sb && placeStats===null){ placeStats=[]; sb.from('place_stats').select('*').order('date',{ascending:false}).limit(30).then(({data,error})=>{ if(error){ console.error(error); document.getElementById('statNaverHint').textContent='불러오기 실패(로그인 확인)'; return; } placeStats=data||[]; renderStatRead(placeStats); renderNaverStats(); }); }
+// 차트 조각
+function chBars(items, opts={}){
+  const W=640, H=opts.h||200, pl=44, pb=26, pt=12, pr=8, series=opts.series||[{key:'v',name:'',color:ST_COL.seq}];
+  const totals=items.map(it=>series.reduce((a,s)=>a+(it.values[s.key]||0),0)), max=Math.max(1,...totals);
+  const iw=(W-pl-pr)/Math.max(1,items.length), bw=Math.min(28, iw*0.6), fmt=opts.fmt||wonK;
+  let g=[0,0.5,1].map(f=>{ const t=Math.round(max*f), y=pt+(H-pt-pb)*(1-t/max); return `<line x1="${pl}" x2="${W-pr}" y1="${y}" y2="${y}" stroke="var(--border)"/><text x="${pl-6}" y="${y+4}" text-anchor="end" font-size="10" fill="var(--muted-fg)">${fmt(t)}</text>`; }).join('');
+  items.forEach((it,i)=>{ const x=pl+iw*i+(iw-bw)/2; let y0=H-pb; series.forEach((s,si)=>{ const v=it.values[s.key]||0; if(!v) return; const h=(H-pt-pb)*v/max; y0-=h; const top = series.slice(si+1).every(t=>!(it.values[t.key]||0)); g+=`<rect x="${x}" y="${y0}" width="${bw}" height="${Math.max(0,h-(top?0:2))}" rx="${top?3:0}" fill="${s.color}"><title>${esc(it.label)} ${esc(s.name)}: ${(opts.tip||fmt)(v)}</title></rect>`; });
+    g+=`<text x="${x+bw/2}" y="${H-pb+14}" text-anchor="middle" font-size="10" fill="var(--muted-fg)">${esc(it.label)}</text>`;
+    if(opts.labels && totals[i]) g+=`<text x="${x+bw/2}" y="${y0-4}" text-anchor="middle" font-size="10" fill="var(--fg-2)">${fmt(totals[i])}</text>`; });
+  const legend = series.length>1 ? `<div class="ch-legend">${series.map(s=>`<span><i style="background:${s.color}"></i>${esc(s.name)}</span>`).join('')}</div>` : '';
+  return `<div class="chart"><svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto;display:block">${g}</svg>${legend}</div>`;
 }
-function renderStatRead(rows){
-  const ul=document.getElementById('statRead'), hint=document.getElementById('statReadHint'), noteEl=document.getElementById('statNote'); if(!ul) return;
-  const out=[]; const pct=(a,b)=>b?Math.round(a/b*100):0;
-  // 예약(앱 데이터)
-  const m=statMonthly(), thisYm=statYmd(new Date()).slice(0,7), days=ym=>new Date(+ym.slice(0,4),+ym.slice(5,7),0).getDate();
-  const cur=m.find(x=>x.ym===thisYm), prevYm=(()=>{const d=new Date(+thisYm.slice(0,4),+thisYm.slice(5,7)-2,1);return statYmd(d).slice(0,7);})(), prev=m.find(x=>x.ym===prevYm);
-  if(cur){ const occ=pct(cur.nights,days(thisYm)); let t=`이번 달 예약 ${cur.cnt}건 · ${cur.nights}박, 점유율 ${occ}%`; if(prev&&prev.nights) t+=` (지난달 ${pct(prev.nights,days(prevYm))}%)`; const fut=m.filter(x=>x.ym>thisYm).reduce((a,x)=>a+x.cnt,0); if(fut) t+=`. 다음 달 이후 ${fut}건 잡혀 있음`; out.push(t+'.'); }
-  const confirmed=reservations.filter(r=>(r.status||'confirmed')==='confirmed'); const chCnt={};
-  confirmed.forEach(r=>{const c=statChannel(r.channel);chCnt[c]=(chCnt[c]||0)+1;});
-  if(confirmed.length){ const top=Object.entries(chCnt).sort((a,b)=>b[1]-a[1]); out.push(`예약 ${confirmed.length}건 중 ${top.map(([k,v])=>`${k} ${v}`).join(' · ')}.`); }
-  const cl=statsCancelled||[]; if(cl.length){ const cch={}; cl.forEach(r=>{const c=statChannel(r.channel);cch[c]=(cch[c]||0)+1;}); const rate=Math.round(cl.length/(cl.length+confirmed.length)*100); out.push(`취소 ${cl.length}건(${Object.entries(cch).map(([k,v])=>`${k} ${v}`).join(' · ')}) — 전체의 ${rate}%.${rate>=30?' 취소가 많음. 취소 규정·결제 시점 점검.':''}`); }
-  // 네이버 유입(place_stats)
-  if(rows&&rows.length){
-    const asc=[...rows].sort((a,b)=>a.date.localeCompare(b.date)); const last7=asc.slice(-7), prev7=asc.slice(-14,-7);
-    const avg=a=>a.length?a.reduce((x,r)=>x+(r.inflow||0),0)/a.length:0; const a7=avg(last7), p7=avg(prev7);
-    let t=`네이버 플레이스 유입 최근 7일 하루 ${Math.round(a7)}회`; if(prev7.length) t+= p7? ` — 그 전 7일(${Math.round(p7)})보다 ${a7>=p7?'+':''}${pct(a7-p7,p7)}%`:''; out.push(t+'.');
-    const tot=asc.reduce((a,r)=>a+(r.inflow||0),0); let brand=0, region=0, map=0;
-    asc.forEach(r=>{ const n=r.inflow||0; (r.keywords||[]).forEach(k=>{ if(/솔숲/.test(k.name)) brand+=k.pct/100*n; else if(/산청|하동|지리산|민박|펜션|독채|스테이/.test(k.name)) region+=k.pct/100*n; }); (r.channels||[]).forEach(c=>{ if(/지도/.test(c.name)) map+=c.pct/100*n; }); });
-    if(tot){ out.push(`검색어의 ${pct(brand,tot)}%가 「스테이솔숲」 이름 검색, 지역·일반 검색어는 ${pct(region,tot)}%. 지도에서 들어온 비율 ${pct(map,tot)}% — 대부분 이름을 알고 찾아오는 손님.`); if(pct(region,tot)<25) out.push('모르는 사람이 걸리는 검색어(산청 민박·산청 스테이·독채)가 적음. 플레이스 소개글·새소식에 그 말이 있어야 새 손님이 생김.'); }
-    const bk=asc.filter(r=>r.bk_inflow!=null); if(bk.length){ const bi=bk.reduce((a,r)=>a+(r.bk_inflow||0),0), ba=bk.reduce((a,r)=>a+(r.bk_applied||0),0), binf=bk.reduce((a,r)=>a+(r.inflow||0),0);
-      out.push(`플레이스를 본 사람 중 ${pct(bi,binf)}%가 예약 페이지까지, 그중 ${pct(ba,bi)}%가 신청(${ba}건). ${bi&&ba?`예약 페이지 ${Math.round(bi/ba)}명당 1명 신청.`:''}`);
+function chLine(points, opts={}){
+  const W=640, H=opts.h||200, pl=40, pb=26, pt=12, pr=8, series=opts.series||[{key:'v',name:'',color:ST_COL.seq}];
+  const max=Math.max(1,...points.flatMap(p=>series.map(s=>p.values[s.key]||0))), n=points.length;
+  const sx=i=>pl+(W-pl-pr)*(n>1?i/(n-1):0.5), sy=v=>pt+(H-pt-pb)*(1-v/max);
+  let g=[0,0.5,1].map(f=>{ const t=Math.round(max*f), y=sy(t); return `<line x1="${pl}" x2="${W-pr}" y1="${y}" y2="${y}" stroke="var(--border)"/><text x="${pl-6}" y="${y+4}" text-anchor="end" font-size="10" fill="var(--muted-fg)">${t}</text>`; }).join('');
+  series.forEach(s=>{ const d=points.map((p,i)=>`${i?'L':'M'}${sx(i).toFixed(1)},${sy(p.values[s.key]||0).toFixed(1)}`).join(' '); g+=`<path d="${d}" fill="none" stroke="${s.color}" stroke-width="2" stroke-linejoin="round"/>`;
+    points.forEach((p,i)=>{ g+=`<circle cx="${sx(i).toFixed(1)}" cy="${sy(p.values[s.key]||0).toFixed(1)}" r="4" fill="${s.color}" stroke="var(--card,#fff)" stroke-width="2"><title>${esc(p.label)} ${esc(s.name)}: ${p.values[s.key]||0}</title></circle>`; }); });
+  const step=Math.ceil(n/8); points.forEach((p,i)=>{ if(i%step===0||i===n-1) g+=`<text x="${sx(i).toFixed(1)}" y="${H-pb+14}" text-anchor="middle" font-size="10" fill="var(--muted-fg)">${esc(p.label)}</text>`; });
+  const legend = series.length>1 ? `<div class="ch-legend">${series.map(s=>`<span><i style="background:${s.color}"></i>${esc(s.name)}</span>`).join('')}</div>` : '';
+  return `<div class="chart"><svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto;display:block">${g}</svg>${legend}</div>`;
+}
+function chDonut(parts, opts={}){
+  const live=parts.filter(p=>p.value>0), tot=live.reduce((a,p)=>a+p.value,0)||1, R=48, r=30, cx=60, cy=60; let a0=-Math.PI/2, segs='';
+  if(live.length===1) segs=`<circle cx="${cx}" cy="${cy}" r="${(R+r)/2}" fill="none" stroke="${live[0].color}" stroke-width="${R-r}"><title>${esc(live[0].label)} 100%</title></circle>`;
+  else live.forEach(p=>{ const a1=a0+2*Math.PI*p.value/tot, big=a1-a0>Math.PI?1:0; const P=(rad,a)=>`${(cx+rad*Math.cos(a)).toFixed(1)},${(cy+rad*Math.sin(a)).toFixed(1)}`; segs+=`<path d="M${P(R,a0)} A${R},${R} 0 ${big} 1 ${P(R,a1)} L${P(r,a1)} A${r},${r} 0 ${big} 0 ${P(r,a0)} Z" fill="${p.color}" stroke="var(--card,#fff)" stroke-width="2"><title>${esc(p.label)} ${pct(p.value,tot)}%</title></path>`; a0=a1; });
+  return `<div class="donut"><svg viewBox="0 0 120 120" style="width:120px;height:120px;flex:none">${segs}${opts.center?`<text x="60" y="65" text-anchor="middle" font-size="15" font-weight="700" fill="var(--fg)">${esc(opts.center)}</text>`:''}</svg><div class="ch-legend v">${parts.map(p=>`<span><i style="background:${p.color}"></i>${esc(p.label)} <b>${opts.raw?p.value:pct(p.value,tot)+'%'}</b></span>`).join('')}</div></div>`;
+}
+function chHBars(items, opts={}){ const max=Math.max(1,...items.map(i=>i.value)); return `<div class="hbars">${items.map(i=>`<div class="hb"><span class="hb-l" title="${esc(i.label)}">${esc(i.label)}</span><span class="hb-t"><i style="width:${Math.max(2,Math.round(i.value/max*100))}%;background:${i.color||ST_COL.seq}"></i></span><span class="hb-v">${opts.fmt?opts.fmt(i.value):i.value}</span></div>`).join('')}</div>`; }
+const tile=(k,v,s)=>`<div class="stat-tile"><div class="k">${k}</div><div class="v">${v}</div>${s?`<div class="s">${s}</div>`:''}</div>`;
+const card=(title,body,hint)=>`<div class="card"><div class="card-head"><div class="card-head-title">${title}</div>${hint?`<span class="adv-hint" style="margin:0">${hint}</span>`:''}</div>${body}</div>`;
+// 네이버 유입 합산
+function statNaverAgg(rows){
+  const tot=rows.reduce((a,r)=>a+(r.inflow||0),0), kw={}, ch={}, age={}; let f=0, mm=0;
+  rows.forEach(r=>{ const n=r.inflow||0; (r.keywords||[]).forEach(k=>kw[k.name]=(kw[k.name]||0)+k.pct/100*n); (r.channels||[]).forEach(c=>ch[c.name]=(ch[c.name]||0)+c.pct/100*n);
+    if(r.gender){ f+=r.gender.female/100*n; mm+=r.gender.male/100*n; Object.entries(r.age||{}).forEach(([a,v])=>{ age[a]=(age[a]||0)+((v.f||0)/100*r.gender.female/100+(v.m||0)/100*r.gender.male/100)*n; }); } });
+  const bk=rows.filter(r=>r.bk_inflow!=null), sum=k=>bk.reduce((a,r)=>a+(r[k]||0),0);
+  return { tot, kw, ch, age, f, m:mm, bk:{ days:bk.length, inflow:sum('inflow'), bi:sum('bk_inflow'), applied:sum('bk_applied'), done:sum('bk_completed'), cancel:sum('bk_cancelled'), amount:sum('bk_applied_amount') } };
+}
+function statsLoad(){
+  if(!sb) return;
+  if(statsCancelled===null){ statsCancelled=[]; sb.from('reservations').select('id,checkin,checkout,channel,price,created_at,updated_at').eq('status','cancelled').then(({data,error})=>{ if(error){console.error(error);return;} statsCancelled=data||[]; statsRerender(); }); }
+  if(statsNote===null){ statsNote={}; sb.from('app_settings').select('value').eq('key','stats_note').maybeSingle().then(({data})=>{ statsNote=(data&&data.value)||{}; statsRerender(); }); }
+  if(placeStats===null){ placeStats=[]; sb.from('place_stats').select('*').order('date',{ascending:false}).limit(60).then(({data,error})=>{ if(error){console.error(error);return;} placeStats=data||[]; statsRerender(); }); }
+}
+function statsRerender(){ const act=document.querySelector('.page.active'); if(act && act.id.startsWith('tab-st_')) renderStatsPage(act.id.slice(4)); }
+function renderStatsPage(name){ statsLoad(); ({ st_sales:renderStSales, st_guest:renderStGuest, st_naver:renderStNaver, st_read:renderStRead })[name]?.(); }
+function renderStSales(){
+  const el=document.getElementById('stSales'); if(!el) return;
+  const rows=statMonthly(), thisYm=statYmd(new Date()).slice(0,7), cur=rows.find(x=>x.ym===thisYm)||{cnt:0,nights:0,rev:0};
+  const year=rows.filter(x=>x.ym.startsWith(thisYm.slice(0,4))&&x.ym<=thisYm), yrev=year.reduce((a,x)=>a+x.rev,0), ycnt=year.reduce((a,x)=>a+x.cnt,0), yn=year.reduce((a,x)=>a+x.nights,0);
+  const future=rows.filter(x=>x.ym>thisYm), conf=statConfirmed(), cl=statsCancelled||[];
+  let h='<div class="stat-grid">'+tile('이번 달 매출',won(cur.rev),`${cur.cnt}건 · ${cur.nights}박 · 점유 ${pct(cur.nights,daysIn(thisYm))}%`)+tile('올해 매출',won(yrev),`${ycnt}건 · ${yn}박`)+tile('평균 1박 단가',won(yn?Math.round(yrev/yn):0),'올해 매출 ÷ 박수')+tile('예정(다음 달 이후)',won(future.reduce((a,x)=>a+x.rev,0)),`${future.reduce((a,x)=>a+x.cnt,0)}건 · ${future.reduce((a,x)=>a+x.nights,0)}박`)+tile('취소',`${cl.length}건`,cl.length||conf.length?`전체의 ${pct(cl.length,cl.length+conf.length)}%`:'')+'</div>';
+  const asc=[...rows].sort((a,b)=>a.ym.localeCompare(b.ym)).slice(-12);
+  const S=[{key:'네이버',name:'네이버',color:ST_COL.네이버},{key:'에어비앤비',name:'에어비앤비',color:ST_COL.에어비앤비},{key:'기타',name:'기타',color:ST_COL.기타}];
+  h+=card('월별 매출 (채널별)', chBars(asc.map(x=>({label:x.ym.slice(2).replace('-','.'),values:x.ch})),{series:S,labels:true}), '입실일 기준 · 확정 예약 결제금액');
+  h+=card('월별 점유율', chBars(asc.map(x=>({label:x.ym.slice(2).replace('-','.'),values:{v:pct(x.nights,daysIn(x.ym))}})),{fmt:v=>v+'%',labels:true,h:160}), '손님이 자는 밤 ÷ 달 일수');
+  h+=card('월별 표', `<div class="guest-wrap"><table class="guest-tbl"><thead><tr><th>월</th><th class="r">건수</th><th class="r">취소</th><th class="r">박수</th><th class="r">점유율</th><th class="r">매출</th><th class="r">네이버</th><th class="r">에어비앤비</th><th class="r">기타</th></tr></thead><tbody>${rows.map(x=>`<tr><td><div class="gname">${x.ym.replace('-','.')}${x.ym>thisYm?' <span class="gsub">예정</span>':(x.ym===thisYm?' <span class="gsub">이번 달</span>':'')}</div></td><td class="r">${x.cnt}</td><td class="r">${x.cancel||''}</td><td class="r">${x.nights}</td><td class="r">${pct(x.nights,daysIn(x.ym))}%</td><td class="r">${won(x.rev)}</td><td class="r">${won(x.ch.네이버)}</td><td class="r">${won(x.ch.에어비앤비)}</td><td class="r">${won(x.ch.기타)}</td></tr>`).join('')}</tbody></table></div>`);
+  const dow=[0,0,0,0,0,0,0]; conf.forEach(r=>dow[new Date(r.checkin+'T00:00:00').getDay()]++);
+  const nd={}; conf.forEach(r=>{ const n=statNights(r); const k=n>=3?'3박+':n+'박'; nd[k]=(nd[k]||0)+1; });
+  const lead={'당일~3일':0,'4~7일':0,'8~14일':0,'15~30일':0,'31일+':0}; let leadN=0; conf.forEach(r=>{ if(!r.createdAt||!String(r.id).startsWith('n')) return; const d=Math.round((new Date(r.checkin+'T00:00:00')-new Date(r.createdAt))/86400000); leadN++; lead[d<=3?'당일~3일':d<=7?'4~7일':d<=14?'8~14일':d<=30?'15~30일':'31일+']++; });
+  h+='<div class="two">'+card('입실 요일', chBars(DOWS.map((d,i)=>({label:d,values:{v:dow[i]}})),{fmt:String,labels:true,h:150}),'확정 예약 건수')+card('숙박 일수', chBars(['1박','2박','3박+'].map(k=>({label:k,values:{v:nd[k]||0}})),{fmt:String,labels:true,h:150}),'확정 예약 건수')+'</div>';
+  h+=card('예약에서 입실까지 (리드타임)', leadN?chBars(Object.entries(lead).map(([k,v])=>({label:k,values:{v}})),{fmt:String,labels:true,h:150}):'<div class="empty"><span class="emoji">⏳</span>네이버 예약이 쌓이면 보입니다</div>', `네이버 예약 ${leadN}건 기준(봇이 수집한 시각 → 입실일)`);
+  el.innerHTML=h; document.getElementById('stSalesSub').textContent=`확정 ${conf.length}건 · 취소 ${cl.length}건 · 입실일 기준 월 집계`;
+}
+function renderStGuest(){
+  const el=document.getElementById('stGuest'); if(!el) return;
+  const conf=statConfirmed(), cc={네이버:0,에어비앤비:0,기타:0}; conf.forEach(r=>cc[statChannel(r.channel)]++);
+  const dog=conf.filter(r=>guestDog(r).on).length, bbq=conf.filter(r=>guestBbq(r).on).length;
+  const visits=guestVisitMap(), repeat=Object.values(visits).filter(v=>v.length>=2).length, people=Object.keys(visits).length;
+  const gcount={}; conf.forEach(r=>{ const g=parseNum(r.guests)||0; const k=g?g+'인':'미입력'; gcount[k]=(gcount[k]||0)+1; });
+  let h='<div class="stat-grid">'+tile('고객 수',`${people}명`,`확정 예약 ${conf.length}건`)+tile('재방문 고객',`${repeat}명`,'같은 전화번호 2회 이상')+tile('반려견 동반',`${pct(dog,conf.length)}%`,`${dog}건`)+tile('바비큐',`${pct(bbq,conf.length)}%`,`${bbq}건`)+'</div>';
+  h+='<div class="two">'+card('예약 채널 (건수)', chDonut([{label:'네이버',value:cc.네이버,color:ST_COL.네이버},{label:'에어비앤비',value:cc.에어비앤비,color:ST_COL.에어비앤비},{label:'기타(DM·전화)',value:cc.기타,color:ST_COL.기타}],{center:conf.length+'건'}))
+    +card('인원', chDonut(Object.entries(gcount).sort().map(([k,v],i)=>({label:k,value:v,color:[ST_COL.seq,ST_COL.seq2,'#1baf7a','#eda100'][i%4]})),{center:conf.length+'건'}))+'</div>';
+  h+='<div class="two">'+card('반려견 · 바비큐', chBars([{label:'반려견',values:{v:dog}},{label:'바비큐',values:{v:bbq}},{label:'둘 다 아님',values:{v:conf.filter(r=>!guestDog(r).on&&!guestBbq(r).on).length}}],{fmt:String,labels:true,h:150}),'메모·고객 탭 체크 기준');
+  const na=statNaverAgg(placeStats||[]); const ages=Object.entries(na.age).filter(([a])=>!/10대|70대/.test(a)).sort((a,b)=>b[1]-a[1]);
+  h+=card('플레이스를 보는 사람', (na.f+na.m)?`<div class="donut-row">${chDonut([{label:'여',value:na.f,color:ST_COL.f},{label:'남',value:na.m,color:ST_COL.m}])}</div>${chHBars(ages.map(([a,v])=>({label:a,value:Math.round(v/(na.f+na.m)*100)})),{fmt:v=>v+'%'})}`:'<div class="empty"><span class="emoji">📊</span>네이버 자료 없음</div>','네이버 스마트플레이스 통계')+'</div>';
+  el.innerHTML=h;
+}
+function renderStNaver(){
+  const el=document.getElementById('stNaver'); if(!el) return; const rows=placeStats||[];
+  if(!rows.length){ el.innerHTML='<div class="empty"><span class="emoji">📊</span>아직 수집된 날이 없어요(봇이 아침 7시 이후 모읍니다)</div>'; return; }
+  const asc=[...rows].sort((a,b)=>a.date.localeCompare(b.date)), last30=asc.slice(-30), na=statNaverAgg(last30);
+  const last7=asc.slice(-7), prev7=asc.slice(-14,-7), avg=a=>a.length?a.reduce((x,r)=>x+(r.inflow||0),0)/a.length:0;
+  let h='<div class="stat-grid">'+tile('최근 7일 하루 유입',Math.round(avg(last7))+'회',prev7.length?`그 전 7일 ${Math.round(avg(prev7))}회`:'')+tile('30일 유입',na.tot+'회',`${last30[0].date.slice(5)}~${last30[last30.length-1].date.slice(5)}`)+tile('예약 페이지 → 신청',`${pct(na.bk.applied,na.bk.bi)}%`,`${na.bk.bi}명 중 ${na.bk.applied}건`)+tile('신청 금액',won(na.bk.amount),`취소 ${na.bk.cancel}건`)+'</div>';
+  h+=card('일별 유입', chLine(last30.map(r=>({label:r.date.slice(5),values:{a:r.inflow||0,b:r.bk_inflow||0}})),{series:[{key:'a',name:'플레이스 유입',color:ST_COL.seq},{key:'b',name:'예약 페이지 유입',color:ST_COL.에어비앤비}]}),'최근 30일');
+  h+='<div class="two">'+card('유입 → 예약', chHBars([{label:'플레이스 유입',value:na.bk.inflow},{label:'예약 페이지',value:na.bk.bi},{label:'예약 신청',value:na.bk.applied},{label:'이용 완료',value:na.bk.done}].map(i=>({...i,color:ST_COL.seq}))),`예약 통계 있는 ${na.bk.days}일 합`)
+    +card('들어온 곳', chDonut(Object.entries(na.ch).sort((a,b)=>b[1]-a[1]).map(([k,v],i)=>({label:k,value:v,color:[ST_COL.seq,ST_COL.에어비앤비,ST_COL.기타,'#eda100','#e87ba4'][i%5]})),{center:na.tot+'회'}))+'</div>';
+  const kws=Object.entries(na.kw).sort((a,b)=>b[1]-a[1]).slice(0,10);
+  h+=card('검색어', chHBars(kws.map(([k,v])=>({label:k,value:Math.round(v),color:/솔숲/.test(k)?ST_COL.seq:ST_COL.기타})),{fmt:v=>v+'회'}),'파랑 = 상호 검색 · 초록 = 지역·일반 검색어 (일별 %를 유입 수로 환산)');
+  const dow=[0,0,0,0,0,0,0], dc=[0,0,0,0,0,0,0]; last30.forEach(r=>{ const d=new Date(r.date+'T00:00:00').getDay(); dow[d]+=r.inflow||0; dc[d]++; });
+  h+=card('요일별 하루 평균 유입', chBars(DOWS.map((d,i)=>({label:d,values:{v:dc[i]?Math.round(dow[i]/dc[i]):0}})),{fmt:String,labels:true,h:150}));
+  h+=card('일별 표 (최근 14일)', `<div class="guest-wrap"><table class="guest-tbl"><thead><tr><th>날짜</th><th class="r">플레이스 유입</th><th class="r">예약 페이지</th><th class="r">신청</th><th class="r">이용완료</th><th class="r">취소</th><th class="r">신청 금액</th></tr></thead><tbody>${rows.slice(0,14).map(x=>`<tr><td>${x.date.slice(5)} (${DOWS[new Date(x.date+'T00:00:00').getDay()]})</td><td class="r">${x.inflow??'-'}</td><td class="r">${x.bk_inflow??'-'}</td><td class="r">${x.bk_applied??'-'}</td><td class="r">${x.bk_completed??'-'}</td><td class="r">${x.bk_cancelled??'-'}</td><td class="r">${x.bk_applied_amount?won(x.bk_applied_amount):'-'}</td></tr>`).join('')}</tbody></table></div>`);
+  el.innerHTML=h;
+}
+function renderStRead(){
+  const ul=document.getElementById('statRead'), noteEl=document.getElementById('statNote'); if(!ul) return;
+  const out=[], m=statMonthly(), thisYm=statYmd(new Date()).slice(0,7), cur=m.find(x=>x.ym===thisYm);
+  const prevYm=statYmd(new Date(+thisYm.slice(0,4),+thisYm.slice(5,7)-2,1)).slice(0,7), prev=m.find(x=>x.ym===prevYm), conf=statConfirmed(), cl=statsCancelled||[];
+  if(cur){ let t=`이번 달 예약 ${cur.cnt}건 · ${cur.nights}박, 점유율 ${pct(cur.nights,daysIn(thisYm))}%`; if(prev&&prev.nights) t+=` (지난달 ${pct(prev.nights,daysIn(prevYm))}%)`; const fut=m.filter(x=>x.ym>thisYm).reduce((a,x)=>a+x.cnt,0); if(fut) t+=`. 다음 달 이후 ${fut}건 잡혀 있음`; out.push(t+'.'); }
+  if(conf.length){ const cc={}; conf.forEach(r=>{const c=statChannel(r.channel);cc[c]=(cc[c]||0)+1;}); out.push(`예약 ${conf.length}건 중 ${Object.entries(cc).sort((a,b)=>b[1]-a[1]).map(([k,v])=>`${k} ${v}`).join(' · ')}.`);
+    const dow=[0,0,0,0,0,0,0]; conf.forEach(r=>dow[new Date(r.checkin+'T00:00:00').getDay()]++); const top=dow.indexOf(Math.max(...dow)); const wk=dow[5]+dow[6]; out.push(`입실 요일은 ${DOWS[top]}요일이 가장 많고, 금·토 입실이 ${pct(wk,conf.length)}%.${pct(wk,conf.length)>=70?' 평일을 채우는 게 과제.':''}`);
+    const n1=conf.filter(r=>statNights(r)===1).length; out.push(`1박 ${pct(n1,conf.length)}%, 2박 이상 ${pct(conf.length-n1,conf.length)}%. ${pct(n1,conf.length)>=70?'연박 할인(둘째 밤 3만)을 더 보이게 할 여지.':''}`);
+    const dog=conf.filter(r=>guestDog(r).on).length; out.push(`반려견 동반 ${pct(dog,conf.length)}%(${dog}건).`); }
+  if(cl.length){ const cch={}; cl.forEach(r=>{const c=statChannel(r.channel);cch[c]=(cch[c]||0)+1;}); const rate=pct(cl.length,cl.length+conf.length); out.push(`취소 ${cl.length}건(${Object.entries(cch).map(([k,v])=>`${k} ${v}`).join(' · ')}) — 전체의 ${rate}%.${rate>=30?' 취소가 많음. 취소 규정·결제 시점 점검.':''}`); }
+  const rows=placeStats||[];
+  if(rows.length){ const asc=[...rows].sort((a,b)=>a.date.localeCompare(b.date)), last7=asc.slice(-7), prev7=asc.slice(-14,-7), avg=a=>a.length?a.reduce((x,r)=>x+(r.inflow||0),0)/a.length:0, a7=avg(last7), p7=avg(prev7);
+    let t=`네이버 플레이스 유입 최근 7일 하루 ${Math.round(a7)}회`; if(prev7.length&&p7) t+=` — 그 전 7일(${Math.round(p7)})보다 ${a7>=p7?'+':''}${pct(a7-p7,p7)}%`; out.push(t+'.');
+    const na=statNaverAgg(asc.slice(-30)); let brand=0, region=0, map=0; Object.entries(na.kw).forEach(([k,v])=>{ if(/솔숲/.test(k)) brand+=v; else if(/산청|하동|지리산|민박|펜션|독채|스테이/.test(k)) region+=v; }); Object.entries(na.ch).forEach(([k,v])=>{ if(/지도/.test(k)) map+=v; });
+    if(na.tot){ out.push(`검색어의 ${pct(brand,na.tot)}%가 「스테이솔숲」 이름 검색, 지역·일반 검색어는 ${pct(region,na.tot)}%. 지도에서 들어온 비율 ${pct(map,na.tot)}% — 대부분 이름을 알고 찾아오는 손님.`); if(pct(region,na.tot)<25) out.push('모르는 사람이 걸리는 검색어(산청 민박·산청 스테이·독채)가 적음. 플레이스 소개글·새소식에 그 말이 있어야 새 손님이 생김.'); }
+    if(na.bk.days){ out.push(`플레이스를 본 사람 중 ${pct(na.bk.bi,na.bk.inflow)}%가 예약 페이지까지, 그중 ${pct(na.bk.applied,na.bk.bi)}%가 신청(${na.bk.applied}건).${na.bk.bi&&na.bk.applied?` 예약 페이지 ${Math.round(na.bk.bi/na.bk.applied)}명당 1명 신청.`:''}`);
       let zero=0; for(let i=asc.length-1;i>=0;i--){ if(asc[i].bk_inflow==null) break; if((asc[i].bk_applied||0)>0) break; zero++; } if(zero>=3) out.push(`최근 ${zero}일 연속 신청 0 — 오픈 공지 효과가 끝난 신호. 릴스·블로그로 다음 파도를 만들 때.`); }
-    let f=0,mm=0,age={}; asc.forEach(r=>{ const n=r.inflow||0; if(r.gender){ f+=r.gender.female/100*n; mm+=r.gender.male/100*n; Object.entries(r.age||{}).forEach(([a,v])=>{ age[a]=(age[a]||0)+((v.f||0)/100*r.gender.female/100+(v.m||0)/100*r.gender.male/100)*n; }); } });
-    const ta=Object.entries(age).sort((a,b)=>b[1]-a[1]); if(f+mm) out.push(`보는 사람은 여 ${pct(f,f+mm)}% · 남 ${pct(mm,f+mm)}%, ${ta.slice(0,2).map(([a,v])=>`${a} ${pct(v,f+mm)}%`).join(' · ')}.`);
+    const dow=[0,0,0,0,0,0,0], dc=[0,0,0,0,0,0,0]; asc.slice(-30).forEach(r=>{ const d=new Date(r.date+'T00:00:00').getDay(); dow[d]+=r.inflow||0; dc[d]++; }); const avgs=dow.map((v,i)=>dc[i]?v/dc[i]:0); const hi=avgs.indexOf(Math.max(...avgs)); if(dc[hi]) out.push(`플레이스는 ${DOWS[hi]}요일에 가장 많이 본다(하루 ${Math.round(avgs[hi])}회). 글·릴스 올리는 날을 그 전날로.`);
+    const ages=Object.entries(na.age).sort((a,b)=>b[1]-a[1]); if(na.f+na.m) out.push(`보는 사람은 여 ${pct(na.f,na.f+na.m)}% · 남 ${pct(na.m,na.f+na.m)}%, ${ages.slice(0,2).map(([a,v])=>`${a} ${pct(v,na.f+na.m)}%`).join(' · ')}.`);
   } else out.push('네이버 유입 자료가 아직 없어요(봇이 아침 7시 이후 모읍니다).');
   ul.innerHTML = out.map(t=>`<li>${esc(t)}</li>`).join('');
-  hint.textContent = '자동 읽기 · 숫자에서 바로 계산';
-  if(statsNote&&statsNote.text){ noteEl.style.display=''; noteEl.textContent = `봇 메모 (${statsNote.date||''})\n${statsNote.text}`; } else noteEl.style.display='none';
-}
-function renderNaverMix(rows){
-  const box=document.getElementById('statMix'), hint=document.getElementById('statMixHint'); if(!box) return;
-  if(!rows.length){ box.innerHTML=''; return; }
-  const tot = rows.reduce((a,r)=>a+(r.inflow||0),0); if(!tot){ box.innerHTML=''; return; }
-  const kw={}, ch={}, g={여:0,남:0}, age={};
-  rows.forEach(r=>{ const n=r.inflow||0;
-    (r.keywords||[]).forEach(k=>kw[k.name]=(kw[k.name]||0)+k.pct/100*n);
-    (r.channels||[]).forEach(c=>ch[c.name]=(ch[c.name]||0)+c.pct/100*n);
-    if(r.gender){ g.여+=r.gender.female/100*n; g.남+=r.gender.male/100*n;
-      Object.entries(r.age||{}).forEach(([a,v])=>{ age[a]=(age[a]||0)+((v.f||0)/100*r.gender.female/100+(v.m||0)/100*r.gender.male/100)*n; }); }
-  });
-  const top=(o,n)=>Object.entries(o).sort((a,b)=>b[1]-a[1]).slice(0,n);
-  const list=(o,n)=>top(o,n).map(([k,v])=>`<div style="display:flex;justify-content:space-between;gap:8px;font-size:13px;"><span>${esc(k)}</span><span style="color:var(--muted-fg)">${Math.round(v/tot*100)}%</span></div>`).join('');
-  const gs=g.여+g.남||1, as=Object.values(age).reduce((a,b)=>a+b,0)||1;
-  hint.textContent = `${rows[rows.length-1].date} ~ ${rows[0].date} · 유입 ${tot}회 기준(일별 %를 유입 수로 가중)`;
-  box.innerHTML = `<div class="stat-tile"><div class="k">검색어</div>${list(kw,6)}</div>
-    <div class="stat-tile"><div class="k">들어온 곳</div>${list(ch,5)}</div>
-    <div class="stat-tile"><div class="k">성별</div>${list({여:g.여/gs*tot,남:g.남/gs*tot},2)}</div>
-    <div class="stat-tile"><div class="k">연령</div>${list(Object.fromEntries(Object.entries(age).map(([a,v])=>[a,v/as*tot])),5)}</div>`;
-}
-function renderNaverStats(){
-  const t=document.getElementById('statNaver'), h=document.getElementById('statNaverHint'); if(!t) return;
-  const rows = placeStats||[];
-  renderNaverMix(rows);
-  if(!rows.length){ t.innerHTML='<tr><td><div class="empty"><span class="emoji">📊</span>아직 수집된 날이 없어요</div></td></tr>'; return; }
-  h.textContent = `${rows[Math.min(13,rows.length-1)].date} ~ ${rows[0].date}`;
-  const won = v => v ? v.toLocaleString('ko-KR')+'원' : '-';
-  t.innerHTML = '<thead><tr><th>날짜</th><th class="r">플레이스 유입</th><th class="r">예약 페이지 유입</th><th class="r">신청</th><th class="r">이용완료</th><th class="r">신청 금액</th></tr></thead><tbody>' + rows.slice(0,14).map(x=>`<tr><td>${x.date.slice(5)}</td><td class="r">${x.inflow??'-'}</td><td class="r">${x.bk_inflow??'-'}</td><td class="r">${x.bk_applied??'-'}</td><td class="r">${x.bk_completed??'-'}</td><td class="r">${won(x.bk_applied_amount)}</td></tr>`).join('') + '</tbody>';
+  if(statsNote&&statsNote.text){ noteEl.style.display=''; noteEl.textContent=`봇 메모 (${statsNote.date||''})\n${statsNote.text}`; } else noteEl.style.display='none';
 }
 function renderGuests(){
   const tbl=document.getElementById('guestTable'); if(!tbl) return;
