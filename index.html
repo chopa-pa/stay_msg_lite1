@@ -1168,7 +1168,7 @@ input,select,textarea{font-family:inherit;}
       <div class="sidebar-brand" onclick="switchTab('home')" role="button" tabindex="0" aria-label="홈으로">
         <div class="sidebar-logo">SM</div>
         <div class="sidebar-brand-text">
-          <div class="sidebar-brand-name">Stay_Msg Pro<span class="sidebar-brand-ver" id="appVer">v1.7.0</span></div>
+          <div class="sidebar-brand-name">Stay_Msg Pro<span class="sidebar-brand-ver" id="appVer">v1.7.1</span></div>
           <div class="sidebar-brand-sub">숙소 예약 문자</div>
         </div>
       </div>
@@ -1222,7 +1222,7 @@ input,select,textarea{font-family:inherit;}
       <div class="mheader-brand" onclick="switchTab('home')" role="button" tabindex="0" aria-label="홈으로">
         <div class="mheader-logo">SM</div>
         <div>
-          <div class="mheader-title">Stay_Msg Pro<span class="mheader-ver" id="appVerM">v1.7.0</span></div>
+          <div class="mheader-title">Stay_Msg Pro<span class="mheader-ver" id="appVerM">v1.7.1</span></div>
           <div class="mheader-sub">숙소 예약 문자</div>
         </div>
       </div>
@@ -2084,7 +2084,7 @@ input,select,textarea{font-family:inherit;}
 <div class="toast" id="toast"></div>
 
 <script>
-const APP_VERSION='v1.7.0'; // Pro (2026-10-27 lite v3.3.0에서 이름·버전 리셋)
+const APP_VERSION='v1.7.1'; // Pro (2026-10-27 lite v3.3.0에서 이름·버전 리셋)
 const SK_SET='stay_msg_lite1_set_v1';
 const SK_TPL='stay_msg_lite1_tpl_v1';
 const SK_RES='stay_msg_lite1_res_v1';
@@ -3817,12 +3817,13 @@ function guestDog(r){ const n = guestNotes[r.id]; return (n && n.dog !== null &&
 function guestBbq(r){ const n = guestNotes[r.id]; return (n && n.bbq !== null && n.bbq !== undefined) ? {on:!!n.bbq, auto:false} : {on:GUEST_BBQ_RE.test(r.memo||''), auto:true}; }
 function guestVisitMap(){ const m = {}; reservations.forEach(r=>{ const k=(r.phone||'').replace(/\D/g,''); if(!k) return; (m[k]=m[k]||[]).push(r.checkin); }); return m; }
 // ── 통계(v1.6.0): 확정 예약 → 월별 매출·박수·점유율·채널, place_stats → 네이버 유입 ──
-let placeStats = null, statsNote = null;
+let placeStats = null, statsNote = null, statsCancelled = null;   // 취소 예약은 앱 목록(reservations)에 없어 통계용으로 따로 읽음
 function statYmd(d){ return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }   // toISOString은 UTC라 날짜가 하루 밀림
 function statChannel(c){ c=c||''; return c.startsWith('네이버') ? '네이버' : (c.includes('에어비앤비') || /airbnb/i.test(c) ? '에어비앤비' : '기타'); }
 function statMonthly(){
   const m = {};
-  const add = (ym) => m[ym] || (m[ym] = { ym, cnt:0, nights:0, rev:0, ch:{네이버:0,에어비앤비:0,기타:0} });
+  const add = (ym) => m[ym] || (m[ym] = { ym, cnt:0, nights:0, rev:0, cancel:0, ch:{네이버:0,에어비앤비:0,기타:0} });
+  (statsCancelled||[]).forEach(r=>{ if(r.checkin) add(r.checkin.slice(0,7)).cancel++; });
   reservations.filter(r => (r.status||'confirmed')==='confirmed' && r.checkin && r.checkout && r.checkout>r.checkin).forEach(r => {
     const ym = r.checkin.slice(0,7), row = add(ym); row.cnt++; const rev = parseNum(r.price); row.rev += rev; row.ch[statChannel(r.channel)] += rev;
     for(let d=new Date(r.checkin+'T00:00:00'); statYmd(d)<r.checkout; d.setDate(d.getDate()+1)){ add(statYmd(d).slice(0,7)).nights++; }
@@ -3844,16 +3845,18 @@ function renderStats(){
     ['올해 매출', won(yrev), `${ycnt}건 · ${ynights}박`],
     ['평균 1박 단가', won(ynights?Math.round(yrev/ynights):0), '올해 매출 ÷ 박수'],
     ['예정(다음 달 이후)', won(future.reduce((a,x)=>a+x.rev,0)), `${future.reduce((a,x)=>a+x.cnt,0)}건 · ${future.reduce((a,x)=>a+x.nights,0)}박`],
+    ['취소', `${(statsCancelled||[]).length}건`, (()=>{const c=(statsCancelled||[]).length, t=c+reservations.filter(r=>(r.status||'confirmed')==='confirmed').length; return t?`전체 예약의 ${Math.round(c/t*100)}%`:'';})()],
   ].map(([k,v,s])=>`<div class="stat-tile"><div class="k">${k}</div><div class="v">${v}</div><div class="s">${s}</div></div>`).join('');
   document.getElementById('statsSub').textContent = `확정 예약 ${reservations.filter(r=>(r.status||'confirmed')==='confirmed').length}건 기준 · 입실일 기준 월 집계`;
   const max = Math.max(1, ...rows.map(x=>x.rev));
-  tbl.innerHTML = '<thead><tr><th>월</th><th class="r">건수</th><th class="r">박수</th><th class="r">점유율</th><th>매출</th><th class="r">네이버</th><th class="r">에어비앤비</th><th class="r">기타</th></tr></thead><tbody>' + rows.map(x=>`<tr>
+  tbl.innerHTML = '<thead><tr><th>월</th><th class="r">건수</th><th class="r">취소</th><th class="r">박수</th><th class="r">점유율</th><th>매출</th><th class="r">네이버</th><th class="r">에어비앤비</th><th class="r">기타</th></tr></thead><tbody>' + rows.map(x=>`<tr>
     <td><div class="gname">${x.ym.replace('-','.')}${x.ym>thisYm?' <span class="gsub">예정</span>':(x.ym===thisYm?' <span class="gsub">이번 달</span>':'')}</div></td>
-    <td class="r">${x.cnt}</td><td class="r">${x.nights}</td><td class="r">${Math.round(x.nights/days(x.ym)*100)}%</td>
+    <td class="r">${x.cnt}</td><td class="r">${x.cancel||''}</td><td class="r">${x.nights}</td><td class="r">${Math.round(x.nights/days(x.ym)*100)}%</td>
     <td><span class="stat-bar" style="width:${Math.round(x.rev/max*120)}px"></span>${won(x.rev)}</td>
     <td class="r">${won(x.ch.네이버)}</td><td class="r">${won(x.ch.에어비앤비)}</td><td class="r">${won(x.ch.기타)}</td></tr>`).join('') + '</tbody>';
   renderStatRead(placeStats||[]);
   renderNaverStats();
+  if(sb && statsCancelled===null){ statsCancelled=[]; sb.from('reservations').select('id,checkin,checkout,channel,price,created_at,updated_at').eq('status','cancelled').then(({data,error})=>{ if(error){console.error(error);return;} statsCancelled=data||[]; renderStats(); }); }
   if(sb && statsNote===null){ statsNote={}; sb.from('app_settings').select('value').eq('key','stats_note').maybeSingle().then(({data})=>{ statsNote=(data&&data.value)||{}; renderStatRead(placeStats||[]); }); }
   if(sb && placeStats===null){ placeStats=[]; sb.from('place_stats').select('*').order('date',{ascending:false}).limit(30).then(({data,error})=>{ if(error){ console.error(error); document.getElementById('statNaverHint').textContent='불러오기 실패(로그인 확인)'; return; } placeStats=data||[]; renderStatRead(placeStats); renderNaverStats(); }); }
 }
@@ -3867,6 +3870,7 @@ function renderStatRead(rows){
   const confirmed=reservations.filter(r=>(r.status||'confirmed')==='confirmed'); const chCnt={};
   confirmed.forEach(r=>{const c=statChannel(r.channel);chCnt[c]=(chCnt[c]||0)+1;});
   if(confirmed.length){ const top=Object.entries(chCnt).sort((a,b)=>b[1]-a[1]); out.push(`예약 ${confirmed.length}건 중 ${top.map(([k,v])=>`${k} ${v}`).join(' · ')}.`); }
+  const cl=statsCancelled||[]; if(cl.length){ const cch={}; cl.forEach(r=>{const c=statChannel(r.channel);cch[c]=(cch[c]||0)+1;}); const rate=Math.round(cl.length/(cl.length+confirmed.length)*100); out.push(`취소 ${cl.length}건(${Object.entries(cch).map(([k,v])=>`${k} ${v}`).join(' · ')}) — 전체의 ${rate}%.${rate>=30?' 취소가 많음. 취소 규정·결제 시점 점검.':''}`); }
   // 네이버 유입(place_stats)
   if(rows&&rows.length){
     const asc=[...rows].sort((a,b)=>a.date.localeCompare(b.date)); const last7=asc.slice(-7), prev7=asc.slice(-14,-7);
