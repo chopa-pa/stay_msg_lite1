@@ -1168,7 +1168,7 @@ input,select,textarea{font-family:inherit;}
       <div class="sidebar-brand" onclick="switchTab('home')" role="button" tabindex="0" aria-label="홈으로">
         <div class="sidebar-logo">SM</div>
         <div class="sidebar-brand-text">
-          <div class="sidebar-brand-name">Stay_Msg Pro<span class="sidebar-brand-ver" id="appVer">v1.6.0</span></div>
+          <div class="sidebar-brand-name">Stay_Msg Pro<span class="sidebar-brand-ver" id="appVer">v1.6.1</span></div>
           <div class="sidebar-brand-sub">숙소 예약 문자</div>
         </div>
       </div>
@@ -1222,7 +1222,7 @@ input,select,textarea{font-family:inherit;}
       <div class="mheader-brand" onclick="switchTab('home')" role="button" tabindex="0" aria-label="홈으로">
         <div class="mheader-logo">SM</div>
         <div>
-          <div class="mheader-title">Stay_Msg Pro<span class="mheader-ver" id="appVerM">v1.6.0</span></div>
+          <div class="mheader-title">Stay_Msg Pro<span class="mheader-ver" id="appVerM">v1.6.1</span></div>
           <div class="mheader-sub">숙소 예약 문자</div>
         </div>
       </div>
@@ -1656,6 +1656,7 @@ input,select,textarea{font-family:inherit;}
       </div>
       <div class="stat-grid" id="statKpi"></div>
       <div class="card"><div class="card-head"><div class="card-head-title">월별 매출 · 점유율</div></div><div class="guest-wrap"><table class="guest-tbl" id="statMonths"></table></div></div>
+      <div class="card"><div class="card-head"><div class="card-head-title">네이버 유입 — 어떻게 들어왔나 (최근 30일 합)</div><span class="adv-hint" id="statMixHint" style="margin:0;"></span></div><div class="stat-grid" id="statMix"></div></div>
       <div class="card"><div class="card-head"><div class="card-head-title">네이버 유입 (최근 14일)</div><span class="adv-hint" id="statNaverHint" style="margin:0;"></span></div><div class="guest-wrap"><table class="guest-tbl" id="statNaver"></table></div></div>
     </section>
 
@@ -2079,7 +2080,7 @@ input,select,textarea{font-family:inherit;}
 <div class="toast" id="toast"></div>
 
 <script>
-const APP_VERSION='v1.6.0'; // Pro (2026-10-27 lite v3.3.0에서 이름·버전 리셋)
+const APP_VERSION='v1.6.1'; // Pro (2026-10-27 lite v3.3.0에서 이름·버전 리셋)
 const SK_SET='stay_msg_lite1_set_v1';
 const SK_TPL='stay_msg_lite1_tpl_v1';
 const SK_RES='stay_msg_lite1_res_v1';
@@ -3848,15 +3849,36 @@ function renderStats(){
     <td><span class="stat-bar" style="width:${Math.round(x.rev/max*120)}px"></span>${won(x.rev)}</td>
     <td class="r">${won(x.ch.네이버)}</td><td class="r">${won(x.ch.에어비앤비)}</td><td class="r">${won(x.ch.기타)}</td></tr>`).join('') + '</tbody>';
   renderNaverStats();
-  if(sb && placeStats===null){ placeStats=[]; sb.from('place_stats').select('date,inflow,bk_inflow,bk_applied,bk_completed,bk_applied_amount').order('date',{ascending:false}).limit(14).then(({data,error})=>{ if(error){ console.error(error); document.getElementById('statNaverHint').textContent='불러오기 실패(로그인 확인)'; return; } placeStats=data||[]; renderNaverStats(); }); }
+  if(sb && placeStats===null){ placeStats=[]; sb.from('place_stats').select('*').order('date',{ascending:false}).limit(30).then(({data,error})=>{ if(error){ console.error(error); document.getElementById('statNaverHint').textContent='불러오기 실패(로그인 확인)'; return; } placeStats=data||[]; renderNaverStats(); }); }
+}
+function renderNaverMix(rows){
+  const box=document.getElementById('statMix'), hint=document.getElementById('statMixHint'); if(!box) return;
+  if(!rows.length){ box.innerHTML=''; return; }
+  const tot = rows.reduce((a,r)=>a+(r.inflow||0),0); if(!tot){ box.innerHTML=''; return; }
+  const kw={}, ch={}, g={여:0,남:0}, age={};
+  rows.forEach(r=>{ const n=r.inflow||0;
+    (r.keywords||[]).forEach(k=>kw[k.name]=(kw[k.name]||0)+k.pct/100*n);
+    (r.channels||[]).forEach(c=>ch[c.name]=(ch[c.name]||0)+c.pct/100*n);
+    if(r.gender){ g.여+=r.gender.female/100*n; g.남+=r.gender.male/100*n;
+      Object.entries(r.age||{}).forEach(([a,v])=>{ age[a]=(age[a]||0)+((v.f||0)/100*r.gender.female/100+(v.m||0)/100*r.gender.male/100)*n; }); }
+  });
+  const top=(o,n)=>Object.entries(o).sort((a,b)=>b[1]-a[1]).slice(0,n);
+  const list=(o,n)=>top(o,n).map(([k,v])=>`<div style="display:flex;justify-content:space-between;gap:8px;font-size:13px;"><span>${esc(k)}</span><span style="color:var(--muted-fg)">${Math.round(v/tot*100)}%</span></div>`).join('');
+  const gs=g.여+g.남||1, as=Object.values(age).reduce((a,b)=>a+b,0)||1;
+  hint.textContent = `${rows[rows.length-1].date} ~ ${rows[0].date} · 유입 ${tot}회 기준(일별 %를 유입 수로 가중)`;
+  box.innerHTML = `<div class="stat-tile"><div class="k">검색어</div>${list(kw,6)}</div>
+    <div class="stat-tile"><div class="k">들어온 곳</div>${list(ch,5)}</div>
+    <div class="stat-tile"><div class="k">성별</div>${list({여:g.여/gs*tot,남:g.남/gs*tot},2)}</div>
+    <div class="stat-tile"><div class="k">연령</div>${list(Object.fromEntries(Object.entries(age).map(([a,v])=>[a,v/as*tot])),5)}</div>`;
 }
 function renderNaverStats(){
   const t=document.getElementById('statNaver'), h=document.getElementById('statNaverHint'); if(!t) return;
   const rows = placeStats||[];
+  renderNaverMix(rows);
   if(!rows.length){ t.innerHTML='<tr><td><div class="empty"><span class="emoji">📊</span>아직 수집된 날이 없어요</div></td></tr>'; return; }
-  h.textContent = `${rows[rows.length-1].date} ~ ${rows[0].date}`;
+  h.textContent = `${rows[Math.min(13,rows.length-1)].date} ~ ${rows[0].date}`;
   const won = v => v ? v.toLocaleString('ko-KR')+'원' : '-';
-  t.innerHTML = '<thead><tr><th>날짜</th><th class="r">플레이스 유입</th><th class="r">예약 페이지 유입</th><th class="r">신청</th><th class="r">이용완료</th><th class="r">신청 금액</th></tr></thead><tbody>' + rows.map(x=>`<tr><td>${x.date.slice(5)}</td><td class="r">${x.inflow??'-'}</td><td class="r">${x.bk_inflow??'-'}</td><td class="r">${x.bk_applied??'-'}</td><td class="r">${x.bk_completed??'-'}</td><td class="r">${won(x.bk_applied_amount)}</td></tr>`).join('') + '</tbody>';
+  t.innerHTML = '<thead><tr><th>날짜</th><th class="r">플레이스 유입</th><th class="r">예약 페이지 유입</th><th class="r">신청</th><th class="r">이용완료</th><th class="r">신청 금액</th></tr></thead><tbody>' + rows.slice(0,14).map(x=>`<tr><td>${x.date.slice(5)}</td><td class="r">${x.inflow??'-'}</td><td class="r">${x.bk_inflow??'-'}</td><td class="r">${x.bk_applied??'-'}</td><td class="r">${x.bk_completed??'-'}</td><td class="r">${won(x.bk_applied_amount)}</td></tr>`).join('') + '</tbody>';
 }
 function renderGuests(){
   const tbl=document.getElementById('guestTable'); if(!tbl) return;
