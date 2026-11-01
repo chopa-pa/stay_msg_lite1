@@ -651,6 +651,10 @@ input,select,textarea{font-family:inherit;}
 .hb-l{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--fg-2);}.hb-t{height:10px;background:var(--muted);border-radius:5px;overflow:hidden;}.hb-t i{display:block;height:100%;border-radius:5px;}.hb-v{text-align:right;color:var(--muted-fg);font-size:12px;}
 .two{display:grid;grid-template-columns:1fr 1fr;gap:12px;}@media(max-width:720px){.two{grid-template-columns:1fr;}}
 .two .card{margin:0 0 12px;}
+.rd{display:flex;flex-direction:column;}.rd-row{display:grid;grid-template-columns:96px 1fr;gap:10px;padding:9px 0;border-bottom:1px solid var(--border);font-size:14px;line-height:1.5;}.rd-row:last-child{border-bottom:none;}
+.rd-k{color:var(--muted-fg);font-weight:600;font-size:13px;}.rd-v{color:var(--fg);word-break:keep-all;}
+.rd-todo{margin:0;padding-left:20px;font-size:14px;line-height:1.6;}.rd-todo li{margin-bottom:6px;}.rd-todo li::marker{color:#b45309;}
+.rd-ok{font-size:14px;color:var(--muted-fg);}.rd-note{font-size:14px;line-height:1.7;white-space:pre-wrap;word-break:keep-all;}
 .guest-tbl th{position:sticky;top:0;background:var(--muted);color:var(--muted-fg);font-weight:600;font-size:12px;text-align:left;padding:10px 12px;border-bottom:1px solid var(--border);white-space:nowrap;}
 .guest-tbl td{padding:10px 12px;border-bottom:1px solid var(--border);vertical-align:middle;white-space:nowrap;}
 .guest-tbl tr:last-child td{border-bottom:none;}
@@ -1175,7 +1179,7 @@ input,select,textarea{font-family:inherit;}
       <div class="sidebar-brand" onclick="switchTab('home')" role="button" tabindex="0" aria-label="홈으로">
         <div class="sidebar-logo">SM</div>
         <div class="sidebar-brand-text">
-          <div class="sidebar-brand-name">Stay_Msg Pro<span class="sidebar-brand-ver" id="appVer">v1.8.2</span></div>
+          <div class="sidebar-brand-name">Stay_Msg Pro<span class="sidebar-brand-ver" id="appVer">v1.8.3</span></div>
           <div class="sidebar-brand-sub">숙소 예약 문자</div>
         </div>
       </div>
@@ -1231,7 +1235,7 @@ input,select,textarea{font-family:inherit;}
       <div class="mheader-brand" onclick="switchTab('home')" role="button" tabindex="0" aria-label="홈으로">
         <div class="mheader-logo">SM</div>
         <div>
-          <div class="mheader-title">Stay_Msg Pro<span class="mheader-ver" id="appVerM">v1.8.2</span></div>
+          <div class="mheader-title">Stay_Msg Pro<span class="mheader-ver" id="appVerM">v1.8.3</span></div>
           <div class="mheader-sub">숙소 예약 문자</div>
         </div>
       </div>
@@ -1668,9 +1672,8 @@ input,select,textarea{font-family:inherit;}
       <div id="stNaver"></div>
     </section>
     <section class="page" id="tab-st_read">
-      <div class="page-head"><h1 class="page-title"><svg class="i"><use href="#i-help"/></svg>분석</h1><p class="page-sub">숫자에서 바로 읽은 것 + 봇 메모</p></div>
-      <div class="card"><div class="card-head"><div class="card-head-title">자동 읽기</div></div><ul id="statRead" style="margin:0;padding-left:18px;font-size:14px;line-height:1.6;"></ul>
-        <div id="statNote" style="display:none;margin-top:12px;padding:12px 14px;background:var(--muted);border-radius:10px;font-size:14px;line-height:1.6;white-space:pre-wrap;"></div></div>
+      <div class="page-head"><h1 class="page-title"><svg class="i"><use href="#i-help"/></svg>분석</h1><p class="page-sub">숫자에서 자동으로 읽은 것 · 봇 메모는 주 1회</p></div>
+      <div id="statReadHost"></div>
     </section>
 
     <!-- ─── HISTORY ─── -->
@@ -2096,7 +2099,7 @@ input,select,textarea{font-family:inherit;}
 <div class="toast" id="toast"></div>
 
 <script>
-const APP_VERSION='v1.8.2'; // Pro (2026-10-27 lite v3.3.0에서 이름·버전 리셋)
+const APP_VERSION='v1.8.3'; // Pro (2026-10-27 lite v3.3.0에서 이름·버전 리셋)
 const SK_SET='stay_msg_lite1_set_v1';
 const SK_TPL='stay_msg_lite1_tpl_v1';
 const SK_RES='stay_msg_lite1_res_v1';
@@ -3947,27 +3950,33 @@ function renderStNaver(){
   el.innerHTML=h;
 }
 function renderStRead(){
-  const ul=document.getElementById('statRead'), noteEl=document.getElementById('statNote'); if(!ul) return;
-  const out=[], m=statMonthly(), thisYm=statYmd(new Date()).slice(0,7), cur=m.find(x=>x.ym===thisYm);
+  const host=document.getElementById('statReadHost'); if(!host) return;
+  const m=statMonthly(), thisYm=statYmd(new Date()).slice(0,7), cur=m.find(x=>x.ym===thisYm);
   const prevYm=statYmd(new Date(+thisYm.slice(0,4),+thisYm.slice(5,7)-2,1)).slice(0,7), prev=m.find(x=>x.ym===prevYm), conf=statConfirmed(), cl=statsCancelled||[];
-  if(cur){ let t=`이번 달 예약 ${cur.cnt}건 · ${cur.nights}박, 점유율 ${pct(cur.nights,daysIn(thisYm))}%`; if(prev&&prev.nights) t+=` (지난달 ${pct(prev.nights,daysIn(prevYm))}%)`; const fut=m.filter(x=>x.ym>thisYm).reduce((a,x)=>a+x.cnt,0); if(fut) t+=`. 다음 달 이후 ${fut}건 잡혀 있음`; out.push(t+'.'); }
-  if(conf.length){ const cc={}; conf.forEach(r=>{const c=statChannel(r.channel);cc[c]=(cc[c]||0)+1;}); out.push(`예약 ${conf.length}건 중 ${Object.entries(cc).sort((a,b)=>b[1]-a[1]).map(([k,v])=>`${k} ${v}`).join(' · ')}.`);
-    const dow=[0,0,0,0,0,0,0]; conf.forEach(r=>dow[new Date(r.checkin+'T00:00:00').getDay()]++); const top=dow.indexOf(Math.max(...dow)); const wk=dow[5]+dow[6]; out.push(`입실 요일은 ${DOWS[top]}요일이 가장 많고, 금·토 입실이 ${pct(wk,conf.length)}%.${pct(wk,conf.length)>=70?' 평일을 채우는 게 과제.':''}`);
-    const n1=conf.filter(r=>statNights(r)===1).length; out.push(`1박 ${pct(n1,conf.length)}%, 2박 이상 ${pct(conf.length-n1,conf.length)}%. ${pct(n1,conf.length)>=70?'연박 할인(둘째 밤 3만)을 더 보이게 할 여지.':''}`);
-    const dog=conf.filter(r=>guestDog(r).on).length; out.push(`반려견 동반 ${pct(dog,conf.length)}%(${dog}건).`); }
-  if(cl.length){ const cch={}; cl.forEach(r=>{const c=statChannel(r.channel);cch[c]=(cch[c]||0)+1;}); const rate=pct(cl.length,cl.length+conf.length); out.push(`취소 ${cl.length}건(${Object.entries(cch).map(([k,v])=>`${k} ${v}`).join(' · ')}) — 전체의 ${rate}%.${rate>=30?' 취소가 많음. 취소 규정·결제 시점 점검.':''}`); }
+  const res=[], nav=[], todo=[];   // [라벨, 문장]
+  if(cur){ res.push(['이번 달', `${cur.cnt}건 · ${cur.nights}박 · 점유율 ${pct(cur.nights,daysIn(thisYm))}%${prev&&prev.nights?` (지난달 ${pct(prev.nights,daysIn(prevYm))}%)`:''}`]); const fut=m.filter(x=>x.ym>thisYm); if(fut.length) res.push(['예정', `${fut.reduce((a,x)=>a+x.cnt,0)}건 · ${fut.reduce((a,x)=>a+x.nights,0)}박 · ${won(fut.reduce((a,x)=>a+x.rev,0))}`]); }
+  if(conf.length){ const cc={}; conf.forEach(r=>{const c=statChannel(r.channel);cc[c]=(cc[c]||0)+1;}); res.push(['채널', Object.entries(cc).sort((a,b)=>b[1]-a[1]).map(([k,v])=>`${k} ${v}건`).join(' · ')]);
+    const dow=[0,0,0,0,0,0,0]; conf.forEach(r=>dow[new Date(r.checkin+'T00:00:00').getDay()]++); const top=dow.indexOf(Math.max(...dow)), wk=pct(dow[5]+dow[6],conf.length); res.push(['입실 요일', `${DOWS[top]}요일 최다 · 금·토 입실 ${wk}%`]); if(wk>=70) todo.push('주말에 몰려 있음. 평일을 채우는 게 과제(연박 할인·평일 콘텐츠).');
+    const n1=pct(conf.filter(r=>statNights(r)===1).length,conf.length); res.push(['숙박', `1박 ${n1}% · 2박 이상 ${100-n1}%`]); if(n1>=70) todo.push('1박이 대부분. 둘째 밤 3만 할인을 안내문·플레이스에 더 보이게.');
+    const dog=conf.filter(r=>guestDog(r).on).length, bbq=conf.filter(r=>guestBbq(r).on).length; res.push(['반려견 · 바비큐', `반려견 ${pct(dog,conf.length)}%(${dog}건) · 바비큐 ${pct(bbq,conf.length)}%(${bbq}건)`]); }
+  if(cl.length){ const cch={}; cl.forEach(r=>{const c=statChannel(r.channel);cch[c]=(cch[c]||0)+1;}); const rate=pct(cl.length,cl.length+conf.length); res.push(['취소', `${cl.length}건 (${Object.entries(cch).map(([k,v])=>`${k} ${v}`).join(' · ')}) · 전체의 ${rate}%`]); if(rate>=30) todo.push(`취소율 ${rate}%. 취소 규정·결제 시점 점검.`); }
   const rows=placeStats||[];
   if(rows.length){ const asc=[...rows].sort((a,b)=>a.date.localeCompare(b.date)), last7=asc.slice(-7), prev7=asc.slice(-14,-7), avg=a=>a.length?a.reduce((x,r)=>x+(r.inflow||0),0)/a.length:0, a7=avg(last7), p7=avg(prev7);
-    let t=`네이버 플레이스 유입 최근 7일 하루 ${Math.round(a7)}회`; if(prev7.length&&p7) t+=` — 그 전 7일(${Math.round(p7)})보다 ${a7>=p7?'+':''}${pct(a7-p7,p7)}%`; out.push(t+'.');
+    nav.push(['유입 추세', `최근 7일 하루 ${Math.round(a7)}회${prev7.length&&p7?` · 그 전 7일 ${Math.round(p7)}회 (${a7>=p7?'+':''}${pct(a7-p7,p7)}%)`:''}`]); if(prev7.length&&p7&&a7<p7*0.7) todo.push(`유입이 전주보다 ${pct(p7-a7,p7)}% 줄었음. 새 글·릴스 필요.`);
     const na=statNaverAgg(asc.slice(-30)); let brand=0, region=0, map=0; Object.entries(na.kw).forEach(([k,v])=>{ if(/솔숲/.test(k)) brand+=v; else if(/산청|하동|지리산|민박|펜션|독채|스테이/.test(k)) region+=v; }); Object.entries(na.ch).forEach(([k,v])=>{ if(/지도/.test(k)) map+=v; });
-    if(na.tot){ out.push(`검색어의 ${pct(brand,na.tot)}%가 「스테이솔숲」 이름 검색, 지역·일반 검색어는 ${pct(region,na.tot)}%. 지도에서 들어온 비율 ${pct(map,na.tot)}% — 대부분 이름을 알고 찾아오는 손님.`); if(pct(region,na.tot)<25) out.push('모르는 사람이 걸리는 검색어(산청 민박·산청 스테이·독채)가 적음. 플레이스 소개글·새소식에 그 말이 있어야 새 손님이 생김.'); }
-    if(na.bk.days){ out.push(`플레이스를 본 사람 중 ${pct(na.bk.bi,na.bk.inflow)}%가 예약 페이지까지, 그중 ${pct(na.bk.applied,na.bk.bi)}%가 신청(${na.bk.applied}건).${na.bk.bi&&na.bk.applied?` 예약 페이지 ${Math.round(na.bk.bi/na.bk.applied)}명당 1명 신청.`:''}`);
-      let zero=0; for(let i=asc.length-1;i>=0;i--){ if(asc[i].bk_inflow==null) break; if((asc[i].bk_applied||0)>0) break; zero++; } if(zero>=3) out.push(`최근 ${zero}일 연속 신청 0 — 오픈 공지 효과가 끝난 신호. 릴스·블로그로 다음 파도를 만들 때.`); }
-    const dow=[0,0,0,0,0,0,0], dc=[0,0,0,0,0,0,0]; asc.slice(-30).forEach(r=>{ const d=new Date(r.date+'T00:00:00').getDay(); dow[d]+=r.inflow||0; dc[d]++; }); const avgs=dow.map((v,i)=>dc[i]?v/dc[i]:0); const hi=avgs.indexOf(Math.max(...avgs)); if(dc[hi]) out.push(`플레이스는 ${DOWS[hi]}요일에 가장 많이 본다(하루 ${Math.round(avgs[hi])}회). 글·릴스 올리는 날을 그 전날로.`);
-    const ages=Object.entries(na.age).sort((a,b)=>b[1]-a[1]); if(na.f+na.m) out.push(`보는 사람은 여 ${pct(na.f,na.f+na.m)}% · 남 ${pct(na.m,na.f+na.m)}%, ${ages.slice(0,2).map(([a,v])=>`${a} ${pct(v,na.f+na.m)}%`).join(' · ')}.`);
-  } else out.push('네이버 유입 자료가 아직 없어요(봇이 아침 7시 이후 모읍니다).');
-  ul.innerHTML = out.map(t=>`<li>${esc(t)}</li>`).join('');
-  if(statsNote&&statsNote.text){ noteEl.style.display=''; noteEl.textContent=`봇 메모 (${statsNote.date||''})\n${statsNote.text}`; } else noteEl.style.display='none';
+    if(na.tot){ nav.push(['검색어', `이름 검색 ${pct(brand,na.tot)}% · 지역·일반 검색어 ${pct(region,na.tot)}% · 지도 유입 ${pct(map,na.tot)}%`]); nav.push(['뜻', pct(brand,na.tot)>=50?'대부분 이름을 알고 찾아오는 손님. 플레이스는 새 손님을 데려오기보다 아는 사람을 예약으로 넘기는 통로.':'모르는 사람이 검색으로 들어오는 비중이 커지고 있음.']); if(pct(region,na.tot)<25) todo.push('지역·일반 검색어(산청 민박·산청 스테이·독채) 비중이 낮음. 소개글·새소식에 그 말이 있어야 새 손님이 생김.'); }
+    if(na.bk.days){ nav.push(['전환', `플레이스 → 예약 페이지 ${pct(na.bk.bi,na.bk.inflow)}% · 예약 페이지 → 신청 ${pct(na.bk.applied,na.bk.bi)}% (${na.bk.applied}건${na.bk.bi&&na.bk.applied?`, ${Math.round(na.bk.bi/na.bk.applied)}명당 1명`:''})`]);
+      let zero=0; for(let i=asc.length-1;i>=0;i--){ if(asc[i].bk_inflow==null) break; if((asc[i].bk_applied||0)>0) break; zero++; } if(zero>=3) todo.push(`최근 ${zero}일 연속 신청 0. 오픈 공지 효과가 끝난 신호 — 릴스·블로그로 다음 파도를.`); }
+    const dow=[0,0,0,0,0,0,0], dc=[0,0,0,0,0,0,0]; asc.slice(-30).forEach(r=>{ const d=new Date(r.date+'T00:00:00').getDay(); dow[d]+=r.inflow||0; dc[d]++; }); const avgs=dow.map((v,i)=>dc[i]?v/dc[i]:0), hi=avgs.indexOf(Math.max(...avgs)); if(dc[hi]) nav.push(['요일', `${DOWS[hi]}요일에 가장 많이 봄 (하루 ${Math.round(avgs[hi])}회) → 글·릴스는 그 전날에`]);
+    const ages=Object.entries(na.age).sort((a,b)=>b[1]-a[1]); if(na.f+na.m) nav.push(['보는 사람', `여 ${pct(na.f,na.f+na.m)}% · 남 ${pct(na.m,na.f+na.m)}% · ${ages.slice(0,2).map(([a,v])=>`${a} ${pct(v,na.f+na.m)}%`).join(' · ')}`]);
+  } else nav.push(['유입', '자료가 아직 없어요(봇이 아침 7시 이후 모읍니다).']);
+  const dl=(items)=>`<div class="rd">${items.map(([k,v])=>`<div class="rd-row"><div class="rd-k">${esc(k)}</div><div class="rd-v">${esc(v)}</div></div>`).join('')}</div>`;
+  let h='';
+  h+=card('지금 볼 것', todo.length?`<ul class="rd-todo">${todo.map(t=>`<li>${esc(t)}</li>`).join('')}</ul>`:'<div class="rd-ok">특별히 신경 쓸 신호 없음.</div>', '숫자에서 자동으로 고른 신호');
+  h+=card('예약', dl(res), '확정 예약 기준');
+  h+=card('네이버 플레이스', dl(nav), '최근 30일');
+  if(statsNote&&statsNote.text) h+=card('봇 메모', `<div class="rd-note">${esc(statsNote.text)}</div>`, `${statsNote.date||''} · 봇이 주 1회 씀`);
+  host.innerHTML=h;
 }
 function renderGuests(){
   const tbl=document.getElementById('guestTable'); if(!tbl) return;
