@@ -639,6 +639,11 @@ input,select,textarea{font-family:inherit;}
 .guest-tools .input{max-width:320px;}
 .guest-wrap{overflow-x:auto;background:var(--card);border:1px solid var(--border);border-radius:var(--radius-lg);box-shadow:var(--shadow-sm);}
 .guest-tbl{width:100%;border-collapse:collapse;font-size:13px;min-width:640px;}
+.stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:14px;}
+.stat-tile{background:var(--card,#fff);border:1px solid var(--border);border-radius:12px;padding:12px 14px;}
+.stat-tile .k{font-size:12px;color:var(--muted-fg);}.stat-tile .v{font-size:20px;font-weight:700;color:var(--fg);margin-top:2px;}.stat-tile .s{font-size:11px;color:var(--muted-fg);margin-top:2px;}
+.guest-tbl td.r,.guest-tbl th.r{text-align:right;}
+.stat-bar{display:inline-block;height:8px;background:var(--primary,#2f6b4f);border-radius:4px;vertical-align:middle;margin-right:6px;opacity:.8;}
 .guest-tbl th{position:sticky;top:0;background:var(--muted);color:var(--muted-fg);font-weight:600;font-size:12px;text-align:left;padding:10px 12px;border-bottom:1px solid var(--border);white-space:nowrap;}
 .guest-tbl td{padding:10px 12px;border-bottom:1px solid var(--border);vertical-align:middle;white-space:nowrap;}
 .guest-tbl tr:last-child td{border-bottom:none;}
@@ -1163,7 +1168,7 @@ input,select,textarea{font-family:inherit;}
       <div class="sidebar-brand" onclick="switchTab('home')" role="button" tabindex="0" aria-label="홈으로">
         <div class="sidebar-logo">SM</div>
         <div class="sidebar-brand-text">
-          <div class="sidebar-brand-name">Stay_Msg Pro<span class="sidebar-brand-ver" id="appVer">v1.5.6</span></div>
+          <div class="sidebar-brand-name">Stay_Msg Pro<span class="sidebar-brand-ver" id="appVer">v1.6.0</span></div>
           <div class="sidebar-brand-sub">숙소 예약 문자</div>
         </div>
       </div>
@@ -1192,6 +1197,9 @@ input,select,textarea{font-family:inherit;}
       <button class="sidebar-link sub" data-tab="price" onclick="switchTab('price')">
         <span class="sidebar-link-icon"><svg class="i"><use href="#i-dollar"/></svg></span>요금 계산
       </button>
+      <button class="sidebar-link sub" data-tab="stats" onclick="switchTab('stats')">
+        <span class="sidebar-link-icon"><svg class="i"><use href="#i-clipboard"/></svg></span>통계
+      </button>
       <div class="sidebar-group">설정</div>
       <button class="sidebar-link sub" data-tab="prop" onclick="switchTab('prop')">
         <span class="sidebar-link-icon"><svg class="i"><use href="#i-house"/></svg></span>숙소 프로필
@@ -1214,7 +1222,7 @@ input,select,textarea{font-family:inherit;}
       <div class="mheader-brand" onclick="switchTab('home')" role="button" tabindex="0" aria-label="홈으로">
         <div class="mheader-logo">SM</div>
         <div>
-          <div class="mheader-title">Stay_Msg Pro<span class="mheader-ver" id="appVerM">v1.5.6</span></div>
+          <div class="mheader-title">Stay_Msg Pro<span class="mheader-ver" id="appVerM">v1.6.0</span></div>
           <div class="mheader-sub">숙소 예약 문자</div>
         </div>
       </div>
@@ -1630,6 +1638,25 @@ input,select,textarea{font-family:inherit;}
         <input class="input" id="guestSearch" placeholder="이름 · 전화번호 검색" oninput="renderGuests()">
       </div>
       <div class="guest-wrap"><table class="guest-tbl" id="guestTable"></table></div>
+    </section>
+
+    <!-- ─── STATS (v1.6.0, 2026-11-01) ─── -->
+    <section class="page" id="tab-stats">
+      <div class="page-head">
+        <h1 class="page-title"><svg class="i"><use href="#i-clipboard"/></svg>통계<button class="btn-help" onclick="toggleHelp('stats')" aria-label="도움말"><svg class="i"><use href="#i-help"/></svg></button></h1>
+        <p class="page-sub" id="statsSub">확정 예약 기준</p>
+      </div>
+      <div class="help-panel" id="help-stats" style="display:none;">
+        <h4><svg class="i"><use href="#i-clipboard"/></svg>통계 읽는 법</h4>
+        <ul>
+          <li><strong>매출</strong> — 확정 예약의 결제금액 합. 취소 제외. 월은 <em>입실일</em> 기준. 에어비앤비는 수수료 반영가라 채널별로 따로 보입니다. 반려견·바비큐 추가금은 결제금액에 없으면 빠집니다.</li>
+          <li><strong>점유율</strong> — 그 달에 손님이 자는 밤 수 ÷ 그 달 일수. 미래 달은 지금까지 예약된 밤 기준.</li>
+          <li><strong>네이버 유입</strong> — 봇이 매일 아침 스마트플레이스 통계에서 가져옵니다(전날까지). 유입 = 플레이스를 본 수, 신청 = 예약 신청 수.</li>
+        </ul>
+      </div>
+      <div class="stat-grid" id="statKpi"></div>
+      <div class="card"><div class="card-head"><div class="card-head-title">월별 매출 · 점유율</div></div><div class="guest-wrap"><table class="guest-tbl" id="statMonths"></table></div></div>
+      <div class="card"><div class="card-head"><div class="card-head-title">네이버 유입 (최근 14일)</div><span class="adv-hint" id="statNaverHint" style="margin:0;"></span></div><div class="guest-wrap"><table class="guest-tbl" id="statNaver"></table></div></div>
     </section>
 
     <!-- ─── HISTORY ─── -->
@@ -2052,7 +2079,7 @@ input,select,textarea{font-family:inherit;}
 <div class="toast" id="toast"></div>
 
 <script>
-const APP_VERSION='v1.5.6'; // Pro (2026-10-27 lite v3.3.0에서 이름·버전 리셋)
+const APP_VERSION='v1.6.0'; // Pro (2026-10-27 lite v3.3.0에서 이름·버전 리셋)
 const SK_SET='stay_msg_lite1_set_v1';
 const SK_TPL='stay_msg_lite1_tpl_v1';
 const SK_RES='stay_msg_lite1_res_v1';
@@ -2221,7 +2248,7 @@ function toggleHelp(name){
   el.style.display=el.style.display==='none'?'':'none';
 }
 
-const TAB_GROUPS={home:{tabs:['home']},msg:{tabs:['compose','templates','history'],labels:['작성','템플릿','발송 이력']},res:{tabs:['reserv','guests','price'],labels:['예약 관리','고객','요금 계산']},set:{tabs:['prop','guide'],labels:['숙소','도움말']}};
+const TAB_GROUPS={home:{tabs:['home']},msg:{tabs:['compose','templates','history'],labels:['작성','템플릿','발송 이력']},res:{tabs:['reserv','guests','price','stats'],labels:['예약 관리','고객','요금 계산','통계']},set:{tabs:['prop','guide'],labels:['숙소','도움말']}};
 const _lastTab={};
 function groupOf(name){return Object.keys(TAB_GROUPS).find(g=>TAB_GROUPS[g].tabs.includes(name))||'home';}
 function lastTabOf(g){return _lastTab[g]||TAB_GROUPS[g].tabs[0];}
@@ -2248,6 +2275,7 @@ function switchTab(name){
   if(name==='templates')renderTemplatesPage();
   if(name==='history')renderHistory();
   if(name==='price')renderPricePage();
+  if(name==='stats')renderStats();
 }
 
 function allTpls(s){return[...s.templates,...(customs[s.id]||[])];}
@@ -3783,6 +3811,53 @@ const GUEST_DOG_RE = /반려견|강아지|소형견/, GUEST_BBQ_RE = /바비큐\
 function guestDog(r){ const n = guestNotes[r.id]; return (n && n.dog !== null && n.dog !== undefined) ? {on:!!n.dog, auto:false} : {on:GUEST_DOG_RE.test(r.memo||''), auto:true}; }
 function guestBbq(r){ const n = guestNotes[r.id]; return (n && n.bbq !== null && n.bbq !== undefined) ? {on:!!n.bbq, auto:false} : {on:GUEST_BBQ_RE.test(r.memo||''), auto:true}; }
 function guestVisitMap(){ const m = {}; reservations.forEach(r=>{ const k=(r.phone||'').replace(/\D/g,''); if(!k) return; (m[k]=m[k]||[]).push(r.checkin); }); return m; }
+// ── 통계(v1.6.0): 확정 예약 → 월별 매출·박수·점유율·채널, place_stats → 네이버 유입 ──
+let placeStats = null;
+function statYmd(d){ return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }   // toISOString은 UTC라 날짜가 하루 밀림
+function statChannel(c){ c=c||''; return c.startsWith('네이버') ? '네이버' : (c.includes('에어비앤비') || /airbnb/i.test(c) ? '에어비앤비' : '기타'); }
+function statMonthly(){
+  const m = {};
+  const add = (ym) => m[ym] || (m[ym] = { ym, cnt:0, nights:0, rev:0, ch:{네이버:0,에어비앤비:0,기타:0} });
+  reservations.filter(r => (r.status||'confirmed')==='confirmed' && r.checkin && r.checkout && r.checkout>r.checkin).forEach(r => {
+    const ym = r.checkin.slice(0,7), row = add(ym); row.cnt++; const rev = parseNum(r.price); row.rev += rev; row.ch[statChannel(r.channel)] += rev;
+    for(let d=new Date(r.checkin+'T00:00:00'); statYmd(d)<r.checkout; d.setDate(d.getDate()+1)){ add(statYmd(d).slice(0,7)).nights++; }
+  });
+  add(statYmd(new Date()).slice(0,7));
+  return Object.values(m).sort((a,b)=>b.ym.localeCompare(a.ym));
+}
+function renderStats(){
+  const kpi=document.getElementById('statKpi'), tbl=document.getElementById('statMonths'); if(!kpi||!tbl) return;
+  const rows = statMonthly(), thisYm = statYmd(new Date()).slice(0,7);
+  const won = v => v ? v.toLocaleString('ko-KR')+'원' : '0원';
+  const days = ym => new Date(+ym.slice(0,4), +ym.slice(5,7), 0).getDate();
+  const cur = rows.find(x=>x.ym===thisYm) || {cnt:0,nights:0,rev:0};
+  const year = rows.filter(x=>x.ym.startsWith(thisYm.slice(0,4)) && x.ym<=thisYm);
+  const yrev = year.reduce((a,x)=>a+x.rev,0), ycnt = year.reduce((a,x)=>a+x.cnt,0), ynights = year.reduce((a,x)=>a+x.nights,0);
+  const future = rows.filter(x=>x.ym>thisYm);
+  kpi.innerHTML = [
+    ['이번 달 매출', won(cur.rev), `${cur.cnt}건 · ${cur.nights}박 · 점유 ${Math.round(cur.nights/days(thisYm)*100)}%`],
+    ['올해 매출', won(yrev), `${ycnt}건 · ${ynights}박`],
+    ['평균 1박 단가', won(ynights?Math.round(yrev/ynights):0), '올해 매출 ÷ 박수'],
+    ['예정(다음 달 이후)', won(future.reduce((a,x)=>a+x.rev,0)), `${future.reduce((a,x)=>a+x.cnt,0)}건 · ${future.reduce((a,x)=>a+x.nights,0)}박`],
+  ].map(([k,v,s])=>`<div class="stat-tile"><div class="k">${k}</div><div class="v">${v}</div><div class="s">${s}</div></div>`).join('');
+  document.getElementById('statsSub').textContent = `확정 예약 ${reservations.filter(r=>(r.status||'confirmed')==='confirmed').length}건 기준 · 입실일 기준 월 집계`;
+  const max = Math.max(1, ...rows.map(x=>x.rev));
+  tbl.innerHTML = '<thead><tr><th>월</th><th class="r">건수</th><th class="r">박수</th><th class="r">점유율</th><th>매출</th><th class="r">네이버</th><th class="r">에어비앤비</th><th class="r">기타</th></tr></thead><tbody>' + rows.map(x=>`<tr>
+    <td><div class="gname">${x.ym.replace('-','.')}${x.ym>thisYm?' <span class="gsub">예정</span>':(x.ym===thisYm?' <span class="gsub">이번 달</span>':'')}</div></td>
+    <td class="r">${x.cnt}</td><td class="r">${x.nights}</td><td class="r">${Math.round(x.nights/days(x.ym)*100)}%</td>
+    <td><span class="stat-bar" style="width:${Math.round(x.rev/max*120)}px"></span>${won(x.rev)}</td>
+    <td class="r">${won(x.ch.네이버)}</td><td class="r">${won(x.ch.에어비앤비)}</td><td class="r">${won(x.ch.기타)}</td></tr>`).join('') + '</tbody>';
+  renderNaverStats();
+  if(sb && placeStats===null){ placeStats=[]; sb.from('place_stats').select('date,inflow,bk_inflow,bk_applied,bk_completed,bk_applied_amount').order('date',{ascending:false}).limit(14).then(({data,error})=>{ if(error){ console.error(error); document.getElementById('statNaverHint').textContent='불러오기 실패(로그인 확인)'; return; } placeStats=data||[]; renderNaverStats(); }); }
+}
+function renderNaverStats(){
+  const t=document.getElementById('statNaver'), h=document.getElementById('statNaverHint'); if(!t) return;
+  const rows = placeStats||[];
+  if(!rows.length){ t.innerHTML='<tr><td><div class="empty"><span class="emoji">📊</span>아직 수집된 날이 없어요</div></td></tr>'; return; }
+  h.textContent = `${rows[rows.length-1].date} ~ ${rows[0].date}`;
+  const won = v => v ? v.toLocaleString('ko-KR')+'원' : '-';
+  t.innerHTML = '<thead><tr><th>날짜</th><th class="r">플레이스 유입</th><th class="r">예약 페이지 유입</th><th class="r">신청</th><th class="r">이용완료</th><th class="r">신청 금액</th></tr></thead><tbody>' + rows.map(x=>`<tr><td>${x.date.slice(5)}</td><td class="r">${x.inflow??'-'}</td><td class="r">${x.bk_inflow??'-'}</td><td class="r">${x.bk_applied??'-'}</td><td class="r">${x.bk_completed??'-'}</td><td class="r">${won(x.bk_applied_amount)}</td></tr>`).join('') + '</tbody>';
+}
 function renderGuests(){
   const tbl=document.getElementById('guestTable'); if(!tbl) return;
   const q=(document.getElementById('guestSearch').value||'').trim().toLowerCase(), qd=q.replace(/\D/g,'');
