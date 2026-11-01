@@ -1163,7 +1163,7 @@ input,select,textarea{font-family:inherit;}
       <div class="sidebar-brand" onclick="switchTab('home')" role="button" tabindex="0" aria-label="홈으로">
         <div class="sidebar-logo">SM</div>
         <div class="sidebar-brand-text">
-          <div class="sidebar-brand-name">Stay_Msg Pro<span class="sidebar-brand-ver" id="appVer">v1.5.4</span></div>
+          <div class="sidebar-brand-name">Stay_Msg Pro<span class="sidebar-brand-ver" id="appVer">v1.5.5</span></div>
           <div class="sidebar-brand-sub">숙소 예약 문자</div>
         </div>
       </div>
@@ -1214,7 +1214,7 @@ input,select,textarea{font-family:inherit;}
       <div class="mheader-brand" onclick="switchTab('home')" role="button" tabindex="0" aria-label="홈으로">
         <div class="mheader-logo">SM</div>
         <div>
-          <div class="mheader-title">Stay_Msg Pro<span class="mheader-ver" id="appVerM">v1.5.4</span></div>
+          <div class="mheader-title">Stay_Msg Pro<span class="mheader-ver" id="appVerM">v1.5.5</span></div>
           <div class="mheader-sub">숙소 예약 문자</div>
         </div>
       </div>
@@ -2053,7 +2053,7 @@ input,select,textarea{font-family:inherit;}
 <div class="toast" id="toast"></div>
 
 <script>
-const APP_VERSION='v1.5.4'; // Pro (2026-10-27 lite v3.3.0에서 이름·버전 리셋)
+const APP_VERSION='v1.5.5'; // Pro (2026-10-27 lite v3.3.0에서 이름·버전 리셋)
 const SK_SET='stay_msg_lite1_set_v1';
 const SK_TPL='stay_msg_lite1_tpl_v1';
 const SK_RES='stay_msg_lite1_res_v1';
@@ -3937,7 +3937,7 @@ function sbRenderJobs(jobs){
         <div id="jobEdit${x.id}" style="display:none;margin-top:6px;"><textarea class="input" rows="12" style="width:100%;font:inherit;font-size:13px;white-space:pre-wrap;">${esc(x.body)}</textarea>
           <div style="display:flex;gap:6px;margin-top:6px;"><button class="btn btn-primary btn-sm" onclick="sbJobSaveBody(${x.id})">저장</button><button class="btn btn-outline btn-sm" onclick="document.getElementById('jobEdit${x.id}').style.display='none'">취소</button></div></div>
       </details>
-      ${can?`<div style="display:flex;gap:6px;flex-wrap:wrap;">${x.status==='pending'?`<button class="btn btn-primary btn-sm" onclick="sbJobSet(${x.id},'approved')">승인</button>`:`<button class="btn btn-outline btn-sm" onclick="sbJobSet(${x.id},'pending')">승인 취소</button>`}<button class="btn btn-outline btn-sm" onclick="sbJobEdit(${x.id})">본문 수정</button><button class="btn btn-outline btn-sm" onclick="sbJobSet(${x.id},'skipped')">건너뛰기(수동 발송)</button></div>`:''}
+      ${can?`<div style="display:flex;gap:6px;flex-wrap:wrap;">${x.status==='pending'?`<button class="btn btn-primary btn-sm" onclick="sbJobSet(${x.id},'approved')">승인</button>`:`<button class="btn btn-outline btn-sm" onclick="sbJobSet(${x.id},'pending')">승인 취소</button>`}<button class="btn btn-outline btn-sm" onclick="sbJobEdit(${x.id})">본문 수정</button><button class="btn btn-outline btn-sm" onclick="sbJobSet(${x.id},'skipped')">건너뛰기(수동 발송)</button><button class="btn btn-outline btn-sm" onclick="sbJobSet(${x.id},'skipped')">건너뛰기(수동 발송)</button></div>`:`<div style="display:flex;gap:6px;flex-wrap:wrap;"><button class="btn btn-outline btn-sm" onclick="sbJobSet(${x.id},'skipped')">수동으로 보냈음 · 치우기</button></div>`}
     </div>`;
   }).join('');
 }
@@ -3960,7 +3960,7 @@ async function sbJobSet(id, status){
   let q = sb.from('sms_jobs').update(upd).eq('id', id); if(from) q = q.eq('status', from);
   const { data, error } = await q.select();
   if(error || !data || !data.length){ toast('처리 실패 — 새로고침 뒤 다시'); return; }
-  toast(status==='approved'?'승인됐어요 — 예정일 아침에 자동 발송':(status==='skipped'?'건너뜀 — 앱에서 직접 보내세요':'승인 취소'));
+  toast(status==='approved'?'승인됐어요 — 예정일 아침에 자동 발송':(status==='skipped'?'목록에서 치웠어요(봇은 안 보냄)':'승인 취소'));
   sbPull(true).catch(()=>{});
 }
 function sbStatus(msg){ const el=document.getElementById('sbStatus'); if(el) el.textContent = msg; }
