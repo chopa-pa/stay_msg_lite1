@@ -1179,7 +1179,7 @@ input,select,textarea{font-family:inherit;}
       <div class="sidebar-brand" onclick="switchTab('home')" role="button" tabindex="0" aria-label="홈으로">
         <div class="sidebar-logo">SM</div>
         <div class="sidebar-brand-text">
-          <div class="sidebar-brand-name">Stay_Msg Pro<span class="sidebar-brand-ver" id="appVer">v1.8.4</span></div>
+          <div class="sidebar-brand-name">Stay_Msg Pro<span class="sidebar-brand-ver" id="appVer">v1.9.0</span></div>
           <div class="sidebar-brand-sub">숙소 예약 문자</div>
         </div>
       </div>
@@ -1235,7 +1235,7 @@ input,select,textarea{font-family:inherit;}
       <div class="mheader-brand" onclick="switchTab('home')" role="button" tabindex="0" aria-label="홈으로">
         <div class="mheader-logo">SM</div>
         <div>
-          <div class="mheader-title">Stay_Msg Pro<span class="mheader-ver" id="appVerM">v1.8.4</span></div>
+          <div class="mheader-title">Stay_Msg Pro<span class="mheader-ver" id="appVerM">v1.9.0</span></div>
           <div class="mheader-sub">숙소 예약 문자</div>
         </div>
       </div>
@@ -1623,13 +1623,16 @@ input,select,textarea{font-family:inherit;}
           <li><strong>문자 작성에서 저장</strong> — 작성 탭의 <em>예약 저장</em> 버튼으로도 예약이 추가됩니다.</li>
           <li><strong>카드 클릭</strong> — 해당 예약이 문자 작성에 자동 로드돼요.</li>
           <li>예약 카드의 <strong>오늘 입실·퇴실·예정</strong> 라벨로 상태를 한눈에 확인.</li>
+          <li><strong>임시 휴무</strong> — 사정으로 손님을 못 받는 날을 넣으면 봇이 10분 안에 네이버·에어비앤비 날짜를 막아요. 휴무를 취소해도 봇은 풀지 않으니 두 곳에서 직접 열어 주세요.</li>
         </ul>
       </div>
 
-      <div style="display:flex;justify-content:flex-end;margin-bottom:12px;">
+      <div style="display:flex;justify-content:flex-end;gap:8px;margin-bottom:12px;">
+        <button class="btn btn-outline btn-sm" onclick="openClosureModal()">🚫 임시 휴무</button>
         <button class="btn btn-primary btn-sm" onclick="openAddResvModal()"><svg class="i"><use href="#i-plus"/></svg>새 예약 추가</button>
       </div>
 
+      <div id="closureBox"></div>
       <div class="resv-grid" id="resvList"></div>
     </section>
 
@@ -2020,6 +2023,27 @@ input,select,textarea{font-family:inherit;}
     <div class="modal-btns" style="margin-top:14px;"><button class="btn btn-primary" id="lg_btn" onclick="sbLogin()">로그인</button></div>
   </div>
 </div>
+<!-- 임시 휴무 (v1.9.0, 2026-11-02) -->
+<div class="modal-ov" id="closureModal">
+  <div class="modal" style="max-width:420px;">
+    <h3 style="margin-bottom:6px;">임시 휴무</h3>
+    <p class="adv-hint" style="margin:0 0 12px;">손님을 못 받는 날을 넣으면 봇이 네이버·에어비앤비 날짜를 막아요. 하루만 쉬면 그날과 다음 날을 고르세요(예: 11/3 휴무 → 11/3 · 11/4).</p>
+    <div class="fi">
+      <label><span class="req">*</span>쉬는 날짜</label>
+      <div class="date-btn" id="clDateBtn" onclick="openDatePicker('cl_start','cl_end','clDateBtn',clShowDates)"><div class="drb-placeholder">📅 날짜를 선택하세요</div></div>
+      <input type="hidden" id="cl_start"><input type="hidden" id="cl_end">
+    </div>
+    <div class="fi" style="margin-top:10px;">
+      <label>메모</label>
+      <input class="input" type="text" id="cl_memo" placeholder="예: 집안일 · 공사">
+    </div>
+    <div class="modal-btns" style="margin-top:18px;">
+      <button class="btn btn-outline" onclick="closeClosureModal()">취소</button>
+      <button class="btn btn-primary" id="clSaveBtn" onclick="submitClosure()">휴무 등록</button>
+    </div>
+  </div>
+</div>
+
 <div class="modal-ov" id="confirmModal">
   <div class="modal">
     <h3 id="confirmTitle"></h3>
@@ -2099,7 +2123,7 @@ input,select,textarea{font-family:inherit;}
 <div class="toast" id="toast"></div>
 
 <script>
-const APP_VERSION='v1.8.4'; // Pro (2026-10-27 lite v3.3.0에서 이름·버전 리셋)
+const APP_VERSION='v1.9.0'; // Pro (2026-10-27 lite v3.3.0에서 이름·버전 리셋)
 const SK_SET='stay_msg_lite1_set_v1';
 const SK_TPL='stay_msg_lite1_tpl_v1';
 const SK_RES='stay_msg_lite1_res_v1';
@@ -4135,6 +4159,67 @@ function sbRenderJobs(jobs){
     </div>`;
   }).join('');
 }
+// ── 임시 휴무 (v1.9.0, 2026-11-02): 넣으면 봇이 네이버·에어비앤비를 막음. 취소해도 봇은 풀지 않음(사람이 직접 열기) ──
+let sbClosures = [], sbClosureBlocks = [];
+function clFmt(ds){ const d=new Date(ds+'T00:00:00'); return `${d.getMonth()+1}.${d.getDate()}(${'일월화수목금토'[d.getDay()]})`; }
+function clLastNight(e){ const d=new Date(e+'T00:00:00'); d.setDate(d.getDate()-1); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; }
+function clRange(s,e){ const l=clLastNight(e); return l===s ? clFmt(s)+' 하루' : clFmt(s)+' ~ '+clFmt(l)+' · '+Math.round((new Date(e)-new Date(s))/864e5)+'일'; }
+function clShowDates(){
+  const s=document.getElementById('cl_start').value, e=document.getElementById('cl_end').value, btn=document.getElementById('clDateBtn');
+  if(s&&e){ btn.className='date-btn has-value'; btn.innerHTML=`<div class="drb-side"><span class="drb-label">🚫 쉬는 날</span><span class="drb-date">${clRange(s,e)}</span></div>`; }
+}
+function openClosureModal(){
+  if(!sb||!sbUserEmail){ toast('로그인이 필요해요'); return; }
+  ['cl_start','cl_end','cl_memo'].forEach(id=>{document.getElementById(id).value='';});
+  const btn=document.getElementById('clDateBtn'); btn.className='date-btn'; btn.innerHTML='<div class="drb-placeholder">📅 날짜를 선택하세요</div>';
+  document.getElementById('closureModal').classList.add('open');
+}
+function closeClosureModal(){ document.getElementById('closureModal').classList.remove('open'); }
+async function submitClosure(){
+  if(!sb||!sbUserEmail){ toast('로그인이 필요해요'); return; }
+  const s=document.getElementById('cl_start').value, e=document.getElementById('cl_end').value, memo=document.getElementById('cl_memo').value.trim();
+  if(!s||!e){ toast('쉬는 날짜를 고르세요'); return; }
+  if(s<getTodayStr()){ toast('지난 날짜는 넣을 수 없어요'); return; }
+  const go=async()=>{
+    const btn=document.getElementById('clSaveBtn'); btn.disabled=true;
+    const { error } = await sb.from('closures').insert({ start_date:s, end_date:e, memo:memo||null, created_by:sbUserEmail });
+    btn.disabled=false;
+    if(error){ console.error(error); toast('저장 실패 — 인터넷 확인 뒤 다시'); return; }
+    closeClosureModal(); toast('휴무 등록 — 봇이 10분 안에 네이버·에어비앤비를 막아요'); sbPull().catch(()=>{});
+  };
+  const hit=reservations.filter(r=>r.status!=='cancelled' && r.checkin<e && r.checkout>s);
+  if(hit.length) showConfirmModal('예약이 있는 날이에요', hit.map(r=>`${r.name} ${r.checkin}~${r.checkout}`).join(', ')+' — 손님께 먼저 연락하세요. 그래도 휴무로 넣을까요?', go);
+  else go();
+}
+function clBlockLabel(cid, ch){
+  const b=sbClosureBlocks.find(x=>x.reservation_id==='closure-'+cid && x.channel===ch);
+  if(!b || b.status==='pending') return ['막기 대기',''];
+  if(b.status==='verified') return ['막힘 ✓',''];
+  if(b.status==='blocked') return ['막음 · 확인 중',''];
+  if(b.status==='conflict') return ['예약이 있음 — 확인','warn'];
+  if(b.status==='failed') return b.attempts>=3 ? ['실패 — 직접 막아 주세요','warn'] : ['다시 시도 중',''];
+  return [b.status,''];
+}
+function renderClosures(){
+  const box=document.getElementById('closureBox'); if(!box) return;
+  const today=getTodayStr(), list=sbClosures.filter(c=>c.status==='active' && c.end_date>today);
+  if(!list.length){ box.innerHTML=''; return; }
+  const tag=([l,c])=>`<span class="adv-hint" style="margin:0;${c?'color:#b45309;':''}">${esc(l)}</span>`;
+  box.innerHTML=`<div class="card" style="margin-bottom:12px;"><div class="card-head"><div class="card-head-title"><span class="ico">🚫</span>임시 휴무</div></div><div class="res-list">`+
+    list.map(c=>`<div class="res-item" style="flex-direction:column;align-items:stretch;gap:6px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;"><div><strong>${clRange(c.start_date,c.end_date)}</strong>${c.memo?' · '+esc(c.memo):''}</div>
+        <button class="btn btn-outline btn-sm" onclick="cancelClosure(${c.id})">휴무 취소</button></div>
+      <div style="display:flex;gap:14px;flex-wrap:wrap;">네이버 ${tag(clBlockLabel(c.id,'naver'))} 에어비앤비 ${tag(clBlockLabel(c.id,'airbnb'))}</div>
+    </div>`).join('')+`</div></div>`;
+}
+function cancelClosure(id){
+  const c=sbClosures.find(x=>x.id===id); if(!c) return;
+  showConfirmModal('휴무 취소', clRange(c.start_date,c.end_date)+' 휴무를 취소할까요? 봇은 막기만 해서, 네이버·에어비앤비 날짜는 직접 열어 주셔야 해요.', async()=>{
+    const { data, error } = await sb.from('closures').update({ status:'cancelled' }).eq('id', id).eq('status','active').select();
+    if(error || !data || !data.length){ toast('취소 실패 — 새로고침 뒤 다시'); return; }
+    toast('휴무 취소됨 — 네이버·에어비앤비에서 날짜를 직접 열어 주세요'); sbPull().catch(()=>{});
+  });
+}
 async function sbHash16(text){ const buf=await crypto.subtle.digest('SHA-1', new TextEncoder().encode(text)); return [...new Uint8Array(buf)].map(b=>b.toString(16).padStart(2,'0')).join('').slice(0,16); }
 function sbJobEdit(id){ const d=document.getElementById('jobEdit'+id); if(!d) return; d.style.display=''; d.closest('details').open=true; d.querySelector('textarea').focus(); }
 async function sbJobSaveBody(id){
@@ -4210,12 +4295,14 @@ async function sbPull(manual){
   return sbRun(async()=>{
     const gen = sbWriteGen;
     if(sbHasPending()){ await sbRetryPending(); if(sbHasPending() || gen !== sbWriteGen){ if(manual && sbHasPending()) toast('먼저 저장 실패분을 올려야 해요 — 인터넷 확인'); return; } }
-    const [s, r, m, j, gn] = await Promise.all([
+    const [s, r, m, j, gn, cl, cb] = await Promise.all([
       sb.from('app_settings').select('key,value'),
       sb.from('reservations').select('*').neq('status','cancelled'),
       sb.from('messages').select('*').order('sent_at',{ascending:false}).limit(200),
       sb.from('sms_jobs').select('*').in('status',['pending','approved','blocked','missed','unknown','failed']).order('scheduled_date'),
-      sb.from('guest_notes').select('*')
+      sb.from('guest_notes').select('*'),
+      sb.from('closures').select('*').eq('status','active').order('start_date'),
+      sb.from('channel_blocks').select('reservation_id,channel,status,attempts,result').like('reservation_id','closure-%')
     ]);
     if(s.error||r.error||m.error) throw (s.error||r.error||m.error);
     if(j.error) console.error(j.error);
@@ -4237,6 +4324,7 @@ async function sbPull(manual){
     const hist = (m.data||[]).map(rowToHist); localStorage.setItem(SK_HIST, JSON.stringify(hist)); sbHistIds = new Set(hist.map(x=>x.id)); sbHistAt = new Map(hist.map(x=>[x.id,x.at||'']));
     sbApplying = true; try { sbRefreshUI(withSettings); } finally { sbApplying = false; }
     sbBotState = map.bot_state || null; sbRenderJobs(j.data||[]);
+    if(cl.error||cb.error) console.error(cl.error||cb.error); else { sbClosures = cl.data||[]; sbClosureBlocks = cb.data||[]; renderClosures(); }
     if(gn.error) console.error(gn.error); else { guestNotes = Object.fromEntries((gn.data||[]).map(x=>[x.reservation_id,x])); const gp=document.getElementById('tab-guests'); if(gp&&gp.classList.contains('active')) renderGuests(); }
     sbStatus('계정: '+sbUserEmail+' · 서버 동기화 '+sbNow()+(withSettings?'':' (편집 중인 설정은 제외)')+sbBotLine());
     if(manual) toast('서버에서 새로고침 ✓');
