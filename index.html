@@ -1179,7 +1179,7 @@ input,select,textarea{font-family:inherit;}
       <div class="sidebar-brand" onclick="switchTab('home')" role="button" tabindex="0" aria-label="홈으로">
         <div class="sidebar-logo">SM</div>
         <div class="sidebar-brand-text">
-          <div class="sidebar-brand-name">Stay_Msg Pro<span class="sidebar-brand-ver" id="appVer">v1.9.3</span></div>
+          <div class="sidebar-brand-name">Stay_Msg Pro<span class="sidebar-brand-ver" id="appVer">v1.9.4</span></div>
           <div class="sidebar-brand-sub">숙소 예약 문자</div>
         </div>
       </div>
@@ -1235,7 +1235,7 @@ input,select,textarea{font-family:inherit;}
       <div class="mheader-brand" onclick="switchTab('home')" role="button" tabindex="0" aria-label="홈으로">
         <div class="mheader-logo">SM</div>
         <div>
-          <div class="mheader-title">Stay_Msg Pro<span class="mheader-ver" id="appVerM">v1.9.3</span></div>
+          <div class="mheader-title">Stay_Msg Pro<span class="mheader-ver" id="appVerM">v1.9.4</span></div>
           <div class="mheader-sub">숙소 예약 문자</div>
         </div>
       </div>
@@ -2128,7 +2128,7 @@ input,select,textarea{font-family:inherit;}
 <div class="toast" id="toast"></div>
 
 <script>
-const APP_VERSION='v1.9.3'; // Pro (2026-10-27 lite v3.3.0에서 이름·버전 리셋)
+const APP_VERSION='v1.9.4'; // Pro (2026-10-27 lite v3.3.0에서 이름·버전 리셋)
 const SK_SET='stay_msg_lite1_set_v1';
 const SK_TPL='stay_msg_lite1_tpl_v1';
 const SK_RES='stay_msg_lite1_res_v1';
@@ -2163,7 +2163,7 @@ const STAGES=[
   ]},
   {id:'checkedin',icon:'🏡',label:'입실후',
    templates:[
-    {title:'바비큐 안내',body:`바비큐는 처마 밑 공간에서 웨버 가스그릴로 하시면 됩니다. 숲이 가까워 숯불은 사용할 수 없습니다.\n밤 9시까지 가능하고 20,000원은 현장에서 결제해 주세요. 비가 조금 오면 가능하지만 많이 오면 이용할 수 없습니다.\n\n필요하신 것이 있으면 언제든지 문의 주세요. / {숙소명}`}
+    {title:'바비큐 안내',body:`바비큐는 처마 밑 공간에서 웨버 가스그릴로 하시면 됩니다. 숲이 가까워 숯불은 사용할 수 없습니다.\n밤 9시까지 가능하고 20,000원은 현장에서 결제해 주세요. 비가 많이 오는 경우 이용 불가합니다.\n\n필요하신 것이 있으면 언제든지 문의 주세요. / {숙소명}`}
   ]},
   {id:'checkout',icon:'🙏',label:'퇴실',
    templates:[
@@ -2240,7 +2240,7 @@ let _composeResId='';  // 불러온 예약 id(고객 탭 바비큐 체크 조회
 // 바비큐 겨울 휴지(11-01 쵸파파): 11~2월 입실인데 바비큐를 예약·문의한 손님(메모 바비큐 ○/문의, 또는 고객 탭 바비큐 체크)이 아니면 겨울 문장. 봇 templates.py bbq_closed와 같은 규칙
 const BBQ_CLOSED='바비큐를 위한 별도의 외부 공간이 없어 날씨가 추워지는 11월부터 2월까지는 바비큐가 불가합니다. 이점 양해부탁드립니다.';
 const BBQ_BOOKED='바비큐(웨버 가스그릴)를 이용하시려면 미리 알려주세요. 20,000원 현장 결제, 밤 9시까지 가능합니다.';
-const BBQ_CHECKIN='바비큐는 처마 밑 공간에서 웨버 가스그릴로 하시면 됩니다. 숲이 가까워 숯불은 사용할 수 없습니다. 밤 9시까지 가능하고 20,000원은 현장에서 결제해 주세요. 비가 조금 오면 가능하지만 많이 오면 이용할 수 없습니다.';
+const BBQ_CHECKIN='바비큐는 처마 밑 공간에서 웨버 가스그릴로 하시면 됩니다. 숲이 가까워 숯불은 사용할 수 없습니다. 밤 9시까지 가능하고 20,000원은 현장에서 결제해 주세요. 비가 많이 오는 경우 이용 불가합니다.';
 // 11-02 쵸파파: 바비큐를 하신다고 한 분(메모 바비큐 ○/문의, 고객 탭 바비큐 체크)은 입실 문자에서 이용 시간을 물음. 봇 BBQ_ASK와 같은 문장
 const BBQ_ASK='바비큐 하실 시간을 답장으로 알려주시면 그릴 준비해 두겠습니다.';
 function bbqWanted(memo,resId){ return GUEST_BBQ_RE.test(memo||'') || !!(resId&&guestNotes[resId]&&guestNotes[resId].bbq); }
