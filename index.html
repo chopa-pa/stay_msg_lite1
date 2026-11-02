@@ -1179,7 +1179,7 @@ input,select,textarea{font-family:inherit;}
       <div class="sidebar-brand" onclick="switchTab('home')" role="button" tabindex="0" aria-label="홈으로">
         <div class="sidebar-logo">SM</div>
         <div class="sidebar-brand-text">
-          <div class="sidebar-brand-name">Stay_Msg Pro<span class="sidebar-brand-ver" id="appVer">v1.9.0</span></div>
+          <div class="sidebar-brand-name">Stay_Msg Pro<span class="sidebar-brand-ver" id="appVer">v1.9.1</span></div>
           <div class="sidebar-brand-sub">숙소 예약 문자</div>
         </div>
       </div>
@@ -1235,7 +1235,7 @@ input,select,textarea{font-family:inherit;}
       <div class="mheader-brand" onclick="switchTab('home')" role="button" tabindex="0" aria-label="홈으로">
         <div class="mheader-logo">SM</div>
         <div>
-          <div class="mheader-title">Stay_Msg Pro<span class="mheader-ver" id="appVerM">v1.9.0</span></div>
+          <div class="mheader-title">Stay_Msg Pro<span class="mheader-ver" id="appVerM">v1.9.1</span></div>
           <div class="mheader-sub">숙소 예약 문자</div>
         </div>
       </div>
@@ -1418,6 +1418,11 @@ input,select,textarea{font-family:inherit;}
         <div id="botJobsBody" style="display:none;">
           <div class="res-list" id="botJobsList"></div>
         </div>
+      </div>
+
+      <div class="card" id="dashClosureCard" style="display:none;cursor:pointer;" onclick="switchTab('reserv')">
+        <div class="card-head" style="border-bottom:0;"><div class="card-head-title"><span class="ico">🚫</span>임시 휴무<span style="margin-left:auto;font-size:12px;font-weight:500;color:var(--muted-fg);">예약 관리 →</span></div></div>
+        <div class="res-list" id="dashClosureList"></div>
       </div>
 
       <div class="card cal-card">
@@ -2123,7 +2128,7 @@ input,select,textarea{font-family:inherit;}
 <div class="toast" id="toast"></div>
 
 <script>
-const APP_VERSION='v1.9.0'; // Pro (2026-10-27 lite v3.3.0에서 이름·버전 리셋)
+const APP_VERSION='v1.9.1'; // Pro (2026-10-27 lite v3.3.0에서 이름·버전 리셋)
 const SK_SET='stay_msg_lite1_set_v1';
 const SK_TPL='stay_msg_lite1_tpl_v1';
 const SK_RES='stay_msg_lite1_res_v1';
@@ -3804,9 +3809,11 @@ function renderDashCal(){
       return `<span class="${cls}" style="${style}" title="${tip}"></span>`;
     }).join('')}</div>`;
     const more='';
+    const closed=sbClosures.some(c=>c.status==='active'&&ds>=c.start_date&&ds<c.end_date);
+    const closedChip=closed?'<div class="res-chip" style="background:#e2e8f0;color:#475569;border-radius:6px;">🚫 휴무</div>':'';
     html+=`<div class="${cls}" onclick="dashCalDayClick('${ds}')">
       <div class="md-num"><span class="md-num-inner">${d}</span>${dayLbl}</div>
-      ${chips}${more}
+      ${closedChip}${chips}${more}
     </div>`;
   }
   const total=first+days;const rem=total%7===0?0:7-(total%7);
@@ -4160,7 +4167,7 @@ function sbRenderJobs(jobs){
   }).join('');
 }
 // ── 임시 휴무 (v1.9.0, 2026-11-02): 넣으면 봇이 네이버·에어비앤비를 막음. 취소해도 봇은 풀지 않음(사람이 직접 열기) ──
-let sbClosures = [], sbClosureBlocks = [];
+var sbClosures = [], sbClosureBlocks = []; // var: 달력이 먼저 그려져도 참조 가능
 function clFmt(ds){ const d=new Date(ds+'T00:00:00'); return `${d.getMonth()+1}.${d.getDate()}(${'일월화수목금토'[d.getDay()]})`; }
 function clLastNight(e){ const d=new Date(e+'T00:00:00'); d.setDate(d.getDate()-1); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; }
 function clRange(s,e){ const l=clLastNight(e); return l===s ? clFmt(s)+' 하루' : clFmt(s)+' ~ '+clFmt(l)+' · '+Math.round((new Date(e)-new Date(s))/864e5)+'일'; }
@@ -4203,8 +4210,11 @@ function clBlockLabel(cid, ch){
 function renderClosures(){
   const box=document.getElementById('closureBox'); if(!box) return;
   const today=getTodayStr(), list=sbClosures.filter(c=>c.status==='active' && c.end_date>today);
-  if(!list.length){ box.innerHTML=''; return; }
   const tag=([l,c])=>`<span class="adv-hint" style="margin:0;${c?'color:#b45309;':''}">${esc(l)}</span>`;
+  const dc=document.getElementById('dashClosureCard'), dl=document.getElementById('dashClosureList');
+  if(dc&&dl){ dc.style.display=list.length?'':'none'; dl.innerHTML=list.map(c=>`<div class="res-item" style="flex-wrap:wrap;gap:6px 18px;justify-content:flex-start;"><strong>${clRange(c.start_date,c.end_date)}</strong>${c.memo?'<span>'+esc(c.memo)+'</span>':''}<span>네이버 ${tag(clBlockLabel(c.id,'naver'))}</span><span>에어비앤비 ${tag(clBlockLabel(c.id,'airbnb'))}</span></div>`).join(''); }
+  if(typeof renderDashCal==='function') renderDashCal();
+  if(!list.length){ box.innerHTML=''; return; }
   box.innerHTML=`<div class="card" style="margin-bottom:12px;"><div class="card-head"><div class="card-head-title"><span class="ico">🚫</span>임시 휴무</div></div><div class="res-list">`+
     list.map(c=>`<div class="res-item" style="flex-direction:column;align-items:stretch;gap:6px;">
       <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;"><div><strong>${clRange(c.start_date,c.end_date)}</strong>${c.memo?' · '+esc(c.memo):''}</div>
