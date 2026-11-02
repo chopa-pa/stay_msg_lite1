@@ -1179,7 +1179,7 @@ input,select,textarea{font-family:inherit;}
       <div class="sidebar-brand" onclick="switchTab('home')" role="button" tabindex="0" aria-label="홈으로">
         <div class="sidebar-logo">SM</div>
         <div class="sidebar-brand-text">
-          <div class="sidebar-brand-name">Stay_Msg Pro<span class="sidebar-brand-ver" id="appVer">v1.9.1</span></div>
+          <div class="sidebar-brand-name">Stay_Msg Pro<span class="sidebar-brand-ver" id="appVer">v1.9.2</span></div>
           <div class="sidebar-brand-sub">숙소 예약 문자</div>
         </div>
       </div>
@@ -1235,7 +1235,7 @@ input,select,textarea{font-family:inherit;}
       <div class="mheader-brand" onclick="switchTab('home')" role="button" tabindex="0" aria-label="홈으로">
         <div class="mheader-logo">SM</div>
         <div>
-          <div class="mheader-title">Stay_Msg Pro<span class="mheader-ver" id="appVerM">v1.9.1</span></div>
+          <div class="mheader-title">Stay_Msg Pro<span class="mheader-ver" id="appVerM">v1.9.2</span></div>
           <div class="mheader-sub">숙소 예약 문자</div>
         </div>
       </div>
@@ -2128,7 +2128,7 @@ input,select,textarea{font-family:inherit;}
 <div class="toast" id="toast"></div>
 
 <script>
-const APP_VERSION='v1.9.1'; // Pro (2026-10-27 lite v3.3.0에서 이름·버전 리셋)
+const APP_VERSION='v1.9.2'; // Pro (2026-10-27 lite v3.3.0에서 이름·버전 리셋)
 const SK_SET='stay_msg_lite1_set_v1';
 const SK_TPL='stay_msg_lite1_tpl_v1';
 const SK_RES='stay_msg_lite1_res_v1';
@@ -3793,7 +3793,7 @@ function renderDashCal(){
       const isCi=r.checkin===ds,isCo=r.checkout===ds;
       const c=roomColor(r.roomId);
       const isMid=!isCi&&!isCo;
-      const bg=isMid?c.light:c.bg;
+      const bg=isMid?c.light:(isCo&&!isCi?'#f97316':c.bg); // 11-02 쵸파파: 입실·퇴실 색이 같아 헷갈림 → 퇴실은 주황
       const fg=isMid?c.fg:'#fff';
       const radius=isCi&&isCo?'6px':isCi?'6px 2px 2px 6px':isCo?'2px 6px 6px 2px':'0';
       const nm=(r.name||'손님').slice(0,4);
