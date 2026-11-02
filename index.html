@@ -1179,7 +1179,7 @@ input,select,textarea{font-family:inherit;}
       <div class="sidebar-brand" onclick="switchTab('home')" role="button" tabindex="0" aria-label="홈으로">
         <div class="sidebar-logo">SM</div>
         <div class="sidebar-brand-text">
-          <div class="sidebar-brand-name">Stay_Msg Pro<span class="sidebar-brand-ver" id="appVer">v1.9.2</span></div>
+          <div class="sidebar-brand-name">Stay_Msg Pro<span class="sidebar-brand-ver" id="appVer">v1.9.3</span></div>
           <div class="sidebar-brand-sub">숙소 예약 문자</div>
         </div>
       </div>
@@ -1235,7 +1235,7 @@ input,select,textarea{font-family:inherit;}
       <div class="mheader-brand" onclick="switchTab('home')" role="button" tabindex="0" aria-label="홈으로">
         <div class="mheader-logo">SM</div>
         <div>
-          <div class="mheader-title">Stay_Msg Pro<span class="mheader-ver" id="appVerM">v1.9.2</span></div>
+          <div class="mheader-title">Stay_Msg Pro<span class="mheader-ver" id="appVerM">v1.9.3</span></div>
           <div class="mheader-sub">숙소 예약 문자</div>
         </div>
       </div>
@@ -1608,7 +1608,7 @@ input,select,textarea{font-family:inherit;}
           <li><strong>추가</strong> — 각 단계의 <em>+ 템플릿 추가</em>를 눌러 새 문자를 만듭니다.</li>
           <li><strong>편집</strong> — 템플릿 제목 행을 클릭하면 펼쳐지고, 제목·본문을 수정 후 <em>저장</em>.</li>
           <li><strong>복제</strong> — 비슷한 문자를 빠르게 만들 때 사용 (해당 단계에 복사본 추가).</li>
-          <li><strong>사용 가능한 변수</strong>: <code>{이름}</code> <code>{입실시간}</code> <code>{퇴실시간}</code> <code>{인원수}</code> <code>{결제금액}</code> <code>{연락처}</code> <code>{숙소명}</code> <code>{호실명}</code> <code>{숙소주소}</code> <code>{입금계좌}</code> <code>{와이파이이름}</code> <code>{와이파이비번}</code> <code>{도어락비번}</code> <code>{주중요금}</code> <code>{주말요금}</code> <code>{반려견동반}</code>(예약 메모에 반려견이 있으면 줄바꿈 뒤 「반려견 동반 (소형견 1마리)」, 없으면 아무것도 안 넣음 — 인원 줄 끝에 붙여 씀) <code>{바비큐확정}</code> <code>{바비큐입실}</code>(11~2월 입실인데 바비큐를 예약·문의한 손님(메모 바비큐 ○/문의, 고객 탭 바비큐 체크)이 아니면 「11월부터 2월까지는 바비큐가 불가합니다. 이점 양해부탁드립니다」 문장, 그 외에는 종전 바비큐 안내 문장)</li>
+          <li><strong>사용 가능한 변수</strong>: <code>{이름}</code> <code>{입실시간}</code> <code>{퇴실시간}</code> <code>{인원수}</code> <code>{결제금액}</code> <code>{연락처}</code> <code>{숙소명}</code> <code>{호실명}</code> <code>{숙소주소}</code> <code>{입금계좌}</code> <code>{와이파이이름}</code> <code>{와이파이비번}</code> <code>{도어락비번}</code> <code>{주중요금}</code> <code>{주말요금}</code> <code>{반려견동반}</code>(예약 메모에 반려견이 있으면 줄바꿈 뒤 「반려견 동반 (소형견 1마리)」, 없으면 아무것도 안 넣음 — 인원 줄 끝에 붙여 씀) <code>{바비큐확정}</code> <code>{바비큐입실}</code>(11~2월 입실인데 바비큐를 예약·문의한 손님(메모 바비큐 ○/문의, 고객 탭 바비큐 체크)이 아니면 「11월부터 2월까지는 바비큐가 불가합니다. 이점 양해부탁드립니다」 문장, 그 외에는 종전 바비큐 안내 문장. 바비큐를 하신다고 한 손님은 입실 문자 끝에 「바비큐 하실 시간을 답장으로 알려주시면 그릴 준비해 두겠습니다」가 붙음)</li>
           <li>변경 사항은 즉시 <strong>문자 작성</strong>에도 반영됩니다.</li>
         </ul>
       </div>
@@ -2128,7 +2128,7 @@ input,select,textarea{font-family:inherit;}
 <div class="toast" id="toast"></div>
 
 <script>
-const APP_VERSION='v1.9.2'; // Pro (2026-10-27 lite v3.3.0에서 이름·버전 리셋)
+const APP_VERSION='v1.9.3'; // Pro (2026-10-27 lite v3.3.0에서 이름·버전 리셋)
 const SK_SET='stay_msg_lite1_set_v1';
 const SK_TPL='stay_msg_lite1_tpl_v1';
 const SK_RES='stay_msg_lite1_res_v1';
@@ -2241,13 +2241,14 @@ let _composeResId='';  // 불러온 예약 id(고객 탭 바비큐 체크 조회
 const BBQ_CLOSED='바비큐를 위한 별도의 외부 공간이 없어 날씨가 추워지는 11월부터 2월까지는 바비큐가 불가합니다. 이점 양해부탁드립니다.';
 const BBQ_BOOKED='바비큐(웨버 가스그릴)를 이용하시려면 미리 알려주세요. 20,000원 현장 결제, 밤 9시까지 가능합니다.';
 const BBQ_CHECKIN='바비큐는 처마 밑 공간에서 웨버 가스그릴로 하시면 됩니다. 숲이 가까워 숯불은 사용할 수 없습니다. 밤 9시까지 가능하고 20,000원은 현장에서 결제해 주세요. 비가 조금 오면 가능하지만 많이 오면 이용할 수 없습니다.';
+// 11-02 쵸파파: 바비큐를 하신다고 한 분(메모 바비큐 ○/문의, 고객 탭 바비큐 체크)은 입실 문자에서 이용 시간을 물음. 봇 BBQ_ASK와 같은 문장
+const BBQ_ASK='바비큐 하실 시간을 답장으로 알려주시면 그릴 준비해 두겠습니다.';
+function bbqWanted(memo,resId){ return GUEST_BBQ_RE.test(memo||'') || !!(resId&&guestNotes[resId]&&guestNotes[resId].bbq); }
 function bbqClosed(checkin,memo,resId){
   if(!checkin)return false;
   const m=new Date(checkin+'T00:00:00').getMonth()+1;
   if(![11,12,1,2].includes(m))return false;
-  if(GUEST_BBQ_RE.test(memo||''))return false;
-  if(resId&&guestNotes[resId]&&guestNotes[resId].bbq)return false;
-  return true;
+  return !bbqWanted(memo,resId);
 }
 function hasDog(memo){return /반려견|강아지|소형견/.test(memo||'');}
 // 입퇴실 블록용 한 줄. 반려견 예약이면 줄바꿈+「반려견 동반 (소형견 1마리)」, 아니면 빈 문자열(줄 자체 없음)
@@ -2279,7 +2280,7 @@ function applyVars(raw){
     '{주말요금}':fmtPriceVal(getSelectedRoom()?.pwe)||'{주말요금}',
     '{반려견동반}':dogHead(_composeMemo),
     '{바비큐확정}':bbqClosed(ci,_composeMemo,_composeResId)?BBQ_CLOSED:BBQ_BOOKED,
-    '{바비큐입실}':bbqClosed(ci,_composeMemo,_composeResId)?BBQ_CLOSED:BBQ_CHECKIN,
+    '{바비큐입실}':bbqClosed(ci,_composeMemo,_composeResId)?BBQ_CLOSED:(bbqWanted(_composeMemo,_composeResId)?BBQ_CHECKIN+' '+BBQ_ASK:BBQ_CHECKIN),
   };
   return raw.replace(/\{[^}]+\}/g,m=>map[m]!==undefined?map[m]:m);
 }
