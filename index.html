@@ -836,77 +836,99 @@ input,select,textarea{font-family:inherit;}
 
 /* ─────── MODAL ─────── */
 .modal-ov{
-  position:fixed;inset:0;background:rgba(15,23,42,0.5);
+  position:fixed;inset:0;background:rgba(15,23,42,0.45);
   z-index:300;display:none;align-items:center;justify-content:center;padding:20px;
   backdrop-filter:blur(4px);
 }
 .modal-ov.open{display:flex;}
 .modal{
-  background:white;border-radius:var(--radius-lg);padding:24px;
+  background:white;border-radius:16px;padding:24px;
   width:100%;max-width:360px;
-  box-shadow:0 20px 60px rgba(0,0,0,0.2);
+  box-shadow:0 20px 50px rgba(15,23,42,.30);
 }
 .modal h3{font-size:16px;font-weight:700;margin-bottom:8px;color:var(--fg);}
 .modal p{font-size:13px;color:var(--muted-fg);margin-bottom:20px;white-space:pre-line;line-height:1.6;}
 .modal-btns{display:flex;gap:8px;}
 .modal-btns .btn{flex:1;}
 
-/* Calendar */
+/* 날짜 고르기(v1.15.0): 폰은 아래 시트, PC(≥960)는 가운데 팝업 */
 .cal-ov{
-  position:fixed;inset:0;background:rgba(15,23,42,0.5);
+  position:fixed;inset:0;background:rgba(15,23,42,0.45);
   z-index:500;display:flex;align-items:flex-end;justify-content:center;
   backdrop-filter:blur(4px);
 }
 .cal-sheet{
   background:white;border-radius:20px 20px 0 0;
-  width:100%;max-width:460px;
-  padding:16px 16px calc(env(safe-area-inset-bottom,0px) + 20px);
-  max-height:85vh;overflow-y:auto;
+  width:100%;max-width:460px;box-sizing:border-box;
+  padding:10px 16px calc(env(safe-area-inset-bottom,0px) + 20px);
+  max-height:88vh;overflow-y:auto;box-shadow:0 20px 50px rgba(15,23,42,.30);
 }
-.cal-handle{width:36px;height:4px;background:var(--border-strong);border-radius:2px;margin:0 auto 12px;}
-.cal-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;}
-.cal-navbtn{background:none;border:none;cursor:pointer;padding:6px 14px;font-size:22px;color:var(--fg);}
-.cal-month{font-weight:700;font-size:15px;color:var(--fg);}
-.cal-title-btn{background:none;border:none;font-weight:700;font-size:15px;color:var(--fg);padding:4px 10px;border-radius:8px;display:inline-flex;align-items:center;gap:4px;cursor:pointer;font-family:inherit;}
-.cal-title-btn:hover{background:var(--accent-soft);}
-.cal-title-btn::after{content:'▾';font-size:11px;color:var(--muted-fg);}
+.cal-handle{width:40px;height:5px;background:#cbd5e1;border-radius:3px;margin:0 auto 12px;}
+.cal-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;}
+.cal-navbtn{display:flex;align-items:center;justify-content:center;width:44px;height:44px;border:0;border-radius:10px;background:#f1f5f9;cursor:pointer;font-size:22px;color:#0f172a;padding:0;}
+.cal-navbtn:hover{background:#e2e8f0;}
+.cal-month{font-weight:800;font-size:18px;color:#0f172a;}
+.cal-title-btn{background:none;border:none;font-weight:800;font-size:18px;color:#0f172a;padding:6px 10px;border-radius:10px;display:inline-flex;align-items:center;gap:4px;cursor:pointer;font-family:inherit;}
+.cal-title-btn:hover{background:#f1f5f9;}
+.cal-title-btn::after{content:'▾';font-size:12px;color:#64748b;}
 .cal-title-btn.ym-open::after{content:'▴';}
-.cal-hint{text-align:center;font-size:12px;color:var(--accent-fg);font-weight:700;margin-bottom:12px;}
-.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;margin-bottom:12px;}
-.cal-dow{text-align:center;font-size:11px;font-weight:600;color:var(--muted-fg);padding:4px 0;}
-.cal-dow:first-child{color:var(--destructive);}
-.cal-dow:last-child{color:#2563eb;}
-.cal-day{text-align:center;padding:6px 2px 7px;border-radius:10px;font-size:14px;cursor:pointer;transition:background .1s;position:relative;min-height:44px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;}
-.cal-day:hover{background:var(--accent-soft);}
-.cal-day.past{color:var(--border-strong);cursor:default;}
+.cal-hint{text-align:center;font-size:14px;color:#047857;font-weight:700;margin-bottom:10px;}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);column-gap:0;row-gap:4px;margin-bottom:14px;}
+.cal-dow{text-align:center;font-size:12px;font-weight:700;color:#64748b;padding:4px 0;}
+.cal-dow:first-child{color:#dc2626;}
+.cal-dow:nth-child(7){color:#2563eb;}
+.cal-day{text-align:center;border-radius:10px;font-size:15px;font-weight:600;color:#0f172a;cursor:pointer;position:relative;height:48px;box-sizing:border-box;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;font-variant-numeric:tabular-nums;}
+.cal-day:hover{background:#ecfdf5;}
+.cal-day.past{color:#cbd5e1;cursor:default;}
 .cal-day.past:hover{background:transparent;}
-.cal-day.sun:not(.past):not(.sel){color:var(--destructive);}
-.cal-day.sat:not(.past):not(.sel){color:#2563eb;}
-.cal-day.holiday:not(.past):not(.sel):not(.range){color:var(--destructive);}
-.cal-day.range{background:var(--accent);color:var(--accent-fg);border-radius:0;}
-.cal-day.sel{background:var(--primary);color:white;font-weight:700;border-radius:10px;}
-.cal-day.today:not(.sel){outline:2px solid var(--primary);outline-offset:-2px;}
-.cal-day small{display:block;font-size:9px;font-weight:600;line-height:1;}
-.cal-day.sel small{color:rgba(255,255,255,.9);}
-.cal-day.range small{color:var(--accent-fg);}
-.we-lbl{color:#ea580c;font-weight:600;}
-.su-lbl{color:var(--destructive);font-weight:600;}
-.wd-lbl{color:var(--muted-fg);}
-.holi-lbl{color:var(--destructive);font-weight:700;}
-.today-lbl{color:var(--primary);font-weight:700;}
-.ci-lbl,.co-lbl{color:inherit;font-weight:700;}
-.cal-ym-wrap{padding:10px 0 4px;}
-.cal-ym-year{display:flex;align-items:center;justify-content:center;gap:16px;margin-bottom:12px;}
-.cal-ym-year span{font-size:18px;font-weight:700;min-width:70px;text-align:center;color:var(--fg);}
-.cal-ym-ybtn{background:var(--muted);border:none;border-radius:8px;font-size:18px;width:36px;height:36px;cursor:pointer;color:var(--fg);}
-.cal-ym-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:8px;}
-.cal-ym-mbtn{padding:10px 4px;border:1.5px solid var(--border);border-radius:10px;background:white;font-size:13px;font-weight:500;cursor:pointer;font-family:inherit;color:var(--fg);transition:all .15s;}
-.cal-ym-mbtn.cur{border-color:var(--primary);background:var(--accent-soft);color:var(--accent-fg);font-weight:700;}
-.cal-ym-mbtn:hover{background:var(--muted);}
-.cal-summary{display:flex;gap:8px;justify-content:center;margin-bottom:14px;flex-wrap:wrap;}
-.cal-tag{font-size:12px;background:var(--muted);padding:6px 12px;border-radius:20px;color:var(--fg-2);font-weight:600;}
-.cal-btns{display:flex;gap:8px;}
-.cal-btns .btn{flex:1;}
+.cal-day.sun:not(.past):not(.sel),.cal-day.holiday:not(.past):not(.sel){color:#dc2626;}
+.cal-day.sat:not(.past):not(.sel):not(.holiday){color:#2563eb;}
+.cal-day.range{background:#d1fae5;border-radius:0;}
+.cal-day.sel{color:#fff;font-weight:800;}
+.cal-day.sel.ci{background:#059669;}
+.cal-day.sel.ci.pair{border-radius:10px 0 0 10px;}
+.cal-day.sel.co{background:#ea580c;border-radius:0 10px 10px 0;}
+.cal-day.sel:hover{filter:brightness(.97);}
+.cal-day.today:not(.sel){box-shadow:inset 0 0 0 1.5px #047857;}
+.cal-day small{display:block;font-size:10px;font-weight:600;line-height:1.1;}
+.cal-day.sel small{color:#fff;font-weight:800;}
+.we-lbl{color:#c2410c;font-weight:600;}
+.su-lbl{color:#dc2626;font-weight:600;}
+.wd-lbl{color:#94a3b8;}
+.holi-lbl{color:#dc2626;font-weight:800;}
+.today-lbl{color:#047857;font-weight:800;}
+.ci-lbl,.co-lbl{color:inherit;font-weight:800;}
+.cal-ym-wrap{padding:6px 0 4px;}
+.cal-ym-year{display:flex;align-items:center;justify-content:center;gap:20px;margin-bottom:14px;}
+.cal-ym-year span{font-size:18px;font-weight:800;min-width:80px;text-align:center;color:#0f172a;}
+.cal-ym-ybtn{background:#f1f5f9;border:none;border-radius:10px;font-size:22px;width:44px;height:44px;cursor:pointer;color:#0f172a;}
+.cal-ym-ybtn:hover{background:#e2e8f0;}
+.cal-ym-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:12px;}
+.cal-ym-mbtn{height:48px;border:1px solid #e2e8f0;border-radius:10px;background:#fff;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit;color:#0f172a;}
+.cal-ym-mbtn:hover{background:#f8fafc;}
+.cal-ym-mbtn.cur{border-color:#10b981;background:#10b981;color:#fff;}
+.cal-summary{display:flex;gap:8px;align-items:center;justify-content:center;margin-bottom:14px;flex-wrap:wrap;}
+.cal-tag{font-size:13px;font-weight:700;padding:6px 12px;border-radius:999px;background:#f1f5f9;color:#94a3b8;font-variant-numeric:tabular-nums;}
+.cal-tag.ci{background:#ecfdf5;color:#047857;}
+.cal-tag.co{background:#fff7ed;color:#c2410c;}
+.cal-arr{width:16px;height:16px;stroke-width:2;color:#94a3b8;}
+.cal-btns{display:grid;grid-template-columns:1fr;gap:8px;}
+.cal-btns.two{grid-template-columns:1fr 1.6fr;}
+.cal-btns .btn{height:46px;font-size:16px;font-weight:700;border-radius:10px;}
+.cal-btns .cal-cancel{background:#f1f5f9;border:0;color:#0f172a;}
+.cal-btns .cal-cancel:hover{background:#e2e8f0;}
+.cal-btns .btn-primary{background:#10b981;}
+.cal-btns .btn-primary:hover{background:#059669;}
+@media(min-width:960px){
+  .cal-ov{align-items:center;padding:24px;}
+  .cal-sheet{border-radius:16px;max-width:440px;padding:18px 20px 20px;max-height:calc(100vh - 48px);}
+  .cal-handle{display:none;}
+}
+@media(max-width:380px){
+  .cal-sheet{padding-left:12px;padding-right:12px;}
+  .cal-day{height:46px;}
+}
+
 
 /* ─────── SECTIONS / TEMPLATE MANAGE ─────── */
 .section-label{
@@ -978,10 +1000,7 @@ input,select,textarea{font-family:inherit;}
 .bd-total{display:flex;justify-content:space-between;align-items:center;gap:12px;font-variant-numeric:tabular-nums;}
 .bd-warn{display:flex;align-items:flex-start;gap:8px;margin-top:12px;padding:12px 14px;border-radius:10px;background:#fffbeb;border:1px solid #fde68a;color:#92400e;font-size:14px;line-height:1.45;}
 .bd-warn svg{width:17px;height:17px;stroke-width:2;color:#b45309;flex-shrink:0;margin-top:1px;}
-.ar-calc-box{
-  border:1px solid var(--border);border-radius:8px;
-  padding:6px 12px;background:var(--accent-soft);
-}
+
 
 /* ─────── RESPONSIVE ─────── */
 @media(min-width:960px){
@@ -1544,6 +1563,75 @@ input,select,textarea{font-family:inherit;}
 }
 @media(max-width:380px){
   #tab-price.page{padding-left:8px;padding-right:8px;}
+}
+/* ═══════ v1.15.0 팝업(새 예약·임시 휴무) — 머리·아래 버튼 고정, 가운데만 스크롤 ═══════ */
+.mx-ov{padding:24px;}
+.modal.mx{display:flex;flex-direction:column;padding:0;max-height:calc(100vh - 48px);max-height:calc(100dvh - 48px);overflow:hidden;}
+.modal.mx-ar{max-width:560px;}
+.modal.mx-cl{max-width:480px;}
+.mx-head{display:flex;align-items:center;gap:8px;padding:16px 12px 10px 20px;flex-shrink:0;}
+.mx-head h3{flex:1;min-width:0;display:flex;align-items:center;flex-wrap:wrap;gap:8px;margin:0;font-size:18px;font-weight:800;color:#0f172a;}
+.mx-hi{width:20px;height:20px;stroke-width:1.8;color:#475569;flex-shrink:0;}
+.mx-x{display:flex;align-items:center;justify-content:center;width:36px;height:36px;border:0;border-radius:10px;background:none;color:#475569;cursor:pointer;flex-shrink:0;padding:0;}
+.mx-x:hover{background:#f1f5f9;}
+.mx-x svg{width:20px;height:20px;stroke-width:2;}
+.ar-from{font-size:12px;font-weight:700;background:#ecfdf5;color:#047857;border-radius:6px;padding:4px 8px;line-height:1.3;}
+.mx-body{flex:1;min-height:0;overflow-y:auto;display:flex;flex-direction:column;gap:14px;padding:4px 20px 18px;}
+.mx-body .fi{display:flex;flex-direction:column;gap:8px;margin:0;}
+.mx-body .fi label{font-size:14px;font-weight:700;color:#0f172a;padding-left:0;}
+.mx-body .input,.mx-body .select{height:44px;border-radius:10px;border-color:#cbd5e1;font-size:15px;padding-left:14px;}
+.mx-body .date-btn{height:60px;}
+.mx-body .date-btn .drb-date{font-size:16px;}
+.mx-g2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px;}
+.mx-g3{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:10px;}
+.mx-pg{display:flex;height:44px;box-sizing:border-box;border:1px solid #cbd5e1;border-radius:10px;overflow:hidden;background:#fff;}
+.mx-pg:focus-within{border-color:#10b981;box-shadow:0 0 0 1px #10b981;}
+.mx-body .mx-pg .input{flex:1;min-width:0;height:100%;border:0;border-radius:0;box-shadow:none;}
+.mx-calc{display:inline-flex;align-items:center;gap:6px;flex-shrink:0;border:0;border-left:1px solid #cbd5e1;background:#ecfdf5;color:#047857;font-size:14px;font-weight:700;padding:0 12px;cursor:pointer;font-family:inherit;white-space:nowrap;}
+.mx-calc:hover{background:#d1fae5;}
+.mx-calc svg{width:16px;height:16px;stroke-width:1.8;}
+.ar-calc-box{background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:4px 16px;}
+.ar-calc-box .bd-row{padding:9px 0;font-size:13px;color:#0f172a;border-bottom:1px solid #e2e8f0;}
+.ar-calc-box .bd-row:last-child{border-bottom:0;}
+.ar-calc-box .bd-total{padding:10px 0 8px;border-top:1px solid #e2e8f0;font-size:14px;font-weight:800;color:#047857;}
+.mx-foot{display:grid;grid-template-columns:1fr 1.6fr;gap:8px;padding:14px 20px 18px;border-top:1px solid #f1f5f9;flex-shrink:0;}
+.mx-foot .btn{height:46px;font-size:16px;font-weight:700;border-radius:10px;}
+.mx-foot .mx-cancel{background:#f1f5f9;border:0;color:#0f172a;}
+.mx-foot .mx-cancel:hover{background:#e2e8f0;}
+.mx-foot .btn-primary{background:#10b981;}
+.mx-foot .btn-primary:hover:not(:disabled){background:#059669;}
+/* 임시 휴무: 안내 두 덩어리 + 한 줄 날짜 칸 */
+.mx .cl-lead{margin:0;font-size:14px;line-height:1.6;color:#334155;white-space:normal;}
+.cl-tip{background:#eff6ff;border:1px solid #bfdbfe;border-radius:12px;padding:12px 14px;}
+.cl-tip-t{display:flex;gap:8px;align-items:flex-start;font-size:14px;font-weight:700;color:#1e3a8a;line-height:1.55;}
+.cl-tip-t svg{width:18px;height:18px;stroke-width:2;color:#1d4ed8;flex-shrink:0;margin-top:2px;}
+.cl-ex{display:flex;align-items:center;gap:12px;margin:10px 0 2px 26px;}
+.cl-ex-c{display:flex;}
+.cl-ex-c span{display:flex;flex-direction:column;align-items:center;justify-content:center;width:52px;height:46px;box-sizing:border-box;font-size:11px;font-weight:600;background:#fff;color:#475569;border:1.5px solid #475569;line-height:1.2;}
+.cl-ex-c span b{font-size:16px;font-weight:800;}
+.cl-ex-c span:first-child{border-radius:8px 0 0 8px;border-right:0;}
+.cl-ex-c span:last-child{border-radius:0 8px 8px 0;}
+.cl-ex-c span.on{background:#475569;color:#fff;}
+.cl-ex-t{font-size:12px;color:#1e3a8a;line-height:1.5;}
+.date-btn.cl-db{display:flex;align-items:center;gap:8px;height:56px;}
+.cl-db-i{width:20px;height:20px;stroke-width:1.8;color:#475569;flex-shrink:0;}
+.cl-db-l{font-size:13px;font-weight:600;color:#64748b;white-space:nowrap;}
+.cl-db-v{font-size:16px;font-weight:800;color:#0f172a;font-variant-numeric:tabular-nums;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.cl-db-v.none{color:#94a3b8;font-weight:600;}
+@media(max-width:640px){
+  .mx-ov{padding:12px;}
+  .modal.mx{max-height:calc(100vh - 24px);max-height:calc(100dvh - 24px);}
+  .mx-head{padding:14px 8px 8px 16px;}
+  .mx-body{padding:4px 16px 16px;gap:12px;}
+  .mx-foot{padding:12px 16px 16px;}
+  .mx-g3{grid-template-columns:minmax(0,1fr);gap:12px;}
+  .mx-g2{gap:8px;}
+}
+@media(max-width:380px){
+  .mx-body .date-btn .drb-date{font-size:15px;}
+  .mx-calc{padding:0 10px;font-size:13px;}
+  .mx-body .input,.mx-body .select{padding-left:10px;padding-right:8px;font-size:14px;}
+  .mx-body .select{padding-right:28px;}
 }
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.1/dist/umd/supabase.min.js"></script>
@@ -2360,22 +2448,28 @@ input,select,textarea{font-family:inherit;}
     <div class="modal-btns" style="margin-top:14px;"><button class="btn btn-primary" id="lg_btn" onclick="sbLogin()">로그인</button></div>
   </div>
 </div>
-<!-- 임시 휴무 (v1.9.0, 2026-11-02) -->
-<div class="modal-ov" id="closureModal">
-  <div class="modal" style="max-width:420px;">
-    <h3 style="margin-bottom:6px;">임시 휴무</h3>
-    <p class="adv-hint" style="margin:0 0 12px;">손님을 못 받는 날을 넣으면 봇이 네이버·에어비앤비 날짜를 막아요. 하루만 쉬면 그날과 다음 날을 고르세요(예: 11/3 휴무 → 11/3 · 11/4).</p>
-    <div class="fi">
-      <label><span class="req">*</span>쉬는 날짜</label>
-      <div class="date-btn" id="clDateBtn" onclick="openDatePicker('cl_start','cl_end','clDateBtn',clShowDates)"><div class="drb-placeholder">📅 날짜를 선택하세요</div></div>
-      <input type="hidden" id="cl_start"><input type="hidden" id="cl_end">
+<!-- 임시 휴무 (v1.9.0, 2026-11-02 · 모양 v1.15.0) -->
+<div class="modal-ov mx-ov" id="closureModal">
+  <div class="modal mx mx-cl" role="dialog" aria-labelledby="clTitle">
+    <div class="mx-head"><h3 id="clTitle"><svg class="mx-hi"><use href="#i-ban2"/></svg>임시 휴무</h3><button type="button" class="mx-x" aria-label="닫기" onclick="closeClosureModal()"><svg><use href="#i-x"/></svg></button></div>
+    <div class="mx-body">
+      <p class="cl-lead">손님을 못 받는 날을 넣으면 봇이 네이버·에어비앤비 날짜를 막아요.</p>
+      <div class="cl-tip">
+        <div class="cl-tip-t"><svg><use href="#i-info"/></svg><span>하루만 쉬면 그날과 다음 날을 고르세요(예: 11/3 휴무 → 11/3 · 11/4).</span></div>
+        <div class="cl-ex" aria-hidden="true"><div class="cl-ex-c"><span class="on"><b>3</b>쉬는 날</span><span><b>4</b>다음 날</span></div><span class="cl-ex-t">두 칸을 고르면<br>11/3 하루 휴무</span></div>
+      </div>
+      <div class="fi">
+        <label><span class="req">*</span>쉬는 날짜</label>
+        <div class="date-btn cl-db" id="clDateBtn" onclick="openDatePicker('cl_start','cl_end','clDateBtn',clShowDates)"><svg class="cl-db-i"><use href="#i-ban2"/></svg><span class="cl-db-l">쉬는 날</span><span class="cl-db-v none">날짜를 선택하세요</span></div>
+        <input type="hidden" id="cl_start"><input type="hidden" id="cl_end">
+      </div>
+      <div class="fi">
+        <label for="cl_memo">메모</label>
+        <input class="input" type="text" id="cl_memo" placeholder="예: 집안일 · 공사">
+      </div>
     </div>
-    <div class="fi" style="margin-top:10px;">
-      <label>메모</label>
-      <input class="input" type="text" id="cl_memo" placeholder="예: 집안일 · 공사">
-    </div>
-    <div class="modal-btns" style="margin-top:18px;">
-      <button class="btn btn-outline" onclick="closeClosureModal()">취소</button>
+    <div class="mx-foot">
+      <button class="btn mx-cancel" onclick="closeClosureModal()">취소</button>
       <button class="btn btn-primary" id="clSaveBtn" onclick="submitClosure()">휴무 등록</button>
     </div>
   </div>
@@ -2392,65 +2486,64 @@ input,select,textarea{font-family:inherit;}
   </div>
 </div>
 
-<div class="modal-ov" id="addResvModal">
-  <div class="modal" style="max-width:420px;">
-    <h3 id="addResvTitle" style="margin-bottom:14px;">새 예약 추가</h3>
-    <input type="hidden" id="ar_id">
-    <div class="form-grid">
-      <div class="fi">
-        <label><span class="req">*</span>손님 이름</label>
-        <input class="input" type="text" id="ar_name" placeholder="홍길동" list="arNameSuggest" onblur="rememberName(this.value)" autocomplete="off">
+<div class="modal-ov mx-ov" id="addResvModal">
+  <div class="modal mx mx-ar" role="dialog" aria-labelledby="addResvTitle">
+    <div class="mx-head"><h3><span id="addResvTitle">새 예약 추가</span><span class="ar-from" id="arFrom" style="display:none;"></span></h3><button type="button" class="mx-x" aria-label="닫기" onclick="closeAddResvModal()"><svg><use href="#i-x"/></svg></button></div>
+    <div class="mx-body">
+      <input type="hidden" id="ar_id">
+      <div class="mx-g2">
+        <div class="fi">
+          <label for="ar_name"><span class="req">*</span>손님 이름</label>
+          <input class="input" type="text" id="ar_name" placeholder="홍길동" list="arNameSuggest" onblur="rememberName(this.value)" autocomplete="off">
         <datalist id="arNameSuggest"></datalist>
-      </div>
-      <div class="fi">
-        <label>전화번호</label>
-        <input class="input" type="tel" id="ar_phone" placeholder="010-0000-0000" list="arPhoneSuggest" oninput="fmtPhone(this)" onblur="rememberPhone(this.value)" maxlength="13" autocomplete="off">
+        </div>
+        <div class="fi">
+          <label for="ar_phone">전화번호</label>
+          <input class="input" type="tel" id="ar_phone" placeholder="010-0000-0000" list="arPhoneSuggest" oninput="fmtPhone(this)" onblur="rememberPhone(this.value)" maxlength="13" autocomplete="off">
         <datalist id="arPhoneSuggest"></datalist>
+        </div>
       </div>
-    </div>
-    <div class="fi" style="margin-top:10px;">
-      <label>호실</label>
-      <select class="select" id="ar_room"></select>
-    </div>
-    <div class="fi" style="margin-top:10px;">
-      <label><span class="req">*</span>입실 · 퇴실</label>
-      <div class="date-btn" id="arDateRangeBtn" onclick="openDatePicker('ar_checkin','ar_checkout','arDateRangeBtn')">
-        <div class="drb-side"><span class="drb-label"><svg><use href="#i-cal"/></svg>입실</span><span class="drb-date drb-none">날짜를 선택하세요</span></div><span></span><div class="drb-side r"><span class="drb-label">퇴실<svg><use href="#i-exit"/></svg></span></div>
-      </div>
-      <input type="hidden" id="ar_checkin">
-      <input type="hidden" id="ar_checkout">
-    </div>
-    <div class="form-grid" style="margin-top:10px;">
       <div class="fi">
-        <label>인원</label>
-        <select class="select" id="ar_guests">
+        <label><span class="req">*</span>입실 · 퇴실</label>
+        <div class="date-btn" id="arDateRangeBtn" onclick="openDatePicker('ar_checkin','ar_checkout','arDateRangeBtn')"><div class="drb-side"><span class="drb-label"><svg><use href="#i-cal"/></svg>입실</span><span class="drb-date drb-none">날짜를 선택하세요</span></div><span></span><div class="drb-side r"><span class="drb-label">퇴실<svg><use href="#i-exit"/></svg></span></div></div>
+        <input type="hidden" id="ar_checkin">
+        <input type="hidden" id="ar_checkout">
+      </div>
+      <div class="mx-g2">
+        <div class="fi">
+          <label for="ar_room">호실</label>
+          <select class="select" id="ar_room"></select>
+        </div>
+        <div class="fi">
+          <label for="ar_guests">인원</label>
+          <select class="select" id="ar_guests">
           <option value="">선택</option>
           <option>1명</option><option>2명</option><option>3명</option><option>4명</option>
           <option>5명</option><option>6명</option><option>7명</option><option>8명</option>
         </select>
+        </div>
       </div>
-      <div class="fi">
-        <label>금액</label>
-        <input class="input" type="text" id="ar_price" inputmode="numeric" placeholder="예: 150,000" onfocus="this.value=this.value.replace(/[^0-9]/g,'')" onblur="fmtPrice(this);">
-      </div>
-    </div>
-    <div class="form-grid" style="margin-top:10px;">
-      <div class="fi">
-        <label>예약 채널</label>
-        <select class="select" id="ar_channel">
+      <div class="mx-g3">
+        <div class="fi">
+          <label for="ar_price">금액</label>
+          <div class="mx-pg"><input class="input" type="text" id="ar_price" inputmode="numeric" placeholder="예: 150,000" onfocus="this.value=this.value.replace(/[^0-9]/g,'')" onblur="fmtPrice(this);"><button type="button" class="mx-calc" onclick="arAutoCalc()"><svg><use href="#i-calc"/></svg>요금 자동 계산</button></div>
+        </div>
+        <div class="fi">
+          <label for="ar_channel">예약 채널</label>
+          <select class="select" id="ar_channel">
           <option value="">선택</option>
           <option>네이버예약</option><option>에어비앤비</option><option>인스타 DM</option><option>전화</option><option>기타</option>
         </select>
+        </div>
       </div>
+      <div id="arCalcInfo" style="display:none;"></div>
       <div class="fi">
-        <label>메모</label>
+        <label for="ar_memo">메모</label>
         <input class="input" type="text" id="ar_memo" placeholder="바비큐 · 반려견 등">
       </div>
     </div>
-    <button class="btn btn-outline btn-sm" style="width:100%;margin-top:10px;" onclick="arAutoCalc()"><svg class="i"><use href="#i-dollar"/></svg>요금 자동 계산</button>
-    <div id="arCalcInfo" style="display:none;margin-top:8px;"></div>
-    <div class="modal-btns" style="margin-top:18px;">
-      <button class="btn btn-outline" onclick="closeAddResvModal()">취소</button>
+    <div class="mx-foot">
+      <button class="btn mx-cancel" onclick="closeAddResvModal()">취소</button>
       <button class="btn btn-primary" id="addResvSaveBtn" onclick="submitAddResv()">저장</button>
     </div>
   </div>
@@ -3069,8 +3162,9 @@ function _renderCal(){
     const holi=HOLIDAYS[ds];
     const cls=['cal-day'];
     if(isPast)cls.push('past');
-    if(isCi||isCo)cls.push('sel');
+    if(isCi||isCo)cls.push('sel',isCi?'ci':'co');
     else if(inRange)cls.push('range');
+    if(isCi&&_cal.co)cls.push('pair');
     if(isSun)cls.push('sun');
     if(isSat)cls.push('sat');
     if(!isPast&&holi)cls.push('holiday');
@@ -3100,13 +3194,13 @@ function _renderCal(){
           <button class="cal-navbtn" ${_cal.ym?'style="visibility:hidden"':''} onclick="_calNav(1)">›</button>
         </div>
         ${body}
-        <div class="cal-summary">
-          <span class="cal-tag">${ciTxt}</span>
-          <span style="align-self:center;color:var(--muted-fg);">→</span>
-          <span class="cal-tag">${coTxt}</span>
-        </div>
-        <div class="cal-btns">
-          <button class="btn btn-outline" onclick="document.getElementById('_calModal').innerHTML=''">취소</button>
+        ${_cal.ym?'':`<div class="cal-summary">
+          <span class="cal-tag${_cal.ci?' ci':''}">${ciTxt}</span>
+          <svg class="cal-arr"><use href="#i-arr"/></svg>
+          <span class="cal-tag${_cal.co?' co':''}">${coTxt}</span>
+        </div>`}
+        <div class="cal-btns${_cal.ci&&_cal.co&&!_cal.ym?' two':''}">
+          <button class="btn cal-cancel" onclick="document.getElementById('_calModal').innerHTML=''">취소</button>
           ${_cal.ci&&_cal.co&&!_cal.ym?`<button class="btn btn-primary" onclick="_calConfirm()">확인</button>`:''}
         </div>
       </div>
@@ -3846,6 +3940,7 @@ function openAddResvModal(){
   _fillArRoomSelect();
   _updateDateDisplay('ar_checkin','ar_checkout','arDateRangeBtn');
   document.getElementById('addResvTitle').textContent='새 예약 추가';
+  document.getElementById('arFrom').style.display='none';
   document.getElementById('addResvSaveBtn').textContent='저장';
   document.getElementById('addResvModal').classList.add('open');
   setTimeout(()=>document.getElementById('ar_name').focus(),50);
@@ -3866,6 +3961,7 @@ function editResv(id,e){
   _fillArRoomSelect(r.roomId||'');
   _updateDateDisplay('ar_checkin','ar_checkout','arDateRangeBtn');
   document.getElementById('addResvTitle').textContent='예약 수정';
+  document.getElementById('arFrom').style.display='none';
   document.getElementById('addResvSaveBtn').textContent='수정';
   document.getElementById('addResvModal').classList.add('open');
 }
@@ -4661,12 +4757,12 @@ function clLastNight(e){ const d=new Date(e+'T00:00:00'); d.setDate(d.getDate()-
 function clRange(s,e){ const l=clLastNight(e); return l===s ? clFmt(s)+' 하루' : clFmt(s)+' ~ '+clFmt(l)+' · '+Math.round((new Date(e)-new Date(s))/864e5)+'일'; }
 function clShowDates(){
   const s=document.getElementById('cl_start').value, e=document.getElementById('cl_end').value, btn=document.getElementById('clDateBtn');
-  if(s&&e){ btn.className='date-btn has-value'; btn.innerHTML=`<div class="drb-side"><span class="drb-label">🚫 쉬는 날</span><span class="drb-date">${clRange(s,e)}</span></div>`; }
+  if(s&&e){ btn.className='date-btn cl-db has-value'; btn.innerHTML=`<svg class="cl-db-i"><use href="#i-ban2"/></svg><span class="cl-db-l">쉬는 날</span><span class="cl-db-v">${clRange(s,e)}</span>`; }
 }
 function openClosureModal(){
   if(!sb||!sbUserEmail){ toast('로그인이 필요해요'); return; }
   ['cl_start','cl_end','cl_memo'].forEach(id=>{document.getElementById(id).value='';});
-  const btn=document.getElementById('clDateBtn'); btn.className='date-btn'; btn.innerHTML='<div class="drb-placeholder">📅 날짜를 선택하세요</div>';
+  const btn=document.getElementById('clDateBtn'); btn.className='date-btn cl-db'; btn.innerHTML='<svg class="cl-db-i"><use href="#i-ban2"/></svg><span class="cl-db-l">쉬는 날</span><span class="cl-db-v none">날짜를 선택하세요</span>';
   document.getElementById('closureModal').classList.add('open');
 }
 function closeClosureModal(){ document.getElementById('closureModal').classList.remove('open'); }
