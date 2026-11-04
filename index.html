@@ -616,16 +616,6 @@ input,select,textarea{font-family:inherit;}
 .res-item-main{flex:1;min-width:0;}
 .res-item-name{font-size:14px;font-weight:600;color:var(--fg);}
 .res-item-sub{font-size:12px;color:var(--muted-fg);margin-top:3px;}
-.res-tag{
-  font-size:11px;font-weight:700;
-  padding:3px 9px;border-radius:6px;
-  white-space:nowrap;
-}
-.tag-ci{background:var(--accent);color:var(--accent-fg);}
-.tag-co{background:#fef3c7;color:#b45309;}
-.tag-up{background:#dbeafe;color:#1d4ed8;}
-.tag-ch{background:#eef2ff;color:#4338ca;}
-.tag-today{background:var(--destructive-bg);color:var(--destructive);}
 .empty{
   text-align:center;padding:32px 16px;
   font-size:13px;color:var(--muted-fg);
@@ -666,39 +656,6 @@ input,select,textarea{font-family:inherit;}
 .gchk.auto{background:var(--accent);border-color:var(--accent);color:var(--accent-fg);}
 .gchk:disabled{cursor:default;opacity:.6;}
 .guest-tbl .gmemo{max-width:220px;overflow:hidden;text-overflow:ellipsis;color:var(--muted-fg);font-size:12px;}
-.resv-grid{
-  display:grid;grid-template-columns:1fr;gap:10px;
-}
-@media(min-width:768px){.resv-grid{grid-template-columns:1fr 1fr;}}
-.resv-card{
-  background:var(--card);
-  border:1px solid var(--border);
-  border-radius:var(--radius-lg);
-  padding:14px 16px;
-  display:flex;align-items:flex-start;justify-content:space-between;gap:10px;
-  cursor:pointer;
-  transition:border-color .15s,box-shadow .15s;
-}
-.resv-card:hover{border-color:var(--primary);box-shadow:var(--shadow);}
-.resv-card.hl{border-color:var(--primary);box-shadow:0 0 0 3px #d1fae5;animation:resvPulse 1.6s ease-out;}
-@keyframes resvPulse{0%{box-shadow:0 0 0 0 #6ee7b7;}60%{box-shadow:0 0 0 8px transparent;}100%{box-shadow:0 0 0 3px #d1fae5;}}
-.resv-card-main{flex:1;min-width:0;}
-.resv-card-name{
-  font-size:15px;font-weight:700;color:var(--fg);
-  display:flex;align-items:center;gap:8px;flex-wrap:wrap;
-}
-.resv-card-date{font-size:12px;color:var(--muted-fg);margin-top:4px;display:flex;align-items:center;gap:4px;}
-.resv-card-extra{font-size:11px;color:var(--muted-fg-2);margin-top:3px;}
-.resv-card-actions{display:flex;flex-direction:column;gap:2px;}
-.resv-card-edit,.resv-card-del{
-  border:none;background:none;cursor:pointer;
-  color:var(--muted-fg-2);padding:4px 8px;border-radius:6px;
-  display:flex;align-items:center;justify-content:center;
-}
-.resv-card-edit{font-size:14px;}
-.resv-card-edit:hover{background:#ecfdf5;color:var(--primary);}
-.resv-card-del{font-size:16px;}
-.resv-card-del:hover{background:var(--destructive-bg);color:var(--destructive);}
 
 /* ─────── GUIDE ─────── */
 .guide-group{margin-bottom:20px;}
@@ -1268,6 +1225,134 @@ input,select,textarea{font-family:inherit;}
   #tab-home #dashCalLabel{font-size:17px;}
   #tab-home .dcal-btn{padding:0 10px;font-size:14px;}
 }
+
+/* ═══════ v1.12.0 공통 머리줄 (홈 머리줄과 같은 말투: 굵은 제목 + 옆에 회색 부제) ═══════ */
+.page-head{display:flex;align-items:baseline;flex-wrap:wrap;column-gap:12px;row-gap:2px;margin-bottom:18px;position:relative;padding-right:46px;min-height:34px;}
+.page-title{font-size:22px;font-weight:800;letter-spacing:-0.01em;gap:0;}
+.page-title > .i{width:21px;height:21px;margin-right:9px;vertical-align:-0.12em;}
+.page-sub{font-size:14px;margin-top:0;}
+.page-title .btn-help{position:absolute;right:0;top:0;margin:0;width:34px;height:34px;border-radius:10px;}
+.page-title .btn-help .i{width:19px;height:19px;margin:0;}
+@media(max-width:640px){
+  .page-head{flex-direction:column;align-items:flex-start;margin-bottom:14px;}
+  .page-title{font-size:18px;}
+  .page-title > .i{width:18px;height:18px;margin-right:7px;}
+  .page-sub{font-size:13px;}
+}
+
+/* ═══════ v1.12.0 예약 관리 ═══════ */
+#tab-reserv .rv-bar{display:flex;align-items:center;gap:10px;margin-bottom:14px;flex-wrap:wrap;}
+#tab-reserv .rv-seg{display:inline-flex;padding:3px;background:var(--muted);border-radius:10px;gap:2px;}
+#tab-reserv .rv-seg button{border:0;background:transparent;border-radius:8px;height:34px;padding:0 13px;font-size:13px;font-weight:600;color:var(--muted-fg);cursor:pointer;white-space:nowrap;}
+#tab-reserv .rv-seg button b{font-weight:700;margin-left:5px;color:var(--muted-fg-2);}
+#tab-reserv .rv-seg button.on{background:var(--card);color:var(--fg);box-shadow:0 1px 3px rgba(15,23,42,.08);}
+#tab-reserv .rv-seg button.on b{color:var(--today-fg);}
+#tab-reserv .rv-search{position:relative;flex:1 1 200px;max-width:300px;display:block;}
+#tab-reserv .rv-search .i{position:absolute;left:11px;top:50%;transform:translateY(-50%);width:16px;height:16px;color:var(--muted-fg-2);pointer-events:none;}
+#tab-reserv .rv-search input{width:100%;height:40px;padding-left:34px;}
+#tab-reserv .rv-actions{margin-left:auto;display:flex;gap:8px;}
+#tab-reserv .rv-actions .btn{height:40px;padding:0 14px;font-size:13px;}
+
+#tab-reserv .rv-cl{display:flex;align-items:center;gap:12px;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px 16px;margin-bottom:14px;box-shadow:var(--shadow-sm);}
+#tab-reserv .rv-cl-ico{width:20px;height:20px;color:var(--muted-fg);}
+#tab-reserv .rv-cl-main{flex:1;min-width:0;}
+#tab-reserv .rv-cl-l1{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;font-size:14px;}
+#tab-reserv .rv-cl-t{font-weight:700;color:var(--fg-2);}
+#tab-reserv .rv-cl-memo{color:var(--muted-fg);font-size:13px;}
+#tab-reserv .rv-cl-sub{font-size:12px;color:var(--muted-fg);margin-top:3px;}
+#tab-reserv .rv-cl-sub .warn{color:#b45309;font-weight:600;}
+
+#tab-reserv .rv-list{display:flex;flex-direction:column;gap:20px;}
+#tab-reserv .rv-gh{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:700;color:var(--fg-2);margin:0 4px 8px;}
+#tab-reserv .rv-gh em{font-style:normal;font-size:11px;font-weight:700;color:var(--muted-fg);background:var(--muted);border-radius:999px;padding:1px 8px;}
+#tab-reserv .rv-gh.now{color:var(--today-fg);}
+#tab-reserv .rv-gh.now em{background:#d1fae5;color:var(--today-fg);}
+#tab-reserv .rv-card{background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden;box-shadow:var(--shadow-sm);}
+#tab-reserv .rv-row + .rv-row{border-top:1px solid var(--border);}
+#tab-reserv .rv-main{display:grid;grid-template-columns:60px minmax(0,1fr) auto 14px;align-items:center;column-gap:14px;padding:12px 16px;cursor:pointer;outline:none;}
+#tab-reserv .rv-main:hover{background:#f8fafc;}
+#tab-reserv .rv-main:focus-visible{box-shadow:inset 0 0 0 2px var(--primary);}
+#tab-reserv .rv-row.open .rv-main,#tab-reserv .rv-row.open .rv-detail{background:var(--accent-soft);}
+#tab-reserv .rv-row.hl .rv-main{animation:rvPulse 2.2s ease-out;}
+@keyframes rvPulse{0%,40%{background:#d1fae5;}100%{background:transparent;}}
+#tab-reserv .rv-date{display:flex;flex-direction:column;align-items:center;justify-content:center;height:52px;border-radius:10px;background:var(--muted);line-height:1.1;}
+#tab-reserv .rv-date b{font-size:17px;font-weight:800;color:var(--fg);letter-spacing:-0.01em;}
+#tab-reserv .rv-date span{font-size:12px;font-weight:600;color:var(--muted-fg);margin-top:4px;}
+#tab-reserv .rv-date.sat span{color:#2563eb;}
+#tab-reserv .rv-date.sun span{color:#dc2626;}
+#tab-reserv .rv-row.now .rv-date{background:#d1fae5;}
+#tab-reserv .rv-row.now .rv-date b{color:var(--today-fg);}
+#tab-reserv .rv-body{min-width:0;}
+#tab-reserv .rv-l1{display:flex;align-items:center;gap:6px;flex-wrap:wrap;}
+#tab-reserv .rv-name{font-size:15px;font-weight:700;color:var(--fg);margin-right:2px;}
+#tab-reserv .rv-tag,#tab-reserv .rv-ch{font-size:11px;font-weight:700;border-radius:6px;padding:2px 7px;line-height:1.45;background:var(--muted);color:var(--muted-fg);white-space:nowrap;}
+#tab-reserv .rv-tag.in{background:var(--chip-in);color:#fff;}
+#tab-reserv .rv-tag.out{background:var(--chip-out);color:#fff;}
+#tab-reserv .rv-tag.stay{background:#d1fae5;color:var(--today-fg);}
+#tab-reserv .rv-tag.dd{background:#eef2ff;color:#4338ca;}
+#tab-reserv .rv-ch{font-weight:600;}
+#tab-reserv .rv-ch.nv{background:#e8f1fc;color:#1d5fae;}
+#tab-reserv .rv-ch.ab{background:#fdeee7;color:#b8461a;}
+#tab-reserv .rv-l2{font-size:13px;color:var(--muted-fg);margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+#tab-reserv .rv-l2 .sep{margin:0 6px;color:var(--border-strong);}
+#tab-reserv .rv-memo{font-size:12px;color:var(--muted-fg-2);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+#tab-reserv .rv-sts{display:flex;gap:6px;}
+#tab-reserv .rv-st{display:inline-flex;align-items:center;gap:5px;height:26px;padding:0 9px;border-radius:999px;font-size:12px;font-weight:600;border:1px solid var(--border);color:var(--muted-fg);background:var(--card);white-space:nowrap;}
+#tab-reserv .rv-st i{font-style:normal;font-weight:700;}
+#tab-reserv .rv-st.done{background:#ecfdf5;border-color:#a7f3d0;color:var(--today-fg);}
+#tab-reserv .rv-st.ok{background:#eff6ff;border-color:#bfdbfe;color:#1d4ed8;}
+#tab-reserv .rv-st.warn{background:var(--warning-bg);border-color:var(--warning-border);color:#b45309;}
+#tab-reserv .rv-st.bad{background:var(--destructive-bg);border-color:var(--destructive-border);color:#b91c1c;}
+#tab-reserv .rv-st.skip{color:var(--muted-fg);background:var(--muted);}
+#tab-reserv .rv-st.none{color:var(--muted-fg-2);border-style:dashed;}
+#tab-reserv .rv-chev{color:var(--muted-fg-2);font-size:20px;line-height:1;transition:transform .15s ease;justify-self:end;}
+#tab-reserv .rv-row.open .rv-chev{transform:rotate(90deg);}
+#tab-reserv .rv-detail{padding:2px 16px 16px 90px;}
+#tab-reserv .rv-dgrid{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:20px;padding-top:12px;border-top:1px dashed #a7f3d0;}
+#tab-reserv .rv-dl{display:grid;grid-template-columns:56px minmax(0,1fr);gap:7px 12px;font-size:13px;margin:0;}
+#tab-reserv .rv-dl dt{color:var(--muted-fg);}
+#tab-reserv .rv-dl dd{color:var(--fg);margin:0;overflow-wrap:anywhere;}
+#tab-reserv .rv-dl dd a{color:var(--today-fg);font-weight:600;text-decoration:none;}
+#tab-reserv .rv-dl dd.memo{white-space:pre-wrap;}
+#tab-reserv .rv-msgs h5{font-size:12px;font-weight:700;color:var(--muted-fg);margin:0 0 6px;}
+#tab-reserv .rv-mline{display:flex;align-items:baseline;gap:8px;font-size:13px;padding:3px 0;color:var(--fg-2);}
+#tab-reserv .rv-mline b{font-weight:600;color:var(--fg);flex-shrink:0;min-width:56px;}
+#tab-reserv .rv-dot{width:8px;height:8px;border-radius:50%;background:var(--border-strong);flex-shrink:0;transform:translateY(-1px);}
+#tab-reserv .rv-mline.done .rv-dot{background:var(--chip-in);}
+#tab-reserv .rv-mline.ok .rv-dot{background:#3b82f6;}
+#tab-reserv .rv-mline.warn .rv-dot{background:var(--warning);}
+#tab-reserv .rv-mline.bad .rv-dot{background:var(--destructive);}
+#tab-reserv .rv-mline.warn span{color:#b45309;}
+#tab-reserv .rv-mline.bad span{color:#b91c1c;}
+#tab-reserv .rv-mline.none span{color:var(--muted-fg-2);}
+#tab-reserv .rv-dact{display:flex;gap:8px;margin-top:14px;align-items:center;flex-wrap:wrap;}
+#tab-reserv .rv-dact .btn{height:36px;padding:0 14px;font-size:13px;}
+#tab-reserv .rv-dact .rv-del{margin-left:auto;color:var(--destructive);}
+#tab-reserv .rv-dact .rv-del:hover{background:var(--destructive-bg);color:var(--destructive);}
+
+@media(min-width:641px) and (max-width:1100px){
+  #tab-reserv .rv-st{padding:0 8px;gap:4px;}
+}
+@media(max-width:640px){
+  #tab-reserv .rv-actions{order:-1;width:100%;margin-left:0;}
+  #tab-reserv .rv-actions .btn{flex:1;}
+  #tab-reserv .rv-seg{flex:1 1 100%;}
+  #tab-reserv .rv-seg button{flex:1;padding:0 6px;}
+  #tab-reserv .rv-search{flex:1 1 100%;max-width:none;}
+  #tab-reserv .rv-main{grid-template-columns:50px minmax(0,1fr) 12px;column-gap:12px;row-gap:8px;padding:12px;}
+  #tab-reserv .rv-date{grid-column:1;grid-row:1 / 3;align-self:start;height:50px;}
+  #tab-reserv .rv-date b{font-size:15px;}
+  #tab-reserv .rv-l2{white-space:normal;}
+  #tab-reserv .rv-body{grid-column:2;grid-row:1;}
+  #tab-reserv .rv-chev{grid-column:3;grid-row:1;}
+  #tab-reserv .rv-sts{grid-column:2 / 4;grid-row:2;flex-wrap:wrap;gap:5px;}
+  #tab-reserv .rv-st{height:24px;padding:0 8px;font-size:11.5px;gap:4px;}
+  #tab-reserv .rv-detail{padding:0 12px 14px;}
+  #tab-reserv .rv-dgrid{grid-template-columns:1fr;gap:14px;}
+  #tab-reserv .rv-dact .btn{flex:1;}
+  #tab-reserv .rv-dact .rv-del{flex:0 0 auto;margin-left:0;}
+  #tab-reserv .rv-cl{flex-wrap:wrap;}
+}
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.1/dist/umd/supabase.min.js"></script>
 </head>
@@ -1310,6 +1395,7 @@ input,select,textarea{font-family:inherit;}
 <symbol id="i-bot" viewBox="0 0 24 24"><rect x="4" y="8" width="16" height="11" rx="3" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M12 4 V8 M9 13 V14 M15 13 V14 M2 13 V15 M22 13 V15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
 <symbol id="i-ban" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M5.6 5.6 L18.4 18.4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
 <symbol id="i-inbox" viewBox="0 0 24 24"><path d="M3 13 L6 5 H18 L21 13 V19 H3 Z M3 13 H8 L9.5 15.5 H14.5 L16 13 H21" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></symbol>
+<symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M16 16 L20.5 20.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
 </defs></svg>
 
 <div class="app">
@@ -1320,7 +1406,7 @@ input,select,textarea{font-family:inherit;}
       <div class="sidebar-brand" onclick="switchTab('home')" role="button" tabindex="0" aria-label="홈으로">
         <div class="sidebar-logo">SM</div>
         <div class="sidebar-brand-text">
-          <div class="sidebar-brand-name">Stay_Msg Pro<span class="sidebar-brand-ver" id="appVer">v1.11.0</span></div>
+          <div class="sidebar-brand-name">Stay_Msg Pro<span class="sidebar-brand-ver" id="appVer">v1.12.0</span></div>
           <div class="sidebar-brand-sub">숙소 예약 문자</div>
         </div>
       </div>
@@ -1376,7 +1462,7 @@ input,select,textarea{font-family:inherit;}
       <div class="mheader-brand" onclick="switchTab('home')" role="button" tabindex="0" aria-label="홈으로">
         <div class="mheader-logo">SM</div>
         <div>
-          <div class="mheader-title">Stay_Msg Pro<span class="mheader-ver" id="appVerM">v1.11.0</span></div>
+          <div class="mheader-title">Stay_Msg Pro<span class="mheader-ver" id="appVerM">v1.12.0</span></div>
           <div class="mheader-sub">숙소 예약 문자</div>
         </div>
       </div>
@@ -1615,21 +1701,29 @@ input,select,textarea{font-family:inherit;}
       <div class="help-panel" id="help-reserv" style="display:none;">
         <h4><svg class="i"><use href="#i-clipboard"/></svg>예약 사용 방법</h4>
         <ul>
-          <li><strong>새 예약 추가</strong> — 우측 상단 버튼으로 이름·전화·날짜·인원·금액을 직접 입력해 예약을 만들 수 있어요.</li>
-          <li><strong>문자 작성에서 저장</strong> — 작성 탭의 <em>예약 저장</em> 버튼으로도 예약이 추가됩니다.</li>
-          <li><strong>카드 클릭</strong> — 해당 예약이 문자 작성에 자동 로드돼요.</li>
-          <li>예약 카드의 <strong>오늘 입실·퇴실·예정</strong> 라벨로 상태를 한눈에 확인.</li>
+          <li><strong>다가오는 · 지난 · 전체</strong> — 다가오는 예약은 <em>오늘·머무는 중 → 7일 안 → 달별</em>로 묶여요. 검색 칸은 이름·전화 뒷자리·메모로 찾습니다.</li>
+          <li><strong>줄 누르기</strong> — 펼쳐서 연락처·메모·문자 단계를 보고, <em>문자 작성</em>·<em>수정</em>·<em>삭제</em>를 합니다.</li>
+          <li><strong>문자 칩 (확정 · 입실 · 퇴실)</strong> — ✓ 보냄 · 파란 날짜 = 승인돼서 그날 자동 발송 · 회색 날짜 = 보낼 차례 · 노랑 = 승인 대기 · 빨강 = 확인 필요 · – = 기록 없음.</li>
+          <li><strong>새 예약</strong> — 이름·전화·날짜·인원·금액을 직접 넣어요. 문자 작성 탭의 <em>예약 저장</em>으로도 추가됩니다.</li>
           <li><strong>임시 휴무</strong> — 사정으로 손님을 못 받는 날을 넣으면 봇이 10분 안에 네이버·에어비앤비 날짜를 막아요. 휴무를 취소해도 봇은 풀지 않으니 두 곳에서 직접 열어 주세요.</li>
         </ul>
       </div>
 
-      <div style="display:flex;justify-content:flex-end;gap:8px;margin-bottom:12px;">
-        <button class="btn btn-outline btn-sm" onclick="openClosureModal()">🚫 임시 휴무</button>
-        <button class="btn btn-primary btn-sm" onclick="openAddResvModal()"><svg class="i"><use href="#i-plus"/></svg>새 예약 추가</button>
+      <div class="rv-bar">
+        <div class="rv-seg" role="tablist">
+          <button type="button" data-f="up" onclick="rvSetFilter('up')">다가오는<b id="rvCntUp">0</b></button>
+          <button type="button" data-f="past" onclick="rvSetFilter('past')">지난<b id="rvCntPast">0</b></button>
+          <button type="button" data-f="all" onclick="rvSetFilter('all')">전체<b id="rvCntAll">0</b></button>
+        </div>
+        <label class="rv-search"><svg class="i"><use href="#i-search"/></svg><input class="input" id="rvSearch" type="search" placeholder="이름 · 전화 뒷자리 · 메모" oninput="renderReservations()"></label>
+        <div class="rv-actions">
+          <button class="btn btn-outline btn-sm" onclick="openClosureModal()"><svg class="i"><use href="#i-ban"/></svg>임시 휴무</button>
+          <button class="btn btn-primary btn-sm" onclick="openAddResvModal()"><svg class="i"><use href="#i-plus"/></svg>새 예약</button>
+        </div>
       </div>
 
       <div id="closureBox"></div>
-      <div class="resv-grid" id="resvList"></div>
+      <div class="rv-list" id="resvList"></div>
     </section>
 
     <!-- ─── GUESTS (고객 관리) ─── -->
@@ -2151,7 +2245,7 @@ input,select,textarea{font-family:inherit;}
 <div class="toast" id="toast"></div>
 
 <script>
-const APP_VERSION='v1.11.0'; // Pro (2026-10-27 lite v3.3.0에서 이름·버전 리셋)
+const APP_VERSION='v1.12.0'; // Pro (2026-10-27 lite v3.3.0에서 이름·버전 리셋)
 const SK_SET='stay_msg_lite1_set_v1';
 const SK_TPL='stay_msg_lite1_tpl_v1';
 const SK_RES='stay_msg_lite1_res_v1';
@@ -3768,14 +3862,15 @@ function dashCalDayClick(ds){
   if(dayRes.length===1){loadReservation(dayRes[0].id,ds);return;}
   if(dayRes.length>1){
     _dashCal.sel=ds;
+    const td=getTodayStr(), allUp=dayRes.every(r=>r.checkout>=td), allPast=dayRes.every(r=>r.checkout<td);
+    _rv.f=allUp?'up':allPast?'past':'all'; _rv.open=null;
+    const se=document.getElementById('rvSearch'); if(se) se.value='';
     switchTab('reserv');
     setTimeout(()=>{
-      const ids=new Set(dayRes.map(r=>r.id));
-      document.querySelectorAll('#resvList .resv-card').forEach(c=>{
-        const m=c.getAttribute('onclick')?.match(/loadReservation\('([^']+)'/);
-        if(m&&ids.has(m[1])){c.classList.add('hl');setTimeout(()=>c.classList.remove('hl'),2200);}
+      const ids=new Set(dayRes.map(r=>r.id)); let first=null;
+      document.querySelectorAll('#resvList .rv-row').forEach(c=>{
+        if(ids.has(c.dataset.rid)){c.classList.add('hl');first=first||c;setTimeout(()=>c.classList.remove('hl'),2200);}
       });
-      const first=document.querySelector('#resvList .resv-card.hl');
       if(first)first.scrollIntoView({behavior:'smooth',block:'center'});
     },80);
     return;
@@ -4074,33 +4169,123 @@ async function guestToggle(resId, field){
   if(error){ console.error(error); toast('저장 실패 — 인터넷 확인'); return; }
   guestNotes[resId] = next; renderGuests();
 }
+// ─────── 예약 관리 (v1.12.0): 다가오는/지난/전체 · 묶음 · 문자 3단계 · 펼쳐 보기 ───────
+let _rv={f:'up',open:null};
+try{const f=localStorage.getItem('rvFilter');if(f==='up'||f==='past'||f==='all')_rv.f=f;}catch(e){}
+function rvSetFilter(f){_rv.f=f;try{localStorage.setItem('rvFilter',f);}catch(e){}renderReservations();}
+function rvToggle(id){_rv.open=_rv.open===id?null:id;renderReservations();}
+function rvYmd(d){return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;}
+function rvAdd(ds,n){const d=new Date(ds+'T00:00:00');d.setDate(d.getDate()+n);return rvYmd(d);}
+function rvMD(ds){const d=new Date(ds+'T00:00:00');return `${d.getMonth()+1}.${d.getDate()}`;}
+function rvDw(ds){return '일월화수목금토'[new Date(ds+'T00:00:00').getDay()];}
+function rvDays(a,b){return Math.round((new Date(b+'T00:00:00')-new Date(a+'T00:00:00'))/864e5);}
+function rvWon(p){const n=parseNum(p);return n?n.toLocaleString('ko-KR')+'원':esc(p||'');}
+function rvGuests(g){g=String(g||'').trim();return /^\d+$/.test(g)?g+'명':esc(g);}
+function rvChCls(ch){ch=ch||'';if(/네이버/.test(ch))return 'nv';if(/에어비앤비|airbnb/i.test(ch))return 'ab';return '';}
+const RV_STAGES=[['booked','확정','예약확정'],['precheckin','입실','입실안내'],['checkout','퇴실','퇴실안내']];
+// 단계 상태 → [칩 색, 칩 글, 펼침 글]. 봇 작업(sms_jobs) 먼저, 없으면 발송 이력(봇은 예약 id, 앱은 전화번호+날짜 범위)
+function rvStage(r,st){
+  const jobs=(typeof sbAllJobs!=='undefined'?sbAllJobs:[]).filter(x=>x.reservation_id===r.id&&x.stage_id===st).sort((a,b)=>b.id-a.id);
+  const j=jobs[0];
+  if(j){
+    const d=j.scheduled_date?rvMD(j.scheduled_date):'';
+    switch(j.status){
+      case 'sent':case 'delivered':return ['done','✓',`보냄 · ${d} (자동)`];
+      case 'sending':return ['ok','…','보내는 중'];
+      case 'approved':return ['ok',d,`승인됨 · ${d} 아침 자동 발송`];
+      case 'pending':return ['warn','승인 대기','승인 대기 · 홈 「자동 문자」에서 승인'];
+      case 'skipped':return ['skip','수동','건너뜀 · 직접 보내기로 함'];
+      default:{const l=(SB_JOB_STATUS[j.status]||[j.status])[0];return ['bad','확인',l+(j.result?' · '+j.result:'')];}
+    }
+  }
+  const dg=(r.phone||'').replace(/\D/g,'');
+  const win=st==='booked'?[rvAdd(r.checkin,-240),r.checkin]:st==='precheckin'?[rvAdd(r.checkin,-3),r.checkin]:[rvAdd(r.checkout,-1),rvAdd(r.checkout,1)];
+  const h=(msgHistory||[]).find(x=>{
+    if(x.stageId!==st||!x.at)return false;
+    if(x.resId?x.resId!==r.id:!(dg&&(x.phone||'').replace(/\D/g,'')===dg))return false;
+    const t=rvYmd(new Date(x.at));return t>=win[0]&&t<=win[1];
+  });
+  if(h)return ['done','✓',`보냄 · ${rvMD(rvYmd(new Date(h.at)))} (${h.sentBy==='bot'?'자동':'앱'})`];
+  const due=st==='booked'?null:(st==='precheckin'?r.checkin:r.checkout);
+  if(due&&due>=getTodayStr())return ['todo','',`${rvMD(due)} 보낼 차례`];
+  return ['none','–','기록 없음'];
+}
+function rvRow(r,today){
+  const open=_rv.open===r.id, n=Math.max(0,rvDays(r.checkin,r.checkout)), dw=rvDw(r.checkin), dwo=rvDw(r.checkout);
+  let tag='';
+  if(r.checkin===today)tag='<span class="rv-tag in">오늘 입실</span>';
+  else if(r.checkout===today)tag='<span class="rv-tag out">오늘 퇴실</span>';
+  else if(r.checkin<today&&r.checkout>today)tag='<span class="rv-tag stay">머무는 중</span>';
+  else if(r.checkin>today){const dd=rvDays(today,r.checkin);if(dd<=14)tag=`<span class="rv-tag dd">D-${dd}</span>`;}
+  const ch=r.channel?`<span class="rv-ch ${rvChCls(r.channel)}">${esc(r.channel)}</span>`:'';
+  const bits=[`→ ${rvMD(r.checkout)}(${dwo})`,`${n}박`];
+  if(r.guests)bits.push(rvGuests(r.guests));
+  if(r.price)bits.push(rvWon(r.price));
+  const st=RV_STAGES.map(([id,lb,full])=>{const [c,t,l]=rvStage(r,id);return `<span class="rv-st ${c}" title="${full} · ${esc(l)}">${lb}${t?`<i>${esc(t)}</i>`:''}</span>`;}).join('');
+  const now=r.checkin<=today&&r.checkout>=today;
+  const rooms=(settings&&settings.rooms)||[], room=rooms.length>1?rooms.find(x=>x.id===r.roomId):null;
+  const det=!open?'':`<div class="rv-detail"><div class="rv-dgrid">
+      <dl class="rv-dl">
+        <dt>숙박</dt><dd>${r.checkin.replace(/-/g,'.')}(${dw}) → ${rvMD(r.checkout)}(${dwo}) · ${n}박</dd>
+        ${r.phone?`<dt>연락처</dt><dd><a href="tel:${esc(String(r.phone).replace(/[^\d+]/g,''))}">${esc(r.phone)}</a></dd>`:''}
+        ${r.guests?`<dt>인원</dt><dd>${rvGuests(r.guests)}</dd>`:''}
+        ${r.price?`<dt>금액</dt><dd>${rvWon(r.price)}</dd>`:''}
+        ${r.channel?`<dt>채널</dt><dd>${esc(r.channel)}</dd>`:''}
+        ${room?`<dt>호실</dt><dd>${esc(room.name||'')}</dd>`:''}
+        ${r.memo?`<dt>메모</dt><dd class="memo">${esc(r.memo)}</dd>`:''}
+      </dl>
+      <div class="rv-msgs"><h5>문자</h5>${RV_STAGES.map(([id,,full])=>{const [c,,l]=rvStage(r,id);return `<div class="rv-mline ${c}"><span class="rv-dot"></span><b>${full}</b><span>${esc(l)}</span></div>`;}).join('')}</div>
+    </div>
+    <div class="rv-dact">
+      <button type="button" class="btn btn-primary btn-sm" onclick="loadReservation('${r.id}','${today}')"><svg class="i"><use href="#i-message"/></svg>문자 작성</button>
+      <button type="button" class="btn btn-outline btn-sm" onclick="editResv('${r.id}',event)"><svg class="i"><use href="#i-pencil"/></svg>수정</button>
+      <button type="button" class="btn btn-ghost btn-sm rv-del" onclick="delReservation('${r.id}',event)"><svg class="i"><use href="#i-trash"/></svg>삭제</button>
+    </div></div>`;
+  return `<div class="rv-row${open?' open':''}${now?' now':''}" data-rid="${esc(r.id)}">
+    <div class="rv-main" role="button" tabindex="0" onclick="rvToggle('${r.id}')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();rvToggle('${r.id}');}">
+      <div class="rv-date${dw==='토'?' sat':dw==='일'?' sun':''}"><b>${rvMD(r.checkin)}</b><span>${dw}</span></div>
+      <div class="rv-body">
+        <div class="rv-l1"><strong class="rv-name">${esc(r.name||'(이름 없음)')}</strong>${tag}${ch}</div>
+        <div class="rv-l2">${bits.join('<span class="sep">·</span>')}</div>
+        ${r.memo?`<div class="rv-memo">${esc(r.memo)}</div>`:''}
+      </div>
+      <div class="rv-sts">${st}</div>
+      <span class="rv-chev">›</span>
+    </div>${det}
+  </div>`;
+}
 function renderReservations(){
-  const list=document.getElementById('resvList');
-  const today=getTodayStr();
-  const sorted=[...reservations].sort((a,b)=>b.checkin.localeCompare(a.checkin));
-  document.getElementById('resvCount').textContent=sorted.length?`총 ${sorted.length}건의 예약`:'저장된 예약이 없습니다';
-  if(!sorted.length){
-    list.innerHTML='<div class="empty" style="grid-column:1/-1;"><span class="emoji">📋</span>저장된 예약이 없어요<br>작성 탭에서 "예약 저장"을 눌러 기록하세요</div>';
+  const list=document.getElementById('resvList');if(!list)return;
+  const today=getTodayStr(), wk=rvAdd(today,7);
+  const all=reservations.filter(r=>r.checkin&&r.checkout);
+  const up=all.filter(r=>r.checkout>=today).sort((a,b)=>a.checkin.localeCompare(b.checkin));
+  const past=all.filter(r=>r.checkout<today).sort((a,b)=>b.checkin.localeCompare(a.checkin));
+  const set=(id,v)=>{const e=document.getElementById(id);if(e)e.textContent=v;};
+  set('rvCntUp',up.length);set('rvCntPast',past.length);set('rvCntAll',all.length);
+  const qEl=document.getElementById('rvSearch'), q=((qEl&&qEl.value)||'').trim();
+  document.querySelectorAll('#tab-reserv .rv-seg button').forEach(b=>b.classList.toggle('on',!q&&b.dataset.f===_rv.f));
+  const mIn=all.filter(r=>r.checkin.slice(0,7)===today.slice(0,7)).length;
+  set('resvCount',all.length?`다가오는 ${up.length}건 · 이번 달 입실 ${mIn}건`:'저장된 예약이 없습니다');
+  const mon=k=>(k.slice(0,4)===today.slice(0,4)?'':k.slice(0,4)+'년 ')+(+k.slice(5,7))+'월';
+  const byMonth=(arr,sfx)=>{const g={};arr.forEach(r=>{const k=r.checkin.slice(0,7);(g[k]=g[k]||[]).push(r);});return Object.keys(g).map(k=>({t:mon(k)+sfx,rows:g[k]}));};
+  const groups=[];
+  if(q){
+    const ql=q.toLowerCase(), qd=q.replace(/\D/g,'');
+    groups.push({t:'검색 결과',rows:[...up,...past].filter(r=>(r.name||'').toLowerCase().includes(ql)||(r.memo||'').toLowerCase().includes(ql)||(qd.length>=2&&String(r.phone||'').replace(/\D/g,'').includes(qd)))});
+  } else {
+    if(_rv.f!=='past'){
+      groups.push({t:'오늘 · 머무는 중',cls:'now',rows:up.filter(r=>r.checkin<=today)});
+      groups.push({t:'7일 안',rows:up.filter(r=>r.checkin>today&&r.checkin<wk)});
+      groups.push(...byMonth(up.filter(r=>r.checkin>=wk),''));
+    }
+    if(_rv.f!=='up')groups.push(...byMonth(past,_rv.f==='all'?' · 지난 예약':''));
+  }
+  const shown=groups.filter(g=>g.rows.length);
+  if(!shown.length){
+    list.innerHTML=`<div class="empty"><span class="emoji">📋</span>${!all.length?'저장된 예약이 없어요<br>「새 예약」으로 넣거나 문자 작성 탭에서 「예약 저장」을 누르세요':q?'찾는 예약이 없어요':_rv.f==='up'?'다가오는 예약이 없어요':'지난 예약이 없어요'}</div>`;
     return;
   }
-  list.innerHTML=sorted.map(r=>{
-    let tagHtml='';
-    if(r.checkin===today)tagHtml='<span class="res-tag tag-today">오늘 입실</span>';
-    else if(r.checkout===today)tagHtml='<span class="res-tag tag-co">오늘 퇴실</span>';
-    else if(r.checkin>today)tagHtml='<span class="res-tag tag-up">예정</span>';
-    return `
-    <div class="resv-card" onclick="loadReservation('${r.id}')">
-      <div class="resv-card-main">
-        <div class="resv-card-name">${esc(r.name)} ${tagHtml}${r.channel?' <span class="res-tag tag-ch">'+esc(r.channel)+'</span>':''}</div>
-        <div class="resv-card-date">📅 ${r.checkin} ~ ${r.checkout}</div>
-        <div class="resv-card-extra">${r.guests?esc(r.guests):''}${r.phone?' · '+esc(r.phone):''}${r.price?' · '+esc(r.price):''}${r.memo?' · '+esc(r.memo):''}</div>
-      </div>
-      <div class="resv-card-actions">
-        <button class="resv-card-edit" onclick="editResv('${r.id}',event)" title="수정"><svg class="i"><use href="#i-pencil"/></svg></button>
-        <button class="resv-card-del" onclick="delReservation('${r.id}',event)" title="삭제">✕</button>
-      </div>
-    </div>`;
-  }).join('');
+  list.innerHTML=shown.map(g=>`<section class="rv-group"><div class="rv-gh${g.cls?' '+g.cls:''}">${g.t}<em>${g.rows.length}</em></div><div class="rv-card">${g.rows.map(r=>rvRow(r,today)).join('')}</div></section>`).join('');
 }
 
 // ─────── MODALS ───────
@@ -4202,7 +4387,7 @@ function sbRenderJobs(jobs){
   }).join('');
 }
 // ── 임시 휴무 (v1.9.0, 2026-11-02): 넣으면 봇이 네이버·에어비앤비를 막음. 취소해도 봇은 풀지 않음(사람이 직접 열기) ──
-var sbClosures = [], sbClosureBlocks = []; // var: 달력이 먼저 그려져도 참조 가능
+var sbClosures = [], sbClosureBlocks = [], sbAllJobs = []; // var: 달력이 먼저 그려져도 참조 가능
 function clFmt(ds){ const d=new Date(ds+'T00:00:00'); return `${d.getMonth()+1}.${d.getDate()}(${'일월화수목금토'[d.getDay()]})`; }
 function clLastNight(e){ const d=new Date(e+'T00:00:00'); d.setDate(d.getDate()-1); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; }
 function clRange(s,e){ const l=clLastNight(e); return l===s ? clFmt(s)+' 하루' : clFmt(s)+' ~ '+clFmt(l)+' · '+Math.round((new Date(e)-new Date(s))/864e5)+'일'; }
@@ -4245,17 +4430,15 @@ function clBlockLabel(cid, ch){
 function renderClosures(){
   const box=document.getElementById('closureBox'); if(!box) return;
   const today=getTodayStr(), list=sbClosures.filter(c=>c.status==='active' && c.end_date>today);
-  const tag=([l,c])=>`<span class="adv-hint" style="margin:0;${c?'color:#b45309;':''}">${esc(l)}</span>`;
   const dc=document.getElementById('dashClosureCard'), dl=document.getElementById('dashClosureList');
   if(dc&&dl){ dc.style.display=list.length?'':'none'; const st=([l,c])=>`<span class="${c?'dcl-warn':''}">${esc(l)}</span>`; dl.innerHTML=list.map(c=>`<div class="dcl-row"><svg class="i ds-ico"><use href="#i-ban"/></svg><div class="dcl-main"><span class="ds-title">임시 휴무</span><strong class="dcl-range">${clRange(c.start_date,c.end_date)}</strong><span class="dcl-sub">${c.memo?'<span class="dcl-memo"> · '+esc(c.memo)+'</span>':''}<span class="dcl-sep"> · </span>네이버 ${st(clBlockLabel(c.id,'naver'))} · 에어비앤비 ${st(clBlockLabel(c.id,'airbnb'))}</span></div><span class="dcl-go">예약 관리 →</span><span class="dcl-chev">›</span></div>`).join(''); dashStripsSync(); }
   if(typeof renderDashCal==='function') renderDashCal();
   if(!list.length){ box.innerHTML=''; return; }
-  box.innerHTML=`<div class="card" style="margin-bottom:12px;"><div class="card-head"><div class="card-head-title"><span class="ico">🚫</span>임시 휴무</div></div><div class="res-list">`+
-    list.map(c=>`<div class="res-item" style="flex-direction:column;align-items:stretch;gap:6px;">
-      <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;"><div><strong>${clRange(c.start_date,c.end_date)}</strong>${c.memo?' · '+esc(c.memo):''}</div>
-        <button class="btn btn-outline btn-sm" onclick="cancelClosure(${c.id})">휴무 취소</button></div>
-      <div style="display:flex;gap:14px;flex-wrap:wrap;">네이버 ${tag(clBlockLabel(c.id,'naver'))} 에어비앤비 ${tag(clBlockLabel(c.id,'airbnb'))}</div>
-    </div>`).join('')+`</div></div>`;
+  const t2=([l,c])=>`<span class="${c?'warn':''}">${esc(l)}</span>`;
+  box.innerHTML=list.map(c=>`<div class="rv-cl"><svg class="i rv-cl-ico"><use href="#i-ban"/></svg>
+    <div class="rv-cl-main"><div class="rv-cl-l1"><span class="rv-cl-t">임시 휴무</span><strong>${clRange(c.start_date,c.end_date)}</strong>${c.memo?`<span class="rv-cl-memo">${esc(c.memo)}</span>`:''}</div>
+      <div class="rv-cl-sub">네이버 ${t2(clBlockLabel(c.id,'naver'))} · 에어비앤비 ${t2(clBlockLabel(c.id,'airbnb'))}</div></div>
+    <button class="btn btn-outline btn-sm" onclick="cancelClosure(${c.id})">휴무 취소</button></div>`).join('');
 }
 function cancelClosure(id){
   const c=sbClosures.find(x=>x.id===id); if(!c) return;
@@ -4297,7 +4480,7 @@ function sbFail(e){ console.error(e); toast('서버 저장 실패 — 인터넷 
 const resToRow = r => ({ id:r.id, name:r.name||'', phone:r.phone||'', checkin:r.checkin, checkout:r.checkout, guests:r.guests||'', price:r.price||'', room_id:r.roomId||'', channel:r.channel||'', memo:r.memo||'', status:r.status||'confirmed', created_at:r.createdAt||new Date().toISOString() });
 const rowToRes = x => ({ id:x.id, name:x.name, phone:x.phone, checkin:x.checkin, checkout:x.checkout, guests:x.guests, price:x.price, roomId:x.room_id, channel:x.channel, memo:x.memo, status:x.status, createdAt:x.created_at });
 const histToRow = h => ({ id:h.id, stage_id:h.stageId||'', stage_label:h.stageLabel||'', tpl_title:h.tplTitle||'', name:h.name||'', phone:h.phone||'', body:h.body||'', sent_by:h.sentBy||'app', status:h.status||'sent', sent_at:h.at||new Date().toISOString() });
-const rowToHist = x => ({ id:x.id, at:x.sent_at, stageId:x.stage_id, stageLabel:x.stage_label, stageIcon:(STAGES.find(s=>s.id===x.stage_id)||{}).icon||'', tplTitle:x.tpl_title, name:x.name, phone:x.phone, body:x.body, sentBy:x.sent_by, status:x.status });
+const rowToHist = x => ({ id:x.id, resId:x.reservation_id||'', at:x.sent_at, stageId:x.stage_id, stageLabel:x.stage_label, stageIcon:(STAGES.find(s=>s.id===x.stage_id)||{}).icon||'', tplTitle:x.tpl_title, name:x.name, phone:x.phone, body:x.body, sentBy:x.sent_by, status:x.status });
 
 // ── 로그인/세션 ──
 async function sbLogin(){
@@ -4342,17 +4525,20 @@ async function sbPull(manual){
   return sbRun(async()=>{
     const gen = sbWriteGen;
     if(sbHasPending()){ await sbRetryPending(); if(sbHasPending() || gen !== sbWriteGen){ if(manual && sbHasPending()) toast('먼저 저장 실패분을 올려야 해요 — 인터넷 확인'); return; } }
-    const [s, r, m, j, gn, cl, cb] = await Promise.all([
+    const [s, r, m, j, gn, cl, cb, jd] = await Promise.all([
       sb.from('app_settings').select('key,value'),
       sb.from('reservations').select('*').neq('status','cancelled'),
       sb.from('messages').select('*').order('sent_at',{ascending:false}).limit(200),
       sb.from('sms_jobs').select('*').in('status',['pending','approved','blocked','missed','unknown','failed']).order('scheduled_date'),
       sb.from('guest_notes').select('*'),
       sb.from('closures').select('*').eq('status','active').order('start_date'),
-      sb.from('channel_blocks').select('reservation_id,channel,status,attempts,result').like('reservation_id','closure-%')
+      sb.from('channel_blocks').select('reservation_id,channel,status,attempts,result').like('reservation_id','closure-%'),
+      sb.from('sms_jobs').select('id,reservation_id,stage_id,status,scheduled_date,result').in('status',['sent','delivered','sending','skipped'])
     ]);
     if(s.error||r.error||m.error) throw (s.error||r.error||m.error);
     if(j.error) console.error(j.error);
+    if(jd.error) console.error(jd.error);
+    sbAllJobs = [...(j.data||[]), ...(jd.data||[])];
     if(gen !== sbWriteGen) return; // 읽는 사이 로컬 저장이 끼어듦 → 이번 결과 버림(저장분이 먼저 올라가고 다음 주기에 다시 읽음)
     const serverEmpty = !(s.data||[]).length && !(r.data||[]).length;
     const localHas = !!(localStorage.getItem(SK_RES) && JSON.parse(localStorage.getItem(SK_RES)||'[]').length) || !!(localStorage.getItem(SK_SET) && (JSON.parse(localStorage.getItem(SK_SET)||'{}').name));
