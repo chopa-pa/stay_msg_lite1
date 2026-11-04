@@ -1231,118 +1231,219 @@ input,select,textarea{font-family:inherit;}
   .page-sub{font-size:13px;}
 }
 
-/* ═══════ v1.12.0 예약 관리 ═══════ */
-#tab-reserv .rv-bar,#tab-guests .rv-bar{display:flex;align-items:center;gap:10px;margin-bottom:14px;flex-wrap:wrap;}
-#tab-reserv .rv-seg,#tab-guests .rv-seg{display:inline-flex;padding:3px;background:var(--muted);border-radius:10px;gap:2px;}
-#tab-reserv .rv-seg button,#tab-guests .rv-seg button{border:0;background:transparent;border-radius:8px;height:34px;padding:0 13px;font-size:13px;font-weight:600;color:var(--muted-fg);cursor:pointer;white-space:nowrap;}
-#tab-reserv .rv-seg button b,#tab-guests .rv-seg button b{font-weight:700;margin-left:5px;color:var(--muted-fg-2);}
-#tab-reserv .rv-seg button.on,#tab-guests .rv-seg button.on{background:var(--card);color:var(--fg);box-shadow:0 1px 3px rgba(15,23,42,.08);}
-#tab-reserv .rv-seg button.on b,#tab-guests .rv-seg button.on b{color:var(--today-fg);}
-#tab-reserv .rv-search,#tab-guests .rv-search{position:relative;flex:1 1 200px;max-width:300px;display:block;}
-#tab-reserv .rv-search .i,#tab-guests .rv-search .i{position:absolute;left:11px;top:50%;transform:translateY(-50%);width:16px;height:16px;color:var(--muted-fg-2);pointer-events:none;}
-#tab-reserv .rv-search input,#tab-guests .rv-search input{width:100%;height:40px;padding-left:34px;}
+/* ═══════ 고객 관리가 같이 쓰는 도구줄·표시 (v1.12.0 모양 그대로) ═══════ */
+#tab-guests .rv-bar{display:flex;align-items:center;gap:10px;margin-bottom:14px;flex-wrap:wrap;}
+#tab-guests .rv-seg{display:inline-flex;padding:3px;background:var(--muted);border-radius:10px;gap:2px;}
+#tab-guests .rv-seg button{border:0;background:transparent;border-radius:8px;height:34px;padding:0 13px;font-size:13px;font-weight:600;color:var(--muted-fg);cursor:pointer;white-space:nowrap;}
+#tab-guests .rv-seg button b{font-weight:700;margin-left:5px;color:var(--muted-fg-2);}
+#tab-guests .rv-seg button.on{background:var(--card);color:var(--fg);box-shadow:0 1px 3px rgba(15,23,42,.08);}
+#tab-guests .rv-seg button.on b{color:var(--today-fg);}
+#tab-guests .rv-search{position:relative;flex:1 1 200px;max-width:300px;display:block;}
+#tab-guests .rv-search .i{position:absolute;left:11px;top:50%;transform:translateY(-50%);width:16px;height:16px;color:var(--muted-fg-2);pointer-events:none;}
+#tab-guests .rv-search input{width:100%;height:40px;padding-left:34px;}
+#tab-guests .rv-tag,#tab-guests .rv-ch{font-size:11px;font-weight:700;border-radius:6px;padding:2px 7px;line-height:1.45;background:var(--muted);color:var(--muted-fg);white-space:nowrap;}
+#tab-guests .rv-tag.in{background:var(--chip-in);color:#fff;}
+#tab-guests .rv-tag.out{background:var(--chip-out);color:#fff;}
+#tab-guests .rv-tag.stay{background:#d1fae5;color:var(--today-fg);}
+#tab-guests .rv-tag.dd{background:#eef2ff;color:#4338ca;}
+#tab-guests .rv-ch{font-weight:600;}
+#tab-guests .rv-ch.nv{background:#e8f1fc;color:#1d5fae;}
+#tab-guests .rv-ch.ab{background:#fdeee7;color:#b8461a;}
+@media(max-width:640px){
+  #tab-guests .rv-seg{flex:1 1 100%;}
+  #tab-guests .rv-seg button{flex:1;padding:0 6px;}
+  #tab-guests .rv-search{flex:1 1 100%;max-width:none;}
+}
+
+/* ═══════ v1.14.0 예약 관리 (2차-1 시안) ═══════ */
+/* 도구줄: 보기 전환 · 검색 · 임시 휴무 · 새 예약(이 화면의 유일한 진한 버튼) */
+#tab-reserv .rv-bar{display:flex;align-items:center;gap:12px;margin-bottom:16px;flex-wrap:wrap;}
+#tab-reserv .rv-seg{display:inline-flex;padding:4px;background:#e9eef3;border-radius:10px;gap:2px;flex-shrink:0;}
+#tab-reserv .rv-seg button{border:0;background:transparent;border-radius:8px;height:36px;padding:0 14px;font-size:14px;font-weight:700;color:#64748b;cursor:pointer;white-space:nowrap;}
+#tab-reserv .rv-seg button b{font-weight:700;margin-left:6px;color:#94a3b8;font-variant-numeric:tabular-nums;}
+#tab-reserv .rv-seg button.on{background:#fff;color:#0f172a;box-shadow:0 1px 2px rgba(15,23,42,.1);}
+#tab-reserv .rv-seg button.on b{color:#047857;}
+#tab-reserv .rv-search{position:relative;flex:1 1 220px;max-width:360px;display:block;}
+#tab-reserv .rv-search .i{position:absolute;left:13px;top:50%;transform:translateY(-50%);width:18px;height:18px;color:#64748b;pointer-events:none;}
+#tab-reserv .rv-search input{width:100%;height:44px;padding:0 12px 0 40px;background:#fff;border:1px solid #cbd5e1;border-radius:10px;font-size:15px;}
+#tab-reserv .rv-search input:focus{outline:none;border-color:#10b981;box-shadow:0 0 0 1px #10b981;}
 #tab-reserv .rv-actions{margin-left:auto;display:flex;gap:8px;}
-#tab-reserv .rv-actions .btn{height:40px;padding:0 14px;font-size:13px;}
+#tab-reserv .rv-actions .btn{height:44px;padding:0 16px;font-size:15px;border-radius:10px;}
+#tab-reserv .rv-actions .btn-outline{background:#fff;border-color:#cbd5e1;color:#0f172a;font-weight:600;}
+#tab-reserv .rv-actions .btn-primary{background:#10b981;color:#fff;font-weight:700;}
+#tab-reserv .rv-actions .btn-primary:hover{background:#059669;}
 
-#tab-reserv .rv-cl{display:flex;align-items:center;gap:12px;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px 16px;margin-bottom:14px;box-shadow:var(--shadow-sm);}
-#tab-reserv .rv-cl-ico{width:20px;height:20px;color:var(--muted-fg);}
-#tab-reserv .rv-cl-main{flex:1;min-width:0;}
-#tab-reserv .rv-cl-l1{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;font-size:14px;}
-#tab-reserv .rv-cl-t{font-weight:700;color:var(--fg-2);}
-#tab-reserv .rv-cl-memo{color:var(--muted-fg);font-size:13px;}
-#tab-reserv .rv-cl-sub{font-size:12px;color:var(--muted-fg);margin-top:3px;}
-#tab-reserv .rv-cl-sub .warn{color:#b45309;font-weight:600;}
+/* 임시 휴무 띠: 대시보드 띠와 같은 모양, 그림자 없음 */
+#tab-reserv .rv-cl{display:flex;align-items:center;gap:12px;background:#fff;border:1px solid #e2e8f0;border-radius:12px;min-height:56px;padding:10px 12px 10px 16px;margin-bottom:16px;}
+#tab-reserv .rv-cl-ico{width:18px;height:18px;color:#475569;flex-shrink:0;margin:0;}
+#tab-reserv .rv-cl-main{flex:1;min-width:0;font-size:15px;color:#475569;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+#tab-reserv .rv-cl-t{font-weight:700;color:#0f172a;margin-right:8px;}
+#tab-reserv .rv-cl-range{font-weight:700;color:#0f172a;}
+#tab-reserv .rv-cl .warn{color:#b45309;font-weight:600;}
+#tab-reserv .rv-cl .btn{height:36px;padding:0 14px;font-size:14px;font-weight:600;flex-shrink:0;background:#fff;border-color:#cbd5e1;color:#0f172a;}
 
-#tab-reserv .rv-list{display:flex;flex-direction:column;gap:20px;}
-#tab-reserv .rv-gh{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:700;color:var(--fg-2);margin:0 4px 8px;}
-#tab-reserv .rv-gh em{font-style:normal;font-size:11px;font-weight:700;color:var(--muted-fg);background:var(--muted);border-radius:999px;padding:1px 8px;}
-#tab-reserv .rv-gh.now{color:var(--today-fg);}
-#tab-reserv .rv-gh.now em{background:#d1fae5;color:var(--today-fg);}
-#tab-reserv .rv-card{background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden;box-shadow:var(--shadow-sm);}
-#tab-reserv .rv-row + .rv-row{border-top:1px solid var(--border);}
-#tab-reserv .rv-main{display:grid;grid-template-columns:60px minmax(0,1fr) auto 14px;align-items:center;column-gap:14px;padding:12px 16px;cursor:pointer;outline:none;}
+/* 목록 · 묶음 */
+#tab-reserv .rv-list{display:flex;flex-direction:column;gap:16px;}
+#tab-reserv .rv-gh{display:flex;align-items:center;gap:8px;font-size:15px;font-weight:800;color:#0f172a;margin:0 4px 8px;}
+#tab-reserv .rv-gh em{font-style:normal;font-size:12px;font-weight:700;color:#475569;background:#e9eef3;border-radius:999px;padding:1px 8px;}
+#tab-reserv .rv-card{background:#fff;border:1px solid #e2e8f0;border-radius:16px;overflow:hidden;}
+#tab-reserv .rv-row + .rv-row{border-top:1px solid #e2e8f0;}
+/* 열 머리(PC만, 표시만) — 줄과 같은 그리드 */
+#tab-reserv .rv-colh{display:grid;grid-template-columns:56px minmax(0,1fr) 140px 96px 312px 20px;column-gap:16px;padding:0 21px;font-size:12px;font-weight:700;color:#64748b;margin-bottom:-4px;}
+#tab-reserv .rv-colh .r{text-align:right;}
+#tab-reserv .rv-colh-st{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;}
+
+/* 한 줄 — PC */
+#tab-reserv .rv-main{display:grid;grid-template-columns:56px minmax(0,1fr) 140px 96px 312px 20px;align-items:center;column-gap:16px;padding:12px 20px;cursor:pointer;outline:none;}
 #tab-reserv .rv-main:hover{background:#f8fafc;}
 #tab-reserv .rv-main:focus-visible{box-shadow:inset 0 0 0 2px var(--primary);}
-#tab-reserv .rv-row.open .rv-main,#tab-reserv .rv-row.open .rv-detail{background:var(--accent-soft);}
+#tab-reserv .rv-row.open .rv-main,#tab-reserv .rv-row.open .rv-detail{background:#f8fafc;}
 #tab-reserv .rv-row.hl .rv-main{animation:rvPulse 2.2s ease-out;}
-@keyframes rvPulse{0%,40%{background:#d1fae5;}100%{background:transparent;}}
-#tab-reserv .rv-date{display:flex;flex-direction:column;align-items:center;justify-content:center;height:52px;border-radius:10px;background:var(--muted);line-height:1.1;}
-#tab-reserv .rv-date b{font-size:17px;font-weight:800;color:var(--fg);letter-spacing:-0.01em;}
-#tab-reserv .rv-date span{font-size:12px;font-weight:600;color:var(--muted-fg);margin-top:4px;}
+@keyframes rvPulse{0%,40%{background:#d1fae5;box-shadow:inset 0 0 0 2px #10b981;}100%{background:transparent;box-shadow:inset 0 0 0 2px transparent;}}
+#tab-reserv .rv-date{display:flex;flex-direction:column;align-items:center;justify-content:center;box-sizing:border-box;width:56px;height:56px;border-radius:12px;background:#f1f5f9;border:1px solid transparent;line-height:1.1;}
+#tab-reserv .rv-date b{font-size:17px;font-weight:800;color:#0f172a;font-variant-numeric:tabular-nums;letter-spacing:-0.01em;}
+#tab-reserv .rv-date span{font-size:12px;font-weight:700;color:#64748b;margin-top:3px;}
 #tab-reserv .rv-date.sat span{color:#2563eb;}
 #tab-reserv .rv-date.sun span{color:#dc2626;}
-#tab-reserv .rv-row.now .rv-date{background:#d1fae5;}
-#tab-reserv .rv-row.now .rv-date b{color:var(--today-fg);}
+#tab-reserv .rv-row.now .rv-date{background:#ecfdf5;border-color:#a7f3d0;}
+#tab-reserv .rv-row.now .rv-date b{color:#047857;}
+#tab-reserv .rv-row.past .rv-date{background:#f8fafc;}
+#tab-reserv .rv-row.past .rv-date b{color:#64748b;}
 #tab-reserv .rv-body{min-width:0;}
-#tab-reserv .rv-l1{display:flex;align-items:center;gap:6px;flex-wrap:wrap;}
-#tab-reserv .rv-name{font-size:15px;font-weight:700;color:var(--fg);margin-right:2px;}
-#tab-reserv .rv-tag,#tab-reserv .rv-ch,#tab-guests .rv-tag,#tab-guests .rv-ch{font-size:11px;font-weight:700;border-radius:6px;padding:2px 7px;line-height:1.45;background:var(--muted);color:var(--muted-fg);white-space:nowrap;}
-#tab-reserv .rv-tag.in,#tab-guests .rv-tag.in{background:var(--chip-in);color:#fff;}
-#tab-reserv .rv-tag.out,#tab-guests .rv-tag.out{background:var(--chip-out);color:#fff;}
-#tab-reserv .rv-tag.stay,#tab-guests .rv-tag.stay{background:#d1fae5;color:var(--today-fg);}
-#tab-reserv .rv-tag.dd,#tab-guests .rv-tag.dd{background:#eef2ff;color:#4338ca;}
-#tab-reserv .rv-ch,#tab-guests .rv-ch{font-weight:600;}
-#tab-reserv .rv-ch.nv,#tab-guests .rv-ch.nv{background:#e8f1fc;color:#1d5fae;}
-#tab-reserv .rv-ch.ab,#tab-guests .rv-ch.ab{background:#fdeee7;color:#b8461a;}
-#tab-reserv .rv-l2{font-size:13px;color:var(--muted-fg);margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-#tab-reserv .rv-l2 .sep{margin:0 6px;color:var(--border-strong);}
-#tab-reserv .rv-memo{font-size:12px;color:var(--muted-fg-2);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-#tab-reserv .rv-sts{display:flex;gap:6px;}
-#tab-reserv .rv-st{display:inline-flex;align-items:center;gap:5px;height:26px;padding:0 9px;border-radius:999px;font-size:12px;font-weight:600;border:1px solid var(--border);color:var(--muted-fg);background:var(--card);white-space:nowrap;}
-#tab-reserv .rv-st i{font-style:normal;font-weight:700;}
-#tab-reserv .rv-st.done{background:#ecfdf5;border-color:#a7f3d0;color:var(--today-fg);}
-#tab-reserv .rv-st.ok{background:#eff6ff;border-color:#bfdbfe;color:#1d4ed8;}
-#tab-reserv .rv-st.warn{background:var(--warning-bg);border-color:var(--warning-border);color:#b45309;}
-#tab-reserv .rv-st.bad{background:var(--destructive-bg);border-color:var(--destructive-border);color:#b91c1c;}
-#tab-reserv .rv-st.skip{color:var(--muted-fg);background:var(--muted);}
-#tab-reserv .rv-st.none{color:var(--muted-fg-2);border-style:dashed;}
-#tab-reserv .rv-chev{color:var(--muted-fg-2);font-size:20px;line-height:1;transition:transform .15s ease;justify-self:end;}
+#tab-reserv .rv-l1{display:flex;align-items:center;gap:8px;min-width:0;}
+#tab-reserv .rv-name{font-size:16px;font-weight:800;color:#0f172a;white-space:nowrap;}
+#tab-reserv .rv-tag{font-size:12px;font-weight:700;border-radius:6px;padding:3px 8px;line-height:1.3;white-space:nowrap;background:#f1f5f9;color:#334155;}
+#tab-reserv .rv-tag.in{background:var(--chip-in);color:#fff;}
+#tab-reserv .rv-tag.out{background:var(--chip-out);color:#fff;}
+#tab-reserv .rv-tag.stay{background:#a7f3d0;color:#065f46;}
+#tab-reserv .rv-tag.dd{background:#f1f5f9;color:#334155;font-variant-numeric:tabular-nums;}
+#tab-reserv .rv-ch{display:inline-flex;align-items:center;gap:5px;font-size:13px;font-weight:600;color:#64748b;white-space:nowrap;}
+#tab-reserv .rv-ch::before{content:'';width:7px;height:7px;border-radius:50%;background:#94a3b8;flex-shrink:0;}
+#tab-reserv .rv-ch.nv::before{background:#2563eb;}
+#tab-reserv .rv-ch.ab::before{background:#eb6834;}
+#tab-reserv .rv-l2{display:flex;align-items:center;gap:6px;margin-top:4px;min-width:0;}
+#tab-reserv .rv-mtag{font-size:12px;font-weight:700;background:#f5f3ff;color:#6d28d9;border-radius:5px;padding:2px 7px;line-height:1.35;white-space:nowrap;flex-shrink:0;}
+#tab-reserv .rv-memo{font-size:13px;color:#475569;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0;}
+#tab-reserv .rv-l3{display:none;}
+#tab-reserv .rv-out b{display:block;font-size:15px;font-weight:600;color:#0f172a;font-variant-numeric:tabular-nums;white-space:nowrap;}
+#tab-reserv .rv-out span{display:block;font-size:13px;color:#64748b;margin-top:3px;white-space:nowrap;}
+#tab-reserv .rv-price{text-align:right;font-size:15px;font-weight:700;color:#0f172a;font-variant-numeric:tabular-nums;white-space:nowrap;}
+#tab-reserv .rv-chev{color:#94a3b8;font-size:20px;line-height:1;transition:transform .15s ease;justify-self:end;}
 #tab-reserv .rv-row.open .rv-chev{transform:rotate(90deg);}
-#tab-reserv .rv-detail{padding:2px 16px 16px 90px;}
-#tab-reserv .rv-dgrid{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:20px;padding-top:12px;border-top:1px dashed #a7f3d0;}
-#tab-reserv .rv-dl{display:grid;grid-template-columns:56px minmax(0,1fr);gap:7px 12px;font-size:13px;margin:0;}
-#tab-reserv .rv-dl dt{color:var(--muted-fg);}
-#tab-reserv .rv-dl dd{color:var(--fg);margin:0;overflow-wrap:anywhere;}
-#tab-reserv .rv-dl dd a{color:var(--today-fg);font-weight:600;text-decoration:none;}
-#tab-reserv .rv-dl dd.memo{white-space:pre-wrap;}
-#tab-reserv .rv-msgs h5{font-size:12px;font-weight:700;color:var(--muted-fg);margin:0 0 6px;}
-#tab-reserv .rv-mline{display:flex;align-items:baseline;gap:8px;font-size:13px;padding:3px 0;color:var(--fg-2);}
-#tab-reserv .rv-mline b{font-weight:600;color:var(--fg);flex-shrink:0;min-width:56px;}
-#tab-reserv .rv-dot{width:8px;height:8px;border-radius:50%;background:var(--border-strong);flex-shrink:0;transform:translateY(-1px);}
-#tab-reserv .rv-mline.done .rv-dot{background:var(--chip-in);}
-#tab-reserv .rv-mline.ok .rv-dot{background:#3b82f6;}
-#tab-reserv .rv-mline.warn .rv-dot{background:var(--warning);}
-#tab-reserv .rv-mline.bad .rv-dot{background:var(--destructive);}
-#tab-reserv .rv-mline.warn span{color:#b45309;}
-#tab-reserv .rv-mline.bad span{color:#b91c1c;}
-#tab-reserv .rv-mline.none span{color:var(--muted-fg-2);}
-#tab-reserv .rv-dact{display:flex;gap:8px;margin-top:14px;align-items:center;flex-wrap:wrap;}
-#tab-reserv .rv-dact .btn{height:36px;padding:0 14px;font-size:13px;}
-#tab-reserv .rv-dact .rv-del{margin-left:auto;color:var(--destructive);}
-#tab-reserv .rv-dact .rv-del:hover{background:var(--destructive-bg);color:var(--destructive);}
 
-@media(min-width:641px) and (max-width:1100px){
-  #tab-reserv .rv-st{padding:0 8px;gap:4px;}
+/* 문자 칩: 상태마다 바탕·테두리·아이콘·글자가 다름. 점선 안 씀 */
+#tab-reserv .rv-sts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;}
+#tab-reserv .rv-st{display:flex;align-items:center;box-sizing:border-box;min-width:0;height:30px;padding:0 7px;border-radius:7px;border:1px solid transparent;font-size:13px;font-weight:700;white-space:nowrap;overflow:hidden;}
+#tab-reserv .rv-st .stg,#tab-reserv .rv-st .tx-m{display:none;}
+#tab-reserv .rv-st .sv{display:flex;align-items:center;gap:4px;min-width:0;}
+#tab-reserv .rv-st .tx-pc{overflow:hidden;text-overflow:ellipsis;}
+#tab-reserv .rv-st svg{width:14px;height:14px;flex-shrink:0;stroke-width:2.2;}
+#tab-reserv .rv-st.done{background:#ecfdf5;border-color:#a7f3d0;color:#047857;}
+#tab-reserv .rv-st.sending{background:#fff;border-color:#93c5fd;color:#1d4ed8;}
+#tab-reserv .rv-st.ok{background:#eff6ff;border-color:#bfdbfe;color:#1d4ed8;}
+#tab-reserv .rv-st.warn{background:#fffbeb;border-color:#fde68a;color:#b45309;}
+#tab-reserv .rv-st.bad{background:#fef2f2;border-color:#fecaca;color:#b91c1c;}
+#tab-reserv .rv-st.skip{background:#f1f5f9;border-color:#e2e8f0;color:#334155;}
+#tab-reserv .rv-st.next{background:#fff;border-color:#cbd5e1;color:#475569;}
+#tab-reserv .rv-st.none{background:transparent;border-color:transparent;color:#94a3b8;}
+
+/* 펼친 칸 */
+#tab-reserv .rv-detail{padding:4px 20px 18px 92px;}
+#tab-reserv .rv-dgrid{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:32px;padding-top:16px;border-top:1px solid #e2e8f0;}
+#tab-reserv .rv-dl{display:grid;grid-template-columns:64px minmax(0,1fr);gap:8px 12px;font-size:14px;line-height:1.55;margin:0;}
+#tab-reserv .rv-dl dt{color:#64748b;}
+#tab-reserv .rv-dl dd{color:#0f172a;margin:0;overflow-wrap:anywhere;}
+#tab-reserv .rv-dl dd.stay{font-weight:600;font-variant-numeric:tabular-nums;}
+#tab-reserv .rv-dl dd a{color:#047857;font-weight:700;text-decoration:none;font-variant-numeric:tabular-nums;}
+#tab-reserv .rv-dl dd.memo{white-space:pre-wrap;color:#334155;}
+#tab-reserv .rv-dl .m{display:none;}
+#tab-reserv .rv-msgs h5{font-size:13px;font-weight:700;color:#64748b;margin:0 0 8px;}
+#tab-reserv .rv-mline{display:grid;grid-template-columns:72px 112px minmax(0,1fr);gap:10px;align-items:center;padding:4px 0;font-size:14px;color:#334155;}
+#tab-reserv .rv-mline b{font-weight:700;color:#0f172a;}
+#tab-reserv .rv-mline .rv-st{height:28px;}
+#tab-reserv .rv-dact{display:flex;gap:8px;margin-top:16px;align-items:center;}
+#tab-reserv .rv-dact .btn{height:40px;padding:0 16px;font-size:15px;border-radius:10px;}
+#tab-reserv .rv-dact .rv-compose{background:#ecfdf5;color:#047857;font-weight:700;}
+#tab-reserv .rv-dact .rv-compose:hover{background:#d1fae5;}
+#tab-reserv .rv-dact .rv-edit{background:#fff;border-color:#cbd5e1;color:#0f172a;font-weight:600;}
+#tab-reserv .rv-dact .rv-edit:hover{background:#f8fafc;}
+#tab-reserv .rv-dact .rv-vsep{margin-left:auto;width:1px;height:24px;background:#e2e8f0;}
+#tab-reserv .rv-dact .rv-del{background:#fef2f2;color:#dc2626;font-weight:700;}
+#tab-reserv .rv-dact .rv-del:hover{background:#fee2e2;}
+
+/* 빈 상태 */
+#tab-reserv .rv-empty{background:#fff;border:1px solid #e2e8f0;border-radius:16px;padding:48px 24px;text-align:center;}
+#tab-reserv .rv-empty .i{display:block;width:32px;height:32px;color:#94a3b8;margin:0 auto 12px;}
+#tab-reserv .rv-empty h4{font-size:16px;font-weight:700;color:#0f172a;margin:0;}
+#tab-reserv .rv-empty p{font-size:14px;color:#64748b;margin:6px 0 0;}
+
+/* 959 이하: 모바일 줄 규격(도구줄은 641~959에서 한 줄) */
+@media(max-width:959px){
+  #tab-reserv .rv-colh{display:none;}
+  #tab-reserv .rv-main{grid-template-columns:48px minmax(0,1fr) 16px;column-gap:10px;row-gap:0;padding:12px;align-items:start;}
+  #tab-reserv .rv-date{grid-column:1;grid-row:1 / span 2;width:48px;height:52px;border-radius:10px;}
+  #tab-reserv .rv-date b{font-size:15px;}
+  #tab-reserv .rv-date span{font-size:11px;}
+  #tab-reserv .rv-body{grid-column:2;grid-row:1;}
+  #tab-reserv .rv-chev{grid-column:3;grid-row:1;margin-top:4px;}
+  #tab-reserv .rv-out,#tab-reserv .rv-price{display:none;}
+  #tab-reserv .rv-l1{flex-wrap:wrap;gap:4px 6px;}
+  #tab-reserv .rv-name{font-size:15px;}
+  #tab-reserv .rv-tag{font-size:11px;padding:2px 6px;border-radius:5px;}
+  #tab-reserv .rv-ch{font-size:12px;gap:4px;}
+  #tab-reserv .rv-ch::before{width:6px;height:6px;}
+  #tab-reserv .rv-l3{display:block;font-size:13px;color:#334155;margin-top:4px;font-variant-numeric:tabular-nums;}
+  #tab-reserv .rv-l2{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;margin-top:4px;line-height:1.45;}
+  #tab-reserv .rv-mtag{display:inline;font-size:11px;padding:1px 6px;margin-right:6px;}
+  #tab-reserv .rv-memo{display:inline;white-space:normal;}
+  #tab-reserv .rv-sts{grid-column:2;grid-row:2;gap:4px;margin-top:8px;}
+  #tab-reserv .rv-st{flex-direction:column;align-items:flex-start;justify-content:center;gap:1px;height:40px;padding:0 5px;border-radius:8px;}
+  #tab-reserv .rv-st .stg{display:block;font-size:10px;font-weight:600;color:#64748b;line-height:1.2;max-width:100%;overflow:hidden;text-overflow:ellipsis;}
+  #tab-reserv .rv-st .sv{gap:3px;font-size:12px;line-height:1.25;max-width:100%;}
+  #tab-reserv .rv-st .tx-pc{display:none;}
+  #tab-reserv .rv-st .tx-m{display:inline;overflow:hidden;text-overflow:ellipsis;}
+  #tab-reserv .rv-st svg{width:12px;height:12px;}
+  #tab-reserv .rv-st.none{background:#f8fafc;border-color:#f1f5f9;}
+  #tab-reserv .rv-detail{padding:0 12px 14px;}
+  #tab-reserv .rv-dgrid{grid-template-columns:1fr;gap:12px;padding-top:12px;}
+  #tab-reserv .rv-dl{grid-template-columns:52px minmax(0,1fr);gap:7px 10px;}
+  #tab-reserv .rv-dl .pc{display:none;}
+  #tab-reserv .rv-dl .m{display:block;}
+  #tab-reserv .rv-msgs{background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:10px 12px;}
+  #tab-reserv .rv-msgs h5{display:none;}
+  #tab-reserv .rv-mline{grid-template-columns:56px 16px minmax(0,1fr);gap:8px;font-size:13px;padding:2px 0;}
+  #tab-reserv .rv-mline .rv-st{width:16px;height:16px;padding:0;border-radius:4px;flex-direction:row;align-items:center;justify-content:center;}
+  #tab-reserv .rv-mline .rv-st .stg,#tab-reserv .rv-mline .rv-st .tx-pc,#tab-reserv .rv-mline .rv-st .tx-m{display:none;}
+  #tab-reserv .rv-mline .rv-st svg{width:11px;height:11px;}
+  #tab-reserv .rv-dact .btn{height:44px;}
+  #tab-reserv .rv-dact .rv-compose{flex:1;}
+  #tab-reserv .rv-dact .i{display:none;}
+  #tab-reserv .rv-dact .rv-vsep{margin-left:0;}
 }
 @media(max-width:640px){
-  #tab-reserv .rv-actions{order:-1;width:100%;margin-left:0;}
-  #tab-reserv .rv-actions .btn{flex:1;}
-  #tab-reserv .rv-seg,#tab-guests .rv-seg{flex:1 1 100%;}
-  #tab-reserv .rv-seg button,#tab-guests .rv-seg button{flex:1;padding:0 6px;}
-  #tab-reserv .rv-search,#tab-guests .rv-search{flex:1 1 100%;max-width:none;}
-  #tab-reserv .rv-main{grid-template-columns:50px minmax(0,1fr) 12px;column-gap:12px;row-gap:8px;padding:12px;}
-  #tab-reserv .rv-date{grid-column:1;grid-row:1 / 3;align-self:start;height:50px;}
-  #tab-reserv .rv-date b{font-size:15px;}
-  #tab-reserv .rv-l2{white-space:normal;}
-  #tab-reserv .rv-body{grid-column:2;grid-row:1;}
-  #tab-reserv .rv-chev{grid-column:3;grid-row:1;}
-  #tab-reserv .rv-sts{grid-column:2 / 4;grid-row:2;flex-wrap:wrap;gap:5px;}
-  #tab-reserv .rv-st{height:24px;padding:0 8px;font-size:11.5px;gap:4px;}
-  #tab-reserv .rv-detail{padding:0 12px 14px;}
-  #tab-reserv .rv-dgrid{grid-template-columns:1fr;gap:14px;}
-  #tab-reserv .rv-dact .btn{flex:1;}
-  #tab-reserv .rv-dact .rv-del{flex:0 0 auto;margin-left:0;}
-  #tab-reserv .rv-cl{flex-wrap:wrap;}
+  #tab-reserv.page{padding:16px 12px 24px;}
+  #tab-reserv .rv-bar{gap:10px;margin-bottom:12px;}
+  #tab-reserv .rv-actions{order:-1;width:100%;margin-left:0;display:grid;grid-template-columns:1fr 1.4fr;}
+  #tab-reserv .rv-seg{flex:1 1 100%;}
+  #tab-reserv .rv-seg button{flex:1;padding:0 6px;}
+  #tab-reserv .rv-search{flex:1 1 100%;max-width:none;}
+  #tab-reserv .rv-cl{margin-bottom:12px;}
+  #tab-reserv .rv-cl-main{white-space:normal;}
+  #tab-reserv .rv-cl-l1{display:block;font-size:14px;}
+  #tab-reserv .rv-cl-t{margin-right:4px;}
+  #tab-reserv .rv-cl-sub{display:block;font-size:12px;color:#475569;margin-top:2px;}
+  #tab-reserv .rv-cl-sep{display:none;}
+  #tab-reserv .rv-cl .btn{font-size:13px;padding:0 12px;}
+  #tab-reserv .rv-list{gap:10px;}
+  #tab-reserv .rv-gh{font-size:14px;}
+  #tab-reserv .rv-empty{padding:36px 16px;}
+  #tab-reserv .rv-empty .i{width:28px;height:28px;}
+  #tab-reserv .rv-empty h4{font-size:15px;}
+}
+@media(max-width:380px){
+  #tab-reserv.page{padding-left:8px;padding-right:8px;}
+  #tab-reserv .rv-main{padding:10px;}
+  #tab-reserv .rv-detail{padding:0 10px 14px;}
 }
 /* ═══════ v1.13.0 고객 관리 ═══════ */
 #tab-guests .gs-list{display:flex;flex-direction:column;gap:12px;}
@@ -1430,6 +1531,15 @@ input,select,textarea{font-family:inherit;}
 <symbol id="i-ban" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M5.6 5.6 L18.4 18.4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
 <symbol id="i-inbox" viewBox="0 0 24 24"><path d="M3 13 L6 5 H18 L21 13 V19 H3 Z M3 13 H8 L9.5 15.5 H14.5 L16 13 H21" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></symbol>
 <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M16 16 L20.5 20.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
+<!-- 예약 관리 문자 칩 상태 아이콘(v1.14.0), 굵기는 CSS stroke-width -->
+<symbol id="i-st-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+<symbol id="i-st-clock" viewBox="0 0 24 24"><path d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18zM12 7v5l3 2" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+<symbol id="i-st-pause" viewBox="0 0 24 24"><path d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18zM10 9v6M14 9v6" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+<symbol id="i-st-alert" viewBox="0 0 24 24"><path d="M12 8v5M12 16.5v.5M10.3 3.9 2.6 17.5A2 2 0 0 0 4.3 20.5h15.4a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+<symbol id="i-st-phone" viewBox="0 0 24 24"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+<symbol id="i-st-next" viewBox="0 0 24 24"><path d="M12 20a8 8 0 1 0 0-16 8 8 0 0 0 0 16z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+<symbol id="i-st-none" viewBox="0 0 24 24"><path d="M7 12h10" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+<symbol id="i-st-dots" viewBox="0 0 24 24"><path d="M6 12h.01M12 12h.01M18 12h.01" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></symbol>
 </defs></svg>
 
 <div class="app">
@@ -1440,7 +1550,7 @@ input,select,textarea{font-family:inherit;}
       <div class="sidebar-brand" onclick="switchTab('home')" role="button" tabindex="0" aria-label="홈으로">
         <div class="sidebar-logo">SM</div>
         <div class="sidebar-brand-text">
-          <div class="sidebar-brand-name">Stay_Msg Pro<span class="sidebar-brand-ver" id="appVer">v1.13.0</span></div>
+          <div class="sidebar-brand-name">Stay_Msg Pro<span class="sidebar-brand-ver" id="appVer">v1.14.0</span></div>
           <div class="sidebar-brand-sub">숙소 예약 문자</div>
         </div>
       </div>
@@ -1496,7 +1606,7 @@ input,select,textarea{font-family:inherit;}
       <div class="mheader-brand" onclick="switchTab('home')" role="button" tabindex="0" aria-label="홈으로">
         <div class="mheader-logo">SM</div>
         <div>
-          <div class="mheader-title">Stay_Msg Pro<span class="mheader-ver" id="appVerM">v1.13.0</span></div>
+          <div class="mheader-title">Stay_Msg Pro<span class="mheader-ver" id="appVerM">v1.14.0</span></div>
           <div class="mheader-sub">숙소 예약 문자</div>
         </div>
       </div>
@@ -1737,7 +1847,7 @@ input,select,textarea{font-family:inherit;}
         <ul>
           <li><strong>다가오는 · 지난 · 전체</strong> — 다가오는 예약은 <em>오늘·머무는 중 → 7일 안 → 달별</em>로 묶여요. 검색 칸은 이름·전화 뒷자리·메모로 찾습니다.</li>
           <li><strong>줄 누르기</strong> — 펼쳐서 연락처·메모·문자 단계를 보고, <em>문자 작성</em>·<em>수정</em>·<em>삭제</em>를 합니다.</li>
-          <li><strong>문자 칩 (확정 · 입실 · 퇴실)</strong> — ✓ 보냄 · 파란 날짜 = 승인돼서 그날 자동 발송 · 회색 날짜 = 보낼 차례 · 노랑 = 승인 대기 · 빨강 = 확인 필요 · – = 기록 없음.</li>
+          <li><strong>문자 칩 (확정 · 입실 · 퇴실)</strong> — 초록 <em>보냄</em> · 파랑 <em>날짜 자동</em> = 승인돼서 그날 아침 자동 발송 · 흰 칸 <em>날짜 차례</em> = 보낼 차례 · 노랑 <em>승인 대기</em> · 빨강 <em>확인 필요</em> · 회색 <em>직접 보냄</em> · 옅은 <em>기록 없음</em>. 메모 앞 보라 표시는 반려견·바비큐예요.</li>
           <li><strong>새 예약</strong> — 이름·전화·날짜·인원·금액을 직접 넣어요. 문자 작성 탭의 <em>예약 저장</em>으로도 추가됩니다.</li>
           <li><strong>임시 휴무</strong> — 사정으로 손님을 못 받는 날을 넣으면 봇이 10분 안에 네이버·에어비앤비 날짜를 막아요. 휴무를 취소해도 봇은 풀지 않으니 두 곳에서 직접 열어 주세요.</li>
         </ul>
@@ -2285,7 +2395,7 @@ input,select,textarea{font-family:inherit;}
 <div class="toast" id="toast"></div>
 
 <script>
-const APP_VERSION='v1.13.0'; // Pro (2026-10-27 lite v3.3.0에서 이름·버전 리셋)
+const APP_VERSION='v1.14.0'; // Pro (2026-10-27 lite v3.3.0에서 이름·버전 리셋)
 const SK_SET='stay_msg_lite1_set_v1';
 const SK_TPL='stay_msg_lite1_tpl_v1';
 const SK_RES='stay_msg_lite1_res_v1';
@@ -4261,7 +4371,7 @@ function rvStage(r,st){
     const d=j.scheduled_date?rvMD(j.scheduled_date):'';
     switch(j.status){
       case 'sent':case 'delivered':return ['done','✓',`보냄 · ${d} (자동)`];
-      case 'sending':return ['ok','…','보내는 중'];
+      case 'sending':return ['sending','','보내는 중'];
       case 'approved':return ['ok',d,`승인됨 · ${d} 아침 자동 발송`];
       case 'pending':return ['warn','승인 대기','승인 대기 · 홈 「자동 문자」에서 승인'];
       case 'skipped':return ['skip','수동','건너뜀 · 직접 보내기로 함'];
@@ -4277,8 +4387,15 @@ function rvStage(r,st){
   });
   if(h)return ['done','✓',`보냄 · ${rvMD(rvYmd(new Date(h.at)))} (${h.sentBy==='bot'?'자동':'앱'})`];
   const due=st==='booked'?null:(st==='precheckin'?r.checkin:r.checkout);
-  if(due&&due>=getTodayStr())return ['todo','',`${rvMD(due)} 보낼 차례`];
+  if(due&&due>=getTodayStr())return ['next',rvMD(due),`${rvMD(due)} 보낼 차례`];
   return ['none','–','기록 없음'];
+}
+// 칩 안쪽: PC는 상태 글, 모바일은 윗줄 단계(·날짜) + 아랫줄 상태
+const RV_ICO={done:'check',sending:'dots',ok:'clock',warn:'pause',bad:'alert',skip:'phone',next:'next',none:'none'};
+function rvChip(c,t,lb){
+  const pc={done:'보냄',sending:'보내는 중',ok:(t?t+' ':'')+'자동',warn:'승인 대기',bad:'확인 필요',skip:'직접 보냄',next:t+' 차례',none:'기록 없음'}[c]||'';
+  const m={ok:'자동 발송',next:'차례'}[c]||pc, top=(c==='ok'||c==='next')&&t?`${lb} · ${t}`:lb;
+  return `<span class="stg">${top}</span><span class="sv"><svg><use href="#i-st-${RV_ICO[c]||'none'}"/></svg><span class="tx-pc">${esc(pc)}</span><span class="tx-m">${esc(m)}</span></span>`;
 }
 function rvRow(r,today){
   const open=_rv.open===r.id, n=Math.max(0,rvDays(r.checkin,r.checkout)), dw=rvDw(r.checkin), dwo=rvDw(r.checkout);
@@ -4288,37 +4405,46 @@ function rvRow(r,today){
   else if(r.checkin<today&&r.checkout>today)tag='<span class="rv-tag stay">머무는 중</span>';
   else if(r.checkin>today){const dd=rvDays(today,r.checkin);if(dd<=14)tag=`<span class="rv-tag dd">D-${dd}</span>`;}
   const ch=r.channel?`<span class="rv-ch ${rvChCls(r.channel)}">${esc(r.channel)}</span>`:'';
+  // 메모 앞 표시: 고객 관리와 같은 판단(직접 켬/끔 반영)
+  const mtags=[guestDog(r).on&&'반려견',guestBbq(r).on&&'바비큐'].filter(Boolean).map(t=>`<span class="rv-mtag">${t}</span>`).join('');
+  const gs=r.guests?rvGuests(r.guests):'', won=r.price?rvWon(r.price):'';
   const bits=[`→ ${rvMD(r.checkout)}(${dwo})`,`${n}박`];
-  if(r.guests)bits.push(rvGuests(r.guests));
-  if(r.price)bits.push(rvWon(r.price));
-  const st=RV_STAGES.map(([id,lb,full])=>{const [c,t,l]=rvStage(r,id);return `<span class="rv-st ${c}" title="${full} · ${esc(l)}">${lb}${t?`<i>${esc(t)}</i>`:''}</span>`;}).join('');
-  const now=r.checkin<=today&&r.checkout>=today;
+  if(gs)bits.push(gs);
+  if(won)bits.push(won);
+  const stg=RV_STAGES.map(([id,lb,full])=>[id,lb,full,...rvStage(r,id)]);
+  const st=stg.map(([,lb,full,c,t,l])=>`<span class="rv-st ${c}" title="${full} · ${esc(l)}">${rvChip(c,t,lb)}</span>`).join('');
+  const now=r.checkin<=today&&r.checkout>=today, past=r.checkout<today;
   const rooms=(settings&&settings.rooms)||[], room=rooms.length>1?rooms.find(x=>x.id===r.roomId):null;
+  const gw=[gs,won].filter(Boolean).join(' · ');
   const det=!open?'':`<div class="rv-detail"><div class="rv-dgrid">
       <dl class="rv-dl">
-        <dt>숙박</dt><dd>${r.checkin.replace(/-/g,'.')}(${dw}) → ${rvMD(r.checkout)}(${dwo}) · ${n}박</dd>
+        <dt>숙박</dt><dd class="stay">${r.checkin.replace(/-/g,'.')}(${dw}) → ${rvMD(r.checkout)}(${dwo}) · ${n}박</dd>
         ${r.phone?`<dt>연락처</dt><dd><a href="tel:${esc(String(r.phone).replace(/[^\d+]/g,''))}">${esc(r.phone)}</a></dd>`:''}
-        ${r.guests?`<dt>인원</dt><dd>${rvGuests(r.guests)}</dd>`:''}
-        ${r.price?`<dt>금액</dt><dd>${rvWon(r.price)}</dd>`:''}
+        ${gs?`<dt class="pc">인원</dt><dd class="pc">${gs}</dd>`:''}
+        ${won?`<dt class="pc">금액</dt><dd class="pc">${won}</dd>`:''}
+        ${gw?`<dt class="m">${gs?'인원':'금액'}</dt><dd class="m">${gw}</dd>`:''}
         ${r.channel?`<dt>채널</dt><dd>${esc(r.channel)}</dd>`:''}
         ${room?`<dt>호실</dt><dd>${esc(room.name||'')}</dd>`:''}
         ${r.memo?`<dt>메모</dt><dd class="memo">${esc(r.memo)}</dd>`:''}
       </dl>
-      <div class="rv-msgs"><h5>문자</h5>${RV_STAGES.map(([id,,full])=>{const [c,,l]=rvStage(r,id);return `<div class="rv-mline ${c}"><span class="rv-dot"></span><b>${full}</b><span>${esc(l)}</span></div>`;}).join('')}</div>
+      <div class="rv-msgs"><h5>문자</h5>${stg.map(([,lb,full,c,t,l])=>`<div class="rv-mline ${c}"><b>${full}</b><span class="rv-st ${c}">${rvChip(c,t,lb)}</span><span>${esc(l)}</span></div>`).join('')}</div>
     </div>
     <div class="rv-dact">
-      <button type="button" class="btn btn-primary btn-sm" onclick="loadReservation('${r.id}','${today}')"><svg class="i"><use href="#i-message"/></svg>문자 작성</button>
-      <button type="button" class="btn btn-outline btn-sm" onclick="editResv('${r.id}',event)"><svg class="i"><use href="#i-pencil"/></svg>수정</button>
-      <button type="button" class="btn btn-ghost btn-sm rv-del" onclick="delReservation('${r.id}',event)"><svg class="i"><use href="#i-trash"/></svg>삭제</button>
+      <button type="button" class="btn rv-compose" onclick="loadReservation('${r.id}','${today}')"><svg class="i"><use href="#i-pencil"/></svg>문자 작성</button>
+      <button type="button" class="btn rv-edit" onclick="editResv('${r.id}',event)">수정</button>
+      <span class="rv-vsep"></span>
+      <button type="button" class="btn rv-del" onclick="delReservation('${r.id}',event)"><svg class="i"><use href="#i-trash"/></svg>삭제</button>
     </div></div>`;
-  return `<div class="rv-row${open?' open':''}${now?' now':''}" data-rid="${esc(r.id)}">
+  return `<div class="rv-row${open?' open':''}${now?' now':''}${past?' past':''}" data-rid="${esc(r.id)}">
     <div class="rv-main" role="button" tabindex="0" onclick="rvToggle('${r.id}')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();rvToggle('${r.id}');}">
       <div class="rv-date${dw==='토'?' sat':dw==='일'?' sun':''}"><b>${rvMD(r.checkin)}</b><span>${dw}</span></div>
       <div class="rv-body">
         <div class="rv-l1"><strong class="rv-name">${esc(r.name||'(이름 없음)')}</strong>${tag}${ch}</div>
-        <div class="rv-l2">${bits.join('<span class="sep">·</span>')}</div>
-        ${r.memo?`<div class="rv-memo">${esc(r.memo)}</div>`:''}
+        <div class="rv-l3">${bits.join(' · ')}</div>
+        ${(mtags||r.memo)?`<div class="rv-l2">${mtags}${r.memo?`<span class="rv-memo">${esc(r.memo)}</span>`:''}</div>`:''}
       </div>
+      <div class="rv-out"><b>→ ${rvMD(r.checkout)}(${dwo})</b><span>${[`${n}박`,gs].filter(Boolean).join(' · ')}</span></div>
+      <div class="rv-price">${won}</div>
       <div class="rv-sts">${st}</div>
       <span class="rv-chev">›</span>
     </div>${det}
@@ -4352,10 +4478,10 @@ function renderReservations(){
   }
   const shown=groups.filter(g=>g.rows.length);
   if(!shown.length){
-    list.innerHTML=`<div class="empty"><span class="emoji">📋</span>${!all.length?'저장된 예약이 없어요<br>「새 예약」으로 넣거나 문자 작성 탭에서 「예약 저장」을 누르세요':q?'찾는 예약이 없어요':_rv.f==='up'?'다가오는 예약이 없어요':'지난 예약이 없어요'}</div>`;
+    list.innerHTML=`<div class="rv-empty"><svg class="i"><use href="#i-clipboard"/></svg>${!all.length?'<h4>저장된 예약이 없어요</h4><p>「새 예약」으로 넣거나 문자 작성 탭에서 「예약 저장」을 누르세요</p>':`<h4>${q?'찾는 예약이 없어요':_rv.f==='up'?'다가오는 예약이 없어요':'지난 예약이 없어요'}</h4>`}</div>`;
     return;
   }
-  list.innerHTML=shown.map(g=>`<section class="rv-group"><div class="rv-gh${g.cls?' '+g.cls:''}">${g.t}<em>${g.rows.length}</em></div><div class="rv-card">${g.rows.map(r=>rvRow(r,today)).join('')}</div></section>`).join('');
+  list.innerHTML='<div class="rv-colh" aria-hidden="true"><span>입실</span><span>손님 · 메모</span><span>퇴실 · 박 · 인원</span><span class="r">금액</span><span class="rv-colh-st"><span>문자 · 확정</span><span>입실 안내</span><span>퇴실 안내</span></span><span></span></div>'+shown.map(g=>`<section class="rv-group"><div class="rv-gh${g.cls?' '+g.cls:''}">${g.t}<em>${g.rows.length}</em></div><div class="rv-card">${g.rows.map(r=>rvRow(r,today)).join('')}</div></section>`).join('');
 }
 
 // ─────── MODALS ───────
@@ -4506,8 +4632,7 @@ function renderClosures(){
   if(!list.length){ box.innerHTML=''; return; }
   const t2=([l,c])=>`<span class="${c?'warn':''}">${esc(l)}</span>`;
   box.innerHTML=list.map(c=>`<div class="rv-cl"><svg class="i rv-cl-ico"><use href="#i-ban"/></svg>
-    <div class="rv-cl-main"><div class="rv-cl-l1"><span class="rv-cl-t">임시 휴무</span><strong>${clRange(c.start_date,c.end_date)}</strong>${c.memo?`<span class="rv-cl-memo">${esc(c.memo)}</span>`:''}</div>
-      <div class="rv-cl-sub">네이버 ${t2(clBlockLabel(c.id,'naver'))} · 에어비앤비 ${t2(clBlockLabel(c.id,'airbnb'))}</div></div>
+    <div class="rv-cl-main"><span class="rv-cl-l1"><span class="rv-cl-t">임시 휴무</span><strong class="rv-cl-range">${clRange(c.start_date,c.end_date)}</strong></span><span class="rv-cl-sub"><span class="rv-cl-sep"> · </span>${c.memo?esc(c.memo)+' · ':''}네이버 ${t2(clBlockLabel(c.id,'naver'))} · 에어비앤비 ${t2(clBlockLabel(c.id,'airbnb'))}</span></div>
     <button class="btn btn-outline btn-sm" onclick="cancelClosure(${c.id})">휴무 취소</button></div>`).join('');
 }
 function cancelClosure(id){
