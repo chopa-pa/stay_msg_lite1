@@ -1231,42 +1231,18 @@ input,select,textarea{font-family:inherit;}
   .page-sub{font-size:13px;}
 }
 
-/* ═══════ 고객 관리가 같이 쓰는 도구줄·표시 (v1.12.0 모양 그대로) ═══════ */
-#tab-guests .rv-bar{display:flex;align-items:center;gap:10px;margin-bottom:14px;flex-wrap:wrap;}
-#tab-guests .rv-seg{display:inline-flex;padding:3px;background:var(--muted);border-radius:10px;gap:2px;}
-#tab-guests .rv-seg button{border:0;background:transparent;border-radius:8px;height:34px;padding:0 13px;font-size:13px;font-weight:600;color:var(--muted-fg);cursor:pointer;white-space:nowrap;}
-#tab-guests .rv-seg button b{font-weight:700;margin-left:5px;color:var(--muted-fg-2);}
-#tab-guests .rv-seg button.on{background:var(--card);color:var(--fg);box-shadow:0 1px 3px rgba(15,23,42,.08);}
-#tab-guests .rv-seg button.on b{color:var(--today-fg);}
-#tab-guests .rv-search{position:relative;flex:1 1 200px;max-width:300px;display:block;}
-#tab-guests .rv-search .i{position:absolute;left:11px;top:50%;transform:translateY(-50%);width:16px;height:16px;color:var(--muted-fg-2);pointer-events:none;}
-#tab-guests .rv-search input{width:100%;height:40px;padding-left:34px;}
-#tab-guests .rv-tag,#tab-guests .rv-ch{font-size:11px;font-weight:700;border-radius:6px;padding:2px 7px;line-height:1.45;background:var(--muted);color:var(--muted-fg);white-space:nowrap;}
-#tab-guests .rv-tag.in{background:var(--chip-in);color:#fff;}
-#tab-guests .rv-tag.out{background:var(--chip-out);color:#fff;}
-#tab-guests .rv-tag.stay{background:#d1fae5;color:var(--today-fg);}
-#tab-guests .rv-tag.dd{background:#eef2ff;color:#4338ca;}
-#tab-guests .rv-ch{font-weight:600;}
-#tab-guests .rv-ch.nv{background:#e8f1fc;color:#1d5fae;}
-#tab-guests .rv-ch.ab{background:#fdeee7;color:#b8461a;}
-@media(max-width:640px){
-  #tab-guests .rv-seg{flex:1 1 100%;}
-  #tab-guests .rv-seg button{flex:1;padding:0 6px;}
-  #tab-guests .rv-search{flex:1 1 100%;max-width:none;}
-}
-
 /* ═══════ v1.14.0 예약 관리 (2차-1 시안) ═══════ */
 /* 도구줄: 보기 전환 · 검색 · 임시 휴무 · 새 예약(이 화면의 유일한 진한 버튼) */
-#tab-reserv .rv-bar{display:flex;align-items:center;gap:12px;margin-bottom:16px;flex-wrap:wrap;}
-#tab-reserv .rv-seg{display:inline-flex;padding:4px;background:#e9eef3;border-radius:10px;gap:2px;flex-shrink:0;}
-#tab-reserv .rv-seg button{border:0;background:transparent;border-radius:8px;height:36px;padding:0 14px;font-size:14px;font-weight:700;color:#64748b;cursor:pointer;white-space:nowrap;}
-#tab-reserv .rv-seg button b{font-weight:700;margin-left:6px;color:#94a3b8;font-variant-numeric:tabular-nums;}
-#tab-reserv .rv-seg button.on{background:#fff;color:#0f172a;box-shadow:0 1px 2px rgba(15,23,42,.1);}
-#tab-reserv .rv-seg button.on b{color:#047857;}
-#tab-reserv .rv-search{position:relative;flex:1 1 220px;max-width:360px;display:block;}
-#tab-reserv .rv-search .i{position:absolute;left:13px;top:50%;transform:translateY(-50%);width:18px;height:18px;color:#64748b;pointer-events:none;}
-#tab-reserv .rv-search input{width:100%;height:44px;padding:0 12px 0 40px;background:#fff;border:1px solid #cbd5e1;border-radius:10px;font-size:15px;}
-#tab-reserv .rv-search input:focus{outline:none;border-color:#10b981;box-shadow:0 0 0 1px #10b981;}
+#tab-reserv .rv-bar,#tab-guests .rv-bar{display:flex;align-items:center;gap:12px;margin-bottom:16px;flex-wrap:wrap;}
+#tab-reserv .rv-seg,#tab-guests .rv-seg{display:inline-flex;padding:4px;background:#e9eef3;border-radius:10px;gap:2px;flex-shrink:0;}
+#tab-reserv .rv-seg button,#tab-guests .rv-seg button{border:0;background:transparent;border-radius:8px;height:36px;padding:0 14px;font-size:14px;font-weight:700;color:#64748b;cursor:pointer;white-space:nowrap;}
+#tab-reserv .rv-seg button b,#tab-guests .rv-seg button b{font-weight:700;margin-left:6px;color:#94a3b8;font-variant-numeric:tabular-nums;}
+#tab-reserv .rv-seg button.on,#tab-guests .rv-seg button.on{background:#fff;color:#0f172a;box-shadow:0 1px 2px rgba(15,23,42,.1);}
+#tab-reserv .rv-seg button.on b,#tab-guests .rv-seg button.on b{color:#047857;}
+#tab-reserv .rv-search,#tab-guests .rv-search{position:relative;flex:1 1 220px;max-width:360px;display:block;}
+#tab-reserv .rv-search .i,#tab-guests .rv-search .i{position:absolute;left:13px;top:50%;transform:translateY(-50%);width:18px;height:18px;color:#64748b;pointer-events:none;}
+#tab-reserv .rv-search input,#tab-guests .rv-search input{width:100%;height:44px;padding:0 12px 0 40px;background:#fff;border:1px solid #cbd5e1;border-radius:10px;font-size:15px;}
+#tab-reserv .rv-search input:focus,#tab-guests .rv-search input:focus{outline:none;border-color:#10b981;box-shadow:0 0 0 1px #10b981;}
 #tab-reserv .rv-actions{margin-left:auto;display:flex;gap:8px;}
 #tab-reserv .rv-actions .btn{height:44px;padding:0 16px;font-size:15px;border-radius:10px;}
 #tab-reserv .rv-actions .btn-outline{background:#fff;border-color:#cbd5e1;color:#0f172a;font-weight:600;}
@@ -1284,9 +1260,9 @@ input,select,textarea{font-family:inherit;}
 
 /* 목록 · 묶음 */
 #tab-reserv .rv-list{display:flex;flex-direction:column;gap:16px;}
-#tab-reserv .rv-gh{display:flex;align-items:center;gap:8px;font-size:15px;font-weight:800;color:#0f172a;margin:0 4px 8px;}
-#tab-reserv .rv-gh em{font-style:normal;font-size:12px;font-weight:700;color:#475569;background:#e9eef3;border-radius:999px;padding:1px 8px;}
-#tab-reserv .rv-card{background:#fff;border:1px solid #e2e8f0;border-radius:16px;overflow:hidden;}
+#tab-reserv .rv-gh,#tab-guests .rv-gh{display:flex;align-items:center;gap:8px;font-size:15px;font-weight:800;color:#0f172a;margin:0 4px 8px;}
+#tab-reserv .rv-gh em,#tab-guests .rv-gh em{font-style:normal;font-size:12px;font-weight:700;color:#475569;background:#e9eef3;border-radius:999px;padding:1px 8px;}
+#tab-reserv .rv-card,#tab-guests .rv-card{background:#fff;border:1px solid #e2e8f0;border-radius:16px;overflow:hidden;}
 #tab-reserv .rv-row + .rv-row{border-top:1px solid #e2e8f0;}
 /* 열 머리(PC만, 표시만) — 줄과 같은 그리드 */
 #tab-reserv .rv-colh{display:grid;grid-template-columns:56px minmax(0,1fr) 140px 96px 312px 20px;column-gap:16px;padding:0 21px;font-size:12px;font-weight:700;color:#64748b;margin-bottom:-4px;}
@@ -1312,15 +1288,15 @@ input,select,textarea{font-family:inherit;}
 #tab-reserv .rv-body{min-width:0;}
 #tab-reserv .rv-l1{display:flex;align-items:center;gap:8px;min-width:0;}
 #tab-reserv .rv-name{font-size:16px;font-weight:800;color:#0f172a;white-space:nowrap;}
-#tab-reserv .rv-tag{font-size:12px;font-weight:700;border-radius:6px;padding:3px 8px;line-height:1.3;white-space:nowrap;background:#f1f5f9;color:#334155;}
-#tab-reserv .rv-tag.in{background:var(--chip-in);color:#fff;}
-#tab-reserv .rv-tag.out{background:var(--chip-out);color:#fff;}
-#tab-reserv .rv-tag.stay{background:#a7f3d0;color:#065f46;}
-#tab-reserv .rv-tag.dd{background:#f1f5f9;color:#334155;font-variant-numeric:tabular-nums;}
-#tab-reserv .rv-ch{display:inline-flex;align-items:center;gap:5px;font-size:13px;font-weight:600;color:#64748b;white-space:nowrap;}
-#tab-reserv .rv-ch::before{content:'';width:7px;height:7px;border-radius:50%;background:#94a3b8;flex-shrink:0;}
-#tab-reserv .rv-ch.nv::before{background:#2563eb;}
-#tab-reserv .rv-ch.ab::before{background:#eb6834;}
+#tab-reserv .rv-tag,#tab-guests .rv-tag{font-size:12px;font-weight:700;border-radius:6px;padding:3px 8px;line-height:1.3;white-space:nowrap;background:#f1f5f9;color:#334155;}
+#tab-reserv .rv-tag.in,#tab-guests .rv-tag.in{background:var(--chip-in);color:#fff;}
+#tab-reserv .rv-tag.out,#tab-guests .rv-tag.out{background:var(--chip-out);color:#fff;}
+#tab-reserv .rv-tag.stay,#tab-guests .rv-tag.stay{background:#a7f3d0;color:#065f46;}
+#tab-reserv .rv-tag.dd,#tab-guests .rv-tag.dd{background:#f1f5f9;color:#334155;font-variant-numeric:tabular-nums;}
+#tab-reserv .rv-ch,#tab-guests .rv-ch{display:inline-flex;align-items:center;gap:5px;font-size:13px;font-weight:600;color:#64748b;white-space:nowrap;}
+#tab-reserv .rv-ch::before,#tab-guests .rv-ch::before{content:'';width:7px;height:7px;border-radius:50%;background:#94a3b8;flex-shrink:0;}
+#tab-reserv .rv-ch.nv::before,#tab-guests .rv-ch.nv::before{background:#2563eb;}
+#tab-reserv .rv-ch.ab::before,#tab-guests .rv-ch.ab::before{background:#eb6834;}
 #tab-reserv .rv-l2{display:flex;align-items:center;gap:6px;margin-top:4px;min-width:0;}
 #tab-reserv .rv-mtag{font-size:12px;font-weight:700;background:#f5f3ff;color:#6d28d9;border-radius:5px;padding:2px 7px;line-height:1.35;white-space:nowrap;flex-shrink:0;}
 #tab-reserv .rv-memo{font-size:13px;color:#475569;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0;}
@@ -1372,10 +1348,10 @@ input,select,textarea{font-family:inherit;}
 #tab-reserv .rv-dact .rv-del:hover{background:#fee2e2;}
 
 /* 빈 상태 */
-#tab-reserv .rv-empty{background:#fff;border:1px solid #e2e8f0;border-radius:16px;padding:48px 24px;text-align:center;}
-#tab-reserv .rv-empty .i{display:block;width:32px;height:32px;color:#94a3b8;margin:0 auto 12px;}
-#tab-reserv .rv-empty h4{font-size:16px;font-weight:700;color:#0f172a;margin:0;}
-#tab-reserv .rv-empty p{font-size:14px;color:#64748b;margin:6px 0 0;}
+#tab-reserv .rv-empty,#tab-guests .rv-empty{background:#fff;border:1px solid #e2e8f0;border-radius:16px;padding:48px 24px;text-align:center;}
+#tab-reserv .rv-empty .i,#tab-guests .rv-empty .i{display:block;width:32px;height:32px;color:#94a3b8;margin:0 auto 12px;}
+#tab-reserv .rv-empty h4,#tab-guests .rv-empty h4{font-size:16px;font-weight:700;color:#0f172a;margin:0;}
+#tab-reserv .rv-empty p,#tab-guests .rv-empty p{font-size:14px;color:#64748b;margin:6px 0 0;}
 
 /* 959 이하: 모바일 줄 규격(도구줄은 641~959에서 한 줄) */
 @media(max-width:959px){
@@ -1389,9 +1365,9 @@ input,select,textarea{font-family:inherit;}
   #tab-reserv .rv-out,#tab-reserv .rv-price{display:none;}
   #tab-reserv .rv-l1{flex-wrap:wrap;gap:4px 6px;}
   #tab-reserv .rv-name{font-size:15px;}
-  #tab-reserv .rv-tag{font-size:11px;padding:2px 6px;border-radius:5px;}
-  #tab-reserv .rv-ch{font-size:12px;gap:4px;}
-  #tab-reserv .rv-ch::before{width:6px;height:6px;}
+  #tab-reserv .rv-tag,#tab-guests .rv-tag{font-size:11px;padding:2px 6px;border-radius:5px;}
+  #tab-reserv .rv-ch,#tab-guests .rv-ch{font-size:12px;gap:4px;}
+  #tab-reserv .rv-ch::before,#tab-guests .rv-ch::before{width:6px;height:6px;}
   #tab-reserv .rv-l3{display:block;font-size:13px;color:#334155;margin-top:4px;font-variant-numeric:tabular-nums;}
   #tab-reserv .rv-l2{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;margin-top:4px;line-height:1.45;}
   #tab-reserv .rv-mtag{display:inline;font-size:11px;padding:1px 6px;margin-right:6px;}
@@ -1421,12 +1397,12 @@ input,select,textarea{font-family:inherit;}
   #tab-reserv .rv-dact .rv-vsep{margin-left:0;}
 }
 @media(max-width:640px){
-  #tab-reserv.page{padding:16px 12px 24px;}
-  #tab-reserv .rv-bar{gap:10px;margin-bottom:12px;}
+  #tab-reserv.page,#tab-guests.page{padding:16px 12px 24px;}
+  #tab-reserv .rv-bar,#tab-guests .rv-bar{gap:10px;margin-bottom:12px;}
   #tab-reserv .rv-actions{order:-1;width:100%;margin-left:0;display:grid;grid-template-columns:1fr 1.4fr;}
-  #tab-reserv .rv-seg{flex:1 1 100%;}
-  #tab-reserv .rv-seg button{flex:1;padding:0 6px;}
-  #tab-reserv .rv-search{flex:1 1 100%;max-width:none;}
+  #tab-reserv .rv-seg,#tab-guests .rv-seg{flex:1 1 100%;}
+  #tab-reserv .rv-seg button,#tab-guests .rv-seg button{flex:1;padding:0 6px;}
+  #tab-reserv .rv-search,#tab-guests .rv-search{flex:1 1 100%;max-width:none;}
   #tab-reserv .rv-cl{margin-bottom:12px;}
   #tab-reserv .rv-cl-main{white-space:normal;}
   #tab-reserv .rv-cl-l1{display:block;font-size:14px;}
@@ -1435,58 +1411,94 @@ input,select,textarea{font-family:inherit;}
   #tab-reserv .rv-cl-sep{display:none;}
   #tab-reserv .rv-cl .btn{font-size:13px;padding:0 12px;}
   #tab-reserv .rv-list{gap:10px;}
-  #tab-reserv .rv-gh{font-size:14px;}
-  #tab-reserv .rv-empty{padding:36px 16px;}
-  #tab-reserv .rv-empty .i{width:28px;height:28px;}
-  #tab-reserv .rv-empty h4{font-size:15px;}
+  #tab-reserv .rv-gh,#tab-guests .rv-gh{font-size:14px;}
+  #tab-reserv .rv-empty,#tab-guests .rv-empty{padding:36px 16px;}
+  #tab-reserv .rv-empty .i,#tab-guests .rv-empty .i{width:28px;height:28px;}
+  #tab-reserv .rv-empty h4,#tab-guests .rv-empty h4{font-size:15px;}
 }
 @media(max-width:380px){
-  #tab-reserv.page{padding-left:8px;padding-right:8px;}
+  #tab-reserv.page,#tab-guests.page{padding-left:8px;padding-right:8px;}
   #tab-reserv .rv-main{padding:10px;}
   #tab-reserv .rv-detail{padding:0 10px 14px;}
 }
-/* ═══════ v1.13.0 고객 관리 ═══════ */
-#tab-guests .gs-list{display:flex;flex-direction:column;gap:12px;}
-#tab-guests .gs-card{background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden;box-shadow:var(--shadow-sm);}
-#tab-guests .gs-head{display:grid;grid-template-columns:40px minmax(0,1fr) auto;align-items:center;column-gap:12px;padding:12px 16px;}
-#tab-guests .gs-card.now{border-color:#a7f3d0;}
-#tab-guests .gs-card.now .gs-head{background:var(--accent-soft);}
-#tab-guests .gs-head .gs-meta{margin-top:4px;}
-#tab-guests .gs-l2 .gs-when{color:var(--fg-2);}
-#tab-guests .gs-av{width:40px;height:40px;border-radius:50%;background:var(--accent);color:var(--accent-fg);display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:800;flex-shrink:0;}
-#tab-guests .gs-id{min-width:0;flex:1;}
-#tab-guests .gs-l1{display:flex;align-items:center;gap:6px;flex-wrap:wrap;}
-#tab-guests .gs-name{font-size:15px;font-weight:700;color:var(--fg);margin-right:2px;}
-#tab-guests .gs-visit{font-size:11px;font-weight:700;border-radius:999px;padding:2px 8px;background:var(--muted);color:var(--muted-fg);white-space:nowrap;}
-#tab-guests .gs-visit.re{background:#d1fae5;color:var(--today-fg);}
-#tab-guests .gs-l2{font-size:13px;color:var(--muted-fg);margin-top:3px;}
-#tab-guests .gs-l2 a{color:var(--today-fg);font-weight:600;text-decoration:none;}
-#tab-guests .gs-l2 .sep{margin:0 6px;color:var(--border-strong);}
-#tab-guests .gs-stay{display:grid;grid-template-columns:minmax(190px,auto) minmax(0,1fr) auto;align-items:center;column-gap:14px;padding:10px 16px 10px 68px;border-top:1px solid var(--border);}
-#tab-guests .gs-stay.now{background:var(--accent-soft);}
-#tab-guests .gs-when{font-size:13px;color:var(--fg-2);white-space:nowrap;}
-#tab-guests .gs-when b{font-weight:700;color:var(--fg);}
-#tab-guests .gs-arr{margin:0 5px;color:var(--muted-fg-2);}
-#tab-guests .gs-nt{margin-left:8px;color:var(--muted-fg);}
-#tab-guests .gs-meta{display:flex;align-items:center;gap:6px;min-width:0;}
-#tab-guests .gs-alt{font-size:12px;color:var(--muted-fg);white-space:nowrap;}
-#tab-guests .gs-memo{font-size:12px;color:var(--muted-fg-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0;}
-#tab-guests .gs-fl{display:flex;gap:6px;justify-content:flex-end;}
-#tab-guests .gs-f{height:28px;padding:0 11px;border-radius:999px;border:1px solid var(--border-strong);background:var(--card);color:var(--muted-fg);font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap;}
-#tab-guests .gs-f:hover:not(:disabled){border-color:var(--primary);color:var(--today-fg);}
-#tab-guests .gs-f.on{background:var(--primary);border-color:var(--primary);color:#fff;}
-#tab-guests .gs-f.auto{background:#ecfdf5;border:1px dashed #6ee7b7;color:var(--today-fg);}
-#tab-guests .gs-f:disabled{cursor:default;opacity:.6;}
+/* ═══════ v1.14.1 고객 관리 (2차 시안) — 도구줄·상태 표시·채널·묶음·빈 상태는 위 예약 관리 부품을 같이 씀 ═══════ */
+#tab-guests .gs-list{display:flex;flex-direction:column;gap:16px;}
+#tab-guests .gs-colh,#tab-guests .gs-row{display:grid;grid-template-columns:minmax(0,1fr) 196px minmax(0,1.25fr) 276px;column-gap:16px;}
+#tab-guests .gs-colh{padding:0 21px;font-size:12px;font-weight:700;color:#64748b;margin-bottom:-4px;}
+#tab-guests .gs-colh .gs-fl span{text-align:center;}
+#tab-guests .gs-row{align-items:center;padding:12px 20px;}
+#tab-guests .gs-cust + .gs-cust{border-top:1px solid #e2e8f0;}
+#tab-guests .gs-cust.now{background:#f0fdf4;}
+#tab-guests .gs-id{min-width:0;}
+#tab-guests .gs-head .gs-id{grid-column:1 / -1;}
+#tab-guests .gs-l1{display:flex;align-items:center;gap:8px;min-width:0;}
+#tab-guests .gs-name{font-size:16px;font-weight:800;color:#0f172a;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+#tab-guests .gs-l2{font-size:13px;color:#64748b;margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+#tab-guests .gs-l2 a{color:#047857;font-weight:700;text-decoration:none;font-variant-numeric:tabular-nums;}
+#tab-guests .gs-l2 .sep{margin:0 5px;color:#cbd5e1;}
+#tab-guests .gs-vis{color:#94a3b8;font-weight:500;}
+#tab-guests .gs-vis.re{color:#047857;font-weight:700;}
+#tab-guests .gs-vis.mb{display:none;}
+#tab-guests .gs-when{min-width:0;}
+#tab-guests .gs-when b{display:block;font-size:15px;font-weight:600;color:#0f172a;font-variant-numeric:tabular-nums;white-space:nowrap;}
+#tab-guests .gs-when span{display:block;font-size:13px;color:#64748b;margin-top:3px;white-space:nowrap;}
+#tab-guests .gs-meta{min-width:0;}
+#tab-guests .gs-memo{display:block;font-size:13px;color:#475569;margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+#tab-guests .gs-meta .rv-ch + .gs-memo{margin-top:4px;}
+#tab-guests .gs-meta .gs-memo:first-child{margin-top:0;}
+/* 반려견 · 바비큐 · 리뷰: 켬 = 진초록 채움 + ✓, 자동 = 연초록 + 「자동」, 끔 = 흰 바탕. 점선 안 씀 */
+#tab-guests .gs-fl{display:grid;grid-template-columns:repeat(3,88px);gap:6px;justify-content:end;}
+#tab-guests .gs-f{display:inline-flex;align-items:center;justify-content:center;gap:4px;box-sizing:border-box;min-width:0;height:30px;padding:0 6px;border-radius:7px;border:1px solid #e2e8f0;background:#fff;color:#64748b;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap;}
+#tab-guests .gs-f:hover{border-color:#10b981;color:#047857;}
+#tab-guests .gs-f.on{background:#059669;border-color:#059669;color:#fff;}
+#tab-guests .gs-f.on:hover{background:#047857;border-color:#047857;color:#fff;}
+#tab-guests .gs-f.auto{background:#ecfdf5;border-color:#6ee7b7;color:#047857;}
+#tab-guests .gs-f svg{width:14px;height:14px;stroke-width:2.6;flex-shrink:0;}
+#tab-guests .gs-f .gs-auto{font-size:10px;font-weight:800;background:#047857;color:#fff;border-radius:4px;padding:3px 4px;line-height:1;}
+#tab-guests .gs-f.lock{opacity:.5;cursor:default;}
+#tab-guests .gs-f.lock:hover{border-color:#e2e8f0;color:#64748b;}
+#tab-guests .gs-f.lock svg{width:13px;height:13px;stroke-width:1.8;}
+#tab-guests .gs-f.ph{visibility:hidden;}
+/* 두 번 이상 온 고객: 머리줄 아래 숙박 줄(최근 먼저) */
+#tab-guests .gs-stay{padding:10px 20px;background:#fcfdfe;border-top:1px solid #f1f5f9;}
+#tab-guests .gs-stay.now{background:#f0fdf4;}
+#tab-guests .gs-sid{display:flex;align-items:center;gap:8px;align-self:stretch;min-width:0;border-left:2px solid #e2e8f0;padding-left:14px;}
+#tab-guests .gs-alt{font-size:13px;color:#64748b;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+#tab-guests .gs-alt b{color:#0f172a;font-weight:700;}
+@media(max-width:959px){
+  #tab-guests .gs-colh{display:none;}
+  #tab-guests .gs-cust{padding:12px;}
+  #tab-guests .gs-row{grid-template-columns:auto minmax(0,1fr);column-gap:8px;row-gap:0;padding:0;align-items:center;}
+  #tab-guests .gs-id{grid-column:1 / -1;grid-row:1;}
+  #tab-guests .gs-name{font-size:15px;}
+  #tab-guests .gs-vis.mb{display:inline;margin-left:auto;font-size:12px;white-space:nowrap;}
+  #tab-guests .gs-pc{display:none;}
+  #tab-guests .gs-l2{margin-top:3px;}
+  #tab-guests .gs-when{grid-column:1;grid-row:2;margin-top:8px;}
+  #tab-guests .gs-when b,#tab-guests .gs-when span{display:inline;font-size:13px;font-weight:600;color:#0f172a;margin:0;}
+  #tab-guests .gs-when span::before{content:' · ';}
+  #tab-guests .gs-sid{grid-column:2;grid-row:2;margin-top:8px;border-left:0;padding-left:0;gap:6px;}
+  #tab-guests .gs-sid .rv-tag{font-size:11px;}
+  #tab-guests .gs-alt{font-size:12px;}
+  #tab-guests .gs-meta{display:contents;}
+  #tab-guests .gs-memo{grid-column:1 / -1;grid-row:3;margin-top:4px;font-size:13px;white-space:normal;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;line-height:1.45;}
+  #tab-guests .gs-meta .gs-memo:first-child{margin-top:4px;}
+  #tab-guests .gs-meta .rv-ch{grid-column:1 / -1;grid-row:4;justify-self:start;margin-top:8px;}
+  #tab-guests .gs-fl{grid-column:1 / -1;grid-row:4;justify-self:end;display:flex;gap:4px;margin-top:8px;}
+  #tab-guests .gs-f{height:32px;padding:0 8px;}
+  #tab-guests .gs-f .gs-auto{font-size:9px;}
+  #tab-guests .gs-f.ph{display:none;}
+  #tab-guests .gs-head + .gs-stay{margin-top:8px;}
+  #tab-guests .gs-stay{padding:0 0 0 10px;margin-top:6px;background:none;border-top:0;border-left:2px solid #e2e8f0;}
+  #tab-guests .gs-stay.now{background:none;}
+  #tab-guests .gs-stay .gs-when,#tab-guests .gs-stay .gs-sid{margin-top:0;}
+}
 @media(max-width:640px){
-  #tab-guests .gs-head{padding:12px;grid-template-columns:40px minmax(0,1fr);row-gap:8px;align-items:start;}
-  #tab-guests .gs-head > .gs-fl{grid-column:2;}
-  #tab-guests .gs-l2 .gs-when{display:block;margin-top:2px;}
-  #tab-guests .gs-card.one .gs-l2 .sep{display:none;}
-  #tab-guests .gs-stay{grid-template-columns:minmax(0,1fr);row-gap:6px;padding:10px 12px;}
-  #tab-guests .gs-when{white-space:normal;}
-  #tab-guests .gs-meta:empty{display:none;}
-  #tab-guests .gs-fl{justify-content:flex-start;}
-  #tab-guests .gs-f{height:30px;padding:0 13px;}
+  #tab-guests .gs-list{gap:10px;}
+}
+@media(max-width:380px){
+  #tab-guests .gs-cust{padding:10px;}
+  #tab-guests .gs-f{padding:0 6px;}
 }
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.1/dist/umd/supabase.min.js"></script>
@@ -1879,8 +1891,8 @@ input,select,textarea{font-family:inherit;}
       <div class="help-panel" id="help-guests" style="display:none;">
         <h4><svg class="i"><use href="#i-user"/></svg>고객 관리 사용 방법</h4>
         <ul>
-          <li><strong>카드 하나 = 고객 한 명</strong> — 같은 전화번호로 온 예약을 한 카드에 묶습니다. 카드 안 줄이 숙박 한 번(최근 먼저). 이름·전화·숙박일은 예약 관리에서 자동으로 옵니다.</li>
-          <li><strong>반려견 · 바비큐 · 리뷰</strong> — 숙박 줄의 버튼을 누르면 바로 저장됩니다(로그인 상태에서만). 점선 초록은 예약 메모를 보고 자동으로 켠 것, 누르면 직접 정한 값이 됩니다. 리뷰는 퇴실이 지난 숙박에만 나옵니다.</li>
+          <li><strong>한 줄 = 고객 한 명</strong> — 같은 전화번호로 온 예약을 한 고객으로 묶습니다. 두 번 이상 온 고객은 아래에 숙박 줄이 붙습니다(최근 먼저). 이름·전화·숙박일은 예약 관리에서 자동으로 옵니다.</li>
+          <li><strong>반려견 · 바비큐 · 리뷰</strong> — 숙박 줄의 버튼을 누르면 바로 저장됩니다(로그인 상태에서만). 「자동」 표시는 예약 메모를 보고 자동으로 켠 것, 누르면 직접 정한 값이 됩니다. 진초록 ✓는 직접 켠 것입니다. 리뷰는 퇴실이 지난 숙박에만 나옵니다.</li>
           <li><strong>보기</strong> — <em>재방문</em>은 두 번 이상 온 고객, <em>리뷰 없음</em>은 다녀갔는데 리뷰 표시가 안 된 고객입니다.</li>
           <li><strong>검색</strong> — 이름, 전화번호 일부, 메모로 찾습니다.</li>
         </ul>
@@ -4306,38 +4318,41 @@ function renderGuests(){
   const hit=r=>(r.name||'').toLowerCase().includes(q)||(r.memo||'').toLowerCase().includes(q)||(qd&&(r.phone||'').replace(/\D/g,'').includes(qd));
   const list=sets[_gs.f].filter(g=>!q||g.st.some(hit));
   if(!list.length){
-    host.innerHTML=`<div class="empty"><span class="emoji">👤</span>${!reservations.length?'예약이 들어오면 고객이 여기 모여요':q?'검색에 맞는 고객이 없어요':_gs.f==='re'?'아직 두 번 이상 온 고객이 없어요':_gs.f==='rv'?'리뷰 표시가 빠진 고객이 없어요':'표시할 고객이 없어요'}</div>`;
+    host.innerHTML=`<div class="rv-empty"><svg class="i"><use href="#i-user"/></svg><h4>${!reservations.length?'예약이 들어오면 고객이 여기 모여요':q?'검색에 맞는 고객이 없어요':_gs.f==='re'?'아직 두 번 이상 온 고객이 없어요':_gs.f==='rv'?'리뷰 표시가 빠진 고객이 없어요':'표시할 고객이 없어요'}</h4></div>`;
     return;
   }
   const canEdit=!!(sb&&sbUserEmail);
-  const pill=(r,field,lb,on,auto)=>`<button type="button" class="gs-f${on?(auto?' auto':' on'):''}" aria-pressed="${on}" ${canEdit?'':'disabled'} onclick="guestToggle('${r.id}','${field}')"${auto?' title="예약 메모로 자동 판단 · 누르면 직접 정함"':''}>${on?'✓ ':''}${lb}</button>`;
-  const when=r=>`<b>${gsDate(r.checkin,y)}(${rvDw(r.checkin)})</b><span class="gs-arr">→</span>${gsDate(r.checkout,y)}<span class="gs-nt">${rvDays(r.checkin,r.checkout)}박${r.guests?' · '+rvGuests(r.guests):''}</span>`;
-  const meta=(r,extra)=>`${r.channel?`<span class="rv-ch ${rvChCls(r.channel)}">${esc(r.channel)}</span>`:''}${extra||''}${r.memo?`<span class="gs-memo" title="${esc(r.memo)}">${esc(r.memo)}</span>`:''}`;
-  const flags=r=>{const d=guestDog(r),bq=guestBbq(r);return pill(r,'dog','반려견',d.on,d.auto)+pill(r,'bbq','바비큐',bq.on,bq.auto)+(r.checkout<=today?pill(r,'review','리뷰',!!(guestNotes[r.id]||{}).review,false):'');};
-  host.innerHTML=list.map(g=>{
-    const L=g.last,ph=gsPhone(L.phone),n=g.st.length,nx=g.next;
+  const ico=id=>`<svg><use href="#${id}"/></svg>`;
+  // 켬 = 진초록 + ✓ / 자동 = 연초록 + 「자동」 / 끔 = 흰 바탕 / 잠김(로그인 안 함) = 끔 모양 + 자물쇠, 누르면 로그인 안내 토스트
+  const pill=(r,field,lb,on,auto)=>{
+    if(!canEdit)return `<button type="button" class="gs-f lock" aria-disabled="true" onclick="guestToggle('${r.id}','${field}')">${ico('i-lock')}${lb}</button>`;
+    return `<button type="button" class="gs-f${on?(auto?' auto':' on'):''}" aria-pressed="${on}" onclick="guestToggle('${r.id}','${field}')" title="${on?(auto?'예약 메모로 자동 판단 · 누르면 직접 정함':'켬'):'끔'}">${on?(auto?'<span class="gs-auto">자동</span>':ico('i-st-check')):''}${lb}</button>`;
+  };
+  const when=r=>`<div class="gs-when"><b>${gsDate(r.checkin,y)}(${rvDw(r.checkin)}) → ${gsDate(r.checkout,y)}</b><span>${rvDays(r.checkin,r.checkout)}박${r.guests?' · '+rvGuests(r.guests):''}</span></div>`;
+  const meta=r=>`<div class="gs-meta">${r.channel?`<span class="rv-ch ${rvChCls(r.channel)}">${esc(r.channel)}</span>`:''}${r.memo?`<span class="gs-memo" title="${esc(r.memo)}">${esc(r.memo)}</span>`:''}</div>`;
+  // 리뷰는 퇴실이 지난 숙박만. 안 보일 때도 PC에서는 빈 칸을 남겨 세로 열을 맞춤
+  const flags=r=>{const d=guestDog(r),bq=guestBbq(r);return `<div class="gs-fl">${pill(r,'dog','반려견',d.on,d.auto)+pill(r,'bbq','바비큐',bq.on,bq.auto)+(r.checkout<=today?pill(r,'review','리뷰',!!(guestNotes[r.id]||{}).review,false):'<span class="gs-f ph" aria-hidden="true"></span>')}</div>`;};
+  const cust=g=>{
+    const L=g.last,ph=gsPhone(L.phone),n=g.st.length,nx=g.next,now=!!(nx&&nx.checkin<=today);
     let tag='';
-    if(nx&&nx.checkin<=today)tag='<span class="rv-tag stay">머무는 중</span>';
+    if(now)tag='<span class="rv-tag stay">머무는 중</span>';
     else if(nx){const d=rvDays(today,nx.checkin);tag=`<span class="rv-tag dd">${d<=14?'D-'+d:gsDate(nx.checkin,y)+' 입실'}</span>`;}
     const tel=ph?`<a href="tel:${esc((L.phone||'').replace(/\D/g,''))}">${esc(ph)}</a>`:'전화번호 없음';
-    const av=`<div class="gs-av" aria-hidden="true">${esc((L.name||'?').trim().charAt(0)||'?')}</div>`;
-    const l1=`<div class="gs-l1"><span class="gs-name">${esc(L.name||'(이름 없음)')}</span><span class="gs-visit${n>1?' re':''}">${n>1?'방문 '+n+'회':'첫 방문'}</span>${tag}</div>`;
-    if(n===1){
-      // 한 번 온 고객: 카드 한 줄(숙박 정보가 머리줄에)
-      return `<div class="gs-card one${nx&&nx.checkin<=today?' now':''}"><div class="gs-head">${av}
-        <div class="gs-id">${l1}<div class="gs-l2">${tel}<span class="sep">·</span><span class="gs-when">${when(L)}</span></div>${(L.channel||L.memo)?`<div class="gs-meta">${meta(L)}</div>`:''}</div>
-        <div class="gs-fl">${flags(L)}</div></div></div>`;
-    }
+    const vis=`<span class="gs-vis${n>1?' re':''}">${n>1?'방문 '+n+'회':'첫 방문'}</span>`;
+    const id=`<div class="gs-id"><div class="gs-l1"><span class="gs-name">${esc(L.name||'(이름 없음)')}</span>${tag}${vis.replace('gs-vis','gs-vis mb')}</div>`+
+      `<div class="gs-l2">${tel}<span class="gs-pc"><span class="sep">·</span>${vis}</span>${n>1?`<span class="sep">·</span>처음 ${gsDate(g.st[n-1].checkin,y)}`:''}</div></div>`;
+    if(n===1)return `<div class="gs-cust${now?' now':''}"><div class="gs-row">${id}${when(L)}${meta(L)}${flags(L)}</div></div>`;
     const rows=g.st.map(r=>{
-      const past=r.checkout<=today,now=r.checkin<=today&&!past;
-      const st=now?'<span class="rv-tag stay">머무는 중</span>':!past?'<span class="rv-tag dd">예정</span>':'';
-      const alt=r.name&&r.name!==L.name?`<span class="gs-alt">${esc(r.name)}</span>`:'';
-      return `<div class="gs-stay${now?' now':''}"><div class="gs-when">${when(r)}</div><div class="gs-meta">${meta(r,st+alt)}</div><div class="gs-fl">${flags(r)}</div></div>`;
+      const past=r.checkout<=today,stay=r.checkin<=today&&!past;
+      const alt=r.name&&r.name!==L.name?`<span class="gs-alt">그때 이름 <b>${esc(r.name)}</b></span>`:'';
+      return `<div class="gs-row gs-stay${stay?' now':''}"><div class="gs-sid">${r.checkin>today?'<span class="rv-tag dd">예정</span>':''}${alt}</div>${when(r)}${meta(r)}${flags(r)}</div>`;
     }).join('');
-    return `<div class="gs-card"><div class="gs-head">${av}
-      <div class="gs-id">${l1}<div class="gs-l2">${tel}<span class="sep">·</span>처음 ${gsDate(g.st[n-1].checkin,y)}</div></div></div>
-      <div class="gs-stays">${rows}</div></div>`;
-  }).join('');
+    return `<div class="gs-cust${now?' now':''}"><div class="gs-row gs-head">${id}</div>${rows}</div>`;
+  };
+  // 묶음 이름은 표시만(정렬은 위 규칙 그대로): 머무는 중·다가오는 숙박이 있는 고객 / 다녀간 고객
+  const grp=(t,gs)=>gs.length?`<section class="rv-group"><div class="rv-gh">${t}<em>${gs.length}</em></div><div class="rv-card">${gs.map(cust).join('')}</div></section>`:'';
+  host.innerHTML='<div class="gs-colh" aria-hidden="true"><span>손님 · 전화</span><span>숙박</span><span>채널 · 메모</span><span class="gs-fl"><span>반려견</span><span>바비큐</span><span>리뷰</span></span></div>'+
+    grp('머무는 중 · 다가오는',list.filter(g=>g.next))+grp('다녀간 고객',list.filter(g=>!g.next));
 }
 async function guestToggle(resId, field){
   if(!(sb && sbUserEmail)){ toast('로그인 후 표시할 수 있어요'); return; }
