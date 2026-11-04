@@ -299,21 +299,29 @@ input,select,textarea{font-family:inherit;}
   background:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'><path d='M3 4.5l3 3 3-3' stroke='%2364748b' stroke-width='1.5' fill='none' stroke-linecap='round'/></svg>") no-repeat right 10px center,var(--card);
   cursor:pointer;
 }
+/* 공용 날짜 칸(v1.15.0): 입실 | n박 | 퇴실. 문자 작성·요금 계산·새 예약·특별 기간이 같이 씀 */
 .date-btn{
-  cursor:pointer;
-  display:flex;align-items:center;justify-content:space-between;
-  text-align:left;gap:8px;
-  height:auto;min-height:48px;
+  cursor:pointer;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;column-gap:10px;
+  height:64px;min-height:0;padding:0 14px;border-radius:12px;border:1px solid #cbd5e1;background:#fff;text-align:left;
 }
-.date-btn:hover{border-color:var(--border-strong);}
-.date-btn.has-value{border-color:var(--primary);background:var(--accent-soft);}
-.date-btn .drb-placeholder{color:var(--muted-fg-2);font-size:13px;}
-.date-btn .drb-side{display:flex;flex-direction:column;gap:2px;}
-.date-btn .drb-label{font-size:10px;color:var(--muted-fg);font-weight:600;}
-.date-btn .drb-date{font-size:13px;font-weight:700;color:var(--fg);}
-.date-btn .drb-mid{display:flex;flex-direction:column;align-items:center;padding:0 6px;gap:2px;}
-.date-btn .drb-arrow{font-size:13px;color:var(--muted-fg-2);}
-.date-btn .drb-nights{font-size:11px;font-weight:700;color:var(--primary);}
+.date-btn:hover{border-color:#10b981;}
+.date-btn.has-value{border-color:#10b981;background:#f0fdf4;}
+.date-btn .drb-placeholder{color:#94a3b8;font-size:15px;font-weight:600;}
+.date-btn .drb-side{display:flex;flex-direction:column;gap:3px;min-width:0;}
+.date-btn .drb-side.r{align-items:flex-end;text-align:right;}
+.date-btn .drb-label{display:inline-flex;align-items:center;gap:4px;font-size:12px;font-weight:600;color:#64748b;white-space:nowrap;}
+.date-btn .drb-label svg{width:13px;height:13px;stroke-width:1.8;flex-shrink:0;}
+.date-btn .drb-date{font-size:17px;font-weight:800;color:#0f172a;font-variant-numeric:tabular-nums;white-space:nowrap;}
+.date-btn .drb-date.drb-none{color:#94a3b8;}
+.date-btn .drb-nights{font-size:12px;font-weight:700;color:#047857;background:#d1fae5;border-radius:999px;padding:3px 10px;white-space:nowrap;}
+@media(max-width:640px){
+  .date-btn{height:60px;}
+  .date-btn .drb-date{font-size:16px;}
+}
+@media(max-width:380px){
+  .date-btn{padding:0 12px;}
+  .date-btn .drb-date{font-size:15px;}
+}
 
 .checkbox-row{
   display:flex;align-items:center;gap:8px;
@@ -953,45 +961,23 @@ input,select,textarea{font-family:inherit;}
 .opt-fee-inp{display:flex;gap:6px;flex:0 0 46%;min-width:0;}
 .opt-fee-inp .input{min-width:0;}
 .opt-fee-inp .input:disabled,.opt-fee-inp .select:disabled{opacity:.45;background:var(--muted);}
-.cnt-row{
-  display:flex;align-items:center;justify-content:space-between;
-  padding:9px 12px;border:1px solid var(--border);border-radius:var(--radius);
-  margin-bottom:8px;background:var(--card);
-}
-.cnt-lbl{font-size:13px;color:var(--fg-2);font-weight:500;}
-.cnt-ctrl{display:flex;align-items:center;gap:10px;}
-.cnt-btn{
-  width:30px;height:30px;border-radius:50%;
-  border:1px solid var(--border);background:var(--card);
-  font-size:16px;cursor:pointer;color:var(--fg);line-height:1;
-  display:flex;align-items:center;justify-content:center;
-  transition:background .12s,border-color .12s;
-}
-.cnt-btn:hover{border-color:var(--primary);background:var(--accent-soft);}
-.cnt-val{font-size:14px;font-weight:700;min-width:20px;text-align:center;font-variant-numeric:tabular-nums;}
-.bd-row{
-  display:flex;justify-content:space-between;align-items:center;gap:8px;
-  padding:7px 0;border-bottom:1px dashed var(--border);
-  font-size:13px;color:var(--fg-2);font-variant-numeric:tabular-nums;
-}
-.bd-row:last-child{border-bottom:none;}
-.bd-badge{
-  display:inline-block;font-size:10px;font-weight:700;
-  padding:2px 7px;border-radius:8px;letter-spacing:.02em;
-}
-.bd-lbl{font-weight:600;color:var(--fg-2);}
-.bd-minus{color:var(--primary);font-weight:600;}
-.bd-total{
-  border-top:2px solid var(--border);border-bottom:none;
-  margin-top:2px;padding-top:10px;
-  font-size:15px;font-weight:800;color:var(--fg);
-}
-.bd-total span:last-child{color:var(--primary);}
-.bd-warn{
-  margin-top:8px;padding:8px 12px;border-radius:8px;
-  background:var(--warning-bg);border:1px solid var(--warning-border);
-  color:#92400e;font-size:12px;
-}
+.cnt-row{display:flex;align-items:center;gap:12px;}
+.cnt-lbl{flex:1;min-width:0;}
+.cnt-ctrl{display:flex;align-items:center;}
+.cnt-btn{display:flex;align-items:center;justify-content:center;cursor:pointer;line-height:1;}
+.cnt-val{text-align:center;font-variant-numeric:tabular-nums;}
+/* 요금 명세(요금 계산 화면 · 새 예약 계산 상자가 같이 씀): 구간 → 할인 → 추가 → 합계 */
+.bd-row{display:flex;justify-content:space-between;align-items:center;gap:12px;font-variant-numeric:tabular-nums;}
+.bd-l{display:flex;align-items:center;flex-wrap:wrap;gap:4px 8px;min-width:0;}
+.bd-name{font-weight:600;}
+.bd-unit{color:#64748b;}
+.bd-amt{font-weight:700;white-space:nowrap;}
+.bd-badge{display:inline-block;font-size:12px;font-weight:700;padding:3px 8px;border-radius:5px;line-height:1.3;}
+.bd-minus .bd-name,.bd-minus .bd-amt{color:#b91c1c;}
+.bd-add .bd-amt{color:#334155;}
+.bd-total{display:flex;justify-content:space-between;align-items:center;gap:12px;font-variant-numeric:tabular-nums;}
+.bd-warn{display:flex;align-items:flex-start;gap:8px;margin-top:12px;padding:12px 14px;border-radius:10px;background:#fffbeb;border:1px solid #fde68a;color:#92400e;font-size:14px;line-height:1.45;}
+.bd-warn svg{width:17px;height:17px;stroke-width:2;color:#b45309;flex-shrink:0;margin-top:1px;}
 .ar-calc-box{
   border:1px solid var(--border);border-radius:8px;
   padding:6px 12px;background:var(--accent-soft);
@@ -1500,6 +1486,65 @@ input,select,textarea{font-family:inherit;}
   #tab-guests .gs-cust{padding:10px;}
   #tab-guests .gs-f{padding:0 6px;}
 }
+/* ═══════ v1.15.0 요금 계산 (2차 시안) — PC: 입력 왼쪽 400 · 명세 오른쪽 ═══════ */
+#tab-price .pc-grid{display:grid;grid-template-columns:400px minmax(0,1fr);gap:24px;align-items:start;}
+#tab-price .pc-card{background:#fff;border:1px solid #e2e8f0;border-radius:16px;padding:20px;}
+#tab-price .pc-fields{display:grid;grid-template-columns:minmax(0,1fr);gap:16px;}
+#tab-price .fi{display:flex;flex-direction:column;gap:8px;margin:0;}
+#tab-price .fi label{font-size:14px;font-weight:700;color:#0f172a;padding-left:0;}
+#tab-price .select{height:44px;border-radius:10px;border-color:#cbd5e1;font-size:15px;padding-left:14px;}
+#tab-price .pc-opts{margin-top:16px;padding-top:8px;border-top:1px solid #e2e8f0;}
+#tab-price .pc-opts:empty{display:none;}
+#tab-price .cnt-row{padding:8px 0;}
+#tab-price .cnt-lbl{font-size:15px;font-weight:600;color:#0f172a;}
+#tab-price .cnt-lbl small,#tab-price .pc-chk small{font-size:13px;font-weight:400;color:#64748b;margin-left:8px;}
+#tab-price .cnt-btn{width:40px;height:40px;border-radius:10px;border:1px solid #cbd5e1;background:#fff;color:#0f172a;font-size:18px;font-weight:600;}
+#tab-price .cnt-btn:hover{border-color:#10b981;background:#f0fdf4;}
+#tab-price .cnt-btn.zero{color:#cbd5e1;}
+#tab-price .cnt-val{min-width:48px;font-size:17px;font-weight:800;color:#0f172a;}
+#tab-price .pc-chk{position:relative;display:flex;align-items:center;gap:10px;padding:8px 0;cursor:pointer;font-size:15px;font-weight:600;color:#0f172a;}
+#tab-price .pc-chk input{position:absolute;opacity:0;width:1px;height:1px;margin:0;}
+#tab-price .pc-chk .box{display:flex;align-items:center;justify-content:center;box-sizing:border-box;width:22px;height:22px;border-radius:6px;border:1.5px solid #94a3b8;background:#fff;flex-shrink:0;}
+#tab-price .pc-chk .box svg{width:14px;height:14px;stroke-width:2.8;color:#fff;opacity:0;}
+#tab-price .pc-chk input:checked + .box{background:#10b981;border-color:#10b981;}
+#tab-price .pc-chk input:checked + .box svg{opacity:1;}
+#tab-price .pc-chk input:focus-visible + .box{box-shadow:0 0 0 3px rgba(16,185,129,.25);}
+#tab-price .pc-chk small{margin-left:-2px;}
+#tab-price .pc-res-h{display:flex;align-items:baseline;flex-wrap:wrap;gap:4px 10px;margin-bottom:14px;}
+#tab-price .pc-res-h h3{font-size:17px;font-weight:800;color:#0f172a;margin:0;}
+#tab-price .pc-res-h span{font-size:14px;color:#64748b;font-variant-numeric:tabular-nums;}
+#tab-price .bd-lines{border:1px solid #e2e8f0;border-radius:12px;padding:4px 16px;}
+#tab-price .bd-row{padding:10px 0;border-bottom:1px solid #f1f5f9;font-size:15px;color:#0f172a;}
+#tab-price .bd-row:last-child{border-bottom:0;}
+#tab-price .bd-total{margin-top:16px;padding:16px 18px;border-radius:12px;background:#ecfdf5;}
+#tab-price .bd-total span:first-child{font-size:16px;font-weight:800;color:#065f46;}
+#tab-price .bd-total span:last-child{font-size:30px;font-weight:800;color:#047857;letter-spacing:-0.01em;}
+#tab-price .pc-empty{display:flex;flex-direction:column;align-items:center;gap:12px;border:1.5px dashed #cbd5e1;border-radius:16px;padding:56px 24px;text-align:center;font-size:16px;font-weight:700;color:#475569;}
+#tab-price .pc-empty .i{width:34px;height:34px;color:#94a3b8;stroke-width:1.8;}
+@media(max-width:959px){
+  #tab-price .pc-grid{grid-template-columns:minmax(0,1fr);gap:12px;}
+}
+@media(max-width:640px){
+  #tab-price.page{padding:16px 12px 24px;}
+  #tab-price .pc-card{padding:16px;}
+  #tab-price .pc-fields{grid-template-columns:1.3fr 1fr;gap:16px 8px;}
+  #tab-price .pc-f-room{order:1;}
+  #tab-price .pc-f-guests{order:2;}
+  #tab-price .pc-f-date{order:3;grid-column:1 / -1;}
+  #tab-price .pc-res-h{display:block;}
+  #tab-price .pc-res-h span{display:block;margin-top:4px;}
+  #tab-price .bd-lines{border:0;padding:0;}
+  #tab-price .bd-row{font-size:14px;}
+  #tab-price .bd-l{display:block;}
+  #tab-price .bd-badge{margin-right:6px;}
+  #tab-price .bd-unit{display:block;font-size:12px;margin-top:2px;}
+  #tab-price .bd-total span:last-child{font-size:24px;}
+  #tab-price .bd-warn{font-size:13px;}
+  #tab-price .pc-empty{padding:40px 16px;}
+}
+@media(max-width:380px){
+  #tab-price.page{padding-left:8px;padding-right:8px;}
+}
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.1/dist/umd/supabase.min.js"></script>
 </head>
@@ -1552,6 +1597,15 @@ input,select,textarea{font-family:inherit;}
 <symbol id="i-st-next" viewBox="0 0 24 24"><path d="M12 20a8 8 0 1 0 0-16 8 8 0 0 0 0 16z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></symbol>
 <symbol id="i-st-none" viewBox="0 0 24 24"><path d="M7 12h10" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></symbol>
 <symbol id="i-st-dots" viewBox="0 0 24 24"><path d="M6 12h.01M12 12h.01M18 12h.01" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+<symbol id="i-calc" viewBox="0 0 24 24"><path d="M6 3h12v18H6zM9 7h6M9 11h.01M12 11h.01M15 11h.01M9 14h.01M12 14h.01M15 14h.01M9 17h.01M12 17h.01M15 17h.01" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+<symbol id="i-warn" viewBox="0 0 24 24"><path d="M12 8v5M12 16.5v.5M10.3 3.9 2.6 17.5A2 2 0 0 0 4.3 20.5h15.4a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+<symbol id="i-info" viewBox="0 0 24 24"><path d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18zM12 11v5M12 8v.01" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+<symbol id="i-exit" viewBox="0 0 24 24"><path d="M10 4H5v16h5M14 8l4 4-4 4M18 12H8" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+<symbol id="i-cal" viewBox="0 0 24 24"><path d="M4 6h16v14H4zM4 10h16M8 3v4M16 3v4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+<symbol id="i-arr" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+<symbol id="i-chevd" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+<symbol id="i-x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+<symbol id="i-ban2" viewBox="0 0 24 24"><path d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18zM5.6 5.6l12.8 12.8" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></symbol>
 </defs></svg>
 
 <div class="app">
@@ -1769,7 +1823,7 @@ input,select,textarea{font-family:inherit;}
               <div class="fi">
                 <label><span class="req">*</span>입실 · 퇴실</label>
                 <div class="date-btn" id="dateRangeBtn" onclick="openDatePicker()">
-                  <div class="drb-placeholder">📅 날짜를 선택하세요</div>
+                  <div class="drb-side"><span class="drb-label"><svg><use href="#i-cal"/></svg>입실</span><span class="drb-date drb-none">날짜를 선택하세요</span></div><span></span><div class="drb-side r"><span class="drb-label">퇴실<svg><use href="#i-exit"/></svg></span></div>
                 </div>
                 <input type="hidden" id="v_checkin">
                 <input type="hidden" id="v_checkout">
@@ -1970,22 +2024,22 @@ input,select,textarea{font-family:inherit;}
         </ul>
       </div>
 
-      <div class="card">
-        <div class="card-body">
-          <div class="fi" style="margin-bottom:12px;">
-            <label>호실</label>
-            <select class="select" id="pc_room" onchange="calcPricePage()"></select>
-          </div>
-          <div class="fi" style="margin-bottom:12px;">
-            <label><span class="req">*</span>입실 · 퇴실</label>
-            <div class="date-btn" id="pcDateRangeBtn" onclick="openDatePicker('pc_checkin','pc_checkout','pcDateRangeBtn',calcPricePage)">
-              <div class="drb-placeholder">📅 날짜를 선택하세요</div>
+      <div class="pc-grid">
+        <div class="pc-card pc-in">
+          <div class="pc-fields">
+            <div class="fi pc-f-room">
+              <label for="pc_room">호실</label>
+              <select class="select" id="pc_room" onchange="calcPricePage()"></select>
             </div>
-            <input type="hidden" id="pc_checkin"><input type="hidden" id="pc_checkout">
-          </div>
-          <div class="form-grid">
-            <div class="fi">
-              <label>총인원</label>
+            <div class="fi pc-f-date">
+              <label><span class="req">*</span>입실 · 퇴실</label>
+              <div class="date-btn" id="pcDateRangeBtn" onclick="openDatePicker('pc_checkin','pc_checkout','pcDateRangeBtn',calcPricePage)">
+                <div class="drb-side"><span class="drb-label"><svg><use href="#i-cal"/></svg>입실</span><span class="drb-date drb-none">날짜를 선택하세요</span></div><span></span><div class="drb-side r"><span class="drb-label">퇴실<svg><use href="#i-exit"/></svg></span></div>
+              </div>
+              <input type="hidden" id="pc_checkin"><input type="hidden" id="pc_checkout">
+            </div>
+            <div class="fi pc-f-guests">
+              <label for="pc_guests">총인원</label>
               <select class="select" id="pc_guests" onchange="calcPricePage()">
                 <option value="">선택</option>
                 <option>1명</option><option>2명</option><option>3명</option><option>4명</option>
@@ -1994,17 +2048,16 @@ input,select,textarea{font-family:inherit;}
               </select>
             </div>
           </div>
-          <div id="pcOptions" style="margin-top:10px;"></div>
+          <div class="pc-opts" id="pcOptions"></div>
+        </div>
+        <div class="pc-out">
+          <div class="pc-card pc-res" id="pcResultCard" style="display:none;">
+            <div class="pc-res-h"><h3>요금 명세</h3><span id="pcSum"></span></div>
+            <div id="pcResult"></div>
+          </div>
+          <div class="pc-empty" id="pcEmpty"><svg class="i"><use href="#i-calc"/></svg>날짜를 선택하면 요금이 계산돼요</div>
         </div>
       </div>
-
-      <div class="card" id="pcResultCard" style="display:none;">
-        <div class="card-head">
-          <div class="card-head-title"><span class="ico"><svg class="i"><use href="#i-dollar"/></svg></span>요금 명세</div>
-        </div>
-        <div class="card-body" id="pcResult"></div>
-      </div>
-      <div class="empty" id="pcEmpty"><span class="emoji">🧮</span>날짜를 선택하면 요금이 계산돼요</div>
     </section>
 
     <!-- ─── PROP (settings) ─── -->
@@ -2362,7 +2415,7 @@ input,select,textarea{font-family:inherit;}
     <div class="fi" style="margin-top:10px;">
       <label><span class="req">*</span>입실 · 퇴실</label>
       <div class="date-btn" id="arDateRangeBtn" onclick="openDatePicker('ar_checkin','ar_checkout','arDateRangeBtn')">
-        <div class="drb-placeholder">📅 날짜를 선택하세요</div>
+        <div class="drb-side"><span class="drb-label"><svg><use href="#i-cal"/></svg>입실</span><span class="drb-date drb-none">날짜를 선택하세요</span></div><span></span><div class="drb-side r"><span class="drb-label">퇴실<svg><use href="#i-exit"/></svg></span></div>
       </div>
       <input type="hidden" id="ar_checkin">
       <input type="hidden" id="ar_checkout">
@@ -3075,6 +3128,7 @@ function _calConfirm(){
   if(ciId==='v_checkin')renderPreview();
   if(typeof _cal.onDone==='function'){const f=_cal.onDone;_cal.onDone=null;f();}
 }
+const DRB_EMPTY='<div class="drb-side"><span class="drb-label"><svg><use href="#i-cal"/></svg>입실</span><span class="drb-date drb-none">날짜를 선택하세요</span></div><span></span><div class="drb-side r"><span class="drb-label">퇴실<svg><use href="#i-exit"/></svg></span></div>';
 function _updateDateDisplay(ciId,coId,btnId){
   ciId=ciId||'v_checkin';coId=coId||'v_checkout';btnId=btnId||'dateRangeBtn';
   const ci=document.getElementById(ciId).value;
@@ -3083,23 +3137,24 @@ function _updateDateDisplay(ciId,coId,btnId){
   if(!btn)return;
   const DOW=['일','월','화','수','목','금','토'];
   function fmt(ds){const d=new Date(ds+'T00:00:00');return`${d.getMonth()+1}.${d.getDate()}(${DOW[d.getDay()]})`;}
+  const L='<span class="drb-label"><svg><use href="#i-cal"/></svg>입실</span>', R='<span class="drb-label">퇴실<svg><use href="#i-exit"/></svg></span>';
   if(ci&&co){
     const n=Math.round((new Date(co)-new Date(ci))/86400000);
     btn.className='date-btn has-value';
-    btn.innerHTML=`<div class="drb-side"><span class="drb-label">📅 입실</span><span class="drb-date">${fmt(ci)}</span></div><div class="drb-mid"><span class="drb-arrow">→</span><span class="drb-nights">${n}박</span></div><div class="drb-side"><span class="drb-label">🚪 퇴실</span><span class="drb-date">${fmt(co)}</span></div>`;
+    btn.innerHTML=`<div class="drb-side">${L}<span class="drb-date">${fmt(ci)}</span></div><span class="drb-nights">${n}박</span><div class="drb-side r">${R}<span class="drb-date">${fmt(co)}</span></div>`;
   } else if(ci){
     btn.className='date-btn';
-    btn.innerHTML=`<div class="drb-side"><span class="drb-label">📅 입실</span><span class="drb-date">${fmt(ci)}</span></div><div class="drb-mid"><span class="drb-arrow">→</span></div><div class="drb-side"><span class="drb-label" style="color:var(--muted-fg-2);">🚪 퇴실</span><span class="drb-date" style="color:var(--muted-fg-2);">미선택</span></div>`;
+    btn.innerHTML=`<div class="drb-side">${L}<span class="drb-date">${fmt(ci)}</span></div><span></span><div class="drb-side r">${R}<span class="drb-date drb-none">미선택</span></div>`;
   } else {
     btn.className='date-btn';
-    btn.innerHTML=`<div class="drb-placeholder">📅 날짜를 선택하세요</div>`;
+    btn.innerHTML=DRB_EMPTY;
   }
 }
 
 // ─────── PRICING ENGINE (stay_msg_pro에서 이식) ───────
 const PT_META={
   peak:{label:'성수기',color:'#ef4444',bg:'#fef2f2'},
-  semi:{label:'준성수기',color:'#f59e0b',bg:'#fffbeb'},
+  semi:{label:'준성수기',color:'#b45309',bg:'#fffbeb'},
   special:{label:'특별기간',color:'#8b5cf6',bg:'#f5f3ff'},
   discount:{label:'할인기간',color:'#10b981',bg:'#ecfdf5'},
 };
@@ -3181,19 +3236,20 @@ function wonFmt(n){return n.toLocaleString('ko-KR')+'원';}
 // 명세 HTML
 function breakdownHtml(res){
   if(!res)return'';
+  const row=(cls,l,amt)=>`<div class="bd-row${cls}"><span class="bd-l">${l}</span><span class="bd-amt">${amt}</span></div>`;
   let h='';
   res.breakdown.forEach(b=>{
     const meta=PT_META[b.type];
-    const badge=meta?`<span class="bd-badge" style="background:${meta.bg};color:${meta.color};">${b.label}</span>`:`<span class="bd-lbl">${b.label}</span>`;
-    h+=`<div class="bd-row"><span>${badge} ${wonFmt(b.price)} × ${b.nights}박</span><span>${wonFmt(b.subtotal)}</span></div>`;
+    const badge=meta?`<span class="bd-badge" style="background:${meta.bg};color:${meta.color};">${meta.label}</span>`:'';
+    const name=meta&&b.label===meta.label?'':`<b class="bd-name">${esc(b.label)}</b>`;
+    h+=row('',`${badge}${name}<span class="bd-unit">${wonFmt(b.price)} × ${b.nights}박</span>`,wonFmt(b.subtotal));
   });
-  if(res.discount>0)h+=`<div class="bd-row bd-minus"><span>연박 할인</span><span>−${wonFmt(res.discount)}</span></div>`;
-  if(res.extraCost>0)h+=`<div class="bd-row"><span>추가 인원 ${res.extraAdults}명</span><span>+${wonFmt(res.extraCost)}</span></div>`;
-  if(res.childCost>0)h+=`<div class="bd-row"><span>미취학아동 ${res.child}명</span><span>+${wonFmt(res.childCost)}</span></div>`;
-  if(res.dogCost>0)h+=`<div class="bd-row"><span>강아지 ${res.dog}마리</span><span>+${wonFmt(res.dogCost)}</span></div>`;
-  if(res.bbqCost>0)h+=`<div class="bd-row"><span>바베큐</span><span>+${wonFmt(res.bbqCost)}</span></div>`;
-  h+=`<div class="bd-row bd-total"><span>${res.nights}박 합계</span><span>${wonFmt(res.finalTotal)}</span></div>`;
-  return h;
+  if(res.discount>0)h+=row(' bd-minus','<b class="bd-name">연박 할인</b>','−'+wonFmt(res.discount));
+  if(res.extraCost>0)h+=row(' bd-add',`<b class="bd-name">추가 인원 ${res.extraAdults}명</b>`,'+'+wonFmt(res.extraCost));
+  if(res.childCost>0)h+=row(' bd-add',`<b class="bd-name">미취학아동 ${res.child}명</b>`,'+'+wonFmt(res.childCost));
+  if(res.dogCost>0)h+=row(' bd-add',`<b class="bd-name">강아지 ${res.dog}마리</b>`,'+'+wonFmt(res.dogCost));
+  if(res.bbqCost>0)h+=row(' bd-add','<b class="bd-name">바베큐</b>','+'+wonFmt(res.bbqCost));
+  return `<div class="bd-lines">${h}</div><div class="bd-total"><span>${res.nights}박 합계</span><span>${wonFmt(res.finalTotal)}</span></div>`;
 }
 
 // ─────── SETTINGS ───────
@@ -3299,7 +3355,7 @@ function openPeriodForm(){
     <div class="fi full" style="margin-top:10px;">
       <label><span class="req">*</span>시작 · 종료</label>
       <div class="date-btn" id="pfDateBtn" onclick="openDatePicker('pf_start','pf_end','pfDateBtn')">
-        <div class="drb-placeholder">📅 날짜를 선택하세요</div>
+        <div class="drb-side"><span class="drb-label"><svg><use href="#i-cal"/></svg>입실</span><span class="drb-date drb-none">날짜를 선택하세요</span></div><span></span><div class="drb-side r"><span class="drb-label">퇴실<svg><use href="#i-exit"/></svg></span></div>
       </div>
       <input type="hidden" id="pf_start"><input type="hidden" id="pf_end">
       <p class="adv-hint" style="margin:6px 0 0;">종료일도 기간에 포함돼요. (달력의 "퇴실"은 마지막 날로 저장)</p>
@@ -3342,10 +3398,10 @@ function deletePeriod(id){
 
 // ─────── 요금 계산 페이지 ───────
 let pcChild=0,pcDog=0,pcBbq=false;
-function _pcCounter(label,key,val){
-  return `<div class="cnt-row"><span class="cnt-lbl">${label}</span>
+function _pcCounter(label,key,val,sub){
+  return `<div class="cnt-row"><span class="cnt-lbl">${label}${sub?`<small>${sub}</small>`:''}</span>
     <div class="cnt-ctrl">
-      <button class="cnt-btn" onclick="pcStep('${key}',-1)" aria-label="감소">−</button>
+      <button class="cnt-btn${val?'':' zero'}" onclick="pcStep('${key}',-1)" aria-label="감소">−</button>
       <span class="cnt-val" id="pcVal_${key}">${val}</span>
       <button class="cnt-btn" onclick="pcStep('${key}',1)" aria-label="증가">+</button>
     </div></div>`;
@@ -3353,16 +3409,16 @@ function _pcCounter(label,key,val){
 function pcStep(key,d){
   if(key==='child')pcChild=Math.max(0,pcChild+d);
   if(key==='dog')pcDog=Math.max(0,pcDog+d);
-  const el=document.getElementById('pcVal_'+key);
-  if(el)el.textContent=key==='child'?pcChild:pcDog;
+  renderPcOptions();
   calcPricePage();
 }
 function renderPcOptions(){
   const host=document.getElementById('pcOptions');if(!host)return;
+  const fee=(v,u,per)=>fmtPriceVal(v)?`${u} ${fmtPriceVal(v)}${per?'/박':''}`:'요금 미설정';
   let h='';
-  if(settings.childOn)h+=_pcCounter('👶 미취학아동','child',pcChild);
-  if(settings.dogOn)h+=_pcCounter('🐶 강아지','dog',pcDog);
-  if(settings.bbqOn)h+=`<label class="checkbox-row"><input type="checkbox" id="pc_bbq" ${pcBbq?'checked':''} onchange="pcBbq=this.checked;calcPricePage()">🔥 바베큐 추가 (${fmtPriceVal(settings.bbqFee)||'요금 미설정'})</label>`;
+  if(settings.childOn)h+=_pcCounter('미취학아동','child',pcChild,fee(settings.childFee,'1명',true));
+  if(settings.dogOn)h+=_pcCounter('강아지','dog',pcDog,fee(settings.dogFee,'1마리',settings.dogPerNight));
+  if(settings.bbqOn)h+=`<label class="pc-chk"><input type="checkbox" id="pc_bbq" ${pcBbq?'checked':''} onchange="pcBbq=this.checked;calcPricePage()"><span class="box"><svg><use href="#i-st-check"/></svg></span>바베큐 추가<small>(${fmtPriceVal(settings.bbqFee)||'요금 미설정'})</small></label>`;
   host.innerHTML=h;
 }
 function renderPricePage(){
@@ -3384,10 +3440,11 @@ function calcPricePage(){
   const res=calcStay(room,ci,co,{guests,child:pcChild,dog:pcDog,bbq:pcBbq});
   if(!res){card.style.display='none';empty.style.display='';return;}
   let warn='';
-  if(!parseNum(room.pw))warn+=`<div class="bd-warn">⚠️ 이 호실의 주중 요금이 비어 있어요. 숙소 프로필에서 입력하세요.</div>`;
+  if(!parseNum(room.pw))warn+=`<div class="bd-warn"><svg><use href="#i-warn"/></svg><span>이 호실의 주중 요금이 비어 있어요. 숙소 프로필에서 입력하세요.</span></div>`;
   const maxG=parseInt(room.max)||0;
   const totalG=parseInt(String(guests).replace(/[^0-9]/g,''))||0;
-  if(maxG>0&&totalG>maxG)warn+=`<div class="bd-warn">⚠️ 최대 인원 ${maxG}명을 초과했어요.</div>`;
+  if(maxG>0&&totalG>maxG)warn+=`<div class="bd-warn"><svg><use href="#i-warn"/></svg><span>최대 인원 ${maxG}명을 초과했어요.</span></div>`;
+  document.getElementById('pcSum').textContent=`${rvMD(ci)}(${rvDw(ci)}) → ${rvMD(co)}(${rvDw(co)}) · ${res.nights}박${guests?' · '+guests:''}`;
   document.getElementById('pcResult').innerHTML=breakdownHtml(res)+warn;
   card.style.display='';empty.style.display='none';
 }
