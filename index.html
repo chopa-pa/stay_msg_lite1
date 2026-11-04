@@ -1633,6 +1633,14 @@ input,select,textarea{font-family:inherit;}
   .mx-body .input,.mx-body .select{padding-left:10px;padding-right:8px;font-size:14px;}
   .mx-body .select{padding-right:28px;}
 }
+/* ═══════ v1.15.0 대시보드 달력 빈 날짜 → 새 예약. 표시는 마우스 있는 기기만, 폰은 누르면 바로 열림 ═══════ */
+#tab-home .month-day.can-add{cursor:pointer;position:relative;}
+#tab-home .md-add{display:none;position:absolute;left:0;right:0;top:34px;bottom:0;align-items:center;justify-content:center;gap:4px;font-size:14px;font-weight:700;color:#047857;pointer-events:none;}
+#tab-home .md-add svg{width:16px;height:16px;stroke-width:2.4;}
+@media(hover:hover){
+  #tab-home .month-day.can-add:hover{background:#f0fdf4;border-color:#10b981;box-shadow:inset 0 0 0 1px #10b981;}
+  #tab-home .month-day.can-add:hover .md-add{display:flex;}
+}
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.1/dist/umd/supabase.min.js"></script>
 </head>
@@ -2292,7 +2300,7 @@ input,select,textarea{font-family:inherit;}
       <div class="guide-group">
         <div class="guide-group-title"><span class="ico"><svg class="i"><use href="#i-home"/></svg></span>대시보드</div>
         <div class="card">
-          <div class="guide-item"><strong>캘린더</strong> · 월간 일정을 한눈에 보고, 날짜를 누르면 해당 예약이 문자 작성에 자동 로드됩니다. (한 날짜에 예약이 여러 건이면 강조 표시)<br><span class="sub">· 입실 날은 「이름 IN」, 퇴실 날은 주황 「이름 OUT」, 숙박 중인 날은 연한 띠로 보여요.</span><span class="sub">· 날짜 위 작은 글씨(주중·주말·일·공휴일·공휴일 전날)는 요금 구분이에요.</span></div>
+          <div class="guide-item"><strong>캘린더</strong> · 월간 일정을 한눈에 보고, 날짜를 누르면 해당 예약이 문자 작성에 자동 로드됩니다. (한 날짜에 예약이 여러 건이면 강조 표시) 예약 없는 날(오늘 이후, 휴무 아님)을 누르면 그날 입실 · 다음 날 퇴실로 새 예약 창이 열려요.<br><span class="sub">· 입실 날은 「이름 IN」, 퇴실 날은 주황 「이름 OUT」, 숙박 중인 날은 연한 띠로 보여요.</span><span class="sub">· 날짜 위 작은 글씨(주중·주말·일·공휴일·공휴일 전날)는 요금 구분이에요.</span></div>
           <div class="guide-item"><strong>자동 문자</strong> · 봇이 만든 문자가 승인을 기다리면 캘린더 위에 카드로 떠요. <em>펼치기</em>로 열어 확인하세요.</div>
           <div class="guide-item"><strong>임시 휴무</strong> · 등록한 휴무가 있으면 카드로 보이고, 네이버·에어비앤비 막기 상태를 함께 알려 줘요.</div>
           <div class="guide-item"><strong>통계 칩</strong> · 캘린더 아래 체크인·체크아웃·7일 내·총 예약 건수를 실시간 표시.</div>
@@ -4190,6 +4198,13 @@ function dashCalDayClick(ds){
     },80);
     return;
   }
+  if(ds<getTodayStr())return;
+  if((typeof sbClosures!=='undefined'?sbClosures:[]).some(c=>c.status==='active'&&ds>=c.start_date&&ds<c.end_date))return;
+  openAddResvModal();
+  document.getElementById('ar_checkin').value=ds;
+  document.getElementById('ar_checkout').value=rvAdd(ds,1);
+  _updateDateDisplay('ar_checkin','ar_checkout','arDateRangeBtn');
+  const fr=document.getElementById('arFrom'); fr.textContent=`달력 ${rvMD(ds)}(${rvDw(ds)})에서`; fr.style.display='';
 }
 function renderDashCal(){
   const host=document.getElementById('dashCalBody');if(!host)return;
@@ -4218,7 +4233,9 @@ function renderDashCal(){
     const _r0=settings.rooms&&settings.rooms[0];
     const holiEve=!holi&&_r0&&parseNum(_r0.ph)>0&&(_r0.phMode||'eve')!=='day'&&HOLIDAYS[nextDay(ds)];
     const dayRes=reservations.filter(r=>r.checkin&&r.checkout&&ds>=r.checkin&&ds<=r.checkout);
-    const cls=['month-day',isSun?'sun':isSat?'sat':'',isToday?'today':'',isSel?'selected':'',holi?'holiday':'',dayRes.length?'has-res':''].filter(Boolean).join(' ');
+    const closed=(typeof sbClosures!=='undefined'?sbClosures:[]).some(c=>c.status==='active'&&ds>=c.start_date&&ds<c.end_date);
+    const canAdd=!dayRes.length&&!closed&&ds>=today; // 오늘 포함(쵸파파 11-05)
+    const cls=['month-day',isSun?'sun':isSat?'sat':'',isToday?'today':'',isSel?'selected':'',holi?'holiday':'',dayRes.length?'has-res':'',canAdd?'can-add':''].filter(Boolean).join(' ');
     const dayLbl=holi?`<small class="holi-lbl">${holi}</small>`
       :holiEve?'<small class="holi-lbl">공휴일 전날</small>'
       :isWe?'<small class="we-lbl">주말</small>'
@@ -4246,11 +4263,10 @@ function renderDashCal(){
       return `<span class="${cls}" style="${style}" title="${tip}"></span>`;
     }).join('')}</div>`;
     const more='';
-    const closed=(typeof sbClosures!=='undefined'?sbClosures:[]).some(c=>c.status==='active'&&ds>=c.start_date&&ds<c.end_date);
     const closedChip=closed?'<div class="res-chip closed">휴무</div>':'';
-    html+=`<div class="${cls}" onclick="dashCalDayClick('${ds}')">
+    html+=`<div class="${cls}" onclick="dashCalDayClick('${ds}')"${canAdd?' title="눌러서 새 예약"':''}>
       <div class="md-head"><span class="md-num-inner">${d}</span>${isToday?'<span class="md-today">오늘</span>':''}${dayLbl}</div>
-      ${closedChip}${chips}${more}
+      ${closedChip}${chips}${more}${canAdd?'<span class="md-add" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" fill="none" stroke="currentColor" stroke-linecap="round"/></svg>예약</span>':''}
     </div>`;
   }
   const total=first+days;const rem=total%7===0?0:7-(total%7);
