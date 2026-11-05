@@ -1712,7 +1712,7 @@ input,select,textarea{font-family:inherit;}
       <div class="sidebar-brand" onclick="switchTab('home')" role="button" tabindex="0" aria-label="홈으로">
         <div class="sidebar-logo">SM</div>
         <div class="sidebar-brand-text">
-          <div class="sidebar-brand-name">Stay_Msg Pro<span class="sidebar-brand-ver" id="appVer">v1.15.0</span></div>
+          <div class="sidebar-brand-name">Stay_Msg Pro<span class="sidebar-brand-ver" id="appVer">v1.15.1</span></div>
           <div class="sidebar-brand-sub">숙소 예약 문자</div>
         </div>
       </div>
@@ -1768,7 +1768,7 @@ input,select,textarea{font-family:inherit;}
       <div class="mheader-brand" onclick="switchTab('home')" role="button" tabindex="0" aria-label="홈으로">
         <div class="mheader-logo">SM</div>
         <div>
-          <div class="mheader-title">Stay_Msg Pro<span class="mheader-ver" id="appVerM">v1.15.0</span></div>
+          <div class="mheader-title">Stay_Msg Pro<span class="mheader-ver" id="appVerM">v1.15.1</span></div>
           <div class="mheader-sub">숙소 예약 문자</div>
         </div>
       </div>
@@ -2009,7 +2009,7 @@ input,select,textarea{font-family:inherit;}
         <ul>
           <li><strong>다가오는 · 지난 · 전체</strong> — 다가오는 예약은 <em>오늘·머무는 중 → 7일 안 → 달별</em>로 묶여요. 검색 칸은 이름·전화 뒷자리·메모로 찾습니다.</li>
           <li><strong>줄 누르기</strong> — 펼쳐서 연락처·메모·문자 단계를 보고, <em>문자 작성</em>·<em>수정</em>·<em>삭제</em>를 합니다.</li>
-          <li><strong>문자 칩 (확정 · 입실 · 퇴실)</strong> — 초록 <em>보냄</em> · 파랑 <em>날짜 자동</em> = 승인돼서 그날 아침 자동 발송 · 흰 칸 <em>날짜 차례</em> = 보낼 차례 · 노랑 <em>승인 대기</em> · 빨강 <em>확인 필요</em> · 회색 <em>직접 보냄</em> · 옅은 <em>기록 없음</em>. 메모 앞 보라 표시는 반려견·바비큐예요.</li>
+          <li><strong>문자 칩 (예약확정 · 입실 · 퇴실)</strong> — 초록 <em>보냄</em> · 파랑 <em>날짜 승인됨</em> = 승인 끝, 그날 봇이 보냄 · 흰 칸 <em>날짜 예정</em> = 아직 승인 전, 이틀 전에 승인 요청이 와요 · 노랑 <em>승인 대기</em> · 빨강 <em>확인 필요</em> · 회색 <em>직접 보냄</em> · 옅은 <em>기록 없음</em>. 메모 앞 보라 표시는 반려견·바비큐예요.</li>
           <li><strong>새 예약</strong> — 이름·전화·날짜·인원·금액을 직접 넣어요. 문자 작성 탭의 <em>예약 저장</em>으로도 추가됩니다.</li>
           <li><strong>임시 휴무</strong> — 사정으로 손님을 못 받는 날을 넣으면 봇이 10분 안에 네이버·에어비앤비 날짜를 막아요. 휴무를 취소해도 봇은 풀지 않으니 두 곳에서 직접 열어 주세요.</li>
         </ul>
@@ -2313,7 +2313,7 @@ input,select,textarea{font-family:inherit;}
         <div class="card">
           <div class="guide-item"><strong>예약 모으기</strong> · 봇이 10분마다 네이버예약·에어비앤비 예약을 가져와 예약 관리에 넣고, 예약이 들어온 날은 다른 채널 날짜를 막아요.</div>
           <div class="guide-item"><strong>만드는 문자</strong> · 예약 확정 안내(새 예약), 입실 안내(입실일 오전), 퇴실 안내(퇴실일 오전) 세 가지예요. 입실·퇴실 문자는 이틀 전부터 만들어져 전날 승인할 수 있어요.</div>
-          <div class="guide-item"><strong>승인</strong> · 홈 「자동 문자」 카드에서 <em>승인</em>을 누르면 예정일 아침에 봇이 보내요. 직접 보낼 거면 <em>건너뛰기(수동 발송)</em>를 누르세요. 봇은 안 보내요.</div>
+          <div class="guide-item"><strong>승인</strong> · 홈 「자동 문자」 카드에서 <em>승인</em>을 누르면 예정일에 봇이 보내요(10분 안). 직접 보낼 거면 <em>건너뛰기(수동 발송)</em>를 누르세요. 봇은 안 보내요.</div>
           <div class="guide-item"><strong>본문 수정</strong> · <em>본문 수정</em> → <em>저장</em>하면 승인 대기로 돌아가요. 다시 승인해야 보내요.</div>
           <div class="guide-item"><strong>시간 놓침 · 발송 실패</strong> · 직접 보낸 뒤 <em>수동으로 보냈음 · 치우기</em>를 누르면 목록에서 사라져요.</div>
         </div>
@@ -2561,7 +2561,7 @@ input,select,textarea{font-family:inherit;}
 <div class="toast" id="toast"></div>
 
 <script>
-const APP_VERSION='v1.15.0'; // Pro (2026-10-27 lite v3.3.0에서 이름·버전 리셋)
+const APP_VERSION='v1.15.1'; // Pro (2026-10-27 lite v3.3.0에서 이름·버전 리셋)
 const SK_SET='stay_msg_lite1_set_v1';
 const SK_TPL='stay_msg_lite1_tpl_v1';
 const SK_RES='stay_msg_lite1_res_v1';
@@ -4546,7 +4546,7 @@ function rvDays(a,b){return Math.round((new Date(b+'T00:00:00')-new Date(a+'T00:
 function rvWon(p){const n=parseNum(p);return n?n.toLocaleString('ko-KR')+'원':esc(p||'');}
 function rvGuests(g){g=String(g||'').trim();return /^\d+$/.test(g)?g+'명':esc(g);}
 function rvChCls(ch){ch=ch||'';if(/네이버/.test(ch))return 'nv';if(/에어비앤비|airbnb/i.test(ch))return 'ab';return '';}
-const RV_STAGES=[['booked','확정','예약확정'],['precheckin','입실','입실안내'],['checkout','퇴실','퇴실안내']];
+const RV_STAGES=[['booked','예약확정','예약확정'],['precheckin','입실','입실안내'],['checkout','퇴실','퇴실안내']];
 // 단계 상태 → [칩 색, 칩 글, 펼침 글]. 봇 작업(sms_jobs) 먼저, 없으면 발송 이력(봇은 예약 id, 앱은 전화번호+날짜 범위)
 function rvStage(r,st){
   const jobs=(typeof sbAllJobs!=='undefined'?sbAllJobs:[]).filter(x=>x.reservation_id===r.id&&x.stage_id===st).sort((a,b)=>b.id-a.id);
@@ -4556,7 +4556,7 @@ function rvStage(r,st){
     switch(j.status){
       case 'sent':case 'delivered':return ['done','✓',`보냄 · ${d} (자동)`];
       case 'sending':return ['sending','','보내는 중'];
-      case 'approved':return ['ok',d,`승인됨 · ${d} 아침 자동 발송`];
+      case 'approved':return ['ok',d,`승인됨 · ${d} 봇이 보냄`];
       case 'pending':return ['warn','승인 대기','승인 대기 · 홈 「자동 문자」에서 승인'];
       case 'skipped':return ['skip','수동','건너뜀 · 직접 보내기로 함'];
       default:{const l=(SB_JOB_STATUS[j.status]||[j.status])[0];return ['bad','확인',l+(j.result?' · '+j.result:'')];}
@@ -4571,14 +4571,14 @@ function rvStage(r,st){
   });
   if(h)return ['done','✓',`보냄 · ${rvMD(rvYmd(new Date(h.at)))} (${h.sentBy==='bot'?'자동':'앱'})`];
   const due=st==='booked'?null:(st==='precheckin'?r.checkin:r.checkout);
-  if(due&&due>=getTodayStr())return ['next',rvMD(due),`${rvMD(due)} 보낼 차례`];
+  if(due&&due>=getTodayStr())return ['next',rvMD(due),`${rvMD(due)} 보낼 예정 · 이틀 전에 승인 요청이 와요`];
   return ['none','–','기록 없음'];
 }
 // 칩 안쪽: PC는 상태 글, 모바일은 윗줄 단계(·날짜) + 아랫줄 상태
 const RV_ICO={done:'check',sending:'dots',ok:'clock',warn:'pause',bad:'alert',skip:'phone',next:'next',none:'none'};
 function rvChip(c,t,lb){
-  const pc={done:'보냄',sending:'보내는 중',ok:(t?t+' ':'')+'자동',warn:'승인 대기',bad:'확인 필요',skip:'직접 보냄',next:t+' 차례',none:'기록 없음'}[c]||'';
-  const m={ok:'자동 발송',next:'차례'}[c]||pc, top=(c==='ok'||c==='next')&&t?`${lb} · ${t}`:lb;
+  const pc={done:'보냄',sending:'보내는 중',ok:(t?t+' ':'')+'승인됨',warn:'승인 대기',bad:'확인 필요',skip:'직접 보냄',next:t+' 예정',none:'기록 없음'}[c]||'';
+  const m={ok:'승인됨',next:'예정'}[c]||pc, top=(c==='ok'||c==='next')&&t?`${lb} · ${t}`:lb;
   return `<span class="stg">${top}</span><span class="sv"><svg><use href="#i-st-${RV_ICO[c]||'none'}"/></svg><span class="tx-pc">${esc(pc)}</span><span class="tx-m">${esc(m)}</span></span>`;
 }
 function rvRow(r,today){
@@ -4665,7 +4665,7 @@ function renderReservations(){
     list.innerHTML=`<div class="rv-empty"><svg class="i"><use href="#i-clipboard"/></svg>${!all.length?'<h4>저장된 예약이 없어요</h4><p>「새 예약」으로 넣거나 문자 작성 탭에서 「예약 저장」을 누르세요</p>':`<h4>${q?'찾는 예약이 없어요':_rv.f==='up'?'다가오는 예약이 없어요':'지난 예약이 없어요'}</h4>`}</div>`;
     return;
   }
-  list.innerHTML='<div class="rv-colh" aria-hidden="true"><span>입실</span><span>손님 · 메모</span><span>퇴실 · 박 · 인원</span><span class="r">금액</span><span class="rv-colh-st"><span>문자 · 확정</span><span>입실 안내</span><span>퇴실 안내</span></span><span></span></div>'+shown.map(g=>`<section class="rv-group"><div class="rv-gh${g.cls?' '+g.cls:''}">${g.t}<em>${g.rows.length}</em></div><div class="rv-card">${g.rows.map(r=>rvRow(r,today)).join('')}</div></section>`).join('');
+  list.innerHTML='<div class="rv-colh" aria-hidden="true"><span>입실</span><span>손님 · 메모</span><span>퇴실 · 박 · 인원</span><span class="r">금액</span><span class="rv-colh-st"><span>예약확정</span><span>입실 안내</span><span>퇴실 안내</span></span><span></span></div>'+shown.map(g=>`<section class="rv-group"><div class="rv-gh${g.cls?' '+g.cls:''}">${g.t}<em>${g.rows.length}</em></div><div class="rv-card">${g.rows.map(r=>rvRow(r,today)).join('')}</div></section>`).join('');
 }
 
 // ─────── MODALS ───────
@@ -4731,7 +4731,7 @@ function sbRun(fn){ const p = sbQueue.then(fn, fn); sbQueue = p.catch(()=>{}); r
 function sbHasPending(){ return Object.values(sbPending).some(Boolean); }
 let sbBotState = null, sbJobs = [];
 const SB_STAGE = { booked:'예약확정', precheckin:'입실안내', checkout:'퇴실안내' };
-const SB_JOB_STATUS = { pending:['승인 대기','warn'], approved:['승인됨 · 예정일 아침 발송',''], blocked:['발송 불가','warn'], missed:['시간 놓침 · 수동 발송','warn'], unknown:['결과 불명 · 솔라피 확인','warn'], failed:['발송 실패','warn'] };
+const SB_JOB_STATUS = { pending:['승인 대기','warn'], approved:['승인됨 · 예정일 자동 발송',''], blocked:['발송 불가','warn'], missed:['시간 놓침 · 수동 발송','warn'], unknown:['결과 불명 · 솔라피 확인','warn'], failed:['발송 실패','warn'] };
 function sbBotLine(){
   if(!sbBotState || !sbBotState.last_run_at) return '';
   const t = s => s ? new Date(s).toLocaleString('ko-KR',{month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'}) : '없음';
@@ -4848,7 +4848,7 @@ async function sbJobSet(id, status){
   let q = sb.from('sms_jobs').update(upd).eq('id', id); if(from) q = q.eq('status', from);
   const { data, error } = await q.select();
   if(error || !data || !data.length){ toast('처리 실패 — 새로고침 뒤 다시'); return; }
-  toast(status==='approved'?'승인됐어요 — 예정일 아침에 자동 발송':(status==='skipped'?'목록에서 치웠어요(봇은 안 보냄)':'승인 취소'));
+  toast(status==='approved'?'승인됐어요 — 예정일에 자동 발송':(status==='skipped'?'목록에서 치웠어요(봇은 안 보냄)':'승인 취소'));
   sbPull(true).catch(()=>{});
 }
 function sbStatus(msg){ const el=document.getElementById('sbStatus'); if(el) el.textContent = msg; }
