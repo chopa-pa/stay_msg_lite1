@@ -1712,7 +1712,7 @@ input,select,textarea{font-family:inherit;}
       <div class="sidebar-brand" onclick="switchTab('home')" role="button" tabindex="0" aria-label="홈으로">
         <div class="sidebar-logo">SM</div>
         <div class="sidebar-brand-text">
-          <div class="sidebar-brand-name">Stay_Msg Pro<span class="sidebar-brand-ver" id="appVer">v1.15.1</span></div>
+          <div class="sidebar-brand-name">Stay_Msg Pro<span class="sidebar-brand-ver" id="appVer">v1.15.2</span></div>
           <div class="sidebar-brand-sub">숙소 예약 문자</div>
         </div>
       </div>
@@ -1768,7 +1768,7 @@ input,select,textarea{font-family:inherit;}
       <div class="mheader-brand" onclick="switchTab('home')" role="button" tabindex="0" aria-label="홈으로">
         <div class="mheader-logo">SM</div>
         <div>
-          <div class="mheader-title">Stay_Msg Pro<span class="mheader-ver" id="appVerM">v1.15.1</span></div>
+          <div class="mheader-title">Stay_Msg Pro<span class="mheader-ver" id="appVerM">v1.15.2</span></div>
           <div class="mheader-sub">숙소 예약 문자</div>
         </div>
       </div>
@@ -1869,6 +1869,8 @@ input,select,textarea{font-family:inherit;}
           <li><strong>{변수}</strong>는 <code>{이름}</code>, <code>{입실시간}</code>, <code>{호실명}</code>, <code>{와이파이이름}</code>, <code>{결제금액}</code> 등이 자동 치환됩니다.</li>
           <li><strong>문자 앱 열기</strong>를 누르면 iOS/Android 문자 앱이 열리고 발송 이력에 자동 기록됩니다.</li>
           <li><strong>예약 저장</strong>으로 이 예약을 "예약 → 예약 관리"에 보관할 수 있어요.</li>
+          <li><strong>템플릿 편집</strong>은 고른 템플릿을 템플릿 관리에서 바로 열고, <strong>지우기</strong>는 게스트 정보·날짜·인원·금액을 비워요.</li>
+          <li>값이 비어 <code>{인원}</code>처럼 그대로 남은 칸이 있으면 문자 앱을 열기 전에 한 번 물어봐요.</li>
         </ul>
       </div>
 
@@ -1988,10 +1990,10 @@ input,select,textarea{font-family:inherit;}
         <h4>📚 템플릿 관리 사용 방법</h4>
         <ul>
           <li><strong>6개 단계</strong> — 문의·예약전·예약확정·입실전·입실후·퇴실별로 템플릿을 모아놨어요.</li>
-          <li><strong>추가</strong> — 각 단계의 <em>+ 템플릿 추가</em>를 눌러 새 문자를 만듭니다.</li>
+          <li><strong>추가</strong> — 각 단계의 <em>새 템플릿</em>을 눌러 새 문자를 만듭니다.</li>
           <li><strong>편집</strong> — 템플릿 제목 행을 클릭하면 펼쳐지고, 제목·본문을 수정 후 <em>저장</em>.</li>
           <li><strong>복제</strong> — 비슷한 문자를 빠르게 만들 때 사용 (해당 단계에 복사본 추가).</li>
-          <li><strong>사용 가능한 변수</strong>: <code>{이름}</code> <code>{입실시간}</code> <code>{퇴실시간}</code> <code>{박수}</code>(입실~퇴실 밤 수) <code>{인원}</code>(「2인」 꼴) <code>{인원수}</code> <code>{결제금액}</code> <code>{연락처}</code> <code>{숙소명}</code> <code>{호실명}</code> <code>{숙소주소}</code> <code>{입금계좌}</code> <code>{와이파이이름}</code> <code>{와이파이비번}</code> <code>{도어락비번}</code> <code>{전화뒷자리}</code>(손님 전화번호 끝 4자리) <code>{주중요금}</code> <code>{주말요금}</code> <code>{반려견동반}</code>(예약 메모에 반려견이 있으면 줄바꿈 뒤 「반려견 동반 (소형견 1마리)」, 없으면 아무것도 안 넣음 — 인원 줄 끝에 붙여 씀) <code>{바비큐확정}</code> <code>{바비큐입실}</code>(11~2월 입실인데 바비큐를 예약·문의한 손님(메모 바비큐 ○/문의, 고객 탭 바비큐 체크)이 아니면 「11월부터 2월까지는 바비큐가 불가합니다. 이점 양해부탁드립니다」 문장, 그 외에는 종전 바비큐 안내 문장. 바비큐를 하신다고 한 손님은 입실 문자 끝에 「바비큐 하실 시간을 답장으로 알려주시면 그릴 준비해 두겠습니다」가 붙음)</li>
+          <li><strong>사용 가능한 변수</strong>: <code>{이름}</code> <code>{입실시간}</code> <code>{퇴실시간}</code> <code>{박수}</code>(입실~퇴실 밤 수) <code>{인원}</code>(「2인」 꼴) <code>{인원수}</code> <code>{결제금액}</code> <code>{연락처}</code> <code>{숙소명}</code> <code>{호실명}</code> <code>{숙소주소}</code> <code>{입금계좌}</code> <code>{와이파이이름}</code> <code>{와이파이비번}</code> <code>{도어락비번}</code> <code>{전화뒷자리}</code>(손님 전화번호 끝 4자리) <code>{주중요금}</code> <code>{주말요금}</code> <code>{반려견동반}</code>(고객 탭 반려견 표시, 직접 안 정했으면 예약 메모에 반려견이 있으면 줄바꿈 뒤 「반려견 동반 (소형견 1마리)」, 없으면 아무것도 안 넣음 — 인원 줄 끝에 붙여 씀) <code>{바비큐확정}</code> <code>{바비큐입실}</code>(11~2월 입실인데 바비큐를 예약·문의한 손님(메모 바비큐 ○/문의, 고객 탭 바비큐 체크)이 아니면 「11월부터 2월까지는 바비큐가 불가합니다. 이점 양해부탁드립니다」 문장, 그 외에는 종전 바비큐 안내 문장. 바비큐를 하신다고 한 손님은 입실 문자 끝에 「바비큐 하실 시간을 답장으로 알려주시면 그릴 준비해 두겠습니다」가 붙음)</li>
           <li>변경 사항은 즉시 <strong>문자 작성</strong>에도 반영됩니다.</li>
         </ul>
       </div>
@@ -2092,6 +2094,7 @@ input,select,textarea{font-family:inherit;}
         <h4><svg class="i"><use href="#i-paperplane"/></svg>발송 이력 사용 방법</h4>
         <ul>
           <li><strong>다시 보내기</strong> — 이력의 문자 내용 그대로 문자 앱이 다시 열려요.</li>
+          <li><strong>봇이 보낸 문자</strong> — 전달 완료 · 전송 중 N분 · 지연 · 전달 실패가 붙어요. 실패하거나 1시간 넘게 안 간 건에만 <em>봇으로 다시 보내기</em>가 나와요(이미 다시 보낸 건은 안 나옴).</li>
           <li><strong>복사 / 삭제</strong> — 이력별 개별 조작, <em>전체 삭제</em>로 이력 초기화도 가능.</li>
         </ul>
       </div>
@@ -2561,7 +2564,7 @@ input,select,textarea{font-family:inherit;}
 <div class="toast" id="toast"></div>
 
 <script>
-const APP_VERSION='v1.15.1'; // Pro (2026-10-27 lite v3.3.0에서 이름·버전 리셋)
+const APP_VERSION='v1.15.2'; // Pro (2026-10-27 lite v3.3.0에서 이름·버전 리셋)
 const SK_SET='stay_msg_lite1_set_v1';
 const SK_TPL='stay_msg_lite1_tpl_v1';
 const SK_RES='stay_msg_lite1_res_v1';
@@ -2676,7 +2679,8 @@ const BBQ_BOOKED='바비큐(웨버 가스그릴)를 이용하시려면 미리 �
 const BBQ_CHECKIN='바비큐는 처마 밑 공간에서 웨버 가스그릴로 하시면 됩니다. 숲이 가까워 숯불은 사용할 수 없습니다. 밤 9시까지 가능하고 20,000원은 현장에서 결제해 주세요. 비가 많이 오는 경우 이용 불가합니다.';
 // 11-02 쵸파파: 바비큐를 하신다고 한 분(메모 바비큐 ○/문의, 고객 탭 바비큐 체크)은 입실 문자에서 이용 시간을 물음. 봇 BBQ_ASK와 같은 문장
 const BBQ_ASK='바비큐 하실 시간을 답장으로 알려주시면 그릴 준비해 두겠습니다.';
-function bbqWanted(memo,resId){ return GUEST_BBQ_RE.test(memo||'') || !!(resId&&guestNotes[resId]&&guestNotes[resId].bbq); }
+// 고객 탭 줄(guest_notes)이 있으면 그 값(켬·끔)이 먼저, 없으면 예약 메모로 판단. 봇 templates.bbq_wanted와 같은 규칙
+function bbqWanted(memo,resId){ const n=resId&&guestNotes[resId]; return (n&&n.bbq!==null&&n.bbq!==undefined)?!!n.bbq:GUEST_BBQ_RE.test(memo||''); }
 function bbqClosed(checkin,memo,resId){
   if(!checkin)return false;
   const m=new Date(checkin+'T00:00:00').getMonth()+1;
@@ -2685,7 +2689,7 @@ function bbqClosed(checkin,memo,resId){
 }
 function hasDog(memo){return /반려견|강아지|소형견/.test(memo||'');}
 // 입퇴실 블록용 한 줄. 반려견 예약이면 줄바꿈+「반려견 동반 (소형견 1마리)」, 아니면 빈 문자열(줄 자체 없음)
-function dogHead(memo){if(!hasDog(memo))return '';const m=(memo||'').match(/반려견[^()\n]*\(([^)]*)\)/);return '\n반려견 동반'+(m?' ('+m[1].trim()+')':'');}
+function dogHead(memo,resId){const n=resId&&guestNotes[resId];if(!((n&&n.dog!==null&&n.dog!==undefined)?n.dog:hasDog(memo)))return '';const m=(memo||'').match(/반려견[^()\n]*\(([^)]*)\)/);return '\n반려견 동반'+(m?' ('+m[1].trim()+')':'');}
 function applyVars(raw){
   raw=applyVarAliases(raw);
   const ci=document.getElementById('v_checkin').value;
@@ -2711,7 +2715,7 @@ function applyVars(raw){
     '{도어락비번}':(()=>{const r=getSelectedRoom();if(r&&r.doorAuto){const p=document.getElementById('v_phone').value.replace(/\D/g,'');return p.length>=4?p.slice(-4):'{도어락비번}';}return (r?.door)||'{도어락비번}';})(),
     '{주중요금}':fmtPriceVal(getSelectedRoom()?.pw)||'{주중요금}',
     '{주말요금}':fmtPriceVal(getSelectedRoom()?.pwe)||'{주말요금}',
-    '{반려견동반}':dogHead(_composeMemo),
+    '{반려견동반}':dogHead(_composeMemo,_composeResId),
     '{바비큐확정}':bbqClosed(ci,_composeMemo,_composeResId)?BBQ_CLOSED:BBQ_BOOKED,
     '{바비큐입실}':bbqClosed(ci,_composeMemo,_composeResId)?BBQ_CLOSED:(bbqWanted(_composeMemo,_composeResId)?BBQ_CHECKIN+' '+BBQ_ASK:BBQ_CHECKIN),
   };
@@ -2931,6 +2935,10 @@ function renderTemplatesPage(){
       ${body}
     </div>`;
   }).join('');
+  if(editingTplKey){   // 편집기가 열려 있으면 변수 칩·이모지도 채움(새 템플릿·복제·탭 복귀 때 빠지던 것)
+    const k=editingTplKey.replace(':','_'),chipHost=document.getElementById('varChipArea_'+k);
+    if(chipHost)chipHost.innerHTML=buildVarChips('edt_body_'+k);
+  }
 }
 
 function openStageAndEdit(key){
@@ -3075,19 +3083,26 @@ function editCurTplInManagement(){
   },50);
 }
 
+// 값이 비어 {변수} 그대로 남은 칸 목록
+function unfilledVars(text){return [...new Set(text.match(/\{[^{}\n]+\}/g)||[])];}
+// iPadOS는 Mac 사용자 문자열을 써서 터치 여부로 구분
+function smsSep(){const ua=navigator.userAgent;return (/iPhone|iPad/.test(ua)||(/Macintosh/.test(ua)&&navigator.maxTouchPoints>1))?'&':'?';}
 function copyMessage(){
   const cur=getCurTpl();if(!cur)return;
   const text=applyVars(cur.tpl.body);
-  navigator.clipboard.writeText(text).then(()=>toast('복사됐어요 📋')).catch(()=>{
-    const ta=document.createElement('textarea');ta.value=text;document.body.appendChild(ta);ta.select();document.execCommand('copy');ta.remove();toast('복사됐어요 📋');
+  const miss=unfilledVars(text), msg=miss.length?`복사됐어요 — ${miss.join(' ')} 칸이 비어 있어요`:'복사됐어요 📋';
+  navigator.clipboard.writeText(text).then(()=>toast(msg)).catch(()=>{
+    const ta=document.createElement('textarea');ta.value=text;document.body.appendChild(ta);ta.select();document.execCommand('copy');ta.remove();toast(msg);
   });
 }
 function openSmsApp(){
   const cur=getCurTpl();if(!cur)return;
   const text=applyVars(cur.tpl.body);
   const phone=document.getElementById('v_phone').value.replace(/-/g,'');
-  addHistoryEntry(cur,text);
-  window.location.href=`sms:${phone}${/iPhone|iPad/.test(navigator.userAgent)?'&':'?'}body=${encodeURIComponent(text)}`;
+  const go=()=>{addHistoryEntry(cur,text);window.location.href=`sms:${phone}${smsSep()}body=${encodeURIComponent(text)}`;};
+  const miss=unfilledVars(text);
+  if(miss.length)showConfirmModal('빈 칸이 있어요',`${miss.join(' ')} 값이 비어 있어 문자에 그대로 들어가요.\n그래도 문자 앱을 열까요?`,go);
+  else go();
 }
 function clearForm(){
   _composeMemo='';_composeResId='';
@@ -3146,9 +3161,10 @@ function openDatePicker(ciId,coId,btnId,onDone){
   _cal.targetBtn=btnId||'dateRangeBtn';
   _cal.onDone=onDone||null;
   const today=new Date();
-  _cal.y=today.getFullYear();_cal.m=today.getMonth();
   _cal.ci=document.getElementById(_cal.targetCi).value||null;
   _cal.co=document.getElementById(_cal.targetCo).value||null;
+  const base=_cal.ci?new Date(_cal.ci+'T00:00:00'):today;   // 고른 날짜가 있으면 그 달부터
+  _cal.y=base.getFullYear();_cal.m=base.getMonth();
   _cal.step='ci';_cal.ym=false;_renderCal();
 }
 function _renderCal(){
@@ -3803,6 +3819,7 @@ function exportData(){
     tpl:JSON.parse(localStorage.getItem(SK_TPL)||'{}'),
     res:JSON.parse(localStorage.getItem(SK_RES)||'[]'),
     periods:JSON.parse(localStorage.getItem(SK_PER)||'[]'),
+    hist:JSON.parse(localStorage.getItem(SK_HIST)||'[]'),   // 보관용. 가져오기는 서버 기록을 덮지 않게 이력은 안 되살림
     exported:new Date().toISOString()
   };
   const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
@@ -3898,10 +3915,11 @@ function renderHistory(){
 function resendHistory(id){
   const h=msgHistory.find(x=>x.id===id);if(!h)return;
   const phone=(h.phone||'').replace(/-/g,'');
-  msgHistory.unshift({...h,id:'h'+Date.now(),at:new Date().toISOString()});
+  const {sentBy,status,...rest}=h;   // 봇 이력을 폰으로 다시 보내면 앱 발송 — 봇 배지·상태는 복사하지 않음
+  msgHistory.unshift({...rest,id:'h'+Date.now(),at:new Date().toISOString()});
   if(msgHistory.length>200)msgHistory.length=200;
   saveHistoryStorage();renderHistory();renderDashboard();
-  window.location.href=`sms:${phone}${/iPhone|iPad/.test(navigator.userAgent)?'&':'?'}body=${encodeURIComponent(h.body)}`;
+  window.location.href=`sms:${phone}${smsSep()}body=${encodeURIComponent(h.body)}`;
 }
 // 봇 발송 이력의 전달 상태. status: sent=통신사 전송 중, delivered=단말 도착, failed=실패(또는 재발송으로 닫힘)
 function histMins(h){return Math.floor((Date.now()-new Date(h.at||0).getTime())/60000);}
@@ -3912,7 +3930,12 @@ function histDeliv(h){
   const m=histMins(h);
   return m>60?`<span class="hist-deliv late">전송 중 ${m}분 · 지연</span>`:`<span class="hist-deliv sending">전송 중 ${m}분</span>`;
 }
-function histNeedsResend(h){return h.sentBy==='bot'&&/^bot\d+/.test(h.id)&&(h.status==='failed'||(h.status==='sent'&&histMins(h)>60));}
+// 같은 봇 작업의 더 새 이력이 있으면(이미 다시 보냄) 버튼을 다시 띄우지 않음
+function histNeedsResend(h){
+  const j=(h.id.match(/^bot(\d+)(?:-|$)/)||[])[1];if(h.sentBy!=='bot'||!j)return false;
+  if(msgHistory.some(x=>x!==h&&(x.id==='bot'+j||x.id.startsWith('bot'+j+'-'))&&x.at>h.at))return false;
+  return h.status==='failed'||(h.status==='sent'&&histMins(h)>60);
+}
 async function sbJobResend(histId){
   if(!sb||!sbUserEmail){toast('로그인 필요');return;}
   const jobId=(histId.match(/^bot(\d+)/)||[])[1];if(!jobId)return;
@@ -3961,7 +3984,7 @@ function editResv(id,e){
   document.getElementById('ar_phone').value=r.phone||'';
   document.getElementById('ar_checkin').value=r.checkin||'';
   document.getElementById('ar_checkout').value=r.checkout||'';
-  document.getElementById('ar_guests').value=r.guests||'';
+  setGuestsSel('ar_guests',r.guests);
   document.getElementById('ar_price').value=r.price||'';
   document.getElementById('ar_channel').value=r.channel||'';
   document.getElementById('ar_memo').value=r.memo||'';
@@ -4109,7 +4132,7 @@ function saveReservation(){
   if(!ci||!co){toast('날짜를 선택하세요');return;}
   const roomSel=document.getElementById('v_room');
   const roomId=roomSel?roomSel.value:'';
-  const conflict=findCheckinConflict(roomId,ci);
+  const conflict=findCheckinConflict(roomId,ci,_composeResId||null);   // 불러온 예약은 자기 자신과 충돌로 안 봄
   if(conflict){toast(`같은 호실에 ${ci} 입실 예약이 이미 있어요`);return;}
   const exists=reservations.find(r=>r.name===name&&r.checkin===ci&&r.checkout===co);
   if(exists){toast('이미 저장된 예약이에요');return;}
@@ -4140,6 +4163,14 @@ function pickStageKeyForDate(ds,ci,co){
   if(ds===co)return 'checkout:0';
   return 'checkout:0';
 }
+// 인원 선택칸 채우기. 「2」는 「2명」으로 맞추고, 목록에 없는 값(「9명」「성인 2명」 등)은 임시 선택지로 넣어 비지 않게
+function setGuestsSel(id,val){
+  const el=document.getElementById(id);if(!el)return;
+  el.querySelectorAll('option[data-extra]').forEach(o=>o.remove());
+  const g=String(val||'').trim(), want=/^\d+$/.test(g)?g+'명':g;
+  el.value=want;
+  if(g&&el.value!==want){const o=new Option(g,g);o.dataset.extra='1';el.add(o);el.value=g;}
+}
 function loadReservation(id,contextDate){
   const r=reservations.find(x=>x.id===id);if(!r)return;
   _composeMemo=r.memo||'';_composeResId=r.id||'';
@@ -4147,7 +4178,7 @@ function loadReservation(id,contextDate){
   document.getElementById('v_phone').value=r.phone||'';
   document.getElementById('v_checkin').value=r.checkin||'';
   document.getElementById('v_checkout').value=r.checkout||'';
-  document.getElementById('v_guests').value=r.guests||'';
+  setGuestsSel('v_guests',r.guests);
   document.getElementById('v_price').value=r.price||'';
   const roomSel=document.getElementById('v_room');
   if(roomSel&&r.roomId&&settings.rooms.find(x=>x.id===r.roomId)){
