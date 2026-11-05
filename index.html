@@ -1641,6 +1641,291 @@ input,select,textarea{font-family:inherit;}
   #tab-home .month-day.can-add:hover{background:#f0fdf4;border-color:#10b981;box-shadow:inset 0 0 0 1px #10b981;}
   #tab-home .month-day.can-add:hover .md-add{display:flex;}
 }
+/* ═══════ v1.16.0 문자 작성 (3차 시안) — 입력 카드 1개 3구역 · 단계 칩 · 미리보기 · 폰 고정 줄 ═══════ */
+@media(min-width:1024px){
+  #tab-compose .compose-grid{grid-template-columns:420px minmax(0,1fr);gap:24px;}
+}
+#tab-compose .cm-card{background:#fff;border:1px solid #e2e8f0;border-radius:16px;overflow:hidden;}
+#tab-compose .cm-sec{padding:16px 20px;}
+#tab-compose .cm-sec + .cm-sec{border-top:1px solid #f1f5f9;}
+#tab-compose .cm-sh{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:12px;min-height:32px;}
+#tab-compose .cm-st{font-size:15px;font-weight:800;color:#0f172a;display:flex;align-items:baseline;gap:8px;min-width:0;}
+#tab-compose .cm-prop{font-size:12px;font-weight:500;color:#64748b;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+#tab-compose .cm-prop.warn{color:#b45309;font-weight:600;}
+#tab-compose .cm-mini{display:inline-flex;align-items:center;gap:5px;height:32px;padding:0 10px;border:0;border-radius:8px;background:transparent;color:#64748b;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;flex-shrink:0;}
+#tab-compose .cm-mini:hover{background:#f1f5f9;}
+#tab-compose .cm-mini.fill{background:#f1f5f9;color:#0f172a;font-weight:700;}
+#tab-compose .cm-mini.fill:hover{background:#e2e8f0;}
+#tab-compose .cm-mini .i{width:15px;height:15px;stroke-width:1.9;margin:0;}
+#tab-compose .cm-stages{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;}
+#tab-compose .cm-chip{display:flex;align-items:center;justify-content:center;gap:6px;height:40px;padding:0 6px;border-radius:10px;border:1px solid #e2e8f0;background:#fff;color:#334155;font-size:14px;font-weight:700;cursor:pointer;white-space:nowrap;min-width:0;}
+#tab-compose .cm-chip:hover{border-color:#a7f3d0;background:#f0fdf4;}
+#tab-compose .cm-chip .i{width:15px;height:15px;stroke-width:1.9;flex-shrink:0;}
+#tab-compose .cm-chip em{font-style:normal;font-size:11px;font-weight:800;color:#475569;background:#f1f5f9;border-radius:999px;padding:1px 6px;line-height:1.4;}
+#tab-compose .cm-chip.on{background:#059669;border-color:#059669;color:#fff;}
+#tab-compose .cm-chip.on em{background:rgba(255,255,255,.22);color:#fff;}
+#tab-compose .cm-tpls{display:flex;flex-direction:column;gap:4px;margin-top:10px;}
+#tab-compose .cm-tpl{display:flex;align-items:center;gap:10px;min-height:40px;padding:6px 12px;border-radius:10px;border:1px solid #e2e8f0;background:#fff;text-align:left;cursor:pointer;font-size:14px;color:#0f172a;}
+#tab-compose .cm-tpl:hover{background:#f8fafc;}
+#tab-compose .cm-radio{width:16px;height:16px;border-radius:50%;border:1.5px solid #cbd5e1;flex-shrink:0;box-sizing:border-box;}
+#tab-compose .cm-tt{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+#tab-compose .cm-user{font-size:11px;font-weight:700;background:#f1f5f9;color:#475569;border-radius:5px;padding:2px 6px;flex-shrink:0;}
+#tab-compose .cm-auto{font-size:11px;font-weight:700;color:#047857;flex-shrink:0;white-space:nowrap;}
+#tab-compose .cm-tpl.on{background:#f0fdf4;border-color:#10b981;}
+#tab-compose .cm-tpl.on .cm-tt{font-weight:700;}
+#tab-compose .cm-tpl.on .cm-radio{border:5px solid #10b981;}
+#tab-compose .cm-room{margin-bottom:12px;}
+#tab-compose .cm-roomempty{background:#fffbeb;border:1px solid #fde68a;color:#92400e;font-size:14px;border-radius:10px;padding:10px 12px;margin-bottom:12px;}
+#tab-compose .cm-roomempty a{color:#92400e;font-weight:700;}
+#tab-compose .cm-gp{margin-top:12px;}
+#tab-compose .cm-card .fi label{font-size:14px;font-weight:700;color:#0f172a;padding-left:0;}
+#tab-compose .form-grid{gap:10px;}
+#tab-compose .cm-card .input,#tab-compose .cm-card .select{height:44px;}
+/* 미리보기 */
+#tab-compose .preview{border-radius:16px;border-color:#e2e8f0;}
+#tab-compose .preview-head{display:flex;align-items:center;gap:10px;padding:12px 20px;background:#fff;border-bottom:1px solid #f1f5f9;}
+#tab-compose .preview-type{font-size:12px;font-weight:800;border-radius:6px;border:1px solid;padding:2px 7px;flex-shrink:0;}
+#tab-compose .preview-type.sms{background:#ecfdf5;color:#047857;border-color:#a7f3d0;}
+#tab-compose .preview-type.lms{background:#fffbeb;color:#b45309;border-color:#fde68a;}
+#tab-compose .preview-type.mms{background:#fef2f2;color:#b91c1c;border-color:#fecaca;}
+#tab-compose .preview-title{display:flex;align-items:center;gap:6px;flex:1;min-width:0;font-size:14px;font-weight:700;color:#334155;}
+#tab-compose .preview-title .i{width:16px;height:16px;color:#059669;stroke-width:1.9;flex-shrink:0;}
+#tab-compose .preview-title span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+#tab-compose .preview-count{margin-left:auto;font-size:13px;font-weight:700;color:#64748b;white-space:nowrap;}
+#tab-compose .preview-count.warn{color:#b45309;}
+#tab-compose .preview-count.danger{color:#b91c1c;}
+#tab-compose .preview-body{font-size:15px;line-height:1.75;padding:16px 20px 18px;min-height:180px;color:#0f172a;word-break:keep-all;overflow-wrap:anywhere;}
+#tab-compose .pv-miss{background:#fffbeb;color:#b45309;font-weight:700;border:1px dashed #f59e0b;border-radius:5px;padding:0 3px;}
+#tab-compose .preview-miss{display:flex;flex-wrap:wrap;align-items:center;gap:6px;padding:10px 20px;border-top:1px solid #f1f5f9;font-size:13px;}
+#tab-compose .preview-miss b{color:#b45309;font-weight:700;margin-right:2px;}
+#tab-compose .preview-miss span{background:#fffbeb;color:#b45309;border:1px solid #fde68a;border-radius:6px;padding:1px 6px;font-weight:600;font-size:12px;}
+#tab-compose .preview-warn{gap:8px;padding:10px 20px;font-size:13px;font-weight:600;}
+#tab-compose .preview-warn .i{width:16px;height:16px;stroke-width:1.9;flex-shrink:0;}
+#tab-compose .preview-warn.lms{background:#fffbeb;color:#92400e;border-top:1px solid #fde68a;}
+#tab-compose .preview-warn.mms{background:#fef2f2;color:#b91c1c;border-top:1px solid #fecaca;}
+/* 버튼 줄 */
+#tab-compose .action-bar{display:grid;grid-template-columns:1fr 1fr 1.6fr;gap:8px;margin-top:12px;}
+#tab-compose .action-bar .btn,#tab-compose .cm-fixed .btn{height:46px;border-radius:10px;font-size:15px;justify-content:center;}
+#tab-compose .action-bar .btn-outline,#tab-compose .cm-fixed .btn-outline{background:#fff;border-color:#cbd5e1;color:#0f172a;font-weight:600;}
+#tab-compose .action-bar .btn-outline .i,#tab-compose .cm-fixed .btn-outline .i{width:17px;height:17px;}
+#tab-compose .action-bar .btn-primary,#tab-compose .cm-fixed .btn-primary{background:#10b981;color:#fff;font-size:16px;font-weight:800;}
+#tab-compose .action-bar .btn-primary:hover,#tab-compose .cm-fixed .btn-primary:hover{background:#059669;}
+#tab-compose .cm-fixed{display:none;}
+@media(max-width:959px){
+  #tab-compose .action-bar{grid-template-columns:1fr;}
+  #tab-compose .action-bar .btn{height:44px;}
+  #tab-compose .action-bar .cm-pc{display:none;}
+  #tab-compose .cm-fixed{display:grid;grid-template-columns:1fr 1.6fr;gap:8px;position:sticky;bottom:calc(var(--nav-h) + env(safe-area-inset-bottom,0px));z-index:20;margin:16px -20px 0;padding:10px 12px;background:rgba(255,255,255,.96);border-top:1px solid #e2e8f0;box-shadow:0 -6px 16px rgba(15,23,42,.06);}
+  #tab-compose .cm-fixed .btn{height:48px;}
+  #tab-compose.page{padding-bottom:0;}
+  body:has(#tab-compose.active) .toast{bottom:calc(var(--nav-h) + env(safe-area-inset-bottom,0px) + 80px);}
+}
+@media(max-width:640px){
+  #tab-compose.page{padding:16px 12px 0;}
+  #tab-compose .cm-fixed{margin-left:-12px;margin-right:-12px;}
+  #tab-compose .cm-sec{padding:14px;}
+  #tab-compose .preview-head{flex-wrap:wrap;row-gap:6px;padding:12px 14px;}
+  #tab-compose .preview-count{flex-basis:100%;text-align:right;}
+  #tab-compose .preview-body{padding:14px 14px 16px;}
+  #tab-compose .preview-miss,#tab-compose .preview-warn{padding-left:14px;padding-right:14px;}
+}
+@media(max-width:380px){
+  #tab-compose .cm-sec{padding:12px;}
+  #tab-compose .cm-chip{font-size:13px;gap:4px;}
+  #tab-compose.page{padding-left:8px;padding-right:8px;}
+  #tab-compose .cm-fixed{padding:8px;margin-left:-8px;margin-right:-8px;}
+}
+/* ═══════ v1.16.0 발송 이력 (3차 시안) — 날짜 묶음 · 한 줄 그리드 · 결과 배지 · 건수/전체 삭제는 맨 아래 ═══════ */
+#tab-history .hist-list{display:flex;flex-direction:column;gap:16px;}
+#tab-history .hs-gh{display:flex;align-items:center;gap:8px;font-size:15px;font-weight:800;color:#0f172a;margin:0 4px 8px;}
+#tab-history .hs-gh em{font-style:normal;font-size:12px;font-weight:700;color:#475569;background:#e9eef3;border-radius:999px;padding:1px 8px;}
+#tab-history .hs-card{background:#fff;border:1px solid #e2e8f0;border-radius:16px;overflow:hidden;}
+#tab-history .hs-row + .hs-row{border-top:1px solid #e2e8f0;}
+#tab-history .hs-row.need{background:#fff7f7;box-shadow:inset 3px 0 0 #dc2626;}
+#tab-history .hs-main{display:grid;grid-template-columns:32px minmax(0,1fr) 168px 52px 252px;align-items:center;column-gap:14px;padding:12px 18px 12px 20px;cursor:pointer;}
+#tab-history .hs-row:not(.need) .hs-main:hover{background:#f8fafc;}
+#tab-history .m{display:none;}
+#tab-history .hs-who{display:flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:9px;background:#f1f5f9;color:#475569;}
+#tab-history .hs-who.bot{background:#eff6ff;color:#1d4ed8;}
+#tab-history .hs-who .i{width:18px;height:18px;stroke-width:1.8;}
+#tab-history .hs-what{min-width:0;}
+#tab-history .hs-l1{display:flex;align-items:center;gap:8px;min-width:0;}
+#tab-history .hs-stg{font-size:12px;font-weight:700;background:#f1f5f9;color:#334155;border-radius:5px;padding:2px 7px;white-space:nowrap;flex-shrink:0;}
+#tab-history .hs-tt{font-size:15px;font-weight:700;color:#0f172a;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0;}
+#tab-history .hs-by{font-size:12px;font-weight:600;color:#475569;white-space:nowrap;}
+#tab-history .hs-by.bot{color:#1d4ed8;}
+#tab-history .hs-l2{display:flex;align-items:baseline;gap:8px;margin-top:4px;font-size:13px;min-width:0;}
+#tab-history .hs-l2 b{font-weight:700;color:#0f172a;white-space:nowrap;}
+#tab-history .hs-ph{color:#64748b;white-space:nowrap;font-variant-numeric:tabular-nums;}
+#tab-history .hs-snip{color:#94a3b8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0;}
+#tab-history .hs-hm{font-size:14px;font-weight:600;color:#475569;text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap;}
+#tab-history .hs-btns{display:flex;align-items:center;justify-content:flex-end;gap:10px;}
+#tab-history .hs-rebot{display:inline-flex;align-items:center;justify-content:center;gap:6px;height:36px;padding:0 14px;border:0;border-radius:9px;background:#10b981;color:#fff;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap;}
+#tab-history .hs-rebot:hover{background:#059669;}
+#tab-history .hs-rebot .i{width:15px;height:15px;stroke-width:2;}
+#tab-history .hs-tg,#tab-history .hs-tgbar{align-items:center;gap:4px;font-size:13px;font-weight:600;color:#64748b;white-space:nowrap;}
+#tab-history .hs-tg{display:inline-flex;}
+#tab-history .hs-tg .i,#tab-history .hs-tgbar .i{width:15px;height:15px;stroke-width:2;transition:transform .15s;}
+#tab-history .hs-row.open .hs-tg .i,#tab-history .hs-row.open .hs-tgbar .i{transform:rotate(180deg);}
+/* 결과 배지 */
+#tab-history .hist-deliv{display:inline-flex;align-items:center;gap:5px;height:28px;padding:0 10px;border-radius:7px;border:1px solid;font-size:13px;font-weight:700;white-space:nowrap;box-sizing:border-box;}
+#tab-history .hist-deliv .i{width:14px;height:14px;stroke-width:2.2;}
+#tab-history .hist-deliv.ok{background:#fff;color:#047857;border-color:#a7f3d0;}
+#tab-history .hist-deliv.sending{background:#fffbeb;color:#b45309;border-color:#fde68a;}
+#tab-history .hist-deliv.late,#tab-history .hist-deliv.fail{background:#dc2626;color:#fff;border-color:#dc2626;}
+/* 펼친 칸: 접혔을 때는 본문 상자 자체를 숨김 */
+#tab-history .hs-open{display:none;padding:0 18px 16px 66px;}
+#tab-history .hs-open.open{display:block;}
+#tab-history .hs-body{background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:12px 14px;font-size:14px;line-height:1.7;color:#0f172a;white-space:pre-wrap;word-break:break-word;}
+#tab-history .hs-acts{display:flex;align-items:center;gap:8px;margin-top:12px;}
+#tab-history .hs-acts .btn{height:38px;padding:0 14px;font-size:14px;font-weight:600;border-radius:9px;background:#fff;border-color:#cbd5e1;color:#0f172a;}
+#tab-history .hs-acts .btn .i{width:15px;height:15px;}
+#tab-history .hs-at{font-size:12px;color:#94a3b8;font-variant-numeric:tabular-nums;}
+#tab-history .hs-del{margin-left:auto;display:inline-flex;align-items:center;justify-content:center;gap:5px;height:38px;padding:0 12px;border:0;border-radius:9px;background:transparent;color:#dc2626;font-size:14px;font-weight:700;cursor:pointer;}
+#tab-history .hs-del:hover{background:#fef2f2;}
+#tab-history .hs-del .i{width:15px;height:15px;stroke-width:1.9;}
+/* 건수 + 전체 삭제(맨 아래) */
+#tab-history .hist-head{display:flex;align-items:center;justify-content:space-between;margin:16px 4px 0;}
+#tab-history .hist-count{font-size:13px;color:#64748b;font-weight:500;}
+#tab-history .hs-clear{display:inline-flex;align-items:center;gap:5px;height:32px;padding:0 10px;border:0;border-radius:8px;background:transparent;color:#dc2626;font-size:13px;font-weight:600;cursor:pointer;}
+#tab-history .hs-clear:hover{background:#fef2f2;}
+#tab-history .hs-clear .i{width:14px;height:14px;stroke-width:1.9;}
+/* 빈 상태 */
+#tab-history .hist-empty{display:flex;flex-direction:column;align-items:center;gap:6px;background:#fff;border:1px dashed #cbd5e1;border-radius:16px;padding:48px 20px;text-align:center;}
+#tab-history .hist-empty .i{width:32px;height:32px;color:#94a3b8;stroke-width:1.6;margin-bottom:6px;}
+#tab-history .hist-empty b{font-size:16px;font-weight:700;color:#0f172a;}
+#tab-history .hist-empty span{font-size:13px;color:#64748b;}
+/* 모바일 */
+@media(max-width:959px){
+  #tab-history .pc{display:none;}
+  #tab-history .m{display:block;}
+  #tab-history span.m,#tab-history .hs-hm.m{display:inline;}
+  #tab-history .hs-main{grid-template-columns:30px minmax(0,1fr);column-gap:10px;padding:12px;align-items:start;}
+  #tab-history .hs-who{width:30px;height:30px;border-radius:8px;}
+  #tab-history .hs-who .i{width:17px;height:17px;}
+  #tab-history .hs-l1{gap:6px;}
+  #tab-history .hs-stg{font-size:11px;padding:1px 6px;}
+  #tab-history .hs-tt{font-size:14px;}
+  #tab-history .hs-l1 .hs-hm{margin-left:auto;font-size:13px;}
+  #tab-history .hs-l2{font-size:12px;gap:6px;flex-wrap:wrap;}
+  #tab-history .hs-l2 .m .hs-by{font-size:12px;}
+  #tab-history .hs-res.m{margin-top:8px;}
+  #tab-history .hist-deliv{height:26px;font-size:12px;padding:0 8px;}
+  #tab-history .hs-snip.m{font-size:13px;margin-top:6px;}
+  #tab-history .hs-row.open .hs-closed{display:none;}
+  #tab-history .hs-rebotm{padding:0 12px 12px 52px;}
+  #tab-history .hs-rebot.wide{width:100%;height:42px;font-size:14px;}
+  #tab-history .hs-open{padding:0 12px 12px;}
+  #tab-history .hs-acts{display:grid;grid-template-columns:1.3fr 1fr 1fr;gap:6px;}
+  #tab-history .hs-acts .btn,#tab-history .hs-del{height:42px;margin:0;justify-content:center;}
+  #tab-history .hs-acts .btn .i,#tab-history .hs-del .i{display:none;}
+  #tab-history .hs-del{background:#fef2f2;}
+  #tab-history .hs-tgbar.m{display:flex;justify-content:center;height:32px;border-top:1px solid #f1f5f9;font-size:12px;cursor:pointer;}
+}
+@media(max-width:640px){
+  #tab-history.page{padding:16px 12px 24px;}
+  #tab-history .hist-list{gap:12px;}
+  #tab-history .hs-gh{font-size:14px;}
+}
+@media(max-width:380px){
+  #tab-history.page{padding-left:8px;padding-right:8px;}
+  #tab-history .hs-main{padding:10px;}
+  #tab-history .hs-rebotm{padding:0 10px 10px 50px;}
+  #tab-history .hs-open{padding:0 10px 10px;}
+}
+/* ═══════ v1.16.0 템플릿 관리 (3차 시안) — 목록 카드 1개 6구역 · PC 오른쪽 편집 패널 · 칩 탭 ═══════ */
+#tab-templates .tp-panel{display:none;}
+@media(min-width:1024px){
+  #tab-templates .tp-grid{display:grid;grid-template-columns:360px minmax(0,1fr);gap:24px;align-items:start;}
+  #tab-templates .tp-panel{display:block;background:#fff;border:1px solid #e2e8f0;border-radius:16px;padding:18px 20px 20px;position:sticky;top:20px;}
+}
+#tplStagesList{background:#fff;border:1px solid #e2e8f0;border-radius:16px;overflow:hidden;}
+#tab-templates .tpl-stage{margin:0;border:0;border-radius:0;background:transparent;}
+#tab-templates .tpl-stage + .tpl-stage{border-top:1px solid #e2e8f0;}
+#tab-templates .tpl-stage-head{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:10px 10px 10px 14px;background:#f8fafc;cursor:default;}
+#tab-templates .tpl-stage.open .tpl-stage-head{border-bottom:0;}
+#tab-templates .tpl-stage-head:hover{background:#f8fafc;}
+#tab-templates .tpl-stage-head .label{flex:1;min-width:0;display:flex;align-items:center;gap:10px;font-size:15px;font-weight:800;color:#0f172a;cursor:pointer;}
+#tab-templates .tpl-stage-head .stage-chev{width:14px;height:14px;color:#64748b;stroke-width:2;transform:rotate(-90deg);transition:transform .15s;margin:0;}
+#tab-templates .tpl-stage.open .stage-chev{transform:none;}
+#tab-templates .tpl-stage-head .label .stage-ico{width:28px;height:28px;border-radius:8px;background:#ecfdf5;color:#047857;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+#tab-templates .stage-ico .i{width:16px;height:16px;stroke-width:1.9;margin:0;}
+#tab-templates .tpl-stage-head .count{font-size:13px;font-weight:500;color:#94a3b8;margin-left:-4px;}
+#tab-templates .tp-add{display:inline-flex;align-items:center;gap:4px;height:32px;padding:0 10px;border:0;border-radius:8px;background:transparent;color:#047857;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap;flex-shrink:0;}
+#tab-templates .tp-add:hover{background:#ecfdf5;}
+#tab-templates .tp-add .i{width:14px;height:14px;stroke-width:2.2;margin:0;}
+#tab-templates .tpl-row{margin:0;border-radius:0;background:#fff;border-top:1px solid #f1f5f9;}
+#tab-templates .tpl-row:hover{background:#fff;}
+#tab-templates .tpl-row-head{display:flex;align-items:center;gap:10px;padding:10px 12px 10px 18px;cursor:pointer;}
+#tab-templates .tpl-row-head:hover{background:#f8fafc;}
+#tab-templates .tpl-row.open > .tpl-row-head{background:#f0fdf4;box-shadow:inset 3px 0 0 #10b981;}
+#tab-templates .tpl-row-main{flex:1;min-width:0;}
+#tab-templates .tpl-row-title{font-size:14px;font-weight:600;color:#0f172a;display:flex;align-items:center;gap:6px;}
+#tab-templates .tpl-row.open .tpl-row-title{font-weight:800;}
+#tab-templates .tpl-row-title .badge{font-size:11px;font-weight:700;background:#f1f5f9;color:#475569;border-radius:5px;padding:2px 6px;margin:0;letter-spacing:0;}
+#tab-templates .tpl-row-snippet{font-size:12px;color:#94a3b8;margin-top:3px;}
+#tab-templates .tpl-row-chev{width:16px;height:16px;color:#94a3b8;stroke-width:2;flex-shrink:0;transform:rotate(-90deg);margin:0;}
+/* 편집기 */
+#tab-templates .tpl-edit{padding:0;border:0;background:transparent;}
+#tab-templates .tpe-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:14px;}
+#tab-templates .tpe-kind{display:flex;align-items:center;gap:6px;font-size:13px;font-weight:700;color:#047857;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+#tab-templates .tpe-kind .i{width:16px;height:16px;stroke-width:1.9;flex-shrink:0;}
+#tab-templates .tpe-kind span{font-weight:500;color:#94a3b8;}
+#tab-templates .tpe-btns{display:flex;gap:6px;flex-shrink:0;}
+#tab-templates .tpe-b{display:inline-flex;align-items:center;gap:5px;height:34px;padding:0 12px;border:1px solid #cbd5e1;border-radius:8px;background:#fff;color:#0f172a;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;}
+#tab-templates .tpe-b:hover{background:#f8fafc;}
+#tab-templates .tpe-b .i{width:14px;height:14px;stroke-width:1.9;}
+#tab-templates .tpe-b.del{background:#fef2f2;border-color:#fef2f2;color:#dc2626;font-weight:700;}
+#tab-templates .tpe-b.del:hover{background:#fee2e2;}
+#tab-templates .tpl-edit .fi{margin-bottom:14px;}
+#tab-templates .tpl-edit label{font-size:14px;font-weight:700;color:#0f172a;text-transform:none;letter-spacing:0;margin-bottom:6px;}
+#tab-templates .tpl-edit .input{height:44px;font-size:15px;}
+#tab-templates .tpl-edit textarea{min-height:360px;font-size:15px;line-height:1.7;padding:12px 14px;border:1px solid #cbd5e1;border-radius:10px;resize:vertical;}
+/* 칩 영역: 변수 / 이모지 탭 */
+#tab-templates .var-chips-wrap{background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:0;overflow:hidden;}
+#tab-templates .vc-tabs{display:flex;align-items:center;gap:4px;background:#f8fafc;border-bottom:1px solid #e2e8f0;padding:0 12px;}
+#tab-templates .vc-tab{height:40px;padding:0 10px;border:0;border-bottom:2px solid transparent;background:transparent;font-size:13px;font-weight:600;color:#64748b;cursor:pointer;margin-bottom:-1px;}
+#tab-templates .vc-tab em{font-style:normal;font-weight:600;color:#94a3b8;margin-left:2px;}
+#tab-templates .vc-tab.on{border-bottom-color:#10b981;color:#047857;font-weight:700;}
+#tab-templates .vc-tab.on em{color:#10b981;}
+#tab-templates .vc-hint{margin-left:auto;font-size:12px;color:#94a3b8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0;}
+#tab-templates .vc-pane{display:flex;flex-wrap:wrap;gap:6px;padding:10px;max-height:132px;overflow:auto;}
+#tab-templates .vc-pane[hidden]{display:none;}
+#tab-templates .var-chip{height:30px;padding:0 10px;border-radius:7px;background:#ecfdf5;color:#047857;border:1px solid #a7f3d0;font-size:13px;font-weight:600;}
+#tab-templates .var-chip:hover{background:#d1fae5;color:#047857;}
+#tab-templates .emoji-chip{width:36px;height:34px;padding:0;border-radius:7px;background:#fff;border:1px solid #e2e8f0;font-size:18px;}
+#tab-templates .tpl-edit-actions{display:grid;grid-template-columns:1fr 1.6fr;gap:8px;margin-top:14px;}
+#tab-templates .tpl-edit-actions .btn{height:46px;border-radius:10px;font-size:15px;justify-content:center;}
+#tab-templates .tpe-cancel{background:#f1f5f9;border:0;color:#0f172a;font-weight:700;}
+#tab-templates .tpe-cancel:hover{background:#e2e8f0;}
+#tab-templates .tpe-save{background:#10b981;font-weight:700;}
+#tab-templates .tpe-save:hover{background:#059669;}
+/* 빈 패널 */
+#tab-templates .tp-empty{display:flex;flex-direction:column;align-items:center;gap:6px;border:1px dashed #cbd5e1;border-radius:14px;padding:72px 24px;text-align:center;}
+#tab-templates .tp-empty .i{width:34px;height:34px;color:#94a3b8;stroke-width:1.6;margin-bottom:6px;}
+#tab-templates .tp-empty b{font-size:15px;font-weight:700;color:#0f172a;}
+#tab-templates .tp-empty span{font-size:13px;color:#64748b;}
+/* 폰·태블릿: 고른 줄 바로 아래 인라인 편집기 */
+@media(max-width:1023px){
+  #tab-templates .tpl-row-chev{transform:none;}
+  #tab-templates .tpl-row.open .tpl-row-chev{transform:rotate(180deg);}
+  #tab-templates .tpl-row.open{background:#f0fdf4;box-shadow:inset 3px 0 0 #10b981;}
+  #tab-templates .tpl-row.open > .tpl-row-head{box-shadow:none;}
+  #tab-templates .tpl-row .tpl-edit{padding:0 12px 14px 15px;}
+  #tab-templates .tpe-head{justify-content:flex-start;margin-bottom:12px;}
+  #tab-templates .tpe-kind{display:none;}
+  #tab-templates .tpl-edit textarea{min-height:280px;background:#fff;}
+  #tab-templates .vc-pane{max-height:116px;}
+}
+@media(max-width:640px){
+  #tab-templates.page{padding:16px 12px 24px;}
+  #tab-templates .vc-hint{font-size:11px;}
+}
+@media(max-width:380px){
+  #tab-templates.page{padding-left:8px;padding-right:8px;}
+  #tab-templates .tpl-row .tpl-edit{padding:0 10px 12px 13px;}
+  #tab-templates .vc-tab{padding:0 7px;}
+}
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.1/dist/umd/supabase.min.js"></script>
 </head>
@@ -1702,6 +1987,13 @@ input,select,textarea{font-family:inherit;}
 <symbol id="i-chevd" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></symbol>
 <symbol id="i-x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></symbol>
 <symbol id="i-ban2" viewBox="0 0 24 24"><path d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18zM5.6 5.6l12.8 12.8" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+<symbol id="i-st-inquiry" viewBox="0 0 24 24"><path d="M4 5h16v11H9l-5 4z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+<symbol id="i-st-prebook" viewBox="0 0 24 24"><path d="M9 3h6v3H9zM7 4.5H5V21h14V4.5h-2M9 11h6M9 15h4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+<symbol id="i-st-booked" viewBox="0 0 24 24"><path d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18zM8 12.5l3 3 5-6" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+<symbol id="i-st-precheckin" viewBox="0 0 24 24"><path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2zM9 4v14M15 6v14" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+<symbol id="i-st-checkedin" viewBox="0 0 24 24"><path d="M4 11 12 4l8 7M6 9.5V20h12V9.5M10 20v-5h4v5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+<symbol id="i-st-checkout" viewBox="0 0 24 24"><path d="M10 4H5v16h5M14 8l4 4-4 4M18 12H8" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+<symbol id="i-xc" viewBox="0 0 24 24"><path d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18zM9 9l6 6M15 9l-6 6" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></symbol>
 </defs></svg>
 
 <div class="app">
@@ -1712,7 +2004,7 @@ input,select,textarea{font-family:inherit;}
       <div class="sidebar-brand" onclick="switchTab('home')" role="button" tabindex="0" aria-label="홈으로">
         <div class="sidebar-logo">SM</div>
         <div class="sidebar-brand-text">
-          <div class="sidebar-brand-name">Stay_Msg Pro<span class="sidebar-brand-ver" id="appVer">v1.15.2</span></div>
+          <div class="sidebar-brand-name">Stay_Msg Pro<span class="sidebar-brand-ver" id="appVer">v1.16.0</span></div>
           <div class="sidebar-brand-sub">숙소 예약 문자</div>
         </div>
       </div>
@@ -1768,7 +2060,7 @@ input,select,textarea{font-family:inherit;}
       <div class="mheader-brand" onclick="switchTab('home')" role="button" tabindex="0" aria-label="홈으로">
         <div class="mheader-logo">SM</div>
         <div>
-          <div class="mheader-title">Stay_Msg Pro<span class="mheader-ver" id="appVerM">v1.15.2</span></div>
+          <div class="mheader-title">Stay_Msg Pro<span class="mheader-ver" id="appVerM">v1.16.0</span></div>
           <div class="mheader-sub">숙소 예약 문자</div>
         </div>
       </div>
@@ -1862,29 +2154,36 @@ input,select,textarea{font-family:inherit;}
       <div class="help-panel" id="help-compose" style="display:none;">
         <h4><svg class="i"><use href="#i-message"/></svg>문자 작성 사용 방법</h4>
         <ul>
-          <li><strong>① 게스트 정보</strong> — 이름과 연락처 입력. 연락처는 자동 하이픈.</li>
-          <li><strong>② 숙소/호실</strong> — 보낼 대상 호실을 고르면 해당 와이파이·도어락이 자동 반영됩니다.</li>
-          <li><strong>③ 체크인/체크아웃</strong> — 날짜 버튼을 눌러 입·퇴실을 한번에 선택. 인원·금액도 여기서.</li>
-          <li><strong>④ 템플릿 선택</strong> — 단계별 템플릿을 고르면 우측 프리뷰에 실제 문자가 나타납니다.</li>
+          <li><strong>① 무슨 문자</strong> — 단계를 누르고 템플릿을 고르면 미리보기에 실제 문자가 나타납니다. 예약을 불러오면 날짜에 맞는 템플릿이 자동으로 골라져요.</li>
+          <li><strong>② 손님</strong> — 이름과 연락처 입력. 연락처는 자동 하이픈.</li>
+          <li><strong>③ 숙박</strong> — 호실(2개 이상일 때)을 고르면 해당 와이파이·도어락이 자동 반영됩니다. 날짜 버튼을 눌러 입·퇴실을 한번에 선택. 인원·금액도 여기서.</li>
           <li><strong>{변수}</strong>는 <code>{이름}</code>, <code>{입실시간}</code>, <code>{호실명}</code>, <code>{와이파이이름}</code>, <code>{결제금액}</code> 등이 자동 치환됩니다.</li>
           <li><strong>문자 앱 열기</strong>를 누르면 iOS/Android 문자 앱이 열리고 발송 이력에 자동 기록됩니다.</li>
           <li><strong>예약 저장</strong>으로 이 예약을 "예약 → 예약 관리"에 보관할 수 있어요.</li>
-          <li><strong>템플릿 편집</strong>은 고른 템플릿을 템플릿 관리에서 바로 열고, <strong>지우기</strong>는 게스트 정보·날짜·인원·금액을 비워요.</li>
-          <li>값이 비어 <code>{인원}</code>처럼 그대로 남은 칸이 있으면 문자 앱을 열기 전에 한 번 물어봐요.</li>
+          <li><strong>템플릿 편집</strong>은 고른 템플릿을 템플릿 관리에서 바로 열고, <strong>지우기</strong>는 손님 정보·날짜·인원·금액을 비워요.</li>
+          <li>값이 비어 <code>{인원}</code>처럼 그대로 남은 칸은 미리보기에 노란 점선으로 표시되고, 문자 앱을 열기 전에 한 번 물어봐요.</li>
         </ul>
       </div>
 
       <div class="compose-grid">
 
-        <!-- Left: form -->
+        <!-- 왼쪽: 입력 카드 1개(무슨 문자 · 손님 · 숙박) -->
         <div class="compose-left">
-
-          <div class="card">
-            <div class="card-head" style="display:flex;align-items:center;justify-content:space-between;gap:8px;">
-              <div class="card-head-title"><span class="ico"><svg class="i"><use href="#i-user"/></svg></span>게스트 정보</div>
-              <button class="btn btn-outline btn-sm" onclick="clearForm()" title="입력 지우기"><svg class="i"><use href="#i-trash"/></svg>지우기</button>
+          <div class="cm-card">
+            <div class="cm-sec">
+              <div class="cm-sh">
+                <div class="cm-st">무슨 문자<span class="cm-prop" id="composePropName"></span></div>
+                <button class="cm-mini fill" onclick="editCurTplInManagement()" title="현재 템플릿 편집"><svg class="i"><use href="#i-pencil"/></svg>템플릿 편집</button>
+              </div>
+              <div class="cm-stages" id="cmStages"></div>
+              <div class="cm-tpls" id="cmTpls"></div>
+              <select id="tplSelect" onchange="onTplChange()" hidden></select>
             </div>
-            <div class="card-body">
+            <div class="cm-sec">
+              <div class="cm-sh">
+                <div class="cm-st">손님</div>
+                <button class="cm-mini" onclick="clearForm()" title="입력 지우기"><svg class="i"><use href="#i-trash"/></svg>지우기</button>
+              </div>
               <div class="form-grid">
                 <div class="fi">
                   <label><span class="req">*</span>이름</label>
@@ -1898,26 +2197,15 @@ input,select,textarea{font-family:inherit;}
                 </div>
               </div>
             </div>
-          </div>
-
-          <div class="card">
-            <div class="card-head">
-              <div class="card-head-title"><span class="ico"><svg class="i"><use href="#i-house"/></svg></span>숙소 / 호실</div>
-            </div>
-            <div class="card-body" style="padding-top:14px;">
-              <div id="composePropName" style="font-weight:700;color:var(--fg);margin-bottom:8px;font-size:14px;"></div>
-              <select class="select" id="v_room" onchange="onRoomChange()"></select>
-              <div id="roomEmpty" style="display:none;color:var(--muted-fg);font-size:13px;padding:4px 0;">
-                등록된 호실이 없어요. <a href="#" onclick="switchTab('prop');return false;" style="color:var(--primary);font-weight:600;text-decoration:none;">숙소 프로필에서 호실 추가 →</a>
+            <div class="cm-sec">
+              <div class="cm-sh"><div class="cm-st">숙박</div></div>
+              <div class="fi cm-room" id="cmRoomFi">
+                <label>호실</label>
+                <select class="select" id="v_room" onchange="onRoomChange()"></select>
               </div>
-            </div>
-          </div>
-
-          <div class="card">
-            <div class="card-head">
-              <div class="card-head-title"><span class="ico"><svg class="i"><use href="#i-calendar"/></svg></span>체크인 / 체크아웃</div>
-            </div>
-            <div class="card-body">
+              <div class="cm-roomempty" id="roomEmpty" style="display:none;">
+                등록된 호실이 없어요. <a href="#" onclick="switchTab('prop');return false;">숙소 프로필에서 호실 추가 →</a>
+              </div>
               <div class="fi">
                 <label><span class="req">*</span>입실 · 퇴실</label>
                 <div class="date-btn" id="dateRangeBtn" onclick="openDatePicker()">
@@ -1926,7 +2214,7 @@ input,select,textarea{font-family:inherit;}
                 <input type="hidden" id="v_checkin">
                 <input type="hidden" id="v_checkout">
               </div>
-              <div class="form-grid" style="margin-top:12px;">
+              <div class="form-grid cm-gp">
                 <div class="fi">
                   <label>인원</label>
                   <select class="select" id="v_guests" onchange="renderPreview()">
@@ -1942,41 +2230,32 @@ input,select,textarea{font-family:inherit;}
               </div>
             </div>
           </div>
-
-          <div class="card">
-            <div class="card-head">
-              <div class="card-head-title"><span class="ico"><svg class="i"><use href="#i-doc"/></svg></span>템플릿 선택</div>
-            </div>
-            <div class="card-body" style="padding-top:14px;">
-              <div class="tpl-select-wrap">
-                <select id="tplSelect" onchange="onTplChange()"></select>
-              </div>
-            </div>
-          </div>
-
         </div>
 
-        <!-- Right: preview -->
+        <!-- 오른쪽: 미리보기 -->
         <div class="compose-right">
           <div class="preview">
             <div class="preview-head">
-              <div style="display:flex;align-items:center;gap:8px;">
-                <span class="preview-type" id="previewType">SMS</span>
-                <span class="preview-title" id="previewTitle"></span>
-              </div>
+              <span class="preview-type sms" id="previewType">SMS</span>
+              <span class="preview-title" id="previewTitle"></span>
               <div class="preview-count" id="previewCount">0자</div>
             </div>
             <div class="preview-body" id="previewBody"></div>
+            <div class="preview-miss" id="previewMiss" style="display:none;"></div>
             <div class="preview-warn" id="previewWarn" style="display:none;"></div>
           </div>
 
           <div class="action-bar">
-            <button class="btn btn-outline" onclick="editCurTplInManagement()" title="현재 템플릿 편집"><svg class="i"><use href="#i-pencil"/></svg>템플릿 편집</button>
             <button class="btn btn-outline" onclick="saveReservation()" title="예약 저장"><svg class="i"><use href="#i-save"/></svg>예약 저장</button>
-            <button class="btn btn-outline" onclick="copyMessage()"><svg class="i"><use href="#i-copy"/></svg>텍스트 복사</button>
-            <button class="btn btn-primary" onclick="openSmsApp()"><svg class="i"><use href="#i-iphone"/></svg>문자 앱 열기</button>
+            <button class="btn btn-outline cm-pc" onclick="copyMessage()"><svg class="i"><use href="#i-copy"/></svg>텍스트 복사</button>
+            <button class="btn btn-primary cm-pc" onclick="openSmsApp()"><svg class="i"><use href="#i-iphone"/></svg>문자 앱 열기</button>
           </div>
         </div>
+      </div>
+      <!-- 폰: 하단 내비 바로 위 고정 줄 -->
+      <div class="cm-fixed">
+        <button class="btn btn-outline" onclick="copyMessage()"><svg class="i"><use href="#i-copy"/></svg>텍스트 복사</button>
+        <button class="btn btn-primary" onclick="openSmsApp()"><svg class="i"><use href="#i-iphone"/></svg>문자 앱 열기</button>
       </div>
     </section>
 
@@ -1997,7 +2276,10 @@ input,select,textarea{font-family:inherit;}
           <li>변경 사항은 즉시 <strong>문자 작성</strong>에도 반영됩니다.</li>
         </ul>
       </div>
-      <div id="tplStagesList"></div>
+      <div class="tp-grid">
+        <div id="tplStagesList"></div>
+        <div class="tp-panel" id="tplEditPanel"></div>
+      </div>
     </section>
 
     <!-- ─── RESERV ─── -->
@@ -2088,7 +2370,7 @@ input,select,textarea{font-family:inherit;}
     <section class="page" id="tab-history">
       <div class="page-head">
         <h1 class="page-title"><svg class="i"><use href="#i-clock"/></svg>발송 이력<button class="btn-help" onclick="toggleHelp('history')" aria-label="도움말"><svg class="i"><use href="#i-help"/></svg></button></h1>
-        <p class="page-sub">문자 앱을 열었던 모든 기록이 자동 저장됩니다</p>
+        <p class="page-sub">문자 앱으로 연 문자와 봇이 보낸 문자가 모두 쌓입니다</p>
       </div>
       <div class="help-panel" id="help-history" style="display:none;">
         <h4><svg class="i"><use href="#i-paperplane"/></svg>발송 이력 사용 방법</h4>
@@ -2099,11 +2381,11 @@ input,select,textarea{font-family:inherit;}
         </ul>
       </div>
 
-      <div class="hist-head">
-        <span class="hist-count" id="histCount">0건</span>
-        <button class="btn btn-outline btn-sm" onclick="clearAllHistory()"><svg class="i"><use href="#i-trash"/></svg>전체 삭제</button>
-      </div>
       <div class="hist-list" id="histList"></div>
+      <div class="hist-head" id="histFoot">
+        <span class="hist-count" id="histCount">0건</span>
+        <button class="hs-clear" onclick="clearAllHistory()"><svg class="i"><use href="#i-trash"/></svg>전체 삭제</button>
+      </div>
     </section>
 
     <!-- ─── PRICE (요금 계산) ─── -->
@@ -2564,7 +2846,7 @@ input,select,textarea{font-family:inherit;}
 <div class="toast" id="toast"></div>
 
 <script>
-const APP_VERSION='v1.15.2'; // Pro (2026-10-27 lite v3.3.0에서 이름·버전 리셋)
+const APP_VERSION='v1.16.0'; // Pro (2026-10-27 lite v3.3.0에서 이름·버전 리셋)
 const SK_SET='stay_msg_lite1_set_v1';
 const SK_TPL='stay_msg_lite1_tpl_v1';
 const SK_RES='stay_msg_lite1_res_v1';
@@ -2796,6 +3078,23 @@ function onTplChange(){
   localStorage.setItem(SK_LAST,curTplKey);
   updateDelBtn();renderPreview();
 }
+// 문자 작성 「무슨 문자」: 단계 칩 + 그 단계 템플릿 줄. #tplSelect 값(단계id:번호)을 보고 다시 그림
+let _autoTplKey=null;   // loadReservation이 날짜로 고른 템플릿 — 사용자가 다른 걸 고르면 지움
+function renderTplPicker(){
+  const st=document.getElementById('cmStages'),tl=document.getElementById('cmTpls');if(!st||!tl)return;
+  const cur=getCurTpl(),sid=cur?cur.stage.id:'';
+  st.innerHTML=STAGES.map(s=>{const n=allTpls(s).length;
+    return `<button class="cm-chip${s.id===sid?' on':''}" onclick="pickTplStage('${s.id}')"><svg class="i"><use href="#i-st-${s.id}"/></svg>${esc(s.label)}${n>1?`<em>${n}</em>`:''}</button>`;}).join('');
+  if(!cur){tl.innerHTML='';return;}
+  tl.innerHTML=allTpls(cur.stage).map((t,i)=>{const key=`${sid}:${i}`,on=key===curTplKey;
+    return `<button class="cm-tpl${on?' on':''}" onclick="pickTpl('${key}')"><span class="cm-radio"></span><span class="cm-tt">${esc(t.title)}</span>${i>=cur.stage.templates.length?'<span class="cm-user">사용자</span>':''}${on&&_autoTplKey===key?'<span class="cm-auto">날짜로 자동 선택</span>':''}</button>`;}).join('');
+}
+function pickTpl(key){
+  const sel=document.getElementById('tplSelect');if(!sel||!sel.querySelector(`option[value="${key}"]`))return;
+  if(key!==curTplKey)_autoTplKey=null;
+  sel.value=key;onTplChange();
+}
+function pickTplStage(sid){pickTpl(sid+':0');}
 function updateDelBtn(){
   const btn=document.getElementById('delTplBtn');if(!btn)return;
   const cur=getCurTpl();
@@ -2803,38 +3102,36 @@ function updateDelBtn(){
 }
 function renderPreview(){
   const cur=getCurTpl();
+  renderTplPicker();
   if(!cur){document.getElementById('previewBody').textContent='';document.getElementById('previewCount').textContent='0자';return;}
   const rend=applyVars(cur.tpl.body);
-  document.getElementById('previewBody').textContent=rend;
-  document.getElementById('previewTitle').textContent='· '+cur.stage.icon+' '+cur.stage.label+' · '+cur.tpl.title;
+  // 값이 비어 남은 {변수}만 노란 점선으로 감쌈(표시용). 복사·문자 앱은 applyVars 원문을 따로 씀
+  document.getElementById('previewBody').innerHTML=esc(rend).replace(/\{[^{}\n]+\}/g,m=>`<span class="pv-miss">${m}</span>`);
+  document.getElementById('previewTitle').innerHTML=`<svg class="i"><use href="#i-st-${cur.stage.id}"/></svg><span>${esc(cur.stage.label)} · ${esc(cur.tpl.title)}</span>`;
+  const miss=unfilledVars(rend),missEl=document.getElementById('previewMiss');
+  if(missEl){missEl.style.display=miss.length?'':'none';missEl.innerHTML=miss.length?`<b>비어 있는 변수 ${miss.length}개</b>${miss.map(v=>`<span>${esc(v)}</span>`).join('')}`:'';}
   const bytes=smsBytes(rend);
   const chars=rend.length;
   const countEl=document.getElementById('previewCount');
   const typeEl=document.getElementById('previewType');
   const warnEl=document.getElementById('previewWarn');
   if(bytes<=90){
-    typeEl.textContent='SMS';
-    typeEl.style.background='var(--accent)';
-    typeEl.style.color='var(--accent-fg)';
+    typeEl.textContent='SMS';typeEl.className='preview-type sms';
     countEl.className='preview-count';
     countEl.textContent=`${chars}자 · ${bytes}/90 bytes`;
     warnEl.style.display='none';
   } else if(bytes<=2000){
-    typeEl.textContent='LMS';
-    typeEl.style.background='var(--warning-bg)';
-    typeEl.style.color='#b45309';
+    typeEl.textContent='LMS';typeEl.className='preview-type lms';
     countEl.className='preview-count warn';
     countEl.textContent=`${chars}자 · ${bytes}/2000 bytes`;
     warnEl.style.display='flex';
-    warnEl.innerHTML='⚠️ 90 bytes 초과 → LMS로 발송됩니다';
+    warnEl.className='preview-warn lms';warnEl.innerHTML='<svg class="i"><use href="#i-info"/></svg>90 bytes 초과 → LMS로 발송됩니다';
   } else {
-    typeEl.textContent='MMS';
-    typeEl.style.background='var(--destructive-bg)';
-    typeEl.style.color='var(--destructive)';
+    typeEl.textContent='MMS';typeEl.className='preview-type mms';
     countEl.className='preview-count danger';
     countEl.textContent=`${chars}자 · ${bytes} bytes (초과)`;
     warnEl.style.display='flex';
-    warnEl.innerHTML='⚠️ 2000 bytes 초과 → MMS 발송 필요';
+    warnEl.className='preview-warn mms';warnEl.innerHTML='<svg class="i"><use href="#i-info"/></svg>2000 bytes 초과 → MMS 발송 필요';
   }
 }
 
@@ -2842,13 +3139,15 @@ function buildVarChips(taId){
   const vars=VAR_LIST.map(v=>`<button class="var-chip" onmouseenter="this.dataset.preview=varPreview('${v}')" onclick="insertAtCursor('${v}','${taId}')">${v}</button>`).join('');
   const emojis=EMOJI_LIST.map(e=>`<button class="emoji-chip" onclick="insertAtCursor('${e}','${taId}')">${e}</button>`).join('');
   return `<div class="var-chips-wrap">
-    <div class="var-chips-label">📌 변수</div>
-    <div class="var-chips">${vars}</div>
-    <div class="emoji-row">
-      <div class="var-chips-label">😊 이모지</div>
-      <div class="var-chips">${emojis}</div>
-    </div>
+    <div class="vc-tabs"><button class="vc-tab on" onclick="vcTab(this,0)">변수 <em>${VAR_LIST.length}</em></button><button class="vc-tab" onclick="vcTab(this,1)">이모지 <em>${EMOJI_LIST.length}</em></button><span class="vc-hint">누르면 커서 자리에 들어가요</span></div>
+    <div class="var-chips vc-pane">${vars}</div>
+    <div class="var-chips vc-pane" hidden>${emojis}</div>
   </div>`;
+}
+function vcTab(btn,i){
+  const w=btn.closest('.var-chips-wrap');if(!w)return;
+  w.querySelectorAll('.vc-tab').forEach((b,j)=>b.classList.toggle('on',j===i));
+  w.querySelectorAll('.vc-pane').forEach((p,j)=>p.hidden=j!==i);
 }
 function insertAtCursor(v,taId){
   const ta=document.getElementById(taId);if(!ta)return;
@@ -2877,69 +3176,65 @@ function discardNewIfPristine(){
 }
 const openStages=new Set();
 
+const _tplWide=matchMedia('(min-width:1024px)');   // PC: 오른쪽 편집 패널 · 폰: 고른 줄 아래 인라인
+let _tplInitOpen=false;
 function renderTemplatesPage(){
   const host=document.getElementById('tplStagesList');if(!host)return;
+  const wide=_tplWide.matches;
+  if(!_tplInitOpen){_tplInitOpen=true;if(wide)STAGES.forEach(s=>openStages.add(s.id));}   // PC 처음엔 6단계 모두 펼침
+  let edit=null;
   host.innerHTML=STAGES.map(s=>{
     const all=allTpls(s);
     const stageOpen=openStages.has(s.id);
     let body='';
     if(stageOpen){
-      const rows=all.map((t,i)=>{
+      body=all.map((t,i)=>{
         const key=`${s.id}:${i}`;
         const isCustom=i>=s.templates.length;
         const isOpen=editingTplKey===key;
+        if(isOpen)edit={key,t,isCustom};
         const snippet=esc((t.body||'').replace(/\n+/g,' ').slice(0,80));
-        const safeKey=`'${key}'`;
-        const actions=[
-          `<button class="btn btn-outline btn-sm" onclick="event.stopPropagation();toggleTplRow(${safeKey})" title="수정"><svg class="i"><use href="#i-pencil"/></svg></button>`,
-          `<button class="btn btn-outline btn-sm" onclick="event.stopPropagation();useTplFromManage(${safeKey})" title="작성에 사용"><svg class="i"><use href="#i-paperplane"/></svg></button>`,
-          `<button class="btn btn-outline btn-sm" onclick="event.stopPropagation();duplicateTpl(${safeKey})" title="복제"><svg class="i"><use href="#i-copy"/></svg></button>`,
-          isCustom?`<button class="btn btn-destructive btn-sm" onclick="event.stopPropagation();deleteTplRow(${safeKey})" title="삭제"><svg class="i"><use href="#i-trash"/></svg></button>`:''
-        ].join('');
         return `<div class="tpl-row${isOpen?' open':''}" data-key="${key}">
-          <div class="tpl-row-head" onclick="toggleTplRow(${safeKey})">
-            <span class="chev">▶</span>
-            <div style="flex:1;min-width:0;">
+          <div class="tpl-row-head" onclick="toggleTplRow('${key}')">
+            <div class="tpl-row-main">
               <div class="tpl-row-title">${esc(t.title)}${isCustom?'<span class="badge">사용자</span>':''}</div>
               <div class="tpl-row-snippet">${snippet}</div>
             </div>
-            <div class="tpl-row-actions">${actions}</div>
+            <svg class="i tpl-row-chev"><use href="#i-chevd"/></svg>
           </div>
-          ${isOpen?renderTplEditor(key,t,isCustom):''}
+          ${isOpen&&!wide?renderTplEditor(key,t,isCustom):''}
         </div>`;
       }).join('');
-      body=`<div class="tpl-rows">${rows}</div>`;
-    } else if(all.length){
-      const items=all.map((t,i)=>{
-        const key=`${s.id}:${i}`;const safeKey=`'${key}'`;
-        const isCustom=i>=s.templates.length;
-        return `<div class="tpl-title-item" onclick="openStageAndEdit(${safeKey})">
-          <span class="dot"></span>
-          <span class="t">${esc(t.title)}${isCustom?'<span class="badge">사용자</span>':''}</span>
-        </div>`;
-      }).join('');
-      body=`<div class="tpl-titles">${items}</div>`;
     }
     return `<div class="tpl-stage${stageOpen?' open':''}">
-      <div class="tpl-stage-head" onclick="toggleStage('${s.id}')">
-        <div class="label">
-          <span class="stage-chev">▶</span>
-          <span class="stage-ico">${s.icon}</span>
+      <div class="tpl-stage-head">
+        <div class="label" onclick="toggleStage('${s.id}')">
+          <svg class="i stage-chev"><use href="#i-chevd"/></svg>
+          <span class="stage-ico"><svg class="i"><use href="#i-st-${s.id}"/></svg></span>
           ${esc(s.label)}
           <span class="count">· ${all.length}개</span>
         </div>
-        <div class="tpl-stage-right">
-          <button class="btn btn-primary btn-sm" onclick="event.stopPropagation();addTplInStage('${s.id}')"><svg class="i"><use href="#i-plus"/></svg>새 템플릿</button>
-        </div>
+        <button class="tp-add" onclick="event.stopPropagation();addTplInStage('${s.id}')"><svg class="i"><use href="#i-plus"/></svg>새 템플릿</button>
       </div>
       ${body}
     </div>`;
   }).join('');
+  const panel=document.getElementById('tplEditPanel');
+  if(panel)panel.innerHTML=!wide?'':edit?renderTplEditor(edit.key,edit.t,edit.isCustom)
+    :'<div class="tp-empty"><svg class="i"><use href="#i-pencil"/></svg><b>왼쪽에서 템플릿을 고르면 여기서 고칠 수 있어요</b><span>변경 사항은 즉시 문자 작성에도 반영됩니다.</span></div>';
   if(editingTplKey){   // 편집기가 열려 있으면 변수 칩·이모지도 채움(새 템플릿·복제·탭 복귀 때 빠지던 것)
     const k=editingTplKey.replace(':','_'),chipHost=document.getElementById('varChipArea_'+k);
     if(chipHost)chipHost.innerHTML=buildVarChips('edt_body_'+k);
   }
 }
+// PC↔폰 폭이 바뀌면 편집기 자리를 옮김(쓰던 제목·내용은 그대로)
+_tplWide.addEventListener('change',()=>{
+  const pg=document.getElementById('tab-templates');if(!pg||!pg.classList.contains('active'))return;
+  const k=editingTplKey&&editingTplKey.replace(':','_');
+  const tv=k&&document.getElementById('edt_title_'+k)?.value,bv=k&&document.getElementById('edt_body_'+k)?.value;
+  renderTemplatesPage();
+  if(k&&tv!=null){const te=document.getElementById('edt_title_'+k),be=document.getElementById('edt_body_'+k);if(te)te.value=tv;if(be)be.value=bv;}
+});
 
 function openStageAndEdit(key){
   const [sid]=key.split(':');
@@ -2968,7 +3263,16 @@ function renderTplEditor(key,t,isCustom){
   const titleId=`edt_title_${key.replace(':','_')}`;
   const bodyId=`edt_body_${key.replace(':','_')}`;
   const safeKey=`'${key}'`;
+  const st=STAGES.find(x=>x.id===key.split(':')[0]);
   return `<div class="tpl-edit">
+    <div class="tpe-head">
+      <div class="tpe-kind"><svg class="i"><use href="#i-st-${st?st.id:''}"/></svg>${esc(st?st.label:'')}<span>· ${isCustom?'사용자 템플릿':'기본 템플릿 (삭제 안 됨)'}</span></div>
+      <div class="tpe-btns">
+        <button class="tpe-b" onclick="useTplFromManage(${safeKey})"><svg class="i"><use href="#i-paperplane"/></svg>작성에 사용</button>
+        <button class="tpe-b" onclick="duplicateTpl(${safeKey})"><svg class="i"><use href="#i-copy"/></svg>복제</button>
+        ${isCustom?`<button class="tpe-b del" onclick="deleteTplRow(${safeKey})"><svg class="i"><use href="#i-trash"/></svg>삭제</button>`:''}
+      </div>
+    </div>
     <div class="fi">
       <label><span class="req">*</span>제목</label>
       <input class="input" type="text" id="${titleId}" value="${esc(t.title)}">
@@ -2979,8 +3283,8 @@ function renderTplEditor(key,t,isCustom){
     </div>
     <div id="varChipArea_${key.replace(':','_')}"></div>
     <div class="tpl-edit-actions">
-      <button class="btn btn-outline" style="flex:1;" onclick="toggleTplRow(${safeKey})"><svg class="i"><use href="#i-xmark"/></svg>취소</button>
-      <button class="btn btn-primary" style="flex:1;" onclick="saveTplFromRow(${safeKey})"><svg class="i"><use href="#i-save"/></svg>저장</button>
+      <button class="btn tpe-cancel" onclick="toggleTplRow(${safeKey})">취소</button>
+      <button class="btn btn-primary tpe-save" onclick="saveTplFromRow(${safeKey})">저장</button>
     </div>
   </div>`;
 }
@@ -3105,7 +3409,7 @@ function openSmsApp(){
   else go();
 }
 function clearForm(){
-  _composeMemo='';_composeResId='';
+  _composeMemo='';_composeResId='';_autoTplKey=null;
   document.getElementById('v_name').value='';
   document.getElementById('v_phone').value='';
   document.getElementById('v_checkin').value='';
@@ -3788,12 +4092,13 @@ function buildRoomSelect(){
   const sel=document.getElementById('v_room');if(!sel)return;
   const empty=document.getElementById('roomEmpty');
   const pname=document.getElementById('composePropName');
-  if(pname)pname.textContent=settings.name?`🏠 ${settings.name}`:'숙소 이름을 프로필에서 먼저 등록하세요';
+  if(pname){pname.textContent=settings.name||'숙소 이름을 프로필에서 먼저 등록하세요';pname.classList.toggle('warn',!settings.name);}
+  const roomFi=document.getElementById('cmRoomFi');if(roomFi)roomFi.style.display=settings.rooms.length>1?'':'none';
   if(!settings.rooms.length){
-    sel.style.display='none';if(empty)empty.style.display='';
+    if(empty)empty.style.display='';
     return;
   }
-  sel.style.display='';if(empty)empty.style.display='none';
+  if(empty)empty.style.display='none';
   const saved=localStorage.getItem(SK_ROOM);
   const keep=sel.value;
   sel.innerHTML=settings.rooms.map(r=>`<option value="${r.id}">${esc(r.name)}</option>`).join('');
@@ -3887,30 +4192,57 @@ function renderHistory(){
   const host=document.getElementById('histList');if(!host)return;
   const countEl=document.getElementById('histCount');
   if(countEl)countEl.textContent=msgHistory.length+'건';
+  const foot=document.getElementById('histFoot');if(foot)foot.style.display=msgHistory.length?'':'none';
   if(!msgHistory.length){
-    host.innerHTML='<div class="hist-empty">아직 발송 이력이 없어요<br><span style="font-size:12px;">"문자 앱 열기"를 누르면 여기에 기록돼요</span></div>';
+    host.innerHTML='<div class="hist-empty"><svg class="i"><use href="#i-clock"/></svg><b>아직 발송 이력이 없어요</b><span>"문자 앱 열기"를 누르면 여기에 기록돼요</span></div>';
     return;
   }
-  host.innerHTML=msgHistory.map(h=>`
-    <div class="hist-item">
-      <div class="hist-item-top">
-        <div class="hist-item-meta">
-          <span class="hist-item-stage">${esc(h.stageLabel||'')}</span>
-          <span class="hist-item-tpl">${esc(h.tplTitle||'')}</span>
-          ${histDeliv(h)}
-        </div>
-        <span class="hist-item-time">${fmtHistTime(h.at)}</span>
+  // 날짜 묶음(표시만): 최신이 위인 순서 그대로, 날짜가 바뀔 때마다 묶음 머리
+  const groups=[];
+  msgHistory.forEach(h=>{const k=histDayKey(h.at),g=groups[groups.length-1];if(g&&g.k===k)g.items.push(h);else groups.push({k,items:[h]});});
+  host.innerHTML=groups.map(g=>`<div class="hs-group"><div class="hs-gh">${histDayLabel(g.k)}<em>${g.items.length}</em></div><div class="hs-card">${g.items.map(histRowHtml).join('')}</div></div>`).join('');
+}
+function histDayKey(iso){const d=new Date(iso);return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;}
+function histDayLabel(k){
+  const d=new Date(k+'T00:00:00'),t=new Date();t.setHours(0,0,0,0);
+  const diff=Math.round((t-d)/864e5);
+  if(diff===0)return '오늘';
+  if(diff===1)return '어제';
+  const w='일월화수목금토'[d.getDay()];
+  return (d.getFullYear()===t.getFullYear()?'':d.getFullYear()+'.')+`${d.getMonth()+1}.${d.getDate()}(${w})`;
+}
+function histRowHtml(h){
+  const bot=h.sentBy==='bot',need=histNeedsResend(h),id=h.id;
+  const d=new Date(h.at),hm=`${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
+  const by=bot?'<span class="hs-by bot">봇 자동</span>':'<span class="hs-by">문자 앱</span>';
+  const snip=esc((h.body||'').split('\n').find(l=>l.trim())||'');
+  const deliv=histDeliv(h);
+  const rb=cls=>`<button class="hs-rebot ${cls}" onclick="event.stopPropagation();sbJobResend('${id}')"><svg class="i"><use href="#i-sync"/></svg>봇으로 다시 보내기</button>`;
+  return `<div class="hs-row${need?' need':''}">
+    <div class="hs-main" onclick="toggleHistBody('${id}',this)">
+      <span class="hs-who${bot?' bot':''}" title="${bot?'봇 자동':'문자 앱'}"><svg class="i"><use href="#${bot?'i-bot':'i-iphone'}"/></svg></span>
+      <div class="hs-what">
+        <div class="hs-l1"><span class="hs-stg">${esc(h.stageLabel||'')}</span><b class="hs-tt">${esc(h.tplTitle||'')}</b><span class="pc">${by}</span><span class="hs-hm m">${hm}</span></div>
+        <div class="hs-l2"><b>${esc(h.name||'이름 없음')}</b>${h.phone?`<span class="hs-ph">${esc(h.phone)}</span>`:''}<span class="m">· ${by}</span><span class="hs-snip pc">${snip}</span></div>
+        ${deliv?`<div class="hs-res m">${deliv}</div>`:''}
+        <div class="hs-snip m hs-closed">${snip}</div>
       </div>
-      <div class="hist-item-name">${esc(h.name||'이름 없음')}${h.phone?' · '+esc(h.phone):''}</div>
-      <div class="hist-item-body" id="hb_${h.id}">${esc(h.body||'')}</div>
-      <div class="hist-item-actions">
-        <button class="btn btn-outline btn-sm" onclick="toggleHistBody('${h.id}',this)"><svg class="i"><use href="#i-doc"/></svg><span>본문 보기</span></button>
-        ${histNeedsResend(h)?`<button class="btn btn-primary btn-sm" onclick="sbJobResend('${h.id}')"><svg class="i"><use href="#i-sync"/></svg>봇으로 다시 보내기</button>`:''}
-        <button class="btn btn-outline btn-sm" onclick="resendHistory('${h.id}')"><svg class="i"><use href="#i-iphone"/></svg>다시 보내기</button>
-        <button class="btn btn-outline btn-sm" onclick="copyHistBody('${h.id}')"><svg class="i"><use href="#i-copy"/></svg>복사</button>
-        <button class="btn btn-destructive btn-sm" onclick="deleteHistoryItem('${h.id}')"><svg class="i"><use href="#i-trash"/></svg></button>
+      <div class="hs-res pc">${deliv}</div>
+      <div class="hs-hm pc">${hm}</div>
+      <div class="hs-btns pc">${need?rb(''):''}<span class="hs-tg"><span class="hs-tgt">본문 보기</span><svg class="i"><use href="#i-chevd"/></svg></span></div>
+    </div>
+    ${need?`<div class="hs-rebotm m">${rb('wide')}</div>`:''}
+    <div class="hs-open" id="hb_${id}">
+      <div class="hs-body">${esc(h.body||'')}</div>
+      <div class="hs-acts">
+        <button class="btn btn-outline" onclick="resendHistory('${id}')"><svg class="i"><use href="#i-iphone"/></svg>다시 보내기</button>
+        <button class="btn btn-outline" onclick="copyHistBody('${id}')"><svg class="i"><use href="#i-copy"/></svg>복사</button>
+        <span class="hs-at pc">${fmtHistTime(h.at)}</span>
+        <button class="hs-del" onclick="deleteHistoryItem('${id}')"><svg class="i"><use href="#i-trash"/></svg>삭제</button>
       </div>
-    </div>`).join('');
+    </div>
+    <div class="hs-tgbar m" onclick="toggleHistBody('${id}',this)"><span class="hs-tgt">본문 보기</span><svg class="i"><use href="#i-chevd"/></svg></div>
+  </div>`;
 }
 function resendHistory(id){
   const h=msgHistory.find(x=>x.id===id);if(!h)return;
@@ -3925,10 +4257,11 @@ function resendHistory(id){
 function histMins(h){return Math.floor((Date.now()-new Date(h.at||0).getTime())/60000);}
 function histDeliv(h){
   if(h.sentBy!=='bot')return '';
-  if(h.status==='delivered')return '<span class="hist-deliv ok">전달 완료</span>';
-  if(h.status==='failed')return '<span class="hist-deliv late">전달 실패</span>';
+  const ic=n=>`<svg class="i"><use href="#${n}"/></svg>`;
+  if(h.status==='delivered')return `<span class="hist-deliv ok">${ic('i-st-check')}전달 완료</span>`;
+  if(h.status==='failed')return `<span class="hist-deliv fail">${ic('i-xc')}전달 실패</span>`;
   const m=histMins(h);
-  return m>60?`<span class="hist-deliv late">전송 중 ${m}분 · 지연</span>`:`<span class="hist-deliv sending">전송 중 ${m}분</span>`;
+  return m>60?`<span class="hist-deliv late">${ic('i-warn')}전송 중 ${m}분 · 지연</span>`:`<span class="hist-deliv sending">${ic('i-st-clock')}전송 중 ${m}분</span>`;
 }
 // 같은 봇 작업의 더 새 이력이 있으면(이미 다시 보냄) 버튼을 다시 띄우지 않음
 function histNeedsResend(h){
@@ -3949,7 +4282,8 @@ async function sbJobResend(histId){
 function toggleHistBody(id,btn){
   const el=document.getElementById('hb_'+id);if(!el)return;
   const open=el.classList.toggle('open');
-  const t=btn.querySelector('span');if(t)t.textContent=open?'접기':'본문 보기';
+  const row=el.closest('.hs-row');if(row)row.classList.toggle('open',open);
+  (row||btn).querySelectorAll('.hs-tgt').forEach(t=>t.textContent=open?'접기':'본문 보기');
 }
 function copyHistBody(id){
   const h=msgHistory.find(x=>x.id===id);if(!h)return;
@@ -4190,6 +4524,7 @@ function loadReservation(id,contextDate){
   const key=pickStageKeyForDate(contextDate,r.checkin,r.checkout);
   if(sel&&key&&sel.querySelector(`option[value="${key}"]`)){
     sel.value=key;curTplKey=key;localStorage.setItem(SK_LAST,key);updateDelBtn();
+    _autoTplKey=key;
   }
   renderPreview();
   toast(r.name+' 예약 불러왔어요 📋');
