@@ -1014,7 +1014,7 @@ input,select,textarea{font-family:inherit;}
 
 /* ─────── HOME v1.11.0 (2026-11-04 Claude Design 대시보드 시안 1차) — 전부 #tab-home 범위, 다른 탭 영향 없음 ─────── */
 /* 칩 색: 예약 목록 IN/OUT 태그용. 대시보드 달력 칩은 v1.16.1부터 손님마다 다른 색(GUEST_COLORS) */
-:root{--today-fg:#047857;--chip-in:#059669;--chip-out:#ea580c;--cal-today:#4f6b5a;--cal-today-bg:#f1f4f2;}  /* --cal-today: 달력 오늘·고른 날(11-06 쵸파파, 손님 색 차분한 톤에 맞춤) */
+:root{--today-fg:#047857;--chip-in:#059669;--chip-out:#ea580c;--cal-today:#047857;--cal-today-bg:#ecfdf5;}  /* --cal-today: 달력 오늘 칸(11-06 쵸파파 「원래 초록으로」 — --today-fg·--accent-soft와 같은 값) */
 #tab-home{font-variant-numeric:tabular-nums;}
 #tab-home .dash-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px;}
 #tab-home .dash-head-txt{display:flex;align-items:baseline;gap:12px;min-width:0;}
@@ -1067,7 +1067,7 @@ input,select,textarea{font-family:inherit;}
 #tab-home .dcal-prev::before{content:'←';margin-right:6px;}
 #tab-home .dcal-next::after{content:'→';margin-left:6px;}
 #tab-home .dcal-today{height:44px;padding:0 18px;background:var(--cal-today-bg);color:var(--cal-today);font-size:15px;font-weight:700;border-radius:10px;border:0;}
-#tab-home .dcal-today:hover{background:#e3e9e5;}
+#tab-home .dcal-today:hover{background:var(--accent);}
 #tab-home .dcal-today-m{display:none;}
 #tab-home #dashCalLabel{font-size:24px;font-weight:800;padding:4px 8px;white-space:nowrap;}
 #tab-home #dashCalLabel::after{font-size:13px;}
@@ -1100,7 +1100,7 @@ input,select,textarea{font-family:inherit;}
 #tab-home .we-lbl{color:#c2410c;}
 #tab-home .su-lbl,#tab-home .holi-lbl{color:#dc2626;}
 #tab-home .month-day.today{background:var(--cal-today-bg);border-color:var(--cal-today);box-shadow:inset 0 0 0 1px var(--cal-today);}
-#tab-home .month-day.selected{background:var(--cal-today-bg);border-color:#94a89b;box-shadow:inset 0 0 0 1px #94a89b;}
+#tab-home .month-day.selected{background:var(--accent-soft);border-color:var(--primary);box-shadow:inset 0 0 0 1px var(--primary);}
 
 #tab-home .res-chip{display:flex;align-items:center;height:26px;min-height:0;padding:0 8px;margin:0;font-size:13px;font-weight:700;line-height:1;color:#fff;border-radius:7px;overflow:hidden;}
 #tab-home .chip-name{min-width:0;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;}
@@ -2024,7 +2024,7 @@ input,select,textarea{font-family:inherit;}
       <div class="sidebar-brand" onclick="switchTab('home')" role="button" tabindex="0" aria-label="홈으로">
         <div class="sidebar-logo">SM</div>
         <div class="sidebar-brand-text">
-          <div class="sidebar-brand-name">Stay_Msg Pro<span class="sidebar-brand-ver" id="appVer">v1.17.2</span></div>
+          <div class="sidebar-brand-name">Stay_Msg Pro<span class="sidebar-brand-ver" id="appVer">v1.17.3</span></div>
           <div class="sidebar-brand-sub">숙소 예약 문자</div>
         </div>
       </div>
@@ -2080,7 +2080,7 @@ input,select,textarea{font-family:inherit;}
       <div class="mheader-brand" onclick="switchTab('home')" role="button" tabindex="0" aria-label="홈으로">
         <div class="mheader-logo">SM</div>
         <div>
-          <div class="mheader-title">Stay_Msg Pro<span class="mheader-ver" id="appVerM">v1.17.2</span></div>
+          <div class="mheader-title">Stay_Msg Pro<span class="mheader-ver" id="appVerM">v1.17.3</span></div>
           <div class="mheader-sub">숙소 예약 문자</div>
         </div>
       </div>
@@ -2858,7 +2858,7 @@ input,select,textarea{font-family:inherit;}
 <div class="toast" id="toast"></div>
 
 <script>
-const APP_VERSION='v1.17.2'; // Pro (2026-10-27 lite v3.3.0에서 이름·버전 리셋)
+const APP_VERSION='v1.17.3'; // Pro (2026-10-27 lite v3.3.0에서 이름·버전 리셋)
 const SK_SET='stay_msg_lite1_set_v1';
 const SK_TPL='stay_msg_lite1_tpl_v1';
 const SK_RES='stay_msg_lite1_res_v1';
