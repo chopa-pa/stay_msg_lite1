@@ -1207,7 +1207,7 @@ input,select,textarea{font-family:inherit;}
   #tab-home .chip-name .n4{display:none;}
   #tab-home .chip-st{font-size:10px;font-weight:800;margin-left:0;padding-left:0;line-height:1.2;}
   #tab-home .res-chip.mid{border-radius:2px;}
-  #tab-home .res-chip.closed{font-size:11px;padding:3px 4px;line-height:1.2;}
+  #tab-home .res-chip.closed .chip-name{font-size:11px;}
   #tab-home .res-dots{gap:3px;}
   #tab-home .res-dot{width:8px;height:8px;}
   #tab-home .res-dot.mid{width:5px;height:5px;}
@@ -2009,7 +2009,7 @@ input,select,textarea{font-family:inherit;}
       <div class="sidebar-brand" onclick="switchTab('home')" role="button" tabindex="0" aria-label="홈으로">
         <div class="sidebar-logo">SM</div>
         <div class="sidebar-brand-text">
-          <div class="sidebar-brand-name">Stay_Msg Pro<span class="sidebar-brand-ver" id="appVer">v1.16.5</span></div>
+          <div class="sidebar-brand-name">Stay_Msg Pro<span class="sidebar-brand-ver" id="appVer">v1.16.6</span></div>
           <div class="sidebar-brand-sub">숙소 예약 문자</div>
         </div>
       </div>
@@ -2065,7 +2065,7 @@ input,select,textarea{font-family:inherit;}
       <div class="mheader-brand" onclick="switchTab('home')" role="button" tabindex="0" aria-label="홈으로">
         <div class="mheader-logo">SM</div>
         <div>
-          <div class="mheader-title">Stay_Msg Pro<span class="mheader-ver" id="appVerM">v1.16.5</span></div>
+          <div class="mheader-title">Stay_Msg Pro<span class="mheader-ver" id="appVerM">v1.16.6</span></div>
           <div class="mheader-sub">숙소 예약 문자</div>
         </div>
       </div>
@@ -2841,7 +2841,7 @@ input,select,textarea{font-family:inherit;}
 <div class="toast" id="toast"></div>
 
 <script>
-const APP_VERSION='v1.16.5'; // Pro (2026-10-27 lite v3.3.0에서 이름·버전 리셋)
+const APP_VERSION='v1.16.6'; // Pro (2026-10-27 lite v3.3.0에서 이름·버전 리셋)
 const SK_SET='stay_msg_lite1_set_v1';
 const SK_TPL='stay_msg_lite1_tpl_v1';
 const SK_RES='stay_msg_lite1_res_v1';
@@ -4603,7 +4603,7 @@ function renderDashCal(){
     // 둘째 줄 손님만 있는 날은 첫 줄에 빈 칸을 넣어 높이를 맞춤
     const laneRes=[...dayRes].sort((a,b)=>gc.lane(a)-gc.lane(b));
     const gap=laneRes.length&&gc.lane(laneRes[0])===1?'<div class="res-chip gap" aria-hidden="true"><span class="chip-name">&nbsp;</span><span class="chip-st">&nbsp;</span></div>':'';
-    const chips=useChips?gap+laneRes.map(r=>{
+    const chips=useChips?(gap&&closed?'':gap)+laneRes.map(r=>{
       const isCi=r.checkin===ds,isCo=r.checkout===ds;
       const c=gc(r);
       const isMid=!isCi&&!isCo;
@@ -4625,10 +4625,11 @@ function renderDashCal(){
       return `<span class="${cls}" style="${style}" title="${tip}"></span>`;
     }).join('')}</div>`;
     const more='';
-    const closedChip=closed?'<div class="res-chip closed">휴무</div>':'';
+    // 휴무는 그날 빈 줄에: 첫 줄이 비어 있으면(둘째 줄 손님만 있거나 손님 없음) 첫 줄, 아니면 손님 아래. 칩과 같은 높이
+    const closedChip=closed?'<div class="res-chip closed"><span class="chip-name">휴무</span><span class="chip-st">&nbsp;</span></div>':'';
     html+=`<div class="${cls}" onclick="dashCalDayClick('${ds}')"${canAdd?' title="눌러서 새 예약"':''}>
       <div class="md-head"><span class="md-num-inner">${d}</span>${isToday?'<span class="md-today">오늘</span>':''}${dayLbl}</div>
-      ${chips}${closedChip}${more}${canAdd?'<span class="md-add" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" fill="none" stroke="currentColor" stroke-linecap="round"/></svg>예약</span>':''}
+      ${gap&&closed&&useChips?closedChip+chips:chips+closedChip}${more}${canAdd?'<span class="md-add" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" fill="none" stroke="currentColor" stroke-linecap="round"/></svg>예약</span>':''}
     </div>`;
   }
   const total=first+days;const rem=total%7===0?0:7-(total%7);
