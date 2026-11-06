@@ -1,5 +1,5 @@
-const CACHE_NAME = 'stay_msg_lite1-v144';
-const ASSETS = ['./index.html', './manifest.json', './icon-192.png', './icon-512.png'];
+const CACHE_NAME = 'stay_msg_lite1-v145';
+const ASSETS = ['./index.html', './manifest.json', './icon-192.png', './icon-512.png', './favicon-32.png'];
 
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(CACHE_NAME).then(c => c.addAll(ASSETS)));
