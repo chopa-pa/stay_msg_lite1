@@ -2024,7 +2024,7 @@ input,select,textarea{font-family:inherit;}
       <div class="sidebar-brand" onclick="switchTab('home')" role="button" tabindex="0" aria-label="홈으로">
         <div class="sidebar-logo">SM</div>
         <div class="sidebar-brand-text">
-          <div class="sidebar-brand-name">Stay_Msg Pro<span class="sidebar-brand-ver" id="appVer">v1.16.11</span></div>
+          <div class="sidebar-brand-name">Stay_Msg Pro<span class="sidebar-brand-ver" id="appVer">v1.16.12</span></div>
           <div class="sidebar-brand-sub">숙소 예약 문자</div>
         </div>
       </div>
@@ -2080,7 +2080,7 @@ input,select,textarea{font-family:inherit;}
       <div class="mheader-brand" onclick="switchTab('home')" role="button" tabindex="0" aria-label="홈으로">
         <div class="mheader-logo">SM</div>
         <div>
-          <div class="mheader-title">Stay_Msg Pro<span class="mheader-ver" id="appVerM">v1.16.11</span></div>
+          <div class="mheader-title">Stay_Msg Pro<span class="mheader-ver" id="appVerM">v1.16.12</span></div>
           <div class="mheader-sub">숙소 예약 문자</div>
         </div>
       </div>
@@ -2858,7 +2858,7 @@ input,select,textarea{font-family:inherit;}
 <div class="toast" id="toast"></div>
 
 <script>
-const APP_VERSION='v1.16.11'; // Pro (2026-10-27 lite v3.3.0에서 이름·버전 리셋)
+const APP_VERSION='v1.16.12'; // Pro (2026-10-27 lite v3.3.0에서 이름·버전 리셋)
 const SK_SET='stay_msg_lite1_set_v1';
 const SK_TPL='stay_msg_lite1_tpl_v1';
 const SK_RES='stay_msg_lite1_res_v1';
@@ -4568,9 +4568,9 @@ function dashCalDayClick(ds){
   _updateDateDisplay('ar_checkin','ar_checkout','arDateRangeBtn');
   const fr=document.getElementById('arFrom'); fr.textContent=`달력 ${rvMD(ds)}(${rvDw(ds)})에서`; fr.style.display='';
 }
-// 달력 손님 색(11-06 쵸파파 C안 「차분한 톤」): 세이지·모카·슬레이트 세 색을 입실일 순서로 돌려 씀(흰 글자).
+// 달력 손님 색(11-06 쵸파파 A안 「숲 톤」): 소나무 초록·흙 갈색·청회색 세 색을 입실일 순서로 돌려 씀(흰 글자).
 // 두 색이면 하루 건너 붙은 손님(앞앞 손님)이 같은 색이라 헷갈림 → 세 색이면 이어지는 세 손님이 모두 다름
-const GUEST_COLORS=[{bg:'#5a7a66',fg:'#fff'},{bg:'#7b5e57',fg:'#fff'},{bg:'#56708f',fg:'#fff'}];
+const GUEST_COLORS=[{bg:'#2f6b4f',fg:'#fff'},{bg:'#8a5a3b',fg:'#fff'},{bg:'#4a6f8a',fg:'#fff'}];
 // 줄(lane): 앞 손님 퇴실 날 들어온 손님은 앞 손님과 다른 줄, 아니면 첫 줄. 연박 내내 같은 줄에 그려 선이 이어지게
 function guestColorFn(){
   const idx=new Map(),lane=new Map();
