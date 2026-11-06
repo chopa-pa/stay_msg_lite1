@@ -2026,7 +2026,7 @@ input,select,textarea{font-family:inherit;}
       <div class="sidebar-brand" onclick="switchTab('home')" role="button" tabindex="0" aria-label="홈으로">
         <div class="sidebar-logo">SM</div>
         <div class="sidebar-brand-text">
-          <div class="sidebar-brand-name">Stay_Msg Pro<span class="sidebar-brand-ver" id="appVer">v1.17.5</span></div>
+          <div class="sidebar-brand-name">Stay_Msg Pro<span class="sidebar-brand-ver" id="appVer">v1.17.6</span></div>
           <div class="sidebar-brand-sub">숙소 예약 문자</div>
         </div>
       </div>
@@ -2082,7 +2082,7 @@ input,select,textarea{font-family:inherit;}
       <div class="mheader-brand" onclick="switchTab('home')" role="button" tabindex="0" aria-label="홈으로">
         <div class="mheader-logo">SM</div>
         <div>
-          <div class="mheader-title">Stay_Msg Pro<span class="mheader-ver" id="appVerM">v1.17.5</span></div>
+          <div class="mheader-title">Stay_Msg Pro<span class="mheader-ver" id="appVerM">v1.17.6</span></div>
           <div class="mheader-sub">숙소 예약 문자</div>
         </div>
       </div>
@@ -2860,7 +2860,7 @@ input,select,textarea{font-family:inherit;}
 <div class="toast" id="toast"></div>
 
 <script>
-const APP_VERSION='v1.17.5'; // Pro (2026-10-27 lite v3.3.0에서 이름·버전 리셋)
+const APP_VERSION='v1.17.6'; // Pro (2026-10-27 lite v3.3.0에서 이름·버전 리셋)
 const SK_SET='stay_msg_lite1_set_v1';
 const SK_TPL='stay_msg_lite1_tpl_v1';
 const SK_RES='stay_msg_lite1_res_v1';
@@ -4708,12 +4708,15 @@ const daysIn = ym => new Date(+ym.slice(0,4), +ym.slice(5,7), 0).getDate();
 const DOWS = ['일','월','화','수','목','금','토'];
 function statYmd(d){ return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }   // toISOString은 UTC라 날짜가 하루 밀림
 function statChannel(c){ c=c||''; return c.startsWith('네이버') ? '네이버' : (c.includes('에어비앤비') || /airbnb/i.test(c) ? '에어비앤비' : '기타'); }
+// 11-07 쵸파파: 취소 뒤 다시 결제한 건(같은 번호·같은 입실일로 확정 예약이 있음)은 취소로 세지 않음
+function statRebooked(r){ const d=s=>String(s||'').replace(/\D/g,''); const p=d(r.phone); return !!p && statConfirmed().some(c=>d(c.phone)===p && c.checkin===r.checkin); }
+function statCancelReal(){ return (statsCancelled||[]).filter(r=>!statRebooked(r)); }
 function statConfirmed(){ return reservations.filter(r => (r.status||'confirmed')==='confirmed' && r.checkin && r.checkout && r.checkout>r.checkin); }
 function statNights(r){ return Math.round((new Date(r.checkout+'T00:00:00')-new Date(r.checkin+'T00:00:00'))/86400000); }
 function statMonthly(){
   const m = {};
   const add = (ym) => m[ym] || (m[ym] = { ym, cnt:0, nights:0, rev:0, cancel:0, ch:{네이버:0,에어비앤비:0,기타:0} });
-  (statsCancelled||[]).forEach(r=>{ if(r.checkin) add(r.checkin.slice(0,7)).cancel++; });
+  statCancelReal().forEach(r=>{ if(r.checkin) add(r.checkin.slice(0,7)).cancel++; });
   statConfirmed().forEach(r => {
     const row = add(r.checkin.slice(0,7)); row.cnt++; const rev = parseNum(r.price); row.rev += rev; row.ch[statChannel(r.channel)] += rev;
     for(let d=new Date(r.checkin+'T00:00:00'); statYmd(d)<r.checkout; d.setDate(d.getDate()+1)){ add(statYmd(d).slice(0,7)).nights++; }
@@ -4763,7 +4766,7 @@ function statNaverAgg(rows){
 }
 function statsLoad(){
   if(!sb) return;
-  if(statsCancelled===null){ statsCancelled=[]; sb.from('reservations').select('id,checkin,checkout,channel,price,created_at,updated_at').eq('status','cancelled').then(({data,error})=>{ if(error){console.error(error);return;} statsCancelled=data||[]; statsRerender(); }); }
+  if(statsCancelled===null){ statsCancelled=[]; sb.from('reservations').select('id,phone,checkin,checkout,channel,price,created_at,updated_at').eq('status','cancelled').then(({data,error})=>{ if(error){console.error(error);return;} statsCancelled=data||[]; statsRerender(); }); }
   if(statsNote===null){ statsNote={}; sb.from('app_settings').select('value').eq('key','stats_note').maybeSingle().then(({data})=>{ statsNote=(data&&data.value)||{}; statsRerender(); }); }
   if(placeStats===null){ placeStats=[]; sb.from('place_stats').select('*').order('date',{ascending:false}).limit(60).then(({data,error})=>{ if(error){console.error(error);return;} placeStats=data||[]; statsRerender(); }); }
 }
@@ -4773,7 +4776,7 @@ function renderStSales(){
   const el=document.getElementById('stSales'); if(!el) return;
   const rows=statMonthly(), thisYm=statYmd(new Date()).slice(0,7), cur=rows.find(x=>x.ym===thisYm)||{cnt:0,nights:0,rev:0};
   const year=rows.filter(x=>x.ym.startsWith(thisYm.slice(0,4))&&x.ym<=thisYm), yrev=year.reduce((a,x)=>a+x.rev,0), ycnt=year.reduce((a,x)=>a+x.cnt,0), yn=year.reduce((a,x)=>a+x.nights,0);
-  const future=rows.filter(x=>x.ym>thisYm), conf=statConfirmed(), cl=statsCancelled||[];
+  const future=rows.filter(x=>x.ym>thisYm), conf=statConfirmed(), cl=statCancelReal();
   let h='<div class="stat-grid">'+tile('이번 달 매출',won(cur.rev),`${cur.cnt}건 · ${cur.nights}박 · 점유 ${pct(cur.nights,daysIn(thisYm))}%`)+tile('올해 매출',won(yrev),`${ycnt}건 · ${yn}박`)+tile('평균 1박 단가',won(yn?Math.round(yrev/yn):0),'올해 매출 ÷ 박수')+tile('예정(다음 달 이후)',won(future.reduce((a,x)=>a+x.rev,0)),`${future.reduce((a,x)=>a+x.cnt,0)}건 · ${future.reduce((a,x)=>a+x.nights,0)}박`)+tile('취소',`${cl.length}건`,cl.length||conf.length?`전체의 ${pct(cl.length,cl.length+conf.length)}%`:'')+'</div>';
   const asc=[...rows].sort((a,b)=>a.ym.localeCompare(b.ym)).slice(-12);
   const S=[{key:'네이버',name:'네이버',color:ST_COL.네이버},{key:'에어비앤비',name:'에어비앤비',color:ST_COL.에어비앤비},{key:'기타',name:'기타',color:ST_COL.기타}];
@@ -4788,7 +4791,7 @@ function renderStSales(){
   h+=card('요일별 매출', chBars(dOrd.map(i=>({label:DOWS[i],values:{v:Math.round(dr[i].rev)}})),{labels:true,h:170,tip:won})+`<div class="guest-wrap"><table class="guest-tbl"><thead><tr><th>요일 밤</th>${dOrd.map(i=>`<th class="r">${DOWS[i]}</th>`).join('')}</tr></thead><tbody><tr><td>박수</td>${dOrd.map(i=>`<td class="r">${dr[i].n}</td>`).join('')}</tr><tr><td>1박 평균</td>${dOrd.map(i=>`<td class="r">${dr[i].n?wonK(Math.round(dr[i].rev/dr[i].n)):'-'}</td>`).join('')}</tr></tbody></table></div>`, '손님이 잔 밤의 요일 기준 · 결제금액 ÷ 박수 · 확정 예약(예정 포함)');
   h+='<div class="two">'+card('입실 요일', chBars(DOWS.map((d,i)=>({label:d,values:{v:dow[i]}})),{fmt:String,labels:true,h:150,w:320}),'확정 예약 건수')+card('숙박 일수', chBars(['1박','2박','3박+'].map(k=>({label:k,values:{v:nd[k]||0}})),{fmt:String,labels:true,h:150,w:320}),'확정 예약 건수')+'</div>';
   h+=card('예약에서 입실까지 (리드타임)', leadN?chBars(Object.entries(lead).map(([k,v])=>({label:k,values:{v}})),{fmt:String,labels:true,h:150}):'<div class="empty"><span class="emoji">⏳</span>네이버 예약이 쌓이면 보입니다</div>', `네이버 예약 ${leadN}건 기준(봇이 수집한 시각 → 입실일)`);
-  el.innerHTML=h; document.getElementById('stSalesSub').textContent=`확정 ${conf.length}건 · 취소 ${cl.length}건 · 입실일 기준 월 집계`;
+  el.innerHTML=h; document.getElementById('stSalesSub').textContent=`확정 ${conf.length}건 · 취소 ${cl.length}건${(statsCancelled||[]).length>cl.length?` (재결제 ${(statsCancelled||[]).length-cl.length}건 제외)`:''} · 입실일 기준 월 집계`;
 }
 function renderStGuest(){
   const el=document.getElementById('stGuest'); if(!el) return;
@@ -4823,7 +4826,7 @@ function renderStNaver(){
 function renderStRead(){
   const host=document.getElementById('statReadHost'); if(!host) return;
   const m=statMonthly(), thisYm=statYmd(new Date()).slice(0,7), cur=m.find(x=>x.ym===thisYm);
-  const prevYm=statYmd(new Date(+thisYm.slice(0,4),+thisYm.slice(5,7)-2,1)).slice(0,7), prev=m.find(x=>x.ym===prevYm), conf=statConfirmed(), cl=statsCancelled||[];
+  const prevYm=statYmd(new Date(+thisYm.slice(0,4),+thisYm.slice(5,7)-2,1)).slice(0,7), prev=m.find(x=>x.ym===prevYm), conf=statConfirmed(), cl=statCancelReal();
   const res=[], nav=[], todo=[];   // [라벨, 문장]
   if(cur){ res.push(['이번 달', `${cur.cnt}건 · ${cur.nights}박 · 점유율 ${pct(cur.nights,daysIn(thisYm))}%${prev&&prev.nights?` (지난달 ${pct(prev.nights,daysIn(prevYm))}%)`:''}`]); const fut=m.filter(x=>x.ym>thisYm); if(fut.length) res.push(['예정', `${fut.reduce((a,x)=>a+x.cnt,0)}건 · ${fut.reduce((a,x)=>a+x.nights,0)}박 · ${won(fut.reduce((a,x)=>a+x.rev,0))}`]); }
   if(conf.length){ const cc={}; conf.forEach(r=>{const c=statChannel(r.channel);cc[c]=(cc[c]||0)+1;}); res.push(['채널', Object.entries(cc).sort((a,b)=>b[1]-a[1]).map(([k,v])=>`${k} ${v}건`).join(' · ')]);
