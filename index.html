@@ -4708,8 +4708,9 @@ const daysIn = ym => new Date(+ym.slice(0,4), +ym.slice(5,7), 0).getDate();
 const DOWS = ['일','월','화','수','목','금','토'];
 function statYmd(d){ return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }   // toISOString은 UTC라 날짜가 하루 밀림
 function statChannel(c){ c=c||''; return c.startsWith('네이버') ? '네이버' : (c.includes('에어비앤비') || /airbnb/i.test(c) ? '에어비앤비' : '기타'); }
-// 11-07 쵸파파: 취소 뒤 다시 결제한 건(같은 번호·같은 입실일로 확정 예약이 있음)은 취소로 세지 않음
-function statRebooked(r){ const d=s=>String(s||'').replace(/\D/g,''); const p=d(r.phone); return !!p && statConfirmed().some(c=>d(c.phone)===p && c.checkin===r.checkin); }
+// 11-07 쵸파파: 취소 뒤 다시 결제한 건은 취소로 세지 않음. 같은 번호의 확정 예약이 ① 같은 입실일이거나 ② 취소 시점 앞뒤 7일 안에 들어왔으면(날짜 바꿔 재결제) 재결제로 봄
+function statRebooked(r){ const d=s=>String(s||'').replace(/\D/g,''), p=d(r.phone), at=Date.parse(r.updated_at||r.created_at||''), W=7*86400000;
+  return !!p && statConfirmed().some(c=>d(c.phone)===p && (c.checkin===r.checkin || (at && c.createdAt && Math.abs(Date.parse(c.createdAt)-at)<=W))); }
 function statCancelReal(){ return (statsCancelled||[]).filter(r=>!statRebooked(r)); }
 function statConfirmed(){ return reservations.filter(r => (r.status||'confirmed')==='confirmed' && r.checkin && r.checkout && r.checkout>r.checkin); }
 function statNights(r){ return Math.round((new Date(r.checkout+'T00:00:00')-new Date(r.checkin+'T00:00:00'))/86400000); }
