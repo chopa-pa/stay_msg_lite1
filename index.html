@@ -1127,7 +1127,15 @@ input,select,textarea{font-family:inherit;}
 #tab-home .sc-num{font-size:20px;font-weight:800;font-variant-numeric:tabular-nums;white-space:nowrap;}
 #tab-home .sc-num small{font-size:14px;font-weight:700;color:#475569;margin-left:2px;}
 #tab-home .sc-num i{font-style:normal;font-size:14px;font-weight:600;color:#94a3b8;margin:0 8px;}
-#tab-home .stat-chips.two{grid-template-columns:repeat(2,minmax(0,1fr));}
+#tab-home .stat-chips.three{grid-template-columns:repeat(3,minmax(0,1fr));}
+#tab-home .stat-chips.three .sc-lbl{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0;}
+@media(min-width:960px) and (max-width:1199px){
+  #tab-home .stat-chips.three{gap:8px;}
+  #tab-home .stat-chips.three .stat-chip{padding:0 12px;gap:8px;}
+  #tab-home .stat-chips.three .sc-ico{display:none;}
+  #tab-home .stat-chips.three .sc-num{font-size:18px;}
+  #tab-home .stat-chips.three .sc-num i{margin:0 5px;}
+}
 
 /* 최근 발송 */
 #tab-home #recentSendsCard{border-radius:16px;}
@@ -1214,7 +1222,7 @@ input,select,textarea{font-family:inherit;}
 
   #tab-home .stat-chips{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;}
   #tab-home .stat-chip{height:48px;}
-  #tab-home .stat-chips.two{grid-template-columns:1fr;}
+  #tab-home .stat-chips.three{grid-template-columns:1fr;}
   #tab-home .sc-num{font-size:18px;}
   #tab-home .dash-rs{flex-direction:column;align-items:flex-start;gap:2px;padding:10px 16px;}
   #tab-home .rs-main{font-size:14px;white-space:normal;}
@@ -2009,7 +2017,7 @@ input,select,textarea{font-family:inherit;}
       <div class="sidebar-brand" onclick="switchTab('home')" role="button" tabindex="0" aria-label="홈으로">
         <div class="sidebar-logo">SM</div>
         <div class="sidebar-brand-text">
-          <div class="sidebar-brand-name">Stay_Msg Pro<span class="sidebar-brand-ver" id="appVer">v1.16.7</span></div>
+          <div class="sidebar-brand-name">Stay_Msg Pro<span class="sidebar-brand-ver" id="appVer">v1.16.8</span></div>
           <div class="sidebar-brand-sub">숙소 예약 문자</div>
         </div>
       </div>
@@ -2065,7 +2073,7 @@ input,select,textarea{font-family:inherit;}
       <div class="mheader-brand" onclick="switchTab('home')" role="button" tabindex="0" aria-label="홈으로">
         <div class="mheader-logo">SM</div>
         <div>
-          <div class="mheader-title">Stay_Msg Pro<span class="mheader-ver" id="appVerM">v1.16.7</span></div>
+          <div class="mheader-title">Stay_Msg Pro<span class="mheader-ver" id="appVerM">v1.16.8</span></div>
           <div class="mheader-sub">숙소 예약 문자</div>
         </div>
       </div>
@@ -2117,7 +2125,12 @@ input,select,textarea{font-family:inherit;}
         <div id="dashCalBody"></div>
       </div>
 
-      <div class="stat-chips two">
+      <div class="stat-chips three">
+        <button class="stat-chip" onclick="switchTab('reserv')">
+          <span class="sc-ico"><svg class="i"><use href="#i-clock"/></svg></span>
+          <span class="sc-lbl">이번 주 예약</span>
+          <span class="sc-num" id="dashWeekNum">0</span>
+        </button>
         <button class="stat-chip blue" onclick="switchTab('reserv')">
           <span class="sc-ico"><svg class="i"><use href="#i-calendar"/></svg></span>
           <span class="sc-lbl">이번 달 예약</span>
@@ -2841,7 +2854,7 @@ input,select,textarea{font-family:inherit;}
 <div class="toast" id="toast"></div>
 
 <script>
-const APP_VERSION='v1.16.7'; // Pro (2026-10-27 lite v3.3.0에서 이름·버전 리셋)
+const APP_VERSION='v1.16.8'; // Pro (2026-10-27 lite v3.3.0에서 이름·버전 리셋)
 const SK_SET='stay_msg_lite1_set_v1';
 const SK_TPL='stay_msg_lite1_tpl_v1';
 const SK_RES='stay_msg_lite1_res_v1';
@@ -4640,10 +4653,16 @@ function renderDashCal(){
 
 function renderDashboard(){
   const today=getTodayStr();
-  // 11-06 쵸파파: 체크인·체크아웃·7일 칸 대신 「이번 달 예약」「총 예약」 건수·박수. 매출 화면과 같은 기준(건수=입실한 달, 박수=그 달에 묵은 밤)
+  // 11-06 쵸파파: 체크인·체크아웃·7일 칸 대신 「이번 주 예약」「이번 달 예약」「총 예약」 건수·박수. 매출 화면과 같은 기준(건수=입실한 달, 박수=그 달에 묵은 밤)
   const cntN=(c,n)=>`${c}<small>건</small><i>·</i>${n}<small>박</small>`;
   const mon=statMonthly().find(x=>x.ym===today.slice(0,7))||{cnt:0,nights:0};
   const conf=statConfirmed();
+  // 이번 주 = 달력 한 줄(일~토). 건수=그 주 입실, 박수=그 주에 묵은 밤
+  const t0=new Date(today+'T00:00:00');t0.setDate(t0.getDate()-t0.getDay());
+  const ws=statYmd(t0);t0.setDate(t0.getDate()+7);const we=statYmd(t0);
+  const wkCnt=conf.filter(r=>r.checkin>=ws&&r.checkin<we).length;
+  const wkN=conf.reduce((t,r)=>{let n=0;for(let d=new Date(r.checkin+'T00:00:00');statYmd(d)<r.checkout;d.setDate(d.getDate()+1)){const k=statYmd(d);if(k>=ws&&k<we)n++;}return t+n;},0);
+  document.getElementById('dashWeekNum').innerHTML=cntN(wkCnt,wkN);
   document.getElementById('dashMonNum').innerHTML=cntN(mon.cnt,mon.nights);
   document.getElementById('dashTotalNum').innerHTML=cntN(conf.length,conf.reduce((t,r)=>t+statNights(r),0));
   const heroEl=document.getElementById('heroPropName');
