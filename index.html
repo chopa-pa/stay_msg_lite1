@@ -1108,7 +1108,7 @@ input,select,textarea{font-family:inherit;}
 #tab-home .res-chip.ci{background:var(--chip-in);border-radius:7px 3px 3px 7px;}
 #tab-home .res-chip.co{background:var(--chip-out);border-radius:3px 7px 7px 3px;}
 #tab-home .res-chip.cico{background:var(--chip-in);border-radius:7px;}
-#tab-home .res-chip.mid{height:10px;padding:0;margin:4px 0;border-radius:3px;background:#a7f3d0;}
+#tab-home .res-chip.mid{border-radius:3px;}
 #tab-home .res-chip.closed{background:#e2e8f0;color:#475569;border-radius:7px;}
 #tab-home .res-dots{justify-content:flex-start;align-items:center;gap:4px;padding:2px 0;}
 #tab-home .res-dot{width:10px;height:10px;}
@@ -1205,7 +1205,7 @@ input,select,textarea{font-family:inherit;}
   #tab-home .chip-name{font-size:11px;line-height:1.25;max-width:100%;text-overflow:clip;}
   #tab-home .chip-name .n4{display:none;}
   #tab-home .chip-st{font-size:10px;font-weight:800;margin-left:0;padding-left:0;line-height:1.2;}
-  #tab-home .res-chip.mid{height:8px;margin:2px 0;border-radius:2px;padding:0;}
+  #tab-home .res-chip.mid{border-radius:2px;}
   #tab-home .res-chip.closed{font-size:11px;padding:3px 4px;line-height:1.2;}
   #tab-home .res-dots{gap:3px;}
   #tab-home .res-dot{width:8px;height:8px;}
@@ -2008,7 +2008,7 @@ input,select,textarea{font-family:inherit;}
       <div class="sidebar-brand" onclick="switchTab('home')" role="button" tabindex="0" aria-label="홈으로">
         <div class="sidebar-logo">SM</div>
         <div class="sidebar-brand-text">
-          <div class="sidebar-brand-name">Stay_Msg Pro<span class="sidebar-brand-ver" id="appVer">v1.16.2</span></div>
+          <div class="sidebar-brand-name">Stay_Msg Pro<span class="sidebar-brand-ver" id="appVer">v1.16.3</span></div>
           <div class="sidebar-brand-sub">숙소 예약 문자</div>
         </div>
       </div>
@@ -2064,7 +2064,7 @@ input,select,textarea{font-family:inherit;}
       <div class="mheader-brand" onclick="switchTab('home')" role="button" tabindex="0" aria-label="홈으로">
         <div class="mheader-logo">SM</div>
         <div>
-          <div class="mheader-title">Stay_Msg Pro<span class="mheader-ver" id="appVerM">v1.16.2</span></div>
+          <div class="mheader-title">Stay_Msg Pro<span class="mheader-ver" id="appVerM">v1.16.3</span></div>
           <div class="mheader-sub">숙소 예약 문자</div>
         </div>
       </div>
@@ -2840,7 +2840,7 @@ input,select,textarea{font-family:inherit;}
 <div class="toast" id="toast"></div>
 
 <script>
-const APP_VERSION='v1.16.2'; // Pro (2026-10-27 lite v3.3.0에서 이름·버전 리셋)
+const APP_VERSION='v1.16.3'; // Pro (2026-10-27 lite v3.3.0에서 이름·버전 리셋)
 const SK_SET='stay_msg_lite1_set_v1';
 const SK_TPL='stay_msg_lite1_tpl_v1';
 const SK_RES='stay_msg_lite1_res_v1';
@@ -4550,8 +4550,9 @@ function dashCalDayClick(ds){
   _updateDateDisplay('ar_checkin','ar_checkout','arDateRangeBtn');
   const fr=document.getElementById('arFrom'); fr.textContent=`달력 ${rvMD(ds)}(${rvDw(ds)})에서`; fr.style.display='';
 }
-// 달력 손님 색: 입실일 순서대로 돌려 써서 앞뒤로 붙은 예약(퇴실 날 다음 손님 입실)은 늘 다른 색
-const GUEST_COLORS=[{bg:'#059669',light:'#a7f3d0'},{bg:'#2563eb',light:'#bfdbfe'},{bg:'#7c3aed',light:'#ddd6fe'},{bg:'#db2777',light:'#fbcfe8'},{bg:'#b45309',light:'#fde68a'},{bg:'#0e7490',light:'#a5f3fc'}];
+// 달력 손님 색(11-06 쵸파파): 초록·브라운 파스텔 두 색을 입실일 순서로 번갈아 씀.
+// 한 채라 한 날 겹치는 손님은 많아야 둘(앞 손님 OUT·다음 손님 IN)이고 늘 순서상 이웃 → 항상 다른 색
+const GUEST_COLORS=[{bg:'#c8f0d8',fg:'#166534'},{bg:'#ead9c6',fg:'#6b4423'}];
 function guestColorFn(){
   const idx=new Map();
   reservations.filter(r=>r.checkin).sort((a,b)=>a.checkin.localeCompare(b.checkin)||String(a.id).localeCompare(String(b.id))).forEach((r,i)=>idx.set(r,i));
@@ -4598,10 +4599,11 @@ function renderDashCal(){
       const isCi=r.checkin===ds,isCo=r.checkout===ds;
       const c=gc(r);
       const isMid=!isCi&&!isCo;
-      if(isMid)return `<div class="res-chip mid" style="background:${c.light};"></div>`;
+      // 연박 중간 날: 같은 색·같은 두께(빈 글자 줄을 넣어 IN/OUT 칩과 높이를 똑같이)
+      if(isMid)return `<div class="res-chip mid" style="background:${c.bg};" title="${esc((r.name||'손님')+' 연박')}"><span class="chip-name">&nbsp;</span><span class="chip-st">&nbsp;</span></div>`;
       // 11-06 쵸파파: 입실·퇴실 색 대신 손님(예약)마다 다른 색. 입실·퇴실은 IN/OUT 글자와 칩 모양으로 구분
       const k=isCi&&isCo?'cico':isCi?'ci':'co';
-      const bg=`background:${c.bg};`;
+      const bg=`background:${c.bg};color:${c.fg};`;
       const nm=(r.name||'손님').slice(0,4), st=isCi?'IN':'OUT';
       return `<div class="res-chip ${k}" style="${bg}" title="${esc((r.name||'손님')+' '+st)}"><span class="chip-name">${esc(nm.slice(0,3))}<span class="n4">${esc(nm.slice(3))}</span></span><span class="chip-st">${st}</span></div>`;
     }).join(''):`<div class="res-dots">${dayRes.map(r=>{
@@ -4609,7 +4611,7 @@ function renderDashCal(){
       const c=gc(r);
       const isMid=!isCi&&!isCo;
       const cls='res-dot'+(isMid?' mid':'');
-      const col=c.bg;
+      const col=c.fg;
       const style=isCo?`background:#fff;box-shadow:inset 0 0 0 2px ${col};`:`background:${col};`;
       const tip=esc((r.name||'손님')+(isCi?' IN':isCo?' OUT':''));
       return `<span class="${cls}" style="${style}" title="${tip}"></span>`;
