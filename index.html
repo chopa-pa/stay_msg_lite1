@@ -2024,7 +2024,7 @@ input,select,textarea{font-family:inherit;}
       <div class="sidebar-brand" onclick="switchTab('home')" role="button" tabindex="0" aria-label="홈으로">
         <div class="sidebar-logo">SM</div>
         <div class="sidebar-brand-text">
-          <div class="sidebar-brand-name">Stay_Msg Pro<span class="sidebar-brand-ver" id="appVer">v1.16.9</span></div>
+          <div class="sidebar-brand-name">Stay_Msg Pro<span class="sidebar-brand-ver" id="appVer">v1.16.10</span></div>
           <div class="sidebar-brand-sub">숙소 예약 문자</div>
         </div>
       </div>
@@ -2080,7 +2080,7 @@ input,select,textarea{font-family:inherit;}
       <div class="mheader-brand" onclick="switchTab('home')" role="button" tabindex="0" aria-label="홈으로">
         <div class="mheader-logo">SM</div>
         <div>
-          <div class="mheader-title">Stay_Msg Pro<span class="mheader-ver" id="appVerM">v1.16.9</span></div>
+          <div class="mheader-title">Stay_Msg Pro<span class="mheader-ver" id="appVerM">v1.16.10</span></div>
           <div class="mheader-sub">숙소 예약 문자</div>
         </div>
       </div>
@@ -2142,8 +2142,8 @@ input,select,textarea{font-family:inherit;}
           <span class="sc-lbl">이번 달 예약</span><span class="sc-num" id="dashMonNum">0</span>
         </button>
         <button class="stat-chip purple" onclick="switchTab('reserv')">
-          <span class="sc-ico"><svg class="i"><use href="#i-chart"/></svg></span>
-          <span class="sc-lbl">총 예약</span><span class="sc-num" id="dashTotalNum">0</span>
+          <span class="sc-ico"><svg class="i"><use href="#i-arr"/></svg></span>
+          <span class="sc-lbl">앞으로 예약</span><span class="sc-num" id="dashNextNum">0</span>
         </button>
       </div>
 
@@ -2858,7 +2858,7 @@ input,select,textarea{font-family:inherit;}
 <div class="toast" id="toast"></div>
 
 <script>
-const APP_VERSION='v1.16.9'; // Pro (2026-10-27 lite v3.3.0에서 이름·버전 리셋)
+const APP_VERSION='v1.16.10'; // Pro (2026-10-27 lite v3.3.0에서 이름·버전 리셋)
 const SK_SET='stay_msg_lite1_set_v1';
 const SK_TPL='stay_msg_lite1_tpl_v1';
 const SK_RES='stay_msg_lite1_res_v1';
@@ -4657,7 +4657,7 @@ function renderDashCal(){
 
 function renderDashboard(){
   const today=getTodayStr();
-  // 11-06 쵸파파: 체크인·체크아웃·7일 칸 대신 「이번 주 예약」「이번 달 예약」「총 예약」. 첫 줄 「8건 · 9박」, 둘째 줄 연박만 「2박 1건 · 3박 1건」(나머지는 1박)
+  // 11-06 쵸파파: 체크인·체크아웃·7일 칸 대신 「이번 주 예약」「이번 달 예약」「앞으로 예약」(오늘 입실부터). 첫 줄 「8건 · 9박」, 둘째 줄 연박만 「2박 1건 · 3박 1건」(나머지는 1박)
   // 건수는 그 기간에 입실한 예약(매출 화면과 같은 기준, 취소 제외). 이번 주 = 달력 한 줄(일~토)
   const conf=statConfirmed();
   const cntN=list=>{const m={};let tot=0;list.forEach(r=>{const n=statNights(r);tot+=n;if(n>1)m[n]=(m[n]||0)+1;});
@@ -4668,7 +4668,7 @@ function renderDashboard(){
   const setN=(id,list)=>{document.getElementById(id).innerHTML=cntN(list);};
   setN('dashWeekNum',conf.filter(r=>r.checkin>=ws&&r.checkin<we));
   setN('dashMonNum',conf.filter(r=>r.checkin.slice(0,7)===today.slice(0,7)));
-  setN('dashTotalNum',conf);
+  setN('dashNextNum',conf.filter(r=>r.checkin>=today));
   const heroEl=document.getElementById('heroPropName');
   if(heroEl)heroEl.textContent=settings.name||'Stay_Msg';
   const tdl=document.getElementById('dashTodayLbl');
