@@ -2026,7 +2026,7 @@ input,select,textarea{font-family:inherit;}
       <div class="sidebar-brand" onclick="switchTab('home')" role="button" tabindex="0" aria-label="홈으로">
         <div class="sidebar-logo">SM</div>
         <div class="sidebar-brand-text">
-          <div class="sidebar-brand-name">Stay_Msg Pro<span class="sidebar-brand-ver" id="appVer">v1.18.1</span></div>
+          <div class="sidebar-brand-name">Stay_Msg Pro<span class="sidebar-brand-ver" id="appVer">v1.18.2</span></div>
           <div class="sidebar-brand-sub">숙소 예약 문자</div>
         </div>
       </div>
@@ -2082,7 +2082,7 @@ input,select,textarea{font-family:inherit;}
       <div class="mheader-brand" onclick="switchTab('home')" role="button" tabindex="0" aria-label="홈으로">
         <div class="mheader-logo">SM</div>
         <div>
-          <div class="mheader-title">Stay_Msg Pro<span class="mheader-ver" id="appVerM">v1.18.1</span></div>
+          <div class="mheader-title">Stay_Msg Pro<span class="mheader-ver" id="appVerM">v1.18.2</span></div>
           <div class="mheader-sub">숙소 예약 문자</div>
         </div>
       </div>
@@ -2860,7 +2860,7 @@ input,select,textarea{font-family:inherit;}
 <div class="toast" id="toast"></div>
 
 <script>
-const APP_VERSION='v1.18.1'; // Pro (2026-10-27 lite v3.3.0에서 이름·버전 리셋)
+const APP_VERSION='v1.18.2'; // Pro (2026-10-27 lite v3.3.0에서 이름·버전 리셋)
 const SK_SET='stay_msg_lite1_set_v1';
 const SK_TPL='stay_msg_lite1_tpl_v1';
 const SK_RES='stay_msg_lite1_res_v1';
@@ -5150,8 +5150,8 @@ function sbRenderJobs(jobs){
         <div class="job-btns">${btns}</div>
       </div>
       <details id="jobDet${x.id}"><summary style="display:none;">본문</summary><pre id="jobBody${x.id}" class="job-body">${esc(x.body)}</pre>
-        <div id="jobEdit${x.id}" style="display:none;margin-top:6px;"><textarea class="input" rows="12" style="width:100%;font:inherit;font-size:13px;white-space:pre-wrap;">${esc(x.body)}</textarea>
-          <div style="display:flex;gap:6px;margin-top:6px;"><button class="btn btn-primary btn-sm" onclick="sbJobSaveBody(${x.id})">저장</button><button class="btn btn-outline btn-sm" onclick="document.getElementById('jobEdit${x.id}').style.display='none'">취소</button></div></div>
+        <div id="jobEdit${x.id}" style="display:none;margin-top:6px;"><textarea class="input" rows="12" oninput="this.style.height='auto';this.style.height=(this.scrollHeight+4)+'px'" style="width:100%;font:inherit;font-size:13px;white-space:pre-wrap;overflow:hidden;resize:none;">${esc(x.body)}</textarea>
+          <div style="display:flex;gap:6px;margin-top:6px;"><button class="btn btn-primary btn-sm" onclick="sbJobSaveBody(${x.id})">저장</button><button class="btn btn-outline btn-sm" onclick="sbJobEditCancel(${x.id})">취소</button></div></div>
       </details>
     </div>`;
   }).join('');
@@ -5220,7 +5220,9 @@ function cancelClosure(id){
 async function sbHash16(text){ const buf=await crypto.subtle.digest('SHA-1', new TextEncoder().encode(text)); return [...new Uint8Array(buf)].map(b=>b.toString(16).padStart(2,'0')).join('').slice(0,16); }
 function sbJobView(id){ const d=document.getElementById('jobDet'+id); if(d) d.open=!d.open; }
 function dashStripsSync(){ const w=document.getElementById('dashStrips'); if(!w) return; const vis=id=>{ const e=document.getElementById(id); return e && e.style.display!=='none'; }; const a=vis('botJobsCard'), b=vis('dashClosureCard'); w.style.display=(a||b)?'':'none'; w.classList.toggle('both', a&&b); }
-function sbJobEdit(id){ const d=document.getElementById('jobEdit'+id); if(!d) return; d.style.display=''; d.closest('details').open=true; d.querySelector('textarea').focus(); }
+// 11-07 쵸파파: 폰에서 고치기 어렵다 → 수정할 때는 위 원문을 숨기고 그 자리에서 바로 고침. 입력칸은 글 길이만큼 늘려 안쪽 스크롤 없앰
+function sbJobEdit(id){ const d=document.getElementById('jobEdit'+id); if(!d) return; const pre=document.getElementById('jobBody'+id); if(pre) pre.style.display='none'; d.style.display=''; d.closest('details').open=true; const ta=d.querySelector('textarea'); ta.style.height='auto'; ta.style.height=(ta.scrollHeight+4)+'px'; ta.focus({preventScroll:true}); d.scrollIntoView({block:'start',behavior:'smooth'}); }
+function sbJobEditCancel(id){ const d=document.getElementById('jobEdit'+id); if(d) d.style.display='none'; const pre=document.getElementById('jobBody'+id); if(pre) pre.style.display=''; }
 async function sbJobSaveBody(id){
   if(!sb || !sbUserEmail) return;
   const ta=document.querySelector('#jobEdit'+id+' textarea'); const body=ta.value.replace(/\r\n/g,'\n').trim();
