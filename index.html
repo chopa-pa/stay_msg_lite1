@@ -2013,6 +2013,7 @@ input,select,textarea{font-family:inherit;}
 <symbol id="i-st-prebook" viewBox="0 0 24 24"><path d="M9 3h6v3H9zM7 4.5H5V21h14V4.5h-2M9 11h6M9 15h4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></symbol>
 <symbol id="i-st-booked" viewBox="0 0 24 24"><path d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18zM8 12.5l3 3 5-6" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></symbol>
 <symbol id="i-st-precheckin" viewBox="0 0 24 24"><path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2zM9 4v14M15 6v14" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+<symbol id="i-st-around" viewBox="0 0 24 24"><path d="M12 21s-6.5-5.6-6.5-11a6.5 6.5 0 0 1 13 0c0 5.4-6.5 11-6.5 11z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="10" r="2.4" fill="none" stroke="currentColor"/></symbol>
 <symbol id="i-st-checkedin" viewBox="0 0 24 24"><path d="M4 11 12 4l8 7M6 9.5V20h12V9.5M10 20v-5h4v5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></symbol>
 <symbol id="i-st-checkout" viewBox="0 0 24 24"><path d="M10 4H5v16h5M14 8l4 4-4 4M18 12H8" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></symbol>
 <symbol id="i-xc" viewBox="0 0 24 24"><path d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18zM9 9l6 6M15 9l-6 6" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></symbol>
@@ -2026,7 +2027,7 @@ input,select,textarea{font-family:inherit;}
       <div class="sidebar-brand" onclick="switchTab('home')" role="button" tabindex="0" aria-label="홈으로">
         <div class="sidebar-logo">SM</div>
         <div class="sidebar-brand-text">
-          <div class="sidebar-brand-name">Stay_Msg Pro<span class="sidebar-brand-ver" id="appVer">v1.18.2</span></div>
+          <div class="sidebar-brand-name">Stay_Msg Pro<span class="sidebar-brand-ver" id="appVer">v1.19.0</span></div>
           <div class="sidebar-brand-sub">숙소 예약 문자</div>
         </div>
       </div>
@@ -2082,7 +2083,7 @@ input,select,textarea{font-family:inherit;}
       <div class="mheader-brand" onclick="switchTab('home')" role="button" tabindex="0" aria-label="홈으로">
         <div class="mheader-logo">SM</div>
         <div>
-          <div class="mheader-title">Stay_Msg Pro<span class="mheader-ver" id="appVerM">v1.18.2</span></div>
+          <div class="mheader-title">Stay_Msg Pro<span class="mheader-ver" id="appVerM">v1.19.0</span></div>
           <div class="mheader-sub">숙소 예약 문자</div>
         </div>
       </div>
@@ -2860,7 +2861,7 @@ input,select,textarea{font-family:inherit;}
 <div class="toast" id="toast"></div>
 
 <script>
-const APP_VERSION='v1.18.2'; // Pro (2026-10-27 lite v3.3.0에서 이름·버전 리셋)
+const APP_VERSION='v1.19.0'; // Pro (2026-10-27 lite v3.3.0에서 이름·버전 리셋)
 const SK_SET='stay_msg_lite1_set_v1';
 const SK_TPL='stay_msg_lite1_tpl_v1';
 const SK_RES='stay_msg_lite1_res_v1';
@@ -2892,6 +2893,10 @@ const STAGES=[
   {id:'precheckin',icon:'🗺️',label:'입실전',
    templates:[
     {title:'입실 안내 (당일 오전)',body:`《{숙소명} 입실 안내》\n\n오늘 솔숲에 오시는 것을 환영합니다.\n\n네비. "{숙소명}" 또는 "{숙소주소}"\n주차. 마당에 1대 주차하시면 됩니다.\n오시는 길. T맵에 주소를 치시면 숙소까지 안내됩니다. 산청대로에서 외송리 방면으로 빠져 둔철산로를 3.3km 오르다 좌회전, 삼거리를 지나 우회전해서 오르막길로 오시다가 하얀 집이 보이면 우회전해서 100m입니다.\n\n현관비번:  {전화뒷자리}*\n체크인:  pm 3:30\n체크아웃: am 11:30\nwifi:  {와이파이이름} (비밀번호 없음)\n\n* 셀프 조식 재료(빵, 요거트, 잼, 견과류, 커피, 유정란)가 준비되어 있으니 토스터와 드립포트로 천천히 드세요.\n\n* {바비큐입실}\n\n* 실내는 금연이며 냄새가 배는 육류, 생선 조리는 불가합니다. 가구 이동은 삼가 주세요. 반려견은 침대 위에 올라가지 않게 부탁드립니다. 수컷은 매너벨트 착용이 필수이며, 암컷도 마킹을 하는 경우 기저귀 착용을 부탁드립니다.\n\n* 문의 010-3314-0079\n\n산이 보이는 자리에서 편히 쉬다 가시길 바랍니다. / {숙소명}`}
+  ]},
+  {id:'around',icon:'📍',label:'가볼 곳',   // 11-07 쵸파파: 봇이 입실 문자 바로 뒤 자동 발송. 여기 첫 템플릿을 고치면 봇도 그 문구를 씀(이모지 금지 — 솔라피에서 안 보임)
+   templates:[
+    {title:'가볼 곳 안내 (입실 문자 뒤 자동)',body:`안녕하세요, 스테이솔숲입니다.\n솔숲지기가 직접 다녀온, 솔숲에서 차로 20분 안의 곳들이에요.\n시골 식당은 먼저 영업하는지 전화로 알아보고 가시는 게 좋아요.\n\n■ 맛집\n【외송 석쇠불고기】 6분\n연탄불 간장 불고기, 정갈한 반찬\nhttps://map.naver.com/p/search/산청%20외송석쇠불고기\n【산애밥상】 6분\n생선구이·돌솥밥 정식, 점심만(3시까지)\nhttps://map.naver.com/p/search/산청%20산애밥상\n【카페 나루터】 성심원 13분\n화덕피자·오븐치킨(미리 예약), 강변 경치\nhttps://map.naver.com/p/search/산청%20카페나루터\n【우두머리 식당】 원지 14분\n진한 한우 곱창전골\nhttps://map.naver.com/p/search/산청%20우두머리\n【금향】 원지 15분\n해물짬뽕·해물철판짜장·탕수육\nhttps://map.naver.com/p/search/산청%20금향\n【타짜오리 본점】 원지 16분\n간장 오리불고기, 쌈채소 무한\nhttps://map.naver.com/p/search/산청%20타짜오리\n【산청다슬기】 신등 단계 17분\n시원한 다슬기 맑은탕, 꼭 전화 예약 010-4899-9686\nhttps://map.naver.com/p/search/산청군%20신등면%20산청다슬기\n\n■ 카페\n【프레드릭】 신등 단계 14분\n직접 로스팅하는 커피\nhttps://map.naver.com/p/search/산청%20프레드릭\n【남다른 이유】 원지 14분\n직접 만든 빵·샌드위치 브런치, 간판이 작아요\nhttps://map.naver.com/p/search/산청%20남다른이유\n【한옥카페 소북】 신등 단계 16분\n한옥 정원, 단계딸기라떼, 밀당책방\nhttps://map.naver.com/p/search/산청%20소북카페\n\n■ 가볼 만한 곳\n【둔철생태체험숲】 5분\n산책 코스, 위쪽에 천문대\nhttps://map.naver.com/p/search/둔철생태체험숲\n【정취암】 7분\n기암절벽 위 암자, 일출 맛집\nhttps://map.naver.com/p/search/산청%20정취암\n【원지 강변로】 15분\n데크길 강변 산책\nhttps://map.naver.com/p/search/산청%20원지%20강변\n【묵곡 생태공원】 단성 20분\n반려견과 산책하기 좋은 공원\nhttps://map.naver.com/p/search/산청%20묵곡생태숲\n【신등목욕탕】 신등 단계 15분\n시골 목욕탕\nhttps://map.naver.com/p/search/산청%20신등목욕탕\n\n여행 일정에 맞춰 편하게 둘러보세요.`}
   ]},
   {id:'checkedin',icon:'🏡',label:'입실후',
    templates:[
@@ -3195,7 +3200,7 @@ let _tplInitOpen=false;
 function renderTemplatesPage(){
   const host=document.getElementById('tplStagesList');if(!host)return;
   const wide=_tplWide.matches;
-  if(!_tplInitOpen){_tplInitOpen=true;if(wide)STAGES.forEach(s=>openStages.add(s.id));}   // PC 처음엔 6단계 모두 펼침
+  if(!_tplInitOpen){_tplInitOpen=true;if(wide)STAGES.forEach(s=>openStages.add(s.id));}   // PC 처음엔 모든 단계 펼침
   let edit=null;
   host.innerHTML=STAGES.map(s=>{
     const all=allTpls(s);
