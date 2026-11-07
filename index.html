@@ -17,6 +17,8 @@
 <title>Stay_Msg Pro · 스테이솔숲 예약 문자</title>
 <link rel="manifest" href="./manifest.json">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<!-- 11-07 홈 헤더 워드마크: 브랜드킷 1A v10 한글 = Noto Sans KR(맑은 고딕 대체) 굵게, 필요한 글자만 받음 -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@700&text=%EC%8A%A4%ED%85%8C%EC%9D%B4%EC%86%94%EC%88%B2&display=swap">
 <style>
 :root{
   --primary:#10b981;
@@ -1021,6 +1023,12 @@ input,select,textarea{font-family:inherit;}
 #tab-home .dash-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px;}
 #tab-home .dash-head-txt{display:flex;align-items:baseline;gap:12px;min-width:0;}
 #tab-home .dash-name{font-size:22px;font-weight:800;color:var(--fg);margin:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.01em;}
+#tab-home .dash-head-txt{align-items:center;}
+#tab-home .dash-logo{width:46px;height:46px;flex-shrink:0;}
+#tab-home .dash-wm{display:flex;flex-direction:column;min-width:0;line-height:1.15;}
+#tab-home .dash-wm .dash-name{font-family:'Noto Sans KR','Malgun Gothic','Apple SD Gothic Neo',sans-serif;font-weight:700;color:#3A5141;letter-spacing:-0.03em;font-size:24px;}
+#tab-home .dash-wm-sub{font-family:Georgia,'Times New Roman',serif;font-style:italic;font-size:13px;color:#5b6e5f;letter-spacing:.01em;margin-top:2px;}
+#tab-home .dash-head-txt .dash-date{align-self:flex-end;margin-bottom:3px;}
 #tab-home .dash-date{font-size:15px;color:var(--muted-fg);white-space:nowrap;}
 #tab-home .dash-cta{height:44px;padding:0 20px;font-size:15px;font-weight:700;border-radius:10px;flex-shrink:0;}
 #tab-home .dash-cta .i{width:18px;height:18px;}
@@ -1121,7 +1129,7 @@ input,select,textarea{font-family:inherit;}
 #tab-home .res-chip.ci{background:var(--chip-in);border-radius:7px 3px 3px 7px;}
 #tab-home .res-chip.co{background:var(--chip-out);border-radius:3px 7px 7px 3px;}
 #tab-home .res-chip.cico{background:var(--chip-in);border-radius:7px;}
-#tab-home .res-chip.mid{border-radius:3px;}
+#tab-home .res-chip.mid{border-radius:3px;flex:1 1 auto;height:auto;min-height:58px;align-items:flex-start;padding-top:6px;opacity:.85;}
 #tab-home .res-chip.gap{background:transparent;}
 #tab-home .res-chip.closed{background:#e2e8f0;color:#475569;border-radius:7px;}
 #tab-home .res-dots{justify-content:flex-start;align-items:center;gap:4px;padding:2px 0;}
@@ -1181,7 +1189,10 @@ input,select,textarea{font-family:inherit;}
 @media(max-width:640px){
   .mheader-action{width:40px;height:40px;}
   #tab-home.page{padding:16px 12px 24px;}
-  #tab-home .dash-head-txt{flex-direction:column;align-items:flex-start;gap:2px;}
+  #tab-home .dash-head-txt{flex-direction:row;align-items:center;gap:10px;}
+  #tab-home .dash-logo{width:38px;height:38px;}
+  #tab-home .dash-wm .dash-name{font-size:19px;}
+  #tab-home .dash-wm-sub{font-size:12px;}
   #tab-home .dash-name{font-size:17px;}
   #tab-home .dash-date{font-size:13px;}
   #tab-home .dash-cta{padding:0 16px;}
@@ -1236,7 +1247,7 @@ input,select,textarea{font-family:inherit;}
   #tab-home .chip-name{font-size:11px;line-height:1.25;max-width:100%;text-overflow:clip;}
   #tab-home .chip-name .n4{display:none;}
   #tab-home .chip-st{font-size:10px;font-weight:800;margin-left:0;padding-left:0;line-height:1.2;}
-  #tab-home .res-chip.mid{border-radius:2px;}
+  #tab-home .res-chip.mid{border-radius:2px;min-height:44px;padding-top:2px;}
   #tab-home .res-chip.closed .chip-name{font-size:11px;}
   #tab-home .res-dots{gap:3px;}
   #tab-home .res-dot{width:8px;height:8px;}
@@ -2041,7 +2052,7 @@ input,select,textarea{font-family:inherit;}
       <div class="sidebar-brand" onclick="switchTab('home')" role="button" tabindex="0" aria-label="홈으로">
         <div class="sidebar-logo">SM</div>
         <div class="sidebar-brand-text">
-          <div class="sidebar-brand-name">Stay_Msg Pro<span class="sidebar-brand-ver" id="appVer">v1.19.1</span></div>
+          <div class="sidebar-brand-name">Stay_Msg Pro<span class="sidebar-brand-ver" id="appVer">v1.19.2</span></div>
           <div class="sidebar-brand-sub">숙소 예약 자동화</div>
         </div>
       </div>
@@ -2097,7 +2108,7 @@ input,select,textarea{font-family:inherit;}
       <div class="mheader-brand" onclick="switchTab('home')" role="button" tabindex="0" aria-label="홈으로">
         <div class="mheader-logo">SM</div>
         <div>
-          <div class="mheader-title">Stay_Msg Pro<span class="mheader-ver" id="appVerM">v1.19.1</span></div>
+          <div class="mheader-title">Stay_Msg Pro<span class="mheader-ver" id="appVerM">v1.19.2</span></div>
           <div class="mheader-sub">숙소 예약 자동화</div>
         </div>
       </div>
@@ -2113,7 +2124,12 @@ input,select,textarea{font-family:inherit;}
       
       <!-- v1.11.0 (2026-11-04 Claude Design 대시보드 시안 1차): 히어로 → 한 줄 머리줄 -->
       <div class="dash-head">
-        <div class="dash-head-txt"><h1 class="dash-name" id="heroPropName">Stay_Msg</h1><span class="dash-date" id="dashTodayLbl"></span></div>
+        <!-- 11-07 쵸파파: 헤더 글씨 = 브랜드킷 1A v10 로고 조합(심볼 + 굵은 고딕 소나무색 + 이탤릭 stay.solsoop) -->
+        <div class="dash-head-txt">
+          <svg class="dash-logo" viewBox="0 0 200 200" aria-hidden="true"><g fill="none" stroke="#3A5141" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"><circle cx="100" cy="100" r="86"/><path d="M62 34 V168"/><path d="M62 56 Q54.8 64 50 74"/><path d="M62 56 Q69.2 64 74 74"/><path d="M62 80 Q51.2 88 44 98"/><path d="M62 80 Q72.8 88 80 98"/><path d="M62 104 Q48.8 112 40 122"/><path d="M62 104 Q75.2 112 84 122"/><path d="M62 128 Q46.4 136 36 146"/><path d="M62 128 Q75.2 136 84 146"/><path d="M92 146 L158 124"/><path d="M98 144 V168"/><path d="M134 132 V168"/><path d="M152 126 V168"/><path d="M48 168 H152"/></g></svg>
+          <div class="dash-wm"><h1 class="dash-name" id="heroPropName">Stay_Msg</h1><span class="dash-wm-sub">stay.solsoop</span></div>
+          <span class="dash-date" id="dashTodayLbl"></span>
+        </div>
         <!-- 11-07 쵸파파: 문자 프로그램 → 예약 자동화. 「새 문자 작성」 대신 오늘 한눈에(입실·퇴실·자동 문자·봇) -->
         <div class="dash-today" id="dashToday"></div>
       </div>
@@ -2876,7 +2892,7 @@ input,select,textarea{font-family:inherit;}
 <div class="toast" id="toast"></div>
 
 <script>
-const APP_VERSION='v1.19.1'; // Pro (2026-10-27 lite v3.3.0에서 이름·버전 리셋)
+const APP_VERSION='v1.19.2'; // Pro (2026-10-27 lite v3.3.0에서 이름·버전 리셋)
 const SK_SET='stay_msg_lite1_set_v1';
 const SK_TPL='stay_msg_lite1_tpl_v1';
 const SK_RES='stay_msg_lite1_res_v1';
@@ -4647,7 +4663,8 @@ function renderDashCal(){
       const c=gc(r);
       const isMid=!isCi&&!isCo;
       // 연박 중간 날: 같은 색·같은 두께(빈 글자 줄을 넣어 IN/OUT 칩과 높이를 똑같이)
-      if(isMid)return `<div class="res-chip mid" style="background:${c.bg};" title="${esc((r.name||'손님')+' 연박')}"><span class="chip-name">&nbsp;</span><span class="chip-st">&nbsp;</span></div>`;
+      // 11-07 쵸파파: 빈 한 줄이라 예약이 더 들어올 수 있는 날처럼 보임 → 이름 + 「연박」을 쓰고 칸 아래까지 채워 꽉 찬 날로 보이게
+      if(isMid){ const nm=(r.name||'손님').slice(0,4); return `<div class="res-chip mid" style="background:${c.bg};color:${c.fg};" title="${esc((r.name||'손님')+' 연박')}"><span class="chip-name">${esc(nm.slice(0,3))}<span class="n4">${esc(nm.slice(3))}</span></span><span class="chip-st">연박</span></div>`; }
       // 11-06 쵸파파: 입실·퇴실 색 대신 손님(예약)마다 다른 색. 입실·퇴실은 IN/OUT 글자와 칩 모양으로 구분
       const k=isCi&&isCo?'cico':isCi?'ci':'co';
       const bg=`background:${c.bg};color:${c.fg};`;
