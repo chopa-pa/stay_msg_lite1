@@ -2058,7 +2058,7 @@ input,select,textarea{font-family:inherit;}
       <div class="sidebar-brand" onclick="switchTab('home')" role="button" tabindex="0" aria-label="홈으로">
         <div class="sidebar-logo">SM</div>
         <div class="sidebar-brand-text">
-          <div class="sidebar-brand-name">Stay_Msg Pro<span class="sidebar-brand-ver" id="appVer">v1.20.0</span></div>
+          <div class="sidebar-brand-name">Stay_Msg Pro<span class="sidebar-brand-ver" id="appVer">v1.20.1</span></div>
           <div class="sidebar-brand-sub">숙소 예약 자동화</div>
         </div>
       </div>
@@ -2114,7 +2114,7 @@ input,select,textarea{font-family:inherit;}
       <div class="mheader-brand" onclick="switchTab('home')" role="button" tabindex="0" aria-label="홈으로">
         <div class="mheader-logo">SM</div>
         <div>
-          <div class="mheader-title">Stay_Msg Pro<span class="mheader-ver" id="appVerM">v1.20.0</span></div>
+          <div class="mheader-title">Stay_Msg Pro<span class="mheader-ver" id="appVerM">v1.20.1</span></div>
           <div class="mheader-sub">숙소 예약 자동화</div>
         </div>
       </div>
@@ -2898,7 +2898,7 @@ input,select,textarea{font-family:inherit;}
 <div class="toast" id="toast"></div>
 
 <script>
-const APP_VERSION='v1.20.0'; // Pro (2026-10-27 lite v3.3.0에서 이름·버전 리셋)
+const APP_VERSION='v1.20.1'; // Pro (2026-10-27 lite v3.3.0에서 이름·버전 리셋)
 const SK_SET='stay_msg_lite1_set_v1';
 const SK_TPL='stay_msg_lite1_tpl_v1';
 const SK_RES='stay_msg_lite1_res_v1';
@@ -2929,7 +2929,7 @@ const STAGES=[
   ]},
   {id:'precheckin',icon:'🗺️',label:'입실전',
    templates:[
-    {title:'입실 안내 (당일 오전)',body:`《{숙소명} 입실 안내》\n\n오늘 솔숲에 오시는 것을 환영합니다.\n\n네비. "{숙소명}" 또는 "{숙소주소}"\n주차. 마당에 1대 주차하시면 됩니다.\n오시는 길. T맵에 주소를 치시면 숙소까지 안내됩니다. 산청대로에서 외송리 방면으로 빠져 둔철산로를 3.3km 오르다 좌회전, 삼거리를 지나 우회전해서 오르막길로 오시다가 하얀 집이 보이면 우회전해서 100m입니다.\n\n현관비번:  {전화뒷자리}*\n체크인:  pm 3:30\n체크아웃: am 11:30\nwifi:  {와이파이이름} (비밀번호 없음)\n\n* 셀프 조식 재료(빵, 요거트, 잼, 견과류, 커피, 유정란)가 준비되어 있으니 토스터와 드립포트로 천천히 드세요.\n\n* {바비큐입실}\n\n* 실내는 금연이며 냄새가 배는 육류, 생선 조리는 불가합니다. 가구 이동은 삼가 주세요.{반려견입실}\n\n* 문의 010-3314-0079\n\n산이 보이는 자리에서 편히 쉬다 가시길 바랍니다. / {숙소명}`}
+    {title:'입실 안내 (당일 오전)',body:`《{숙소명} 입실 안내》\n\n오늘 솔숲에 오시는 것을 환영합니다.\n\n네비. T맵에 "{숙소명}" 또는 "{숙소주소}"를 치시면 숙소까지 안내됩니다.\n주차. 마당에 1대 주차하시면 됩니다.\n오시는 길. 산청대로에서 외송리 방면으로 빠져 둔철산로를 3.3km 오르다 좌회전, 삼거리를 지나 우회전해서 오르막길로 오시다가 하얀 집이 보이면 우회전해서 100m입니다.\n\n현관비번:  {전화뒷자리}*\n체크인:  pm 3:30\n체크아웃: am 11:30\nwifi:  {와이파이이름} (비밀번호 없음)\n\n* 셀프 조식 재료(빵, 요거트, 잼, 견과류, 커피, 유정란)가 준비되어 있으니 토스터와 드립포트로 천천히 드세요.\n\n* {바비큐입실}\n\n* 실내는 금연이며 냄새가 배는 육류, 생선 조리는 불가합니다. 가구 이동은 삼가 주세요.{반려견입실}\n\n* 문의 010-3314-0079\n\n산이 보이는 자리에서 편히 쉬다 가시길 바랍니다. / {숙소명}`}
   ]},
   {id:'around',icon:'📍',label:'가볼 곳',   // 11-07 쵸파파: 봇이 입실 문자 바로 뒤 자동 발송. 여기 첫 템플릿을 고치면 봇도 그 문구를 씀(이모지 금지 — 솔라피에서 안 보임)
    templates:[
