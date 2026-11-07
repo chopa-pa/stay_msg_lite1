@@ -2026,7 +2026,7 @@ input,select,textarea{font-family:inherit;}
       <div class="sidebar-brand" onclick="switchTab('home')" role="button" tabindex="0" aria-label="홈으로">
         <div class="sidebar-logo">SM</div>
         <div class="sidebar-brand-text">
-          <div class="sidebar-brand-name">Stay_Msg Pro<span class="sidebar-brand-ver" id="appVer">v1.18.0</span></div>
+          <div class="sidebar-brand-name">Stay_Msg Pro<span class="sidebar-brand-ver" id="appVer">v1.18.1</span></div>
           <div class="sidebar-brand-sub">숙소 예약 문자</div>
         </div>
       </div>
@@ -2082,7 +2082,7 @@ input,select,textarea{font-family:inherit;}
       <div class="mheader-brand" onclick="switchTab('home')" role="button" tabindex="0" aria-label="홈으로">
         <div class="mheader-logo">SM</div>
         <div>
-          <div class="mheader-title">Stay_Msg Pro<span class="mheader-ver" id="appVerM">v1.18.0</span></div>
+          <div class="mheader-title">Stay_Msg Pro<span class="mheader-ver" id="appVerM">v1.18.1</span></div>
           <div class="mheader-sub">숙소 예약 문자</div>
         </div>
       </div>
@@ -2860,7 +2860,7 @@ input,select,textarea{font-family:inherit;}
 <div class="toast" id="toast"></div>
 
 <script>
-const APP_VERSION='v1.18.0'; // Pro (2026-10-27 lite v3.3.0에서 이름·버전 리셋)
+const APP_VERSION='v1.18.1'; // Pro (2026-10-27 lite v3.3.0에서 이름·버전 리셋)
 const SK_SET='stay_msg_lite1_set_v1';
 const SK_TPL='stay_msg_lite1_tpl_v1';
 const SK_RES='stay_msg_lite1_res_v1';
@@ -5120,7 +5120,7 @@ if (SB_URL.startsWith('http') && window.supabase) sb = window.supabase.createCli
 function sbRun(fn){ const p = sbQueue.then(fn, fn); sbQueue = p.catch(()=>{}); return p; }
 function sbHasPending(){ return Object.values(sbPending).some(Boolean); }
 let sbBotState = null, sbJobs = [];
-const SB_STAGE = { booked:'예약확정', precheckin:'입실안내', checkout:'퇴실안내' };
+const SB_STAGE = { booked:'예약확정', precheckin:'입실안내', checkout:'퇴실안내', around:'가볼 곳' };   // 11-07 around = 봇 가볼곳 문자(입실 문자 뒤)
 const SB_JOB_STATUS = { pending:['승인 대기','warn'], approved:['승인됨 · 예정일 자동 발송',''], blocked:['발송 불가','warn'], missed:['시간 놓침 · 수동 발송','warn'], unknown:['결과 불명 · 솔라피 확인','warn'], failed:['발송 실패','warn'] };
 function sbBotLine(){
   if(!sbBotState || !sbBotState.last_run_at) return '';
