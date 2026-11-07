@@ -2058,7 +2058,7 @@ input,select,textarea{font-family:inherit;}
       <div class="sidebar-brand" onclick="switchTab('home')" role="button" tabindex="0" aria-label="홈으로">
         <div class="sidebar-logo">SM</div>
         <div class="sidebar-brand-text">
-          <div class="sidebar-brand-name">Stay_Msg Pro<span class="sidebar-brand-ver" id="appVer">v1.20.2</span></div>
+          <div class="sidebar-brand-name">Stay_Msg Pro<span class="sidebar-brand-ver" id="appVer">v1.20.3</span></div>
           <div class="sidebar-brand-sub">숙소 예약 자동화</div>
         </div>
       </div>
@@ -2114,7 +2114,7 @@ input,select,textarea{font-family:inherit;}
       <div class="mheader-brand" onclick="switchTab('home')" role="button" tabindex="0" aria-label="홈으로">
         <div class="mheader-logo">SM</div>
         <div>
-          <div class="mheader-title">Stay_Msg Pro<span class="mheader-ver" id="appVerM">v1.20.2</span></div>
+          <div class="mheader-title">Stay_Msg Pro<span class="mheader-ver" id="appVerM">v1.20.3</span></div>
           <div class="mheader-sub">숙소 예약 자동화</div>
         </div>
       </div>
@@ -2898,7 +2898,7 @@ input,select,textarea{font-family:inherit;}
 <div class="toast" id="toast"></div>
 
 <script>
-const APP_VERSION='v1.20.2'; // Pro (2026-10-27 lite v3.3.0에서 이름·버전 리셋)
+const APP_VERSION='v1.20.3'; // Pro (2026-10-27 lite v3.3.0에서 이름·버전 리셋)
 const SK_SET='stay_msg_lite1_set_v1';
 const SK_TPL='stay_msg_lite1_tpl_v1';
 const SK_RES='stay_msg_lite1_res_v1';
@@ -4414,12 +4414,12 @@ function submitAddResv(){
   const co=document.getElementById('ar_checkout').value;
   if(!name){toast('손님 이름을 입력하세요');return;}
   if(!ci||!co){toast('체크인/체크아웃 날짜를 선택하세요');return;}
-  if(co<ci){toast('체크아웃은 체크인 이후여야 해요');return;}
+  if(co<=ci){toast('체크아웃은 체크인 다음 날 이후여야 해요');return;}
   const dup=reservations.find(r=>r.id!==id&&r.name===name&&r.checkin===ci&&r.checkout===co);
   if(dup){toast('이미 같은 예약이 있어요');return;}
   const roomId=document.getElementById('ar_room').value;
-  const conflict=findCheckinConflict(roomId,ci,id||null);
-  if(conflict){toast(`같은 호실에 ${ci} 입실 예약이 이미 있어요`);return;}
+  const conflict=findOverlap(roomId,ci,co,id||null);
+  if(conflict){toast(overlapMsg(conflict));return;}
   if(id){
     const r=reservations.find(x=>x.id===id);if(!r){closeAddResvModal();return;}
     r.name=name;
@@ -4496,14 +4496,17 @@ function buildPhoneSuggest(){
     const el=document.getElementById(id);if(el)el.innerHTML=opts;
   });
 }
-function findCheckinConflict(roomId,ci,excludeId){
-  if(!roomId||!ci)return null;
+// 날짜 겹침 검사 — 서버 reservations_no_overlap과 같은 규칙(확정 예약만, 같은 호실, [입실,퇴실) 반열림: 퇴실일=다음 입실일은 허용)
+function findOverlap(roomId,ci,co,excludeId){
+  if(!ci||!co)return null;
   return reservations.find(r=>{
     if(excludeId&&r.id===excludeId)return false;
-    if(!r.roomId||r.roomId!==roomId)return false;
-    return r.checkin===ci;
+    if((r.status||'confirmed')!=='confirmed')return false;
+    if((r.roomId||'')!==(roomId||''))return false;
+    return r.checkin<co&&ci<r.checkout;
   });
 }
+const overlapMsg=r=>`${r.name}님 예약(${r.checkin}~${r.checkout})과 날짜가 겹쳐요. 저장하지 않았어요`;
 function saveReservation(){
   const name=document.getElementById('v_name').value.trim();
   const ci=document.getElementById('v_checkin').value;
@@ -4512,8 +4515,9 @@ function saveReservation(){
   if(!ci||!co){toast('날짜를 선택하세요');return;}
   const roomSel=document.getElementById('v_room');
   const roomId=roomSel?roomSel.value:'';
-  const conflict=findCheckinConflict(roomId,ci,_composeResId||null);   // 불러온 예약은 자기 자신과 충돌로 안 봄
-  if(conflict){toast(`같은 호실에 ${ci} 입실 예약이 이미 있어요`);return;}
+  if(co<=ci){toast('체크아웃은 체크인 다음 날 이후여야 해요');return;}
+  const conflict=findOverlap(roomId,ci,co,_composeResId||null);   // 불러온 예약은 자기 자신과 충돌로 안 봄
+  if(conflict){toast(overlapMsg(conflict));return;}
   const exists=reservations.find(r=>r.name===name&&r.checkin===ci&&r.checkout===co);
   if(exists){toast('이미 저장된 예약이에요');return;}
   reservations.push({
@@ -5429,13 +5433,18 @@ async function _pushReservations(){
       // 제약 위반(날짜 겹침 등)은 영구 오류 → 한 건씩 올려 멀쩡한 건 살리고 거부된 건만 알림
       for(const row of rows){ const r = await sb.from('reservations').upsert(row); if(r.error) rejected.push({ row, code:r.error.code }); }
       const names = rejected.map(x=>x.row.name||x.row.id).join(', ');
-      toast((rejected.some(x=>x.code==='23P01') ? '날짜가 겹쳐 서버가 거부한 예약: ' : '서버가 거부한 예약: ')+names+' — 저장 안 됨, 서버에서 새로고침으로 확인');
+      toast((rejected.some(x=>x.code==='23P01') ? '날짜가 겹쳐 서버가 거부한 예약: ' : '서버가 거부한 예약: ')+names+' — 저장 안 됨, 앱 화면에서도 뺐어요');
     } else if(error){ sbFail(error); return false; }
   }
   const cur = new Set(reservations.map(r=>r.id));
   const gone = [...sbResIds].filter(id=>!cur.has(id));
   if(gone.length){ const { error } = await sb.from('reservations').delete().in('id', gone); if(error){ sbFail(error); return false; } }
   rejected.forEach(x=>cur.delete(x.row.id));
+  if(rejected.length){   // 11-07 서버가 거부한 예약(날짜 겹침 등)은 이 기기 화면에서도 빼서 유령 예약이 남지 않게
+    const bad = new Set(rejected.map(x=>x.row.id));
+    reservations = reservations.filter(r=>!bad.has(r.id)); _saveReservations();
+    try{ renderReservations(); renderDashboard(); }catch(e){}
+  }
   sbResIds = cur; if(g === sbWriteGen) sbPending.res = false;
   return rejected.length === 0;
 }
