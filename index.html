@@ -4661,7 +4661,9 @@ function renderDashCal(){
     const useChips=dayRes.length<=3;
     // 둘째 줄 손님만 있는 날은 첫 줄에 빈 칸을 넣어 높이를 맞춤
     const laneRes=[...dayRes].sort((a,b)=>gc.lane(a)-gc.lane(b));
-    const gap=laneRes.length&&gc.lane(laneRes[0])===1?'<div class="res-chip gap" aria-hidden="true"><span class="chip-name">&nbsp;</span><span class="chip-st">&nbsp;</span></div>':'';
+    // 11-07: 연박 중간 날은 칸을 위에서부터 꽉 채우므로 빈 첫 줄을 넣지 않음(넣으면 아래로 밀려 칸이 높아짐)
+    const midDay=laneRes.some(r=>r.checkin!==ds&&r.checkout!==ds);
+    const gap=laneRes.length&&gc.lane(laneRes[0])===1&&!midDay?'<div class="res-chip gap" aria-hidden="true"><span class="chip-name">&nbsp;</span><span class="chip-st">&nbsp;</span></div>':'';
     const chips=useChips?(gap&&closed?'':gap)+laneRes.map(r=>{
       const isCi=r.checkin===ds,isCo=r.checkout===ds;
       const c=gc(r);
