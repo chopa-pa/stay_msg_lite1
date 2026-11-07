@@ -68,5 +68,5 @@ alter table reservations drop constraint if exists reservations_dates_chk;
 alter table reservations add constraint reservations_dates_chk check (checkout > checkin);
 alter table reservations drop constraint if exists reservations_no_overlap;
 alter table reservations add constraint reservations_no_overlap
-  exclude using gist (coalesce(room_id,'') with =, daterange(checkin, checkout, '[)') with &&)
+  exclude using gist (daterange(checkin, checkout, '[)') with &&)  -- 독채라 호실 무관(2026-11-07)
   where (status = 'confirmed');
