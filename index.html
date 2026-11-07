@@ -1132,7 +1132,8 @@ input,select,textarea{font-family:inherit;}
 #tab-home .res-chip.ci{background:var(--chip-in);border-radius:7px 3px 3px 7px;}
 #tab-home .res-chip.co{background:var(--chip-out);border-radius:3px 7px 7px 3px;}
 #tab-home .res-chip.cico{background:var(--chip-in);border-radius:7px;}
-#tab-home .res-chip.mid{border-radius:3px;flex:1 1 auto;height:auto;min-height:58px;align-items:flex-start;padding-top:6px;opacity:.85;}
+#tab-home .res-chip.mid{border-radius:3px;flex:1 1 auto;height:auto;min-height:58px;align-items:flex-start;padding-top:7px;opacity:.85;}
+#tab-home .res-chip.mid.lane2{padding-top:39px;}   /* 11-07 쵸파파: 둘째 줄 손님은 글씨를 입실 칩과 같은 둘째 줄 높이에(줄 간격 32 + 글씨 7) */
 #tab-home .res-chip.gap{background:transparent;}
 #tab-home .res-chip.closed{background:#e2e8f0;color:#475569;border-radius:7px;}
 #tab-home .res-dots{justify-content:flex-start;align-items:center;gap:4px;padding:2px 0;}
@@ -1252,6 +1253,7 @@ input,select,textarea{font-family:inherit;}
   #tab-home .chip-name .n4{display:none;}
   #tab-home .chip-st{font-size:10px;font-weight:800;margin-left:0;padding-left:0;line-height:1.2;}
   #tab-home .res-chip.mid{border-radius:2px;min-height:44px;padding-top:2px;}
+  #tab-home .res-chip.mid.lane2{padding-top:34px;}
   #tab-home .res-chip.closed .chip-name{font-size:11px;}
   #tab-home .res-dots{gap:3px;}
   #tab-home .res-dot{width:8px;height:8px;}
@@ -4670,7 +4672,7 @@ function renderDashCal(){
       const isMid=!isCi&&!isCo;
       // 연박 중간 날: 같은 색·같은 두께(빈 글자 줄을 넣어 IN/OUT 칩과 높이를 똑같이)
       // 11-07 쵸파파: 빈 한 줄이라 예약이 더 들어올 수 있는 날처럼 보임 → 이름 + 「연박」을 쓰고 칸 아래까지 채워 꽉 찬 날로 보이게
-      if(isMid){ const nm=(r.name||'손님').slice(0,4); return `<div class="res-chip mid" style="background:${c.bg};color:${c.fg};" title="${esc((r.name||'손님')+' 연박')}"><span class="chip-name">${esc(nm.slice(0,3))}<span class="n4">${esc(nm.slice(3))}</span></span><span class="chip-st">연박</span></div>`; }
+      if(isMid){ const nm=(r.name||'손님').slice(0,4); return `<div class="res-chip mid${gc.lane(r)===1?' lane2':''}" style="background:${c.bg};color:${c.fg};" title="${esc((r.name||'손님')+' 연박')}"><span class="chip-name">${esc(nm.slice(0,3))}<span class="n4">${esc(nm.slice(3))}</span></span><span class="chip-st">연박</span></div>`; }
       // 11-06 쵸파파: 입실·퇴실 색 대신 손님(예약)마다 다른 색. 입실·퇴실은 IN/OUT 글자와 칩 모양으로 구분
       const k=isCi&&isCo?'cico':isCi?'ci':'co';
       const bg=`background:${c.bg};color:${c.fg};`;
