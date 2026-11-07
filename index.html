@@ -2058,7 +2058,7 @@ input,select,textarea{font-family:inherit;}
       <div class="sidebar-brand" onclick="switchTab('home')" role="button" tabindex="0" aria-label="홈으로">
         <div class="sidebar-logo">SM</div>
         <div class="sidebar-brand-text">
-          <div class="sidebar-brand-name">Stay_Msg Pro<span class="sidebar-brand-ver" id="appVer">v1.20.1</span></div>
+          <div class="sidebar-brand-name">Stay_Msg Pro<span class="sidebar-brand-ver" id="appVer">v1.20.2</span></div>
           <div class="sidebar-brand-sub">숙소 예약 자동화</div>
         </div>
       </div>
@@ -2114,7 +2114,7 @@ input,select,textarea{font-family:inherit;}
       <div class="mheader-brand" onclick="switchTab('home')" role="button" tabindex="0" aria-label="홈으로">
         <div class="mheader-logo">SM</div>
         <div>
-          <div class="mheader-title">Stay_Msg Pro<span class="mheader-ver" id="appVerM">v1.20.1</span></div>
+          <div class="mheader-title">Stay_Msg Pro<span class="mheader-ver" id="appVerM">v1.20.2</span></div>
           <div class="mheader-sub">숙소 예약 자동화</div>
         </div>
       </div>
@@ -2898,7 +2898,7 @@ input,select,textarea{font-family:inherit;}
 <div class="toast" id="toast"></div>
 
 <script>
-const APP_VERSION='v1.20.1'; // Pro (2026-10-27 lite v3.3.0에서 이름·버전 리셋)
+const APP_VERSION='v1.20.2'; // Pro (2026-10-27 lite v3.3.0에서 이름·버전 리셋)
 const SK_SET='stay_msg_lite1_set_v1';
 const SK_TPL='stay_msg_lite1_tpl_v1';
 const SK_RES='stay_msg_lite1_res_v1';
@@ -2933,7 +2933,7 @@ const STAGES=[
   ]},
   {id:'around',icon:'📍',label:'가볼 곳',   // 11-07 쵸파파: 봇이 입실 문자 바로 뒤 자동 발송. 여기 첫 템플릿을 고치면 봇도 그 문구를 씀(이모지 금지 — 솔라피에서 안 보임)
    templates:[
-    {title:'가볼 곳 안내 (입실 문자 뒤 자동)',body:`안녕하세요, 스테이솔숲입니다.\n솔숲지기가 직접 다녀온, 솔숲에서 차로 20분 안의 곳들이에요.\n시골 식당은 먼저 영업하는지 전화로 알아보고 가시는 게 좋아요.\n\n■ 맛집\n【외송 석쇠불고기】 6분\n연탄불 간장 불고기, 정갈한 반찬\nhttps://map.naver.com/p/search/산청%20외송석쇠불고기\n【산애밥상】 6분\n생선구이·돌솥밥 정식, 점심만(3시까지)\nhttps://map.naver.com/p/search/산청%20산애밥상\n【카페 나루터】 성심원 13분\n화덕피자·오븐치킨(미리 예약), 강변 경치\nhttps://map.naver.com/p/search/산청%20카페나루터\n【우두머리 식당】 원지 14분\n진한 한우 곱창전골\nhttps://map.naver.com/p/search/산청%20우두머리\n【금향】 원지 15분\n해물짬뽕·해물철판짜장·탕수육\nhttps://map.naver.com/p/search/산청%20금향\n【타짜오리 본점】 원지 16분\n간장 오리불고기, 쌈채소 무한\nhttps://map.naver.com/p/search/산청%20타짜오리\n【산청다슬기】 신등 단계 17분\n시원한 다슬기 맑은탕, 꼭 전화 예약 010-4899-9686\nhttps://map.naver.com/p/search/산청군%20신등면%20산청다슬기\n\n■ 카페\n【프레드릭】 신등 단계 14분\n직접 로스팅하는 커피\nhttps://map.naver.com/p/search/산청%20프레드릭\n【남다른 이유】 원지 14분\n직접 만든 빵·샌드위치 브런치, 간판이 작아요\nhttps://map.naver.com/p/search/산청%20남다른이유\n【한옥카페 소북】 신등 단계 16분\n한옥 정원, 단계딸기라떼, 밀당책방\nhttps://map.naver.com/p/search/산청%20소북카페\n\n■ 가볼 만한 곳\n【둔철생태체험숲】 5분\n산책 코스, 위쪽에 천문대\nhttps://map.naver.com/p/search/둔철생태체험숲\n【정취암】 7분\n기암절벽 위 암자, 일출 맛집\nhttps://map.naver.com/p/search/산청%20정취암\n【원지 강변로】 15분\n데크길 강변 산책\nhttps://map.naver.com/p/search/산청%20원지%20강변\n【묵곡 생태공원】 단성 20분\n반려견과 산책하기 좋은 공원\nhttps://map.naver.com/p/search/산청%20묵곡생태숲\n【신등목욕탕】 신등 단계 15분\n시골 목욕탕\nhttps://map.naver.com/p/search/산청%20신등목욕탕\n\n여행 일정에 맞춰 편하게 둘러보세요.`}
+    {title:'가볼 곳 안내 (입실 문자 뒤 자동)',body:`안녕하세요, 스테이솔숲입니다.\n솔숲지기가 직접 다녀온, 솔숲에서 차로 20분 안의 곳들이에요.\n시골 식당은 먼저 영업하는지 전화로 알아보고 가시는 게 좋아요.\n\n■ 맛집\n【외송석쇠불고기】 6분\n연탄불 간장 불고기, 정갈한 반찬\nhttps://map.naver.com/p/search/산청%20외송석쇠불고기\n【산애밥상】 6분\n생선구이·돌솥밥 정식, 점심만(3시까지)\nhttps://map.naver.com/p/search/산청%20산애밥상\n【카페나루터】 성심원 13분\n화덕피자·오븐치킨(미리 예약), 강변 경치\nhttps://map.naver.com/p/search/산청%20카페나루터\n【우두머리】 원지 14분\n진한 한우 곱창전골\nhttps://map.naver.com/p/search/산청%20우두머리\n【금향】 원지 15분\n해물짬뽕·해물철판짜장·탕수육\nhttps://map.naver.com/p/search/산청%20금향\n【타짜오리】 원지 16분\n간장 오리불고기, 쌈채소 무한\nhttps://map.naver.com/p/search/산청%20타짜오리\n【산청다슬기】 신등 단계 17분\n시원한 다슬기 맑은탕, 꼭 전화 예약 010-4899-9686\nhttps://map.naver.com/p/search/산청군%20신등면%20산청다슬기\n\n■ 카페\n【프레드릭】 신등 단계 14분\n직접 로스팅하는 커피\nhttps://map.naver.com/p/search/산청%20프레드릭\n【남다른이유】 원지 14분\n직접 만든 빵·샌드위치 브런치, 간판이 작아요\nhttps://map.naver.com/p/search/산청%20남다른이유\n【소북카페】 신등 단계 16분\n한옥 정원, 단계딸기라떼, 밀당책방\nhttps://map.naver.com/p/search/산청%20소북카페\n\n■ 가볼 만한 곳\n【둔철생태체험숲】 5분\n산책 코스, 위쪽에 천문대\nhttps://map.naver.com/p/search/둔철생태체험숲\n【정취암】 7분\n기암절벽 위 암자, 일출 맛집\nhttps://map.naver.com/p/search/산청%20정취암\n【원지 강변】 15분\n데크길 강변 산책\nhttps://map.naver.com/p/search/산청%20원지%20강변\n【묵곡생태숲】 단성 20분\n반려견과 산책하기 좋은 공원\nhttps://map.naver.com/p/search/산청%20묵곡생태숲\n【신등목욕탕】 신등 단계 15분\n시골 목욕탕\nhttps://map.naver.com/p/search/산청%20신등목욕탕\n\n여행 일정에 맞춰 편하게 둘러보세요.`}
   ]},
   {id:'checkedin',icon:'🏡',label:'입실후',
    templates:[
