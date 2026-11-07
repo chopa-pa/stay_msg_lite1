@@ -2026,7 +2026,7 @@ input,select,textarea{font-family:inherit;}
       <div class="sidebar-brand" onclick="switchTab('home')" role="button" tabindex="0" aria-label="홈으로">
         <div class="sidebar-logo">SM</div>
         <div class="sidebar-brand-text">
-          <div class="sidebar-brand-name">Stay_Msg Pro<span class="sidebar-brand-ver" id="appVer">v1.17.6</span></div>
+          <div class="sidebar-brand-name">Stay_Msg Pro<span class="sidebar-brand-ver" id="appVer">v1.18.0</span></div>
           <div class="sidebar-brand-sub">숙소 예약 문자</div>
         </div>
       </div>
@@ -2082,7 +2082,7 @@ input,select,textarea{font-family:inherit;}
       <div class="mheader-brand" onclick="switchTab('home')" role="button" tabindex="0" aria-label="홈으로">
         <div class="mheader-logo">SM</div>
         <div>
-          <div class="mheader-title">Stay_Msg Pro<span class="mheader-ver" id="appVerM">v1.17.6</span></div>
+          <div class="mheader-title">Stay_Msg Pro<span class="mheader-ver" id="appVerM">v1.18.0</span></div>
           <div class="mheader-sub">숙소 예약 문자</div>
         </div>
       </div>
@@ -2860,7 +2860,7 @@ input,select,textarea{font-family:inherit;}
 <div class="toast" id="toast"></div>
 
 <script>
-const APP_VERSION='v1.17.6'; // Pro (2026-10-27 lite v3.3.0에서 이름·버전 리셋)
+const APP_VERSION='v1.18.0'; // Pro (2026-10-27 lite v3.3.0에서 이름·버전 리셋)
 const SK_SET='stay_msg_lite1_set_v1';
 const SK_TPL='stay_msg_lite1_tpl_v1';
 const SK_RES='stay_msg_lite1_res_v1';
@@ -4789,8 +4789,10 @@ function renderStSales(){
   const lead={'당일~3일':0,'4~7일':0,'8~14일':0,'15~30일':0,'31일+':0}; let leadN=0; conf.forEach(r=>{ if(!r.createdAt||!String(r.id).startsWith('n')) return; const d=Math.round((new Date(r.checkin+'T00:00:00')-new Date(r.createdAt))/86400000); leadN++; lead[d<=3?'당일~3일':d<=7?'4~7일':d<=14?'8~14일':d<=30?'15~30일':'31일+']++; });
   const dr=DOWS.map(()=>({rev:0,n:0})); conf.forEach(r=>{ const n=statNights(r), per=n?parseNum(r.price)/n:0; for(let d=new Date(r.checkin+'T00:00:00'); statYmd(d)<r.checkout; d.setDate(d.getDate()+1)){ const x=dr[d.getDay()]; x.rev+=per; x.n++; } });   // 밤 기준: 결제금액 ÷ 박수를 각 밤의 요일에
   const dOrd=[1,2,3,4,5,6,0];   // 월~일 순
+  const bd=[0,0,0,0,0,0,0]; let bdN=0; conf.forEach(r=>{ if(!r.createdAt||!String(r.id).startsWith('n')) return; bd[new Date(r.createdAt).getDay()]++; bdN++; });   // 11-07 쵸파파: 손님이 예약한 요일(리드타임과 같은 네이버 기준)
   h+=card('요일별 매출', chBars(dOrd.map(i=>({label:DOWS[i],values:{v:Math.round(dr[i].rev)}})),{labels:true,h:170,tip:won})+`<div class="guest-wrap"><table class="guest-tbl"><thead><tr><th>요일 밤</th>${dOrd.map(i=>`<th class="r">${DOWS[i]}</th>`).join('')}</tr></thead><tbody><tr><td>박수</td>${dOrd.map(i=>`<td class="r">${dr[i].n}</td>`).join('')}</tr><tr><td>1박 평균</td>${dOrd.map(i=>`<td class="r">${dr[i].n?wonK(Math.round(dr[i].rev/dr[i].n)):'-'}</td>`).join('')}</tr></tbody></table></div>`, '손님이 잔 밤의 요일 기준 · 결제금액 ÷ 박수 · 확정 예약(예정 포함)');
   h+='<div class="two">'+card('입실 요일', chBars(DOWS.map((d,i)=>({label:d,values:{v:dow[i]}})),{fmt:String,labels:true,h:150,w:320}),'확정 예약 건수')+card('숙박 일수', chBars(['1박','2박','3박+'].map(k=>({label:k,values:{v:nd[k]||0}})),{fmt:String,labels:true,h:150,w:320}),'확정 예약 건수')+'</div>';
+  h+=card('예약 들어온 요일', bdN?chBars(dOrd.map(i=>({label:DOWS[i],values:{v:bd[i]}})),{fmt:String,labels:true,h:150}):'<div class="empty"><span class="emoji">⏳</span>네이버 예약이 쌓이면 보입니다</div>', `손님이 예약한 요일 · 네이버 예약 ${bdN}건 기준(봇이 수집한 시각)`);
   h+=card('예약에서 입실까지 (리드타임)', leadN?chBars(Object.entries(lead).map(([k,v])=>({label:k,values:{v}})),{fmt:String,labels:true,h:150}):'<div class="empty"><span class="emoji">⏳</span>네이버 예약이 쌓이면 보입니다</div>', `네이버 예약 ${leadN}건 기준(봇이 수집한 시각 → 입실일)`);
   el.innerHTML=h; document.getElementById('stSalesSub').textContent=`확정 ${conf.length}건 · 취소 ${cl.length}건${(statsCancelled||[]).length>cl.length?` (재결제 ${(statsCancelled||[]).length-cl.length}건 제외)`:''} · 입실일 기준 월 집계`;
 }
