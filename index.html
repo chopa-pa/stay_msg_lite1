@@ -1027,7 +1027,8 @@ input,select,textarea{font-family:inherit;}
 /* 11-07 균형 조정: 브랜드킷처럼 심볼을 글자 덩어리보다 크게(약 2배), 선 굵기 원본 5, 이름은 작고 단단하게, 이탤릭과 간격. 날짜는 오른쪽 칸으로 */
 #tab-home .dash-head-txt{gap:14px;}
 #tab-home .dash-logo{width:64px;height:64px;flex-shrink:0;}
-#tab-home .dash-wm{display:flex;flex-direction:column;min-width:0;line-height:1.1;}
+#tab-home .dash-wm{display:flex;flex-direction:column;align-items:center;text-align:center;min-width:0;line-height:1.1;}   /* 11-07 쵸파파: 영문을 한글 가운데에 */
+#tab-home .dash-head-txt .dash-date{margin-left:10px;}   /* 11-07 쵸파파: 날짜는 로고 옆으로 다시(조금 띄움) */
 #tab-home .dash-wm .dash-name{font-family:'Noto Sans KR','Malgun Gothic','Apple SD Gothic Neo',sans-serif;font-weight:700;color:#3A5141;letter-spacing:-0.02em;font-size:19px;}
 #tab-home .dash-wm-sub{font-family:Georgia,'Times New Roman',serif;font-style:italic;font-size:13px;color:#5b6e5f;letter-spacing:.04em;margin-top:6px;}
 #tab-home .dash-right{display:flex;align-items:center;gap:14px;min-width:0;}
@@ -2055,7 +2056,7 @@ input,select,textarea{font-family:inherit;}
       <div class="sidebar-brand" onclick="switchTab('home')" role="button" tabindex="0" aria-label="홈으로">
         <div class="sidebar-logo">SM</div>
         <div class="sidebar-brand-text">
-          <div class="sidebar-brand-name">Stay_Msg Pro<span class="sidebar-brand-ver" id="appVer">v1.19.3</span></div>
+          <div class="sidebar-brand-name">Stay_Msg Pro<span class="sidebar-brand-ver" id="appVer">v1.19.4</span></div>
           <div class="sidebar-brand-sub">숙소 예약 자동화</div>
         </div>
       </div>
@@ -2111,7 +2112,7 @@ input,select,textarea{font-family:inherit;}
       <div class="mheader-brand" onclick="switchTab('home')" role="button" tabindex="0" aria-label="홈으로">
         <div class="mheader-logo">SM</div>
         <div>
-          <div class="mheader-title">Stay_Msg Pro<span class="mheader-ver" id="appVerM">v1.19.3</span></div>
+          <div class="mheader-title">Stay_Msg Pro<span class="mheader-ver" id="appVerM">v1.19.4</span></div>
           <div class="mheader-sub">숙소 예약 자동화</div>
         </div>
       </div>
@@ -2131,9 +2132,10 @@ input,select,textarea{font-family:inherit;}
         <div class="dash-head-txt">
           <svg class="dash-logo" viewBox="0 0 200 200" aria-hidden="true"><g fill="none" stroke="#3A5141" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"><circle cx="100" cy="100" r="86"/><path d="M62 34 V168"/><path d="M62 56 Q54.8 64 50 74"/><path d="M62 56 Q69.2 64 74 74"/><path d="M62 80 Q51.2 88 44 98"/><path d="M62 80 Q72.8 88 80 98"/><path d="M62 104 Q48.8 112 40 122"/><path d="M62 104 Q75.2 112 84 122"/><path d="M62 128 Q46.4 136 36 146"/><path d="M62 128 Q75.2 136 84 146"/><path d="M92 146 L158 124"/><path d="M98 144 V168"/><path d="M134 132 V168"/><path d="M152 126 V168"/><path d="M48 168 H152"/></g></svg>
           <div class="dash-wm"><h1 class="dash-name" id="heroPropName">Stay_Msg</h1><span class="dash-wm-sub">stay.solsoop</span></div>
+          <span class="dash-date" id="dashTodayLbl"></span>
         </div>
         <!-- 11-07 쵸파파: 문자 프로그램 → 예약 자동화. 「새 문자 작성」 대신 오늘 한눈에(입실·퇴실·자동 문자·봇) -->
-        <div class="dash-right"><span class="dash-date" id="dashTodayLbl"></span><div class="dash-today" id="dashToday"></div></div>
+        <div class="dash-right"><div class="dash-today" id="dashToday"></div></div>
       </div>
 
       <!-- 자동 문자 · 임시 휴무 띠. PC 2열(하나만 있으면 전체 폭), 모바일 한 카드 위아래. 둘 다 없으면 dashStripsSync가 줄을 숨김 -->
@@ -2894,7 +2896,7 @@ input,select,textarea{font-family:inherit;}
 <div class="toast" id="toast"></div>
 
 <script>
-const APP_VERSION='v1.19.3'; // Pro (2026-10-27 lite v3.3.0에서 이름·버전 리셋)
+const APP_VERSION='v1.19.4'; // Pro (2026-10-27 lite v3.3.0에서 이름·버전 리셋)
 const SK_SET='stay_msg_lite1_set_v1';
 const SK_TPL='stay_msg_lite1_tpl_v1';
 const SK_RES='stay_msg_lite1_res_v1';
