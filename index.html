@@ -1024,6 +1024,17 @@ input,select,textarea{font-family:inherit;}
 #tab-home .dash-date{font-size:15px;color:var(--muted-fg);white-space:nowrap;}
 #tab-home .dash-cta{height:44px;padding:0 20px;font-size:15px;font-weight:700;border-radius:10px;flex-shrink:0;}
 #tab-home .dash-cta .i{width:18px;height:18px;}
+#tab-home .dash-today{display:flex;flex-wrap:wrap;gap:8px;justify-content:flex-end;min-width:0;}
+#tab-home .dt-chip{display:inline-flex;align-items:center;gap:7px;height:36px;padding:0 14px;border:1px solid var(--border);border-radius:999px;background:var(--card);font:inherit;font-size:14px;color:var(--muted-fg);cursor:pointer;white-space:nowrap;max-width:100%;}
+#tab-home .dt-chip b{font-weight:700;color:var(--fg);overflow:hidden;text-overflow:ellipsis;}
+#tab-home .dt-chip:hover{border-color:var(--primary);}
+#tab-home .dt-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;background:var(--muted-fg);}
+#tab-home .dt-in .dt-dot{background:var(--primary);}
+#tab-home .dt-out .dt-dot{background:#3b82f6;}
+#tab-home .dt-stay .dt-dot{background:#a3a3a3;}
+#tab-home .dt-ok .dt-dot{background:var(--primary);}
+#tab-home .dt-warn{border-color:var(--warning-border);background:var(--warning-bg);}
+#tab-home .dt-warn .dt-dot{background:var(--warning);}
 
 /* 자동 문자 · 임시 휴무 띠 */
 #tab-home .dash-strips{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:16px;}
@@ -1174,6 +1185,9 @@ input,select,textarea{font-family:inherit;}
   #tab-home .dash-name{font-size:17px;}
   #tab-home .dash-date{font-size:13px;}
   #tab-home .dash-cta{padding:0 16px;}
+  #tab-home .dash-head{flex-direction:column;align-items:flex-start;gap:10px;}
+  #tab-home .dash-today{justify-content:flex-start;gap:6px;}
+  #tab-home .dt-chip{height:32px;padding:0 11px;font-size:13px;gap:6px;}
   #tab-home .dash-strips{flex-direction:column;flex-wrap:nowrap;gap:0;background:var(--card);border:1px solid var(--border);border-radius:16px;overflow:hidden;}
   #tab-home .dash-strip{flex:none;border:0;border-radius:0;min-height:48px;padding:6px 10px 6px 16px;}
   #tab-home #botJobsCard{order:1;}
@@ -2027,7 +2041,7 @@ input,select,textarea{font-family:inherit;}
       <div class="sidebar-brand" onclick="switchTab('home')" role="button" tabindex="0" aria-label="홈으로">
         <div class="sidebar-logo">SM</div>
         <div class="sidebar-brand-text">
-          <div class="sidebar-brand-name">Stay_Msg Pro<span class="sidebar-brand-ver" id="appVer">v1.19.0</span></div>
+          <div class="sidebar-brand-name">Stay_Msg Pro<span class="sidebar-brand-ver" id="appVer">v1.19.1</span></div>
           <div class="sidebar-brand-sub">숙소 예약 문자</div>
         </div>
       </div>
@@ -2083,7 +2097,7 @@ input,select,textarea{font-family:inherit;}
       <div class="mheader-brand" onclick="switchTab('home')" role="button" tabindex="0" aria-label="홈으로">
         <div class="mheader-logo">SM</div>
         <div>
-          <div class="mheader-title">Stay_Msg Pro<span class="mheader-ver" id="appVerM">v1.19.0</span></div>
+          <div class="mheader-title">Stay_Msg Pro<span class="mheader-ver" id="appVerM">v1.19.1</span></div>
           <div class="mheader-sub">숙소 예약 문자</div>
         </div>
       </div>
@@ -2100,7 +2114,8 @@ input,select,textarea{font-family:inherit;}
       <!-- v1.11.0 (2026-11-04 Claude Design 대시보드 시안 1차): 히어로 → 한 줄 머리줄 -->
       <div class="dash-head">
         <div class="dash-head-txt"><h1 class="dash-name" id="heroPropName">Stay_Msg</h1><span class="dash-date" id="dashTodayLbl"></span></div>
-        <button type="button" class="btn btn-primary dash-cta" onclick="switchTab('compose')"><svg class="i"><use href="#i-pencil"/></svg>새 문자 작성</button>
+        <!-- 11-07 쵸파파: 문자 프로그램 → 예약 자동화. 「새 문자 작성」 대신 오늘 한눈에(입실·퇴실·자동 문자·봇) -->
+        <div class="dash-today" id="dashToday"></div>
       </div>
 
       <!-- 자동 문자 · 임시 휴무 띠. PC 2열(하나만 있으면 전체 폭), 모바일 한 카드 위아래. 둘 다 없으면 dashStripsSync가 줄을 숨김 -->
@@ -2861,7 +2876,7 @@ input,select,textarea{font-family:inherit;}
 <div class="toast" id="toast"></div>
 
 <script>
-const APP_VERSION='v1.19.0'; // Pro (2026-10-27 lite v3.3.0에서 이름·버전 리셋)
+const APP_VERSION='v1.19.1'; // Pro (2026-10-27 lite v3.3.0에서 이름·버전 리셋)
 const SK_SET='stay_msg_lite1_set_v1';
 const SK_TPL='stay_msg_lite1_tpl_v1';
 const SK_RES='stay_msg_lite1_res_v1';
@@ -4662,6 +4677,30 @@ function renderDashCal(){
   host.innerHTML=html;
 }
 
+// 11-07 홈 머리줄 「오늘 한눈에」: 오늘 입실·퇴실(없으면 숙박 중), 오늘 자동 문자 나간 수/전체, 봇 마지막 실행. 누르면 해당 화면
+function renderDashToday(){
+  const host=document.getElementById('dashToday'); if(!host) return;
+  const today=getTodayStr(), live=reservations.filter(r=>r.status!=='cancelled');
+  const who=list=>list.length>1?`${list[0].name||'손님'} 외 ${list.length-1}`:(list[0].name||'손님');
+  const chip=(cls,lbl,val,act)=>`<button type="button" class="dt-chip ${cls}" onclick="${act}"><span class="dt-dot"></span>${lbl}${val?` <b>${esc(val)}</b>`:''}</button>`;
+  const ins=live.filter(r=>r.checkin===today), outs=live.filter(r=>r.checkout===today), stay=live.filter(r=>r.checkin<today&&r.checkout>today);
+  let h='';
+  if(ins.length) h+=chip('dt-in','입실',who(ins),"switchTab('reserv')");
+  if(outs.length) h+=chip('dt-out','퇴실',who(outs),"switchTab('reserv')");
+  if(!ins.length&&!outs.length) h+=stay.length?chip('dt-stay','숙박 중',who(stay),"switchTab('reserv')"):chip('dt-stay','오늘 손님 없음','',"switchTab('reserv')");
+  const jobs=(sbAllJobs||[]).filter(j=>j.scheduled_date===today&&j.status!=='skipped');
+  if(jobs.length){
+    const sent=jobs.filter(j=>['sent','delivered'].includes(j.status)).length, bad=jobs.some(j=>['missed','failed','unknown','blocked'].includes(j.status));
+    h+=chip(bad?'dt-warn':(sent===jobs.length?'dt-ok':''),'자동 문자',`${sent}/${jobs.length}${sent===jobs.length?' ✓':''}`,"toggleBotJobs(true);document.getElementById('botJobsCard').scrollIntoView({behavior:'smooth',block:'center'})");
+  }
+  let bs=null; try{ bs=sbBotState; }catch(e){}   // 첫 화면은 sbBotState(let) 선언 전에 그려질 수 있음
+  if(bs&&bs.last_run_at){
+    const t=new Date(bs.last_run_at), late=(Date.now()-t)>25*60000, err=!!(bs.naver&&bs.naver.error);
+    const hm=t.toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit',hour12:false});
+    h+=chip(late||err?'dt-warn':'dt-ok','봇',`${hm} ${late?'멈춤?':err?'확인 필요':'정상'}`,"toast(sbBotLine().replace(/^ · /,''))");
+  }
+  host.innerHTML=h;
+}
 function renderDashboard(){
   const today=getTodayStr();
   // 11-06 쵸파파: 체크인·체크아웃·7일 칸 대신 「이번 주 예약」「이번 달 예약」「앞으로 예약」(오늘 입실부터). 첫 줄 「8건 · 9박」, 둘째 줄 연박만 「2박 1건 · 3박 1건」(나머지는 1박)
@@ -4678,6 +4717,7 @@ function renderDashboard(){
   setN('dashNextNum',conf.filter(r=>r.checkin>=today));
   const heroEl=document.getElementById('heroPropName');
   if(heroEl)heroEl.textContent=settings.name||'Stay_Msg';
+  renderDashToday();
   const tdl=document.getElementById('dashTodayLbl');
   if(tdl){const t=new Date(today+'T00:00:00');tdl.textContent=`${t.getMonth()+1}월 ${t.getDate()}일 (${'일월화수목금토'[t.getDay()]})`;}
 
@@ -5134,7 +5174,7 @@ function sbBotLine(){
   return ' · 봇 '+t(sbBotState.last_run_at)+(sbBotState.mode==='live'?' (자동 발송)':' (미리보기)')+' · 네이버 수집 '+(nv.error?'실패: '+nv.error:t(nv.ok_at));
 }
 function sbRenderJobs(jobs){
-  sbJobs = jobs; const card=document.getElementById('botJobsCard'), host=document.getElementById('botJobsList'); if(!card||!host) return;
+  sbJobs = jobs; renderDashToday(); const card=document.getElementById('botJobsCard'), host=document.getElementById('botJobsList'); if(!card||!host) return;
   if(!jobs.length){ card.style.display='none'; const bb=document.getElementById('botJobsBody'); if(bb) bb.style.display='none'; dashStripsSync(); return; }
   if(card.style.display==='none'){ card.style.display=''; let o=false; try{ o=localStorage.getItem('botJobsOpen')==='1'; }catch(e){} toggleBotJobs(o); }
   dashStripsSync();
