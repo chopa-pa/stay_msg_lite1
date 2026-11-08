@@ -2058,7 +2058,7 @@ input,select,textarea{font-family:inherit;}
       <div class="sidebar-brand" onclick="switchTab('home')" role="button" tabindex="0" aria-label="홈으로">
         <div class="sidebar-logo">SM</div>
         <div class="sidebar-brand-text">
-          <div class="sidebar-brand-name">Stay_Msg Pro<span class="sidebar-brand-ver" id="appVer">v1.21.0</span></div>
+          <div class="sidebar-brand-name">Stay_Msg Pro<span class="sidebar-brand-ver" id="appVer">v1.21.1</span></div>
           <div class="sidebar-brand-sub">숙소 예약 자동화</div>
         </div>
       </div>
@@ -2114,7 +2114,7 @@ input,select,textarea{font-family:inherit;}
       <div class="mheader-brand" onclick="switchTab('home')" role="button" tabindex="0" aria-label="홈으로">
         <div class="mheader-logo">SM</div>
         <div>
-          <div class="mheader-title">Stay_Msg Pro<span class="mheader-ver" id="appVerM">v1.21.0</span></div>
+          <div class="mheader-title">Stay_Msg Pro<span class="mheader-ver" id="appVerM">v1.21.1</span></div>
           <div class="mheader-sub">숙소 예약 자동화</div>
         </div>
       </div>
@@ -2898,7 +2898,7 @@ input,select,textarea{font-family:inherit;}
 <div class="toast" id="toast"></div>
 
 <script>
-const APP_VERSION='v1.21.0'; // Pro (2026-10-27 lite v3.3.0에서 이름·버전 리셋)
+const APP_VERSION='v1.21.1'; // Pro (2026-10-27 lite v3.3.0에서 이름·버전 리셋)
 const SK_SET='stay_msg_lite1_set_v1';
 const SK_TPL='stay_msg_lite1_tpl_v1';
 const SK_RES='stay_msg_lite1_res_v1';
@@ -5221,6 +5221,9 @@ function sbRenderJobs(jobs){
   dashStripsSync();
   document.getElementById('botJobsCount').textContent = jobs.filter(x=>x.status==='pending').length+'건 승인 대기';
   const fp = p => p && p.length===11 ? p.slice(0,3)+'-'+p.slice(3,7)+'-'+p.slice(7) : (p||'-');
+  // 11-08 쵸파파: 60초 자동 동기화 때 열어 둔 본문이 닫힘 → 열린 본문은 다시 열고, 본문 수정 중이면 목록을 다시 그리지 않음(쓰던 글 보존)
+  if([...host.querySelectorAll('[id^="jobEdit"]')].some(e=>e.style.display!=='none')) return;
+  const keepOpen=[...host.querySelectorAll('details[open]')].map(d=>d.id);
   host.innerHTML = jobs.map(x=>{
     const r = reservations.find(q=>q.id===x.reservation_id) || {};
     const [lbl, cls] = SB_JOB_STATUS[x.status] || [x.status,''];
@@ -5241,6 +5244,7 @@ function sbRenderJobs(jobs){
       </details>
     </div>`;
   }).join('');
+  keepOpen.forEach(id=>{ const d=document.getElementById(id); if(d) d.open=true; });
 }
 // ── 임시 휴무 (v1.9.0, 2026-11-02): 넣으면 봇이 네이버·에어비앤비를 막음. 취소해도 봇은 풀지 않음(사람이 직접 열기) ──
 var sbClosures = [], sbClosureBlocks = [], sbAllJobs = []; // var: 달력이 먼저 그려져도 참조 가능
@@ -5375,7 +5379,7 @@ function sbRefreshUI(withSettings){
   if(withSettings){ fillSettingsFields(); buildRoomSelect(); buildTplSelect(); }
   renderPreview(); renderDashboard();
   const rp=document.getElementById('tab-reserv'); if(rp&&rp.classList.contains('active')) renderReservations();
-  const hp=document.getElementById('tab-history'); if(hp&&hp.classList.contains('active')) renderHistory();
+  const hp=document.getElementById('tab-history'); if(hp&&hp.classList.contains('active')){ const keep=[...hp.querySelectorAll('.hs-open.open')].map(e=>e.id.slice(3)); renderHistory(); keep.forEach(id=>toggleHistBody(id)); }   // 11-08 열린 본문 유지
 }
 async function sbPull(manual){
   if(!sb || !sbUserEmail) return;
