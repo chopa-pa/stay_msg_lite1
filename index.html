@@ -2703,7 +2703,7 @@ input,select,textarea{font-family:inherit;}
           <div class="guide-item"><strong>자동 저장</strong> · <em>문자 앱 열기</em>를 누른 모든 발송 기록이 자동으로 쌓입니다.</div>
           <div class="guide-item"><strong>다시 보내기</strong> · 이력의 문자 내용 그대로 문자 앱이 다시 열려요.</div>
           <div class="guide-item"><strong>복사 / 삭제</strong> · 이력별 개별 조작, <em>전체 삭제</em>로 일괄 초기화도 가능.</div>
-          <div class="guide-item"><strong>봇이 보낸 문자</strong> · 전달 상태가 함께 보여요. <em>봇으로 다시 보내기</em>를 누르면 10분 안에 봇이 같은 문자를 다시 보내요(08~21시).</div>
+          <div class="guide-item"><strong>봇이 보낸 문자</strong> · 전달 상태가 함께 보여요. <em>봇으로 다시 보내기</em>를 누르면 10분 안에 봇이 같은 문자를 다시 보내요(09~21시).</div>
         </div>
       </div>
 
@@ -2898,7 +2898,7 @@ input,select,textarea{font-family:inherit;}
 <div class="toast" id="toast"></div>
 
 <script>
-const APP_VERSION='v1.21.2'; // Pro (2026-10-27 lite v3.3.0에서 이름·버전 리셋)
+const APP_VERSION='v1.21.3'; // Pro (2026-10-27 lite v3.3.0에서 이름·버전 리셋)
 const SK_SET='stay_msg_lite1_set_v1';
 const SK_TPL='stay_msg_lite1_tpl_v1';
 const SK_RES='stay_msg_lite1_res_v1';
@@ -4334,7 +4334,7 @@ function histNeedsResend(h){
 async function sbJobResend(histId){
   if(!sb||!sbUserEmail){toast('로그인 필요');return;}
   const jobId=(histId.match(/^bot(\d+)/)||[])[1];if(!jobId)return;
-  showConfirmModal('봇으로 다시 보내기','같은 문자를 봇이 다시 보내요(승인 상태로 바뀌고 10분 안에 발송, 08~21시).\n먼저 보낸 문자가 늦게 도착하면 두 번 받을 수 있어요.',async()=>{
+  showConfirmModal('봇으로 다시 보내기','같은 문자를 봇이 다시 보내요(승인 상태로 바뀌고 10분 안에 발송, 09~21시).\n먼저 보낸 문자가 늦게 도착하면 두 번 받을 수 있어요.',async()=>{
     const today=new Date(Date.now()+9*3600e3).toISOString().slice(0,10);
     const {data,error}=await sb.from('sms_jobs').update({status:'approved',approved_by:sbUserEmail,approved_at:new Date().toISOString(),provider_id:null,result:'재발송 요청',scheduled_date:today}).eq('id',jobId).eq('status','sent').select();
     if(error||!data||!data.length){toast('처리 실패 — 새로고침 뒤 다시');return;}
