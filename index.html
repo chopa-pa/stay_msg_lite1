@@ -1044,6 +1044,7 @@ input,select,textarea{font-family:inherit;}
 #tab-home .dt-out .dt-dot{background:#3b82f6;}
 #tab-home .dt-stay .dt-dot{background:#a3a3a3;}
 #tab-home .dt-new .dt-dot{background:#8b5cf6;}
+#tab-home .dt-rv .dt-dot{background:#d97706;}
 #tab-home .dt-ok .dt-dot{background:var(--primary);}
 #tab-home .dt-warn{border-color:var(--warning-border);background:var(--warning-bg);}
 #tab-home .dt-warn .dt-dot{background:var(--warning);}
@@ -1351,6 +1352,7 @@ input,select,textarea{font-family:inherit;}
 #tab-reserv .rv-tag.in,#tab-guests .rv-tag.in{background:var(--chip-in);color:#fff;}
 #tab-reserv .rv-tag.out,#tab-guests .rv-tag.out{background:var(--chip-out);color:#fff;}
 #tab-reserv .rv-tag.stay,#tab-guests .rv-tag.stay{background:#a7f3d0;color:#065f46;}
+#tab-reserv .rv-tag.rvs{background:#fef3c7;color:#92400e;}
 #tab-reserv .rv-tag.dd,#tab-guests .rv-tag.dd{background:#f1f5f9;color:#334155;font-variant-numeric:tabular-nums;}
 #tab-reserv .rv-ch,#tab-guests .rv-ch{display:inline-flex;align-items:center;gap:5px;font-size:13px;font-weight:600;color:#64748b;white-space:nowrap;}
 #tab-reserv .rv-ch::before,#tab-guests .rv-ch::before{content:'';width:7px;height:7px;border-radius:50%;background:#94a3b8;flex-shrink:0;}
@@ -2059,7 +2061,7 @@ input,select,textarea{font-family:inherit;}
       <div class="sidebar-brand" onclick="switchTab('home')" role="button" tabindex="0" aria-label="홈으로">
         <div class="sidebar-logo">SM</div>
         <div class="sidebar-brand-text">
-          <div class="sidebar-brand-name">Stay_Msg Pro<span class="sidebar-brand-ver" id="appVer">v1.23.0</span></div>
+          <div class="sidebar-brand-name">Stay_Msg Pro<span class="sidebar-brand-ver" id="appVer">v1.24.0</span></div>
           <div class="sidebar-brand-sub">숙소 예약 자동화</div>
         </div>
       </div>
@@ -2115,7 +2117,7 @@ input,select,textarea{font-family:inherit;}
       <div class="mheader-brand" onclick="switchTab('home')" role="button" tabindex="0" aria-label="홈으로">
         <div class="mheader-logo">SM</div>
         <div>
-          <div class="mheader-title">Stay_Msg Pro<span class="mheader-ver" id="appVerM">v1.23.0</span></div>
+          <div class="mheader-title">Stay_Msg Pro<span class="mheader-ver" id="appVerM">v1.24.0</span></div>
           <div class="mheader-sub">숙소 예약 자동화</div>
         </div>
       </div>
@@ -2345,6 +2347,7 @@ input,select,textarea{font-family:inherit;}
         <h4><svg class="i"><use href="#i-clipboard"/></svg>예약 사용 방법</h4>
         <ul>
           <li><strong>다가오는 · 지난 · 전체</strong> — 다가오는 예약은 <em>오늘·머무는 중 → 7일 안 → 달별</em>로 묶여요. 검색 칸은 이름·전화 뒷자리·메모로 찾습니다.</li>
+          <li><strong>재방문 표시</strong> — 같은 전화번호로 다녀간 적 있는 손님은 이름 옆에 <em>재방문 5%</em>, 지난 방문에 리뷰 체크(리뷰·사진 2장·방명록)가 있으면 <em>재방문 10%</em>가 떠요. 할인은 자동으로 걸리지 않으니 직접 처리하세요.</li>
           <li><strong>입실일순 · 예약일순</strong> — 예약일순은 예약이 들어온 날로 묶어 최근 것부터 보여요(오늘 예약 → 어제 예약 → 날짜별). 검색할 때도 같이 적용돼요.</li>
           <li><strong>줄 누르기</strong> — 펼쳐서 연락처·메모·문자 단계를 보고, <em>문자 작성</em>·<em>수정</em>·<em>삭제</em>를 합니다.</li>
           <li><strong>문자 칩 (예약확정 · 입실 · 퇴실)</strong> — 초록 <em>보냄</em> · 파랑 <em>날짜 승인됨</em> = 승인 끝, 그날 봇이 보냄 · 흰 칸 <em>날짜 예정</em> = 아직 승인 전, 이틀 전에 승인 요청이 와요 · 노랑 <em>승인 대기</em> · 빨강 <em>확인 필요</em> · 회색 <em>직접 보냄</em> · 옅은 <em>기록 없음</em>. 메모 앞 보라 표시는 반려견·바비큐예요.</li>
@@ -2905,7 +2908,7 @@ input,select,textarea{font-family:inherit;}
 <div class="toast" id="toast"></div>
 
 <script>
-const APP_VERSION='v1.23.0'; // Pro (2026-10-27 lite v3.3.0에서 이름·버전 리셋)
+const APP_VERSION='v1.24.0'; // Pro (2026-10-27 lite v3.3.0에서 이름·버전 리셋)
 const SK_SET='stay_msg_lite1_set_v1';
 const SK_TPL='stay_msg_lite1_tpl_v1';
 const SK_RES='stay_msg_lite1_res_v1';
@@ -4738,6 +4741,7 @@ function renderDashToday(){
   const one=(list,f)=>list.length>1?`${list.length}건`:`${list[0].name||'손님'} · ${f(list[0])}`;
   const fresh=live.filter(r=>r.createdAt&&statYmd(new Date(r.createdAt))===today);
   if(fresh.length) h+=chip('dt-new','새 예약',one(fresh,ch),"switchTab('reserv')");
+  fresh.forEach(r=>{const v=rvRevisit(r); if(v) h+=chip('dt-rv','재방문 할인',`${r.name||'손님'} ${v.pct}%`,`toast(${esc(JSON.stringify((r.name||'손님')+' · '+v.txt+' · 자동 적용 아님'))})`);});
   const cxl=(sbCancelToday||[]).filter(r=>statYmd(new Date(r.updated_at))===today&&!statRebooked(r));
   if(cxl.length){
     const msg=cxl.map(r=>`${r.name||'손님'} ${md(r.checkin)} 입실 (${statChannel(r.channel)})`).join(' · ')+' 취소';
@@ -5075,6 +5079,16 @@ function rvChip(c,t,lb){
   const m={ok:'승인됨',next:'예정'}[c]||pc, top=(c==='ok'||c==='next')&&t?`${lb} · ${t}`:lb;
   return `<span class="stg">${top}</span><span class="sv"><svg><use href="#i-st-${RV_ICO[c]||'none'}"/></svg><span class="tx-pc">${esc(pc)}</span><span class="tx-m">${esc(m)}</span></span>`;
 }
+// 11-13 쵸파파: 재방문 할인 대상 표시(자동 적용 아님, 처리는 쵸파파). 같은 번호로 이 예약 입실일 전에 퇴실한 확정 예약이 있으면 재방문 5%,
+// 그 예약들 중 고객 탭 「리뷰」 체크(리뷰·사진 2장·방명록 인정)가 하나라도 있으면 +5% = 10%. 지인(무료)은 빼고 셈
+function rvRevisit(r){
+  const d=s=>String(s||'').replace(/\D/g,''), p=d(r.phone);
+  if(p.length<8||statFree(r)) return null;
+  const prev=reservations.filter(x=>x.id!==r.id&&(x.status||'confirmed')==='confirmed'&&!statFree(x)&&x.checkout&&x.checkout<=r.checkin&&d(x.phone)===p);
+  if(!prev.length) return null;
+  const rv=prev.some(x=>(guestNotes[x.id]||{}).review);
+  return {pct:rv?10:5, rv, txt:rv?'재방문 5% + 리뷰 5% = 10%':'재방문 5% (지난 방문 리뷰 체크 없음)'};
+}
 function rvRow(r,today){
   const open=_rv.open===r.id, n=Math.max(0,rvDays(r.checkin,r.checkout)), dw=rvDw(r.checkin), dwo=rvDw(r.checkout);
   let tag='';
@@ -5083,6 +5097,7 @@ function rvRow(r,today){
   else if(r.checkin<today&&r.checkout>today)tag='<span class="rv-tag stay">머무는 중</span>';
   else if(r.checkin>today){const dd=rvDays(today,r.checkin);if(dd<=14)tag=`<span class="rv-tag dd">D-${dd}</span>`;}
   const ch=r.channel?`<span class="rv-ch ${rvChCls(r.channel)}">${esc(r.channel)}</span>`:'';
+  const rvs=rvRevisit(r), rvTag=rvs?`<span class="rv-tag rvs" title="${rvs.txt} · 자동 적용 아님">재방문 ${rvs.pct}%</span>`:'';
   // 메모 앞 표시: 고객 관리와 같은 판단(직접 켬/끔 반영)
   const mtags=[guestDog(r).on&&'반려견',guestBbq(r).on&&'바비큐'].filter(Boolean).map(t=>`<span class="rv-mtag">${t}</span>`).join('');
   const gs=r.guests?rvGuests(r.guests):'', won=r.price?rvWon(r.price):'';
@@ -5102,6 +5117,7 @@ function rvRow(r,today){
         ${won?`<dt class="pc">금액</dt><dd class="pc">${won}</dd>`:''}
         ${gw?`<dt class="m">${gs?'인원':'금액'}</dt><dd class="m">${gw}</dd>`:''}
         ${r.channel?`<dt>채널</dt><dd>${esc(r.channel)}</dd>`:''}
+        ${rvs?`<dt>할인</dt><dd>${rvs.txt} · 자동 적용 아님</dd>`:''}
         ${room?`<dt>호실</dt><dd>${esc(room.name||'')}</dd>`:''}
         ${r.memo?`<dt>메모</dt><dd class="memo">${esc(r.memo)}</dd>`:''}
       </dl>
@@ -5117,7 +5133,7 @@ function rvRow(r,today){
     <div class="rv-main" role="button" tabindex="0" onclick="rvToggle('${r.id}')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();rvToggle('${r.id}');}">
       <div class="rv-date${dw==='토'?' sat':dw==='일'?' sun':''}"><b>${rvMD(r.checkin)}</b><span>${dw}</span></div>
       <div class="rv-body">
-        <div class="rv-l1"><strong class="rv-name">${esc(r.name||'(이름 없음)')}</strong>${tag}${ch}</div>
+        <div class="rv-l1"><strong class="rv-name">${esc(r.name||'(이름 없음)')}</strong>${tag}${rvTag}${ch}</div>
         <div class="rv-l3">${bits.join(' · ')}</div>
         ${(mtags||r.memo)?`<div class="rv-l2">${mtags}${r.memo?`<span class="rv-memo">${esc(r.memo)}</span>`:''}</div>`:''}
       </div>
