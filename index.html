@@ -1043,6 +1043,7 @@ input,select,textarea{font-family:inherit;}
 #tab-home .dt-in .dt-dot{background:var(--primary);}
 #tab-home .dt-out .dt-dot{background:#3b82f6;}
 #tab-home .dt-stay .dt-dot{background:#a3a3a3;}
+#tab-home .dt-new .dt-dot{background:#8b5cf6;}
 #tab-home .dt-ok .dt-dot{background:var(--primary);}
 #tab-home .dt-warn{border-color:var(--warning-border);background:var(--warning-bg);}
 #tab-home .dt-warn .dt-dot{background:var(--warning);}
@@ -2058,7 +2059,7 @@ input,select,textarea{font-family:inherit;}
       <div class="sidebar-brand" onclick="switchTab('home')" role="button" tabindex="0" aria-label="홈으로">
         <div class="sidebar-logo">SM</div>
         <div class="sidebar-brand-text">
-          <div class="sidebar-brand-name">Stay_Msg Pro<span class="sidebar-brand-ver" id="appVer">v1.21.3</span></div>
+          <div class="sidebar-brand-name">Stay_Msg Pro<span class="sidebar-brand-ver" id="appVer">v1.22.0</span></div>
           <div class="sidebar-brand-sub">숙소 예약 자동화</div>
         </div>
       </div>
@@ -2114,7 +2115,7 @@ input,select,textarea{font-family:inherit;}
       <div class="mheader-brand" onclick="switchTab('home')" role="button" tabindex="0" aria-label="홈으로">
         <div class="mheader-logo">SM</div>
         <div>
-          <div class="mheader-title">Stay_Msg Pro<span class="mheader-ver" id="appVerM">v1.21.3</span></div>
+          <div class="mheader-title">Stay_Msg Pro<span class="mheader-ver" id="appVerM">v1.22.0</span></div>
           <div class="mheader-sub">숙소 예약 자동화</div>
         </div>
       </div>
@@ -2898,7 +2899,7 @@ input,select,textarea{font-family:inherit;}
 <div class="toast" id="toast"></div>
 
 <script>
-const APP_VERSION='v1.21.3'; // Pro (2026-10-27 lite v3.3.0에서 이름·버전 리셋)
+const APP_VERSION='v1.22.0'; // Pro (2026-10-27 lite v3.3.0에서 이름·버전 리셋)
 const SK_SET='stay_msg_lite1_set_v1';
 const SK_TPL='stay_msg_lite1_tpl_v1';
 const SK_RES='stay_msg_lite1_res_v1';
@@ -4726,6 +4727,16 @@ function renderDashToday(){
   if(ins.length) h+=chip('dt-in','입실',who(ins),"switchTab('reserv')");
   if(outs.length) h+=chip('dt-out','퇴실',who(outs),"switchTab('reserv')");
   if(!ins.length&&!outs.length) h+=stay.length?chip('dt-stay','숙박 중',who(stay),"switchTab('reserv')"):chip('dt-stay','오늘 손님 없음','',"switchTab('reserv')");
+  // 11-13 쵸파파(네이버 「예약 현황」 참고): 오늘 새로 들어온 예약·오늘 취소. 0건이면 칩 없음. 취소 뒤 재결제한 건은 취소로 안 셈(statRebooked)
+  const ch=r=>statChannel(r.channel), md=s=>{const [,m,d]=String(s).split('-');return `${+m}/${+d}`;};
+  const one=(list,f)=>list.length>1?`${list.length}건`:`${list[0].name||'손님'} · ${f(list[0])}`;
+  const fresh=live.filter(r=>r.createdAt&&statYmd(new Date(r.createdAt))===today);
+  if(fresh.length) h+=chip('dt-new','새 예약',one(fresh,ch),"switchTab('reserv')");
+  const cxl=(sbCancelToday||[]).filter(r=>statYmd(new Date(r.updated_at))===today&&!statRebooked(r));
+  if(cxl.length){
+    const msg=cxl.map(r=>`${r.name||'손님'} ${md(r.checkin)} 입실 (${statChannel(r.channel)})`).join(' · ')+' 취소';
+    h+=chip('dt-warn','취소',one(cxl,r=>`${md(r.checkin)} ${ch(r)}`),`toast(${esc(JSON.stringify(msg))})`);
+  }
   const jobs=(sbAllJobs||[]).filter(j=>j.scheduled_date===today&&j.status!=='skipped');
   if(jobs.length){
     const sent=jobs.filter(j=>['sent','delivered'].includes(j.status)).length, bad=jobs.some(j=>['missed','failed','unknown','blocked'].includes(j.status));
@@ -5247,7 +5258,7 @@ function sbRenderJobs(jobs){
   keepOpen.forEach(id=>{ const d=document.getElementById(id); if(d) d.open=true; });
 }
 // ── 임시 휴무 (v1.9.0, 2026-11-02): 넣으면 봇이 네이버·에어비앤비를 막음. 취소해도 봇은 풀지 않음(사람이 직접 열기) ──
-var sbClosures = [], sbClosureBlocks = [], sbAllJobs = []; // var: 달력이 먼저 그려져도 참조 가능
+var sbClosures = [], sbClosureBlocks = [], sbAllJobs = [], sbCancelToday = []; // var: 달력이 먼저 그려져도 참조 가능
 function clFmt(ds){ const d=new Date(ds+'T00:00:00'); return `${d.getMonth()+1}.${d.getDate()}(${'일월화수목금토'[d.getDay()]})`; }
 function clLastNight(e){ const d=new Date(e+'T00:00:00'); d.setDate(d.getDate()-1); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; }
 function clRange(s,e){ const l=clLastNight(e); return l===s ? clFmt(s)+' 하루' : clFmt(s)+' ~ '+clFmt(l)+' · '+Math.round((new Date(e)-new Date(s))/864e5)+'일'; }
@@ -5386,7 +5397,8 @@ async function sbPull(manual){
   return sbRun(async()=>{
     const gen = sbWriteGen;
     if(sbHasPending()){ await sbRetryPending(); if(sbHasPending() || gen !== sbWriteGen){ if(manual && sbHasPending()) toast('먼저 저장 실패분을 올려야 해요 — 인터넷 확인'); return; } }
-    const [s, r, m, j, gn, cl, cb, jd] = await Promise.all([
+    const day0 = new Date(); day0.setHours(0,0,0,0);   // 11-13 홈 「취소」 칩: 오늘(이 기기 자정 이후) 취소로 바뀐 예약
+    const [s, r, m, j, gn, cl, cb, jd, cx] = await Promise.all([
       sb.from('app_settings').select('key,value'),
       sb.from('reservations').select('*').neq('status','cancelled'),
       sb.from('messages').select('*').order('sent_at',{ascending:false}).limit(200),
@@ -5394,12 +5406,14 @@ async function sbPull(manual){
       sb.from('guest_notes').select('*'),
       sb.from('closures').select('*').eq('status','active').order('start_date'),
       sb.from('channel_blocks').select('reservation_id,channel,status,attempts,result').like('reservation_id','closure-%'),
-      sb.from('sms_jobs').select('id,reservation_id,stage_id,status,scheduled_date,result').in('status',['sent','delivered','sending','skipped'])
+      sb.from('sms_jobs').select('id,reservation_id,stage_id,status,scheduled_date,result').in('status',['sent','delivered','sending','skipped']),
+      sb.from('reservations').select('id,name,phone,checkin,checkout,channel,created_at,updated_at').eq('status','cancelled').gte('updated_at', day0.toISOString())
     ]);
     if(s.error||r.error||m.error) throw (s.error||r.error||m.error);
     if(j.error) console.error(j.error);
     if(jd.error) console.error(jd.error);
     sbAllJobs = [...(j.data||[]), ...(jd.data||[])];
+    if(cx.error) console.error(cx.error); else sbCancelToday = cx.data||[];
     if(gen !== sbWriteGen) return; // 읽는 사이 로컬 저장이 끼어듦 → 이번 결과 버림(저장분이 먼저 올라가고 다음 주기에 다시 읽음)
     const serverEmpty = !(s.data||[]).length && !(r.data||[]).length;
     const localHas = !!(localStorage.getItem(SK_RES) && JSON.parse(localStorage.getItem(SK_RES)||'[]').length) || !!(localStorage.getItem(SK_SET) && (JSON.parse(localStorage.getItem(SK_SET)||'{}').name));
