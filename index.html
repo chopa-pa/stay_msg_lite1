@@ -1693,6 +1693,8 @@ input,select,textarea{font-family:inherit;}
 #tab-home .month-day.can-add{cursor:pointer;position:relative;}
 #tab-home .md-add{display:none;position:absolute;left:0;right:0;top:34px;bottom:0;align-items:center;justify-content:center;gap:4px;font-size:14px;font-weight:700;color:#047857;pointer-events:none;}
 #tab-home .md-add svg{width:16px;height:16px;stroke-width:2.4;}
+#tab-home .month-day.can-add.has-res .md-add{top:auto;bottom:2px;height:24px;font-size:13px;}
+#tab-home .month-day .res-chip[data-rid]{cursor:pointer;}
 @media(hover:hover){
   #tab-home .month-day.can-add:hover{background:#f0fdf4;border-color:#10b981;box-shadow:inset 0 0 0 1px #10b981;}
   #tab-home .month-day.can-add:hover .md-add{display:flex;}
@@ -2061,7 +2063,7 @@ input,select,textarea{font-family:inherit;}
       <div class="sidebar-brand" onclick="switchTab('home')" role="button" tabindex="0" aria-label="홈으로">
         <div class="sidebar-logo">SM</div>
         <div class="sidebar-brand-text">
-          <div class="sidebar-brand-name">Stay_Msg Pro<span class="sidebar-brand-ver" id="appVer">v1.24.0</span></div>
+          <div class="sidebar-brand-name">Stay_Msg Pro<span class="sidebar-brand-ver" id="appVer">v1.25.0</span></div>
           <div class="sidebar-brand-sub">숙소 예약 자동화</div>
         </div>
       </div>
@@ -2117,7 +2119,7 @@ input,select,textarea{font-family:inherit;}
       <div class="mheader-brand" onclick="switchTab('home')" role="button" tabindex="0" aria-label="홈으로">
         <div class="mheader-logo">SM</div>
         <div>
-          <div class="mheader-title">Stay_Msg Pro<span class="mheader-ver" id="appVerM">v1.24.0</span></div>
+          <div class="mheader-title">Stay_Msg Pro<span class="mheader-ver" id="appVerM">v1.25.0</span></div>
           <div class="mheader-sub">숙소 예약 자동화</div>
         </div>
       </div>
@@ -2908,7 +2910,7 @@ input,select,textarea{font-family:inherit;}
 <div class="toast" id="toast"></div>
 
 <script>
-const APP_VERSION='v1.24.0'; // Pro (2026-10-27 lite v3.3.0에서 이름·버전 리셋)
+const APP_VERSION='v1.25.0'; // Pro (2026-10-27 lite v3.3.0에서 이름·버전 리셋)
 const SK_SET='stay_msg_lite1_set_v1';
 const SK_TPL='stay_msg_lite1_tpl_v1';
 const SK_RES='stay_msg_lite1_res_v1';
@@ -4609,8 +4611,21 @@ function _dashYmPickerHtml(y,m){
     <div class="cal-ym-grid">${months}</div>
   </div>`;
 }
-function dashCalDayClick(ds){
+function dashCalDayClick(ds,ev){
+  // 11-13 쵸파파: 퇴실만 있는 날도 빈 곳 누르면 새 예약. 손님 칩을 누르면 그 예약
+  const chip=ev&&ev.target&&ev.target.closest?ev.target.closest('.res-chip[data-rid]'):null;
+  if(chip){const r=reservations.find(x=>String(x.id)===chip.dataset.rid);if(r){loadReservation(r.id,ds);return;}}
   const dayRes=reservations.filter(r=>r.checkin&&r.checkout&&ds>=r.checkin&&ds<=r.checkout);
+  const nightFree=!dayRes.some(r=>r.checkout!==ds)&&ds>=getTodayStr()
+    &&!(typeof sbClosures!=='undefined'?sbClosures:[]).some(c=>c.status==='active'&&ds>=c.start_date&&ds<c.end_date);
+  if(nightFree){
+    openAddResvModal();
+    document.getElementById('ar_checkin').value=ds;
+    document.getElementById('ar_checkout').value=rvAdd(ds,1);
+    _updateDateDisplay('ar_checkin','ar_checkout','arDateRangeBtn');
+    const fr=document.getElementById('arFrom'); fr.textContent=`달력 ${rvMD(ds)}(${rvDw(ds)})에서`; fr.style.display='';
+    return;
+  }
   if(dayRes.length===1){loadReservation(dayRes[0].id,ds);return;}
   if(dayRes.length>1){
     _dashCal.sel=ds;
@@ -4627,13 +4642,6 @@ function dashCalDayClick(ds){
     },80);
     return;
   }
-  if(ds<getTodayStr())return;
-  if((typeof sbClosures!=='undefined'?sbClosures:[]).some(c=>c.status==='active'&&ds>=c.start_date&&ds<c.end_date))return;
-  openAddResvModal();
-  document.getElementById('ar_checkin').value=ds;
-  document.getElementById('ar_checkout').value=rvAdd(ds,1);
-  _updateDateDisplay('ar_checkin','ar_checkout','arDateRangeBtn');
-  const fr=document.getElementById('arFrom'); fr.textContent=`달력 ${rvMD(ds)}(${rvDw(ds)})에서`; fr.style.display='';
 }
 // 달력 손님 색(11-06 쵸파파): 앱 기본 톤 진한 초록·브라운 + 청회색(파랑은 너무 쨍해 바꿈) 세 색을 입실일 순서로 돌려 씀(흰 글자).
 // 두 색이면 하루 건너 붙은 손님(앞앞 손님)이 같은 색이라 헷갈림 → 세 색이면 이어지는 세 손님이 모두 다름
@@ -4676,7 +4684,7 @@ function renderDashCal(){
     const holiEve=!holi&&_r0&&parseNum(_r0.ph)>0&&(_r0.phMode||'eve')!=='day'&&HOLIDAYS[nextDay(ds)];
     const dayRes=reservations.filter(r=>r.checkin&&r.checkout&&ds>=r.checkin&&ds<=r.checkout);
     const closed=(typeof sbClosures!=='undefined'?sbClosures:[]).some(c=>c.status==='active'&&ds>=c.start_date&&ds<c.end_date);
-    const canAdd=!dayRes.length&&!closed&&ds>=today; // 오늘 포함(쵸파파 11-05)
+    const canAdd=!dayRes.some(r=>r.checkout!==ds)&&!closed&&ds>=today; // 오늘 포함(쵸파파 11-05), 퇴실만 있는 날도(11-13)
     const cls=['month-day',isSun?'sun':isSat?'sat':'',isToday?'today':'',isSel?'selected':'',holi?'holiday':'',dayRes.length?'has-res':'',canAdd?'can-add':''].filter(Boolean).join(' ');
     const dayLbl=holi?`<small class="holi-lbl">${holi}</small>`
       :holiEve?'<small class="holi-lbl">공휴일 전날</small>'
@@ -4695,12 +4703,12 @@ function renderDashCal(){
       const isMid=!isCi&&!isCo;
       // 연박 중간 날: 같은 색·같은 두께(빈 글자 줄을 넣어 IN/OUT 칩과 높이를 똑같이)
       // 11-07 쵸파파: 빈 한 줄이라 예약이 더 들어올 수 있는 날처럼 보임 → 이름 + 「연박」을 쓰고 칸 아래까지 채워 꽉 찬 날로 보이게
-      if(isMid){ const nm=(r.name||'손님').slice(0,4); return `<div class="res-chip mid${gc.lane(r)===1?' lane2':''}" style="background:${c.bg};color:${c.fg};" title="${esc((r.name||'손님')+' 연박')}"><span class="chip-name">${esc(nm.slice(0,3))}<span class="n4">${esc(nm.slice(3))}</span></span><span class="chip-st">연박</span></div>`; }
+      if(isMid){ const nm=(r.name||'손님').slice(0,4); return `<div class="res-chip mid${gc.lane(r)===1?' lane2':''}" data-rid="${esc(String(r.id))}" style="background:${c.bg};color:${c.fg};" title="${esc((r.name||'손님')+' 연박')}"><span class="chip-name">${esc(nm.slice(0,3))}<span class="n4">${esc(nm.slice(3))}</span></span><span class="chip-st">연박</span></div>`; }
       // 11-06 쵸파파: 입실·퇴실 색 대신 손님(예약)마다 다른 색. 입실·퇴실은 IN/OUT 글자와 칩 모양으로 구분
       const k=isCi&&isCo?'cico':isCi?'ci':'co';
       const bg=`background:${c.bg};color:${c.fg};`;
       const nm=(r.name||'손님').slice(0,4), st=isCi?'IN':'OUT';
-      return `<div class="res-chip ${k}" style="${bg}" title="${esc((r.name||'손님')+' '+st)}"><span class="chip-name">${esc(nm.slice(0,3))}<span class="n4">${esc(nm.slice(3))}</span></span><span class="chip-st">${st}</span></div>`;
+      return `<div class="res-chip ${k}" data-rid="${esc(String(r.id))}" style="${bg}" title="${esc((r.name||'손님')+' '+st)}"><span class="chip-name">${esc(nm.slice(0,3))}<span class="n4">${esc(nm.slice(3))}</span></span><span class="chip-st">${st}</span></div>`;
     }).join(''):`<div class="res-dots">${dayRes.map(r=>{
       const isCi=r.checkin===ds,isCo=r.checkout===ds;
       const c=gc(r);
@@ -4714,7 +4722,7 @@ function renderDashCal(){
     const more='';
     // 휴무는 그날 빈 줄에: 첫 줄이 비어 있으면(둘째 줄 손님만 있거나 손님 없음) 첫 줄, 아니면 손님 아래. 칩과 같은 높이
     const closedChip=closed?'<div class="res-chip closed"><span class="chip-name">휴무</span><span class="chip-st">&nbsp;</span></div>':'';
-    html+=`<div class="${cls}" onclick="dashCalDayClick('${ds}')"${canAdd?' title="눌러서 새 예약"':''}>
+    html+=`<div class="${cls}" onclick="dashCalDayClick('${ds}',event)"${canAdd?' title="눌러서 새 예약"':''}>
       <div class="md-head"><span class="md-num-inner">${d}</span>${isToday?'<span class="md-today">오늘</span>':''}${dayLbl}</div>
       ${gap&&closed&&useChips?closedChip+chips:chips+closedChip}${more}${canAdd?'<span class="md-add" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" fill="none" stroke="currentColor" stroke-linecap="round"/></svg>예약</span>':''}
     </div>`;
