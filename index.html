@@ -1045,6 +1045,7 @@ input,select,textarea{font-family:inherit;}
 #tab-home .dt-stay .dt-dot{background:#a3a3a3;}
 #tab-home .dt-new .dt-dot{background:#8b5cf6;}
 #tab-home .dt-rv .dt-dot{background:#d97706;}
+#tab-home .dt-ct .dt-dot{background:#dc2626;}
 #tab-home .dt-ok .dt-dot{background:var(--primary);}
 #tab-home .dt-warn{border-color:var(--warning-border);background:var(--warning-bg);}
 #tab-home .dt-warn .dt-dot{background:var(--warning);}
@@ -1346,13 +1347,14 @@ input,select,textarea{font-family:inherit;}
 #tab-reserv .rv-row.past .rv-date{background:#f8fafc;}
 #tab-reserv .rv-row.past .rv-date b{color:#64748b;}
 #tab-reserv .rv-body{min-width:0;}
-#tab-reserv .rv-l1{display:flex;align-items:center;gap:8px;min-width:0;}
+#tab-reserv .rv-l1{display:flex;align-items:center;flex-wrap:wrap;gap:4px 8px;min-width:0;}
 #tab-reserv .rv-name{font-size:16px;font-weight:800;color:#0f172a;white-space:nowrap;}
 #tab-reserv .rv-tag,#tab-guests .rv-tag{font-size:12px;font-weight:700;border-radius:6px;padding:3px 8px;line-height:1.3;white-space:nowrap;background:#f1f5f9;color:#334155;}
 #tab-reserv .rv-tag.in,#tab-guests .rv-tag.in{background:var(--chip-in);color:#fff;}
 #tab-reserv .rv-tag.out,#tab-guests .rv-tag.out{background:var(--chip-out);color:#fff;}
 #tab-reserv .rv-tag.stay,#tab-guests .rv-tag.stay{background:#a7f3d0;color:#065f46;}
 #tab-reserv .rv-tag.rvs{background:#fef3c7;color:#92400e;}
+#tab-reserv .rv-tag.ct,#tab-guests .rv-tag.ct{background:#dc2626;color:#fff;}
 #tab-reserv .rv-tag.dd,#tab-guests .rv-tag.dd{background:#f1f5f9;color:#334155;font-variant-numeric:tabular-nums;}
 #tab-reserv .rv-ch,#tab-guests .rv-ch{display:inline-flex;align-items:center;gap:5px;font-size:13px;font-weight:600;color:#64748b;white-space:nowrap;}
 #tab-reserv .rv-ch::before,#tab-guests .rv-ch::before{content:'';width:7px;height:7px;border-radius:50%;background:#94a3b8;flex-shrink:0;}
@@ -1526,6 +1528,13 @@ input,select,textarea{font-family:inherit;}
 #tab-guests .gs-sid{display:flex;align-items:center;gap:8px;align-self:stretch;min-width:0;border-left:2px solid #e2e8f0;padding-left:14px;}
 #tab-guests .gs-alt{font-size:13px;color:#64748b;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 #tab-guests .gs-alt b{color:#0f172a;font-weight:700;}
+#tab-guests .gs-pm{margin-top:6px;font-size:13px;color:#334155;white-space:pre-wrap;line-height:1.45;}
+#tab-guests .gs-pm.ct{color:#b91c1c;}
+#tab-guests .gs-pmb{border:0;background:none;padding:0;margin-left:8px;font-size:12px;font-weight:700;color:#047857;cursor:pointer;}
+#tab-guests .gs-pe{margin-top:8px;display:flex;flex-direction:column;gap:6px;max-width:420px;}
+#tab-guests .gs-pe textarea{width:100%;min-height:64px;padding:8px 10px;border:1px solid #cbd5e1;border-radius:8px;font:inherit;font-size:14px;resize:vertical;}
+#tab-guests .gs-pe .row{display:flex;align-items:center;gap:8px;font-size:13px;}
+#tab-guests .gs-pe label{display:flex;align-items:center;gap:6px;font-weight:700;color:#b91c1c;margin-right:auto;}
 @media(max-width:959px){
   #tab-guests .gs-colh{display:none;}
   #tab-guests .gs-cust{padding:12px;}
@@ -2063,7 +2072,7 @@ input,select,textarea{font-family:inherit;}
       <div class="sidebar-brand" onclick="switchTab('home')" role="button" tabindex="0" aria-label="홈으로">
         <div class="sidebar-logo">SM</div>
         <div class="sidebar-brand-text">
-          <div class="sidebar-brand-name">Stay_Msg Pro<span class="sidebar-brand-ver" id="appVer">v1.25.2</span></div>
+          <div class="sidebar-brand-name">Stay_Msg Pro<span class="sidebar-brand-ver" id="appVer">v1.26.0</span></div>
           <div class="sidebar-brand-sub">숙소 예약 자동화</div>
         </div>
       </div>
@@ -2119,7 +2128,7 @@ input,select,textarea{font-family:inherit;}
       <div class="mheader-brand" onclick="switchTab('home')" role="button" tabindex="0" aria-label="홈으로">
         <div class="mheader-logo">SM</div>
         <div>
-          <div class="mheader-title">Stay_Msg Pro<span class="mheader-ver" id="appVerM">v1.25.2</span></div>
+          <div class="mheader-title">Stay_Msg Pro<span class="mheader-ver" id="appVerM">v1.26.0</span></div>
           <div class="mheader-sub">숙소 예약 자동화</div>
         </div>
       </div>
@@ -2910,7 +2919,7 @@ input,select,textarea{font-family:inherit;}
 <div class="toast" id="toast"></div>
 
 <script>
-const APP_VERSION='v1.25.2'; // Pro (2026-10-27 lite v3.3.0에서 이름·버전 리셋)
+const APP_VERSION='v1.26.0'; // Pro (2026-10-27 lite v3.3.0에서 이름·버전 리셋)
 const SK_SET='stay_msg_lite1_set_v1';
 const SK_TPL='stay_msg_lite1_tpl_v1';
 const SK_RES='stay_msg_lite1_res_v1';
@@ -4749,6 +4758,7 @@ function renderDashToday(){
   const one=(list,f)=>list.length>1?`${list.length}건`:`${list[0].name||'손님'} · ${f(list[0])}`;
   const fresh=live.filter(r=>r.createdAt&&statYmd(new Date(r.createdAt))===today);
   if(fresh.length) h+=chip('dt-new','새 예약',one(fresh,ch),"switchTab('reserv')");
+  fresh.forEach(r=>{const g=gpOf(r.phone); if(g&&g.caution) h+=chip('dt-ct','주의 손님',r.name||'손님',`toast(${esc(JSON.stringify((r.name||'손님')+' · '+(g.memo||'메모 없음')))})`);});
   fresh.forEach(r=>{const v=rvRevisit(r); if(v) h+=chip('dt-rv','재방문 할인',`${r.name||'손님'} ${v.pct}%`,`toast(${esc(JSON.stringify((r.name||'손님')+' · '+v.txt+' · 자동 적용 아님'))})`);});
   const cxl=(sbCancelToday||[]).filter(r=>statYmd(new Date(r.updated_at))===today&&!statRebooked(r));
   if(cxl.length){
@@ -4807,6 +4817,8 @@ function renderDashboard(){
 }
 // ─────── GUESTS (고객 관리) ─────── 화면은 v1.13.0 renderGuests
 let guestNotes = {};   // reservation_id → {dog,bbq,review,note}
+let guestProfiles = {};   // 11-14 손님(전화번호 숫자) → {memo,caution}. 예약이 바뀌어도 같은 번호면 따라옴
+function gpOf(phone){const d=String(phone||'').replace(/\D/g,'');return d.length>=8?(guestProfiles[d]||null):null;}
 const GUEST_DOG_RE = /반려견|강아지|소형견/, GUEST_BBQ_RE = /바비큐\s*(○|o|✓|예|있음|신청|이용|문의)/i;
 function guestDog(r){ const n = guestNotes[r.id]; return (n && n.dog !== null && n.dog !== undefined) ? {on:!!n.dog, auto:false} : {on:GUEST_DOG_RE.test(r.memo||''), auto:true}; }
 function guestBbq(r){ const n = guestNotes[r.id]; return (n && n.bbq !== null && n.bbq !== undefined) ? {on:!!n.bbq, auto:false} : {on:GUEST_BBQ_RE.test(r.memo||''), auto:true}; }
@@ -5013,8 +5025,8 @@ function renderGuests(){
     else if(nx){const d=rvDays(today,nx.checkin);tag=`<span class="rv-tag dd">${d<=14?'D-'+d:gsDate(nx.checkin,y)+' 입실'}</span>`;}
     const tel=ph?`<a href="tel:${esc((L.phone||'').replace(/\D/g,''))}">${esc(ph)}</a>`:'전화번호 없음';
     const vis=`<span class="gs-vis${n>1?' re':''}">${n>1?'방문 '+n+'회':'첫 방문'}</span>`;
-    const id=`<div class="gs-id"><div class="gs-l1"><span class="gs-name">${esc(L.name||'(이름 없음)')}</span>${tag}${vis.replace('gs-vis','gs-vis mb')}</div>`+
-      `<div class="gs-l2">${tel}<span class="gs-pc"><span class="sep">·</span>${vis}</span>${n>1?`<span class="sep">·</span>처음 ${gsDate(g.st[n-1].checkin,y)}`:''}</div></div>`;
+    const id=`<div class="gs-id"><div class="gs-l1"><span class="gs-name">${esc(L.name||'(이름 없음)')}</span>${(gpOf(L.phone)||{}).caution?'<span class="rv-tag ct">주의</span>':''}${tag}${vis.replace('gs-vis','gs-vis mb')}</div>`+
+      `<div class="gs-l2">${tel}<span class="gs-pc"><span class="sep">·</span>${vis}</span>${n>1?`<span class="sep">·</span>처음 ${gsDate(g.st[n-1].checkin,y)}`:''}</div>${gpBlock(L.phone,canEdit)}</div>`;
     if(n===1)return `<div class="gs-cust${now?' now':''}"><div class="gs-row">${id}${when(L)}${meta(L)}${flags(L)}</div></div>`;
     const rows=g.st.map(r=>{
       const past=r.checkout<=today,stay=r.checkin<=today&&!past;
@@ -5027,6 +5039,25 @@ function renderGuests(){
   const grp=(t,gs)=>gs.length?`<section class="rv-group"><div class="rv-gh">${t}<em>${gs.length}</em></div><div class="rv-card">${gs.map(cust).join('')}</div></section>`:'';
   host.innerHTML='<div class="gs-colh" aria-hidden="true"><span>손님 · 전화</span><span>숙박</span><span>채널 · 메모</span><span class="gs-fl"><span>반려견</span><span>바비큐</span><span>리뷰</span></span></div>'+
     grp('머무는 중 · 다가오는',list.filter(g=>g.next))+grp('다녀간 고객',list.filter(g=>!g.next));
+}
+// 손님 메모·주의(11-14 쵸파파). 전화번호 없는 손님(에어비앤비 등)은 저장할 곳이 없어 안 보임
+let _gpEdit=null;
+function gpBlock(phone,canEdit){
+  const d=String(phone||'').replace(/\D/g,''); if(d.length<8) return '';
+  const pf=guestProfiles[d]||{};
+  if(_gpEdit===d) return `<div class="gs-pe"><textarea id="gpMemo" placeholder="사실만 적어 주세요 (예: 11-03 실내 흡연 확인)">${esc(pf.memo||'')}</textarea>`+
+    `<div class="row"><label><input type="checkbox" id="gpCaution"${pf.caution?' checked':''}>주의 손님</label><button type="button" class="btn btn-secondary btn-sm" onclick="gpEdit(null)">취소</button><button type="button" class="btn btn-primary btn-sm" onclick="gpSave('${d}')">저장</button></div></div>`;
+  const btn=canEdit?`<button type="button" class="gs-pmb" onclick="gpEdit('${d}')">${pf.memo||pf.caution?'메모 고치기':'+ 손님 메모'}</button>`:'';
+  return pf.memo?`<div class="gs-pm${pf.caution?' ct':''}">${esc(pf.memo)}${btn}</div>`:(btn?`<div class="gs-pm">${btn.replace('gs-pmb','gs-pmb" style="margin-left:0')}</div>`:'');
+}
+function gpEdit(d){ if(d&&!(sb&&sbUserEmail)){ toast('로그인 후 적을 수 있어요'); return; } _gpEdit=d; renderGuests(); if(d){const t=document.getElementById('gpMemo'); if(t) t.focus();} }
+async function gpSave(d){
+  if(!(sb && sbUserEmail)){ toast('로그인 후 적을 수 있어요'); return; }
+  const memo=(document.getElementById('gpMemo').value||'').trim(), caution=document.getElementById('gpCaution').checked;
+  const row={ phone:d, memo:memo||null, caution, updated_by:sbUserEmail, updated_at:new Date().toISOString() };
+  const { error } = await sb.from('guest_profiles').upsert(row);
+  if(error){ console.error(error); toast('저장 실패 — 인터넷 확인'); return; }
+  guestProfiles[d]=row; _gpEdit=null; renderGuests(); toast('저장됐어요 ✓');
 }
 async function guestToggle(resId, field){
   if(!(sb && sbUserEmail)){ toast('로그인 후 표시할 수 있어요'); return; }
@@ -5106,6 +5137,7 @@ function rvRow(r,today){
   else if(r.checkin>today){const dd=rvDays(today,r.checkin);if(dd<=14)tag=`<span class="rv-tag dd">D-${dd}</span>`;}
   const ch=r.channel?`<span class="rv-ch ${rvChCls(r.channel)}">${esc(r.channel)}</span>`:'';
   const rvs=rvRevisit(r), rvTag=rvs?`<span class="rv-tag rvs" title="${rvs.txt} · 자동 적용 아님">재방문 ${rvs.pct}%</span>`:'';
+  const gpf=gpOf(r.phone), ctTag=gpf&&gpf.caution?`<span class="rv-tag ct" title="${esc(gpf.memo||'주의 손님')}">주의</span>`:'';
   // 메모 앞 표시: 고객 관리와 같은 판단(직접 켬/끔 반영)
   const mtags=[guestDog(r).on&&'반려견',guestBbq(r).on&&'바비큐'].filter(Boolean).map(t=>`<span class="rv-mtag">${t}</span>`).join('');
   const gs=r.guests?rvGuests(r.guests):'', won=r.price?rvWon(r.price):'';
@@ -5141,7 +5173,7 @@ function rvRow(r,today){
     <div class="rv-main" role="button" tabindex="0" onclick="rvToggle('${r.id}')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();rvToggle('${r.id}');}">
       <div class="rv-date${dw==='토'?' sat':dw==='일'?' sun':''}"><b>${rvMD(r.checkin)}</b><span>${dw}</span></div>
       <div class="rv-body">
-        <div class="rv-l1"><strong class="rv-name">${esc(r.name||'(이름 없음)')}</strong>${tag}${rvTag}${ch}</div>
+        <div class="rv-l1"><strong class="rv-name">${esc(r.name||'(이름 없음)')}</strong>${tag}${ctTag}${rvTag}${ch}</div>
         <div class="rv-l3">${bits.join(' · ')}</div>
         ${(mtags||r.memo)?`<div class="rv-l2">${mtags}${r.memo?`<span class="rv-memo">${esc(r.memo)}</span>`:''}</div>`:''}
       </div>
@@ -5440,12 +5472,13 @@ async function sbPull(manual){
     const gen = sbWriteGen;
     if(sbHasPending()){ await sbRetryPending(); if(sbHasPending() || gen !== sbWriteGen){ if(manual && sbHasPending()) toast('먼저 저장 실패분을 올려야 해요 — 인터넷 확인'); return; } }
     const day0 = new Date(); day0.setHours(0,0,0,0);   // 11-13 홈 「취소」 칩: 오늘(이 기기 자정 이후) 취소로 바뀐 예약
-    const [s, r, m, j, gn, cl, cb, jd, cx] = await Promise.all([
+    const [s, r, m, j, gn, gpf, cl, cb, jd, cx] = await Promise.all([
       sb.from('app_settings').select('key,value'),
       sb.from('reservations').select('*').neq('status','cancelled'),
       sb.from('messages').select('*').order('sent_at',{ascending:false}).limit(200),
       sb.from('sms_jobs').select('*').in('status',['pending','approved','blocked','missed','unknown','failed']).order('scheduled_date'),
       sb.from('guest_notes').select('*'),
+      sb.from('guest_profiles').select('*'),
       sb.from('closures').select('*').eq('status','active').order('start_date'),
       sb.from('channel_blocks').select('reservation_id,channel,status,attempts,result').like('reservation_id','closure-%'),
       sb.from('sms_jobs').select('id,reservation_id,stage_id,status,scheduled_date,result').in('status',['sent','delivered','sending','skipped']),
@@ -5475,7 +5508,8 @@ async function sbPull(manual){
     sbApplying = true; try { sbRefreshUI(withSettings); } finally { sbApplying = false; }
     sbBotState = map.bot_state || null; sbRenderJobs(j.data||[]);
     if(cl.error||cb.error) console.error(cl.error||cb.error); else { sbClosures = cl.data||[]; sbClosureBlocks = cb.data||[]; renderClosures(); }
-    if(gn.error) console.error(gn.error); else { guestNotes = Object.fromEntries((gn.data||[]).map(x=>[x.reservation_id,x])); const gp=document.getElementById('tab-guests'); if(gp&&gp.classList.contains('active')) renderGuests(); }
+    if(gpf.error) console.error(gpf.error); else guestProfiles = Object.fromEntries((gpf.data||[]).map(x=>[x.phone,x]));
+    if(gn.error) console.error(gn.error); else { guestNotes = Object.fromEntries((gn.data||[]).map(x=>[x.reservation_id,x])); const gp=document.getElementById('tab-guests'); if(gp&&gp.classList.contains('active')&&!_gpEdit) renderGuests(); }   // 손님 메모 적는 중엔 다시 그리지 않음(쓰던 글 보존)
     sbStatus('계정: '+sbUserEmail+' · 서버 동기화 '+sbNow()+(withSettings?'':' (편집 중인 설정은 제외)')+sbBotLine());
     if(manual) toast('서버에서 새로고침 ✓');
   });
