@@ -1994,7 +1994,7 @@ input,select,textarea{font-family:inherit;}
   #tab-templates .vc-tab{padding:0 7px;}
 }
 </style>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.1/dist/umd/supabase.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.1/dist/umd/supabase.min.js" crossorigin="anonymous"></script>
 </head>
 <body>
 
@@ -2072,7 +2072,7 @@ input,select,textarea{font-family:inherit;}
       <div class="sidebar-brand" onclick="switchTab('home')" role="button" tabindex="0" aria-label="홈으로">
         <div class="sidebar-logo">SM</div>
         <div class="sidebar-brand-text">
-          <div class="sidebar-brand-name">Stay_Msg Pro<span class="sidebar-brand-ver" id="appVer">v1.27.4</span></div>
+          <div class="sidebar-brand-name">Stay_Msg Pro<span class="sidebar-brand-ver" id="appVer">v1.28.0</span></div>
           <div class="sidebar-brand-sub">숙소 예약 자동화</div>
         </div>
       </div>
@@ -2128,7 +2128,7 @@ input,select,textarea{font-family:inherit;}
       <div class="mheader-brand" onclick="switchTab('home')" role="button" tabindex="0" aria-label="홈으로">
         <div class="mheader-logo">SM</div>
         <div>
-          <div class="mheader-title">Stay_Msg Pro<span class="mheader-ver" id="appVerM">v1.27.4</span></div>
+          <div class="mheader-title">Stay_Msg Pro<span class="mheader-ver" id="appVerM">v1.28.0</span></div>
           <div class="mheader-sub">숙소 예약 자동화</div>
         </div>
       </div>
@@ -2925,7 +2925,7 @@ input,select,textarea{font-family:inherit;}
 <div class="toast" id="toast"></div>
 
 <script>
-const APP_VERSION='v1.27.4'; // Pro (2026-10-27 lite v3.3.0에서 이름·버전 리셋)
+const APP_VERSION='v1.28.0'; // Pro (2026-10-27 lite v3.3.0에서 이름·버전 리셋)
 const SK_SET='stay_msg_lite1_set_v1';
 const SK_TPL='stay_msg_lite1_tpl_v1';
 const SK_RES='stay_msg_lite1_res_v1';
@@ -4373,6 +4373,8 @@ function histDeliv(h){
 function histNeedsResend(h){
   const j=(h.id.match(/^bot(\d+)(?:-|$)/)||[])[1];if(h.sentBy!=='bot'||!j)return false;
   if(msgHistory.some(x=>x!==h&&(x.id==='bot'+j||x.id.startsWith('bot'+j+'-'))&&x.at>h.at))return false;
+  const dg=s=>String(s||'').replace(/\D/g,'');
+  if(msgHistory.some(x=>x!==h&&x.sentBy!=='bot'&&x.stageId===h.stageId&&dg(x.phone)&&dg(x.phone)===dg(h.phone)&&(!x.resId||!h.resId||x.resId===h.resId)&&x.at>h.at))return false;   // v1.28.0: 그 뒤에 폰으로 같은 문자를 다시 보냈으면 버튼 숨김(두 번 발송 방지)
   return h.status==='failed'||(h.status==='sent'&&histMins(h)>60);
 }
 async function sbJobResend(histId){
@@ -5316,9 +5318,30 @@ if('serviceWorker' in navigator){
 //         pull 도중 로컬 저장이 끼어들면 그 pull 결과는 버림(sbWriteGen), 세션은 onAuthStateChange로 추적.
 const SB_URL = localStorage.getItem('sb_url') || 'https://yqzrxxepkxmxeukmsqeb.supabase.co';
 const SB_ANON = localStorage.getItem('sb_anon') || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlxenJ4eGVwa3hteGV1a21zcWViIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTMwMjM1MjgsImV4cCI6MjEwODU5OTUyOH0.outwfYIUJdGNKJ_Orw9GaiXX5MOCtnTUIy6FIqcdjbY';
-let sb = null, sbResIds = new Set(), sbHistIds = new Set(), sbHistAt = new Map(), sbTimer = null, sbUserEmail = '';
+let sb = null, sbTimer = null, sbUserEmail = '';
 let sbQueue = Promise.resolve(), sbWriteGen = 0, sbFormDirty = false, sbApplying = false;
 const sbPending = { settings:false, tpl:false, periods:false, res:false, hist:false };
+// v1.28.0: 미전송 표시(sbPending)와 「마지막으로 서버와 맞춘 모습」(sbBase)을 기기에 저장 → 새로고침·앱 종료 뒤에도 못 올린 저장분을 이어서 올리고,
+//          올릴 때는 그 모습과 달라진 줄·칸만 올림(목록 전체를 올리면 다른 기기·봇이 고친 줄과 봇의 취소를 옛값으로 되돌림)
+const SK_SYNC = 'sb_sync_v1';
+const RES_F = ['name','phone','checkin','checkout','guests','price','room_id','channel','memo'];   // 앱이 고칠 수 있는 칸(status·created_at 제외)
+const resFields = r => ({ name:r.name||'', phone:r.phone||'', checkin:r.checkin, checkout:r.checkout, guests:r.guests||'', price:r.price||'', room_id:r.roomId||'', channel:r.channel||'', memo:r.memo||'' });
+// res: {예약 id: 칸 값}, hist: {이력 id: 보낸 시각}, set: {키: 서버 값 글}, ver: {키: 서버 updated_at}, sent: {키: 올리려던 값 글(응답이 끊긴 저장 구분용)}
+let sbBase = { res:{}, hist:{}, set:{}, ver:{}, sent:{} };
+function sbCanon(v){ return JSON.stringify(v, (k, x) => (x && typeof x === 'object' && !Array.isArray(x)) ? Object.keys(x).sort().reduce((o, key) => (o[key] = x[key], o), {}) : x); }   // 키 순서를 맞춘 글(서버 jsonb는 키 순서를 바꿈)
+function sbSaveState(){ try { localStorage.setItem(SK_SYNC, JSON.stringify({ url: SB_URL, pending: sbPending, base: sbBase })); } catch(e){} }
+(function sbLoadState(){
+  let st = null; try { st = JSON.parse(localStorage.getItem(SK_SYNC) || 'null'); } catch(e){}
+  if(st && st.url === SB_URL && st.base && st.base.res && st.base.hist){
+    Object.keys(sbPending).forEach(k => sbPending[k] = !!(st.pending && st.pending[k]));
+    sbBase = { res: st.base.res, hist: st.base.hist, set: st.base.set || {}, ver: st.base.ver || {}, sent: st.base.sent || {}, put: st.base.put || {} };
+    return;
+  }
+  // 저장된 상태가 없거나(이전 버전에서 올라온 첫 실행) 다른 서버의 것 → 이 기기의 캐시를 「서버에서 마지막으로 받은 모습」으로 봄.
+  // 기준이 비어 있으면 첫 받기 전에 저장할 때 캐시 전체가 「새 예약」으로 올라가 봇의 취소·다른 기기 수정을 되돌림
+  try { sbBase.res = Object.fromEntries(JSON.parse(localStorage.getItem(SK_RES) || '[]').map(r => [r.id, resFields(r)])); } catch(e){ sbBase.res = {}; }
+  try { sbBase.hist = Object.fromEntries(JSON.parse(localStorage.getItem(SK_HIST) || '[]').map(h => [h.id, h.at || ''])); } catch(e){ sbBase.hist = {}; }
+})();
 if (SB_URL.startsWith('http') && window.supabase) sb = window.supabase.createClient(SB_URL, SB_ANON);
 
 function sbRun(fn){ const p = sbQueue.then(fn, fn); sbQueue = p.catch(()=>{}); return p; }
@@ -5504,10 +5527,13 @@ async function sbPull(manual){
   if(!sb || !sbUserEmail) return;
   return sbRun(async()=>{
     const gen = sbWriteGen;
-    if(sbHasPending()){ await sbRetryPending(); if(sbHasPending() || gen !== sbWriteGen){ if(manual && sbHasPending()) toast('먼저 저장 실패분을 올려야 해요 — 인터넷 확인'); return; } }
+    if(sbHasPending()){ await sbRetryPending(); if(sbHasPending() || gen !== sbWriteGen){
+      // 손으로 새로고침했는데도 못 올린 변경이 남아 있으면 버리고 다시 받는 길을 줌(미전송 표시가 기기에 남기 때문에 새로고침으로는 안 풀림)
+      if(manual && sbHasPending()) showConfirmModal('못 올린 변경이 있어요', '이 기기에서 저장한 내용 중 서버에 올리지 못한 것이 남아 있어요. 인터넷이 되면 자동으로 다시 올려요.\n인터넷이 되는데도 계속 실패한다면, 그 변경을 버리고 서버 내용으로 다시 받을 수 있어요. 버리고 다시 받을까요?', ()=>{ Object.keys(sbPending).forEach(k=>sbPending[k]=false); sbSaveState(); sbPull(true).catch(()=>toast('서버에서 불러오기 실패')); });
+      return; } }
     const day0 = new Date(); day0.setHours(0,0,0,0);   // 11-13 홈 「취소」 칩: 오늘(이 기기 자정 이후) 취소로 바뀐 예약
     const [s, r, m, j, gn, gpf, cl, cb, jd, cx] = await Promise.all([
-      sb.from('app_settings').select('key,value'),
+      sb.from('app_settings').select('key,value,updated_at'),
       sb.from('reservations').select('*').neq('status','cancelled'),
       sb.from('messages').select('*').order('sent_at',{ascending:false}).limit(200),
       sb.from('sms_jobs').select('*').in('status',['pending','approved','blocked','missed','unknown','failed']).order('scheduled_date'),
@@ -5527,7 +5553,10 @@ async function sbPull(manual){
     const serverEmpty = !(s.data||[]).length && !(r.data||[]).length;
     const localHas = !!(localStorage.getItem(SK_RES) && JSON.parse(localStorage.getItem(SK_RES)||'[]').length) || !!(localStorage.getItem(SK_SET) && (JSON.parse(localStorage.getItem(SK_SET)||'{}').name));
     if(serverEmpty && localHas){
-      showConfirmModal('서버에 올리기', '서버가 비어 있습니다. 이 기기의 설정·템플릿·예약을 서버로 올릴까요? (한 번만)', ()=>sbPushAll().then(()=>toast('서버에 올렸어요 ☁️')).catch(()=>toast('올리기 실패')));
+      showConfirmModal('서버에 올리기', '서버가 비어 있습니다. 이 기기의 설정·템플릿·예약을 서버로 올릴까요? (한 번만)', ()=>{
+        sbBase = { res:{}, hist:{}, set:{}, ver:{}, sent:{} };   // 빈 서버 복원: 기준을 비워 이 기기의 전부를 「새로 넣기」로(기준이 남아 있으면 같은 줄은 안 올라가 다음 받기에 사라짐)
+        sbPushAll().then(()=>toast('서버에 올렸어요 ☁️')).catch(()=>toast('올리기 실패'));
+      });
       return;
     }
     const map = Object.fromEntries((s.data||[]).map(x=>[x.key,x.value]));
@@ -5536,9 +5565,12 @@ async function sbPull(manual){
       if(map.settings) localStorage.setItem(SK_SET, JSON.stringify(map.settings));
       if(map.tpl) localStorage.setItem(SK_TPL, JSON.stringify(map.tpl));
       if(map.periods) localStorage.setItem(SK_PER, JSON.stringify(map.periods));
+      // 편집 중이라 안 받은 값은 기준·버전도 그대로 → 저장할 때 서버가 바뀐 걸 알아챔
+      (s.data||[]).forEach(x=>{ if(x.key in SB_SET_KEYS){ sbBase.set[x.key] = sbCanon(x.value); sbBase.ver[x.key] = x.updated_at; delete sbBase.sent[x.key]; } });
     }
-    const res = (r.data||[]).map(rowToRes); localStorage.setItem(SK_RES, JSON.stringify(res)); sbResIds = new Set(res.map(x=>x.id));
-    const hist = (m.data||[]).map(rowToHist); localStorage.setItem(SK_HIST, JSON.stringify(hist)); sbHistIds = new Set(hist.map(x=>x.id)); sbHistAt = new Map(hist.map(x=>[x.id,x.at||'']));
+    const res = (r.data||[]).map(rowToRes); localStorage.setItem(SK_RES, JSON.stringify(res)); sbBase.res = Object.fromEntries(res.map(x=>[x.id, resFields(x)])); sbBase.put = {};
+    const hist = (m.data||[]).map(rowToHist); localStorage.setItem(SK_HIST, JSON.stringify(hist)); sbBase.hist = Object.fromEntries(hist.map(x=>[x.id, x.at||'']));
+    sbSaveState();
     sbApplying = true; try { sbRefreshUI(withSettings); } finally { sbApplying = false; }
     sbBotState = map.bot_state || null; sbRenderJobs(j.data||[]);
     if(cl.error||cb.error) console.error(cl.error||cb.error); else { sbClosures = cl.data||[]; sbClosureBlocks = cb.data||[]; renderClosures(); }
@@ -5552,47 +5584,111 @@ async function sbPull(manual){
 // ── 캐시 → 서버 (실제 작업: 큐 안에서만 호출) ──
 const SB_SET_KEYS = { settings:[SK_SET,'{}'], tpl:[SK_TPL,'{}'], periods:[SK_PER,'[]'] };
 async function _pushSettings(key){
+  // v1.28.0: 통째로 덮어쓰는 값이라 「내가 마지막으로 받은 버전(updated_at)일 때만」 고침(서버가 한 번에 판단 → 두 기기가 동시에 저장해도 한쪽만 통과).
+  // 그사이 다른 기기·봇이 바꿨으면 덮지 않고 서버 값으로 맞춘 뒤 알림(전엔 마지막 저장이 이김)
   const g = sbWriteGen, [sk, def] = SB_SET_KEYS[key];
-  const { error } = await sb.from('app_settings').upsert({ key, value: JSON.parse(localStorage.getItem(sk)||def) });
-  if(error){ sbFail(error); return false; }
-  if(g === sbWriteGen) sbPending[key] = false; // 올리는 사이 또 저장됐으면 pending 유지(다음 push가 올림)
-  return true;
+  const local = JSON.parse(localStorage.getItem(sk)||def), lc = sbCanon(local);
+  // 올렸지만 서버 답을 못 받은 값들(sent) — 서버와 대조가 끝날 때까지 전부 남겨 둠. 서버 값이 이 중 하나면 「내가 올린 것」이라 충돌이 아님
+  const sentList = Array.isArray(sbBase.sent[key]) ? sbBase.sent[key] : (sbBase.sent[key] === undefined ? [] : [sbBase.sent[key]]);
+  if(!sentList.includes(lc)) sentList.push(lc);
+  sbBase.sent[key] = sentList; sbSaveState();
+  const done = nv => { sbBase.set[key] = lc; delete sbBase.sent[key]; if(nv) sbBase.ver[key] = nv; else delete sbBase.ver[key];
+    if(g === sbWriteGen) sbPending[key] = false;   // 올리는 사이 또 저장됐으면 pending 유지(다음 push가 올림)
+    sbSaveState(); return true; };
+  for(let attempt = 0; attempt < 3; attempt++){
+    const ver = sbBase.ver[key];
+    if(ver){
+      const r = await sb.from('app_settings').update({ value: local }).eq('key', key).eq('updated_at', ver).select('updated_at');
+      if(r.error){ sbFail(r.error); return false; }
+      if((r.data||[]).length) return done(r.data[0].updated_at);
+    }
+    // 내 버전이 아니거나 버전을 모름(첫 실행) → 서버 값을 읽어 판단. 버전을 모른다고 그냥 덮지 않음
+    const cur = await sb.from('app_settings').select('value,updated_at').eq('key', key);
+    if(cur.error){ sbFail(cur.error); return false; }
+    const row = cur.data && cur.data[0];
+    if(!row){   // 서버에 아직 없는 키 → 넣기(그사이 다른 기기가 넣었으면 0행 → 다시 판단)
+      const ins = await sb.from('app_settings').upsert({ key, value: local }, { ignoreDuplicates:true }).select('updated_at');
+      if(ins.error){ sbFail(ins.error); return false; }
+      if((ins.data||[]).length) return done(ins.data[0].updated_at);
+      delete sbBase.ver[key]; continue;
+    }
+    const sc = sbCanon(row.value);
+    if(sc === lc) return done(row.updated_at);   // 이미 같은 값
+    if(sentList.includes(sc) || sbBase.set[key] === sc){ sbBase.ver[key] = row.updated_at; continue; }   // 서버 값 = 내가 앞서 올린 값(응답만 끊김)이거나 내가 받은 값 그대로 → 충돌 아님, 새 버전으로 다시
+    if(g !== sbWriteGen) return true;   // 판단하는 사이 또 저장함 → 화면을 서버 값으로 덮지 않고 그 저장의 push가 다시 판단(pending 유지)
+    localStorage.setItem(sk, JSON.stringify(row.value)); sbBase.set[key] = sc; sbBase.ver[key] = row.updated_at; delete sbBase.sent[key];
+    sbPending[key] = false; sbFormDirty = false; sbSaveState();
+    sbApplying = true; try { sbRefreshUI(true); } finally { sbApplying = false; }
+    const what = { settings:'숙소 설정', tpl:'문자 템플릿', periods:'요금 기간' }[key];
+    showConfirmModal('다른 기기에서 먼저 바꿨어요', what+'이(가) 다른 기기나 봇에서 먼저 바뀌어, 방금 저장한 내용을 올리지 않고 서버 값으로 맞췄어요.\n화면을 확인하고 필요한 부분만 다시 고쳐 주세요.', ()=>{});
+    return true;
+  }
+  sbFail(new Error('settings push: version loop')); return false;
 }
 async function _pushReservations(){
-  const g = sbWriteGen, rows = reservations.map(resToRow);
-  let rejected = [];
-  if(rows.length){
-    const { error } = await sb.from('reservations').upsert(rows);
-    if(error && String(error.code||'').startsWith('23')){
-      // 제약 위반(날짜 겹침 등)은 영구 오류 → 한 건씩 올려 멀쩡한 건 살리고 거부된 건만 알림
-      for(const row of rows){ const r = await sb.from('reservations').upsert(row); if(r.error) rejected.push({ row, code:r.error.code }); }
-      const names = rejected.map(x=>x.row.name||x.row.id).join(', ');
-      toast((rejected.some(x=>x.code==='23P01') ? '날짜가 겹쳐 서버가 거부한 예약: ' : '서버가 거부한 예약: ')+names+' — 저장 안 됨, 앱 화면에서도 뺐어요');
+  // v1.28.0: 기준 모습(sbBase.res)과 달라진 것만 올림. 새 예약 = 넣기(서버에 이미 있는 id는 건드리지 않음), 고친 예약 = 바뀐 칸만(status는 안 건드려 봇의 취소를 되살리지 않음),
+  //          화면에서 지운 예약 = 삭제. 보낼 값은 첫 요청 전에 떠 두고(스냅샷) 기준에는 실제로 보낸 값만 적음 — 올리는 사이 또 고친 내용이 「이미 올린 것」으로 처리되지 않게
+  const g = sbWriteGen, base = sbBase.res;
+  const snap = reservations.map(r=>({ id:r.id, name:r.name||r.id, f:resFields(r), row:resToRow(r) })), ids = new Set(snap.map(s=>s.id));
+  const added = snap.filter(s=>!(s.id in base));
+  const gone = Object.keys(base).filter(id=>!ids.has(id));
+  const rejected = [], lost = [];
+  const isPerm = e => /^(22|23)/.test(String(e && e.code || ''));   // 값·제약 위반(날짜 형식, 날짜 겹침 등) = 다시 해도 안 되는 오류 → 그 줄만 거부. 그 밖(네트워크·로그인 만료 등)은 재시도
+  if(added.length){
+    // 넣기는 서버에 이미 있는 id를 건드리지 않음. 실제로 들어간 줄만 답으로 옴. 안 들어간 줄 = 앞서 넣었는데 답만 끊긴 경우 →
+    // 그때 보낸 모습(sbBase.put, 기기에 저장)을 기준으로 삼아 아래 「바뀐 칸」 단계에서 그 뒤 이 기기가 고친 칸만 올림(다른 기기가 고친 칸은 안 건드림)
+    const sentAt = sbBase.put || (sbBase.put = {});
+    added.forEach(s=>{ if(!sentAt[s.id]) sentAt[s.id] = s.f; }); sbSaveState();
+    const dup = [], put = async list => { const x = await sb.from('reservations').upsert(list.map(s=>s.row), { ignoreDuplicates:true }).select('id');
+      if(!x.error){ const got = new Set((x.data||[]).map(r=>r.id)); list.forEach(s=>{ if(got.has(s.id)){ base[s.id] = s.f; delete sentAt[s.id]; } else dup.push(s); }); } return x.error; };
+    const error = await put(added);
+    if(error && isPerm(error)){
+      for(const s of added){ const e = await put([s]); if(!e) continue; if(isPerm(e)){ rejected.push({ s, code:e.code }); delete sentAt[s.id]; } else { sbSaveState(); sbFail(e); return false; } }
     } else if(error){ sbFail(error); return false; }
+    if(dup.length){
+      const d = await sb.from('reservations').select('id').in('id', dup.map(s=>s.id));
+      if(d.error){ sbSaveState(); sbFail(d.error); return false; }
+      const there = new Set((d.data||[]).map(r=>r.id));
+      dup.forEach(s=>{ if(there.has(s.id)) base[s.id] = sentAt[s.id]; else lost.push(s); delete sentAt[s.id]; });   // 서버에 없으면 그사이 다른 기기가 지운 것 → 다시 넣지 않음
+    }
   }
-  const cur = new Set(reservations.map(r=>r.id));
-  const gone = [...sbResIds].filter(id=>!cur.has(id));
-  if(gone.length){ const { error } = await sb.from('reservations').delete().in('id', gone); if(error){ sbFail(error); return false; } }
-  rejected.forEach(x=>cur.delete(x.row.id));
-  if(rejected.length){   // 11-07 서버가 거부한 예약(날짜 겹침 등)은 이 기기 화면에서도 빼서 유령 예약이 남지 않게
-    const bad = new Set(rejected.map(x=>x.row.id));
+  const changed = snap.filter(s=>s.id in base).map(s=>{ const b = base[s.id], diff = {}; RES_F.forEach(k=>{ if((b[k] ?? '') !== (s.f[k] ?? '')) diff[k] = s.f[k]; }); return Object.keys(diff).length ? { ...s, diff } : null; }).filter(Boolean);
+  for(const s of changed){
+    const x = await sb.from('reservations').update(s.diff).eq('id', s.id).select('id');
+    if(x.error){ if(isPerm(x.error)){ rejected.push({ s, code:x.error.code }); continue; } sbSaveState(); sbFail(x.error); return false; }
+    if(!(x.data||[]).length){ lost.push(s); continue; }   // 서버에 그 줄이 없음 = 다른 기기가 지움
+    base[s.id] = { ...base[s.id], ...s.diff };
+  }
+  if(gone.length){ const { error } = await sb.from('reservations').delete().in('id', gone); if(error){ sbSaveState(); sbFail(error); return false; } gone.forEach(id=>{ delete base[id]; }); }
+  if(rejected.length || lost.length){
+    if(rejected.length) toast((rejected.some(x=>x.code==='23P01') ? '날짜가 겹쳐 서버가 거부한 예약: ' : '서버가 거부한 예약: ')+rejected.map(x=>x.s.name).join(', ')+' — 저장 안 됨, 앱 화면에서도 뺐어요');
+    else toast('다른 기기에서 지운 예약이라 수정을 올리지 못했어요: '+lost.map(s=>s.name).join(', '));
+    // 이 기기 화면과 기준에서 뺌(기준에 남기면 「화면에서 지운 예약」으로 오해해 서버에서 지움). 고치다 거부된 예약은 다음 받기 때 서버 모습으로 돌아옴
+    const bad = new Set([...rejected.map(x=>x.s.id), ...lost.map(s=>s.id)]);
+    bad.forEach(id=>{ delete base[id]; });
     reservations = reservations.filter(r=>!bad.has(r.id)); _saveReservations();
     try{ renderReservations(); renderDashboard(); }catch(e){}
   }
-  sbResIds = cur; if(g === sbWriteGen) sbPending.res = false;
+  if(g === sbWriteGen) sbPending.res = false;
+  sbSaveState();
   return rejected.length === 0;
 }
 async function _pushHistory(){
-  const g = sbWriteGen, rows = msgHistory.map(histToRow);
-  if(rows.length){ const { error } = await sb.from('messages').upsert(rows); if(error){ sbFail(error); return false; } }
-  const cur = new Set(msgHistory.map(h=>h.id));
-  // 200개 넘쳐서 밀려난(가장 오래된) 이력은 삭제가 아님 → 현재 목록의 가장 오래된 시각보다 뒤인 것만 '지운 것'으로 봄
-  const oldest = msgHistory.length>=200 ? (msgHistory[msgHistory.length-1]?.at||'') : '';
-  const gone = [...sbHistIds].filter(id=>!cur.has(id) && (!oldest || (sbHistAt.get(id)||'') >= oldest));
-  if(gone.length){ const { error } = await sb.from('messages').delete().in('id', gone); if(error){ sbFail(error); return false; } }
-  gone.forEach(id=>{ sbHistIds.delete(id); sbHistAt.delete(id); });
-  msgHistory.forEach(h=>{ sbHistIds.add(h.id); sbHistAt.set(h.id, h.at||''); });
-  if(g === sbWriteGen) sbPending.hist = false; return true;
+  // v1.28.0: 이 기기에서 새로 생긴 이력만 올림(전엔 200건 전체를 올려 봇이 바꾼 전달 상태를 되돌림). 앱은 이미 있는 이력을 고치지 않음.
+  //          목록은 첫 요청 전에 떠 두고, 기준에는 실제로 보낸 이력만 적음(올리는 사이 생긴 이력이 빠지지 않게)
+  const g = sbWriteGen, base = sbBase.hist;
+  const snap = msgHistory.map(h=>({ id:h.id, at:h.at||'', row:histToRow(h) })), cur = new Set(snap.map(s=>s.id));
+  const fresh = snap.filter(s=>!(s.id in base));
+  if(fresh.length){ const { error } = await sb.from('messages').upsert(fresh.map(s=>s.row), { ignoreDuplicates:true }); if(error){ sbFail(error); return false; } fresh.forEach(s=>{ base[s.id] = s.at; }); }
+  // 200개 넘쳐서 밀려난(가장 오래된) 이력은 삭제가 아님 → 현재 목록의 가장 오래된 시각보다 뒤인 것만 '지운 것'으로 보고, 밀려난 것은 기준에서만 뺌
+  const oldest = snap.length>=200 ? snap[snap.length-1].at : '';
+  const missing = Object.keys(base).filter(id=>!cur.has(id));
+  const gone = missing.filter(id=>!oldest || (base[id]||'') >= oldest);
+  if(gone.length){ const { error } = await sb.from('messages').delete().in('id', gone); if(error){ sbSaveState(); sbFail(error); return false; } }
+  missing.forEach(id=>{ delete base[id]; });
+  if(g === sbWriteGen) sbPending.hist = false;
+  sbSaveState();
+  return true;
 }
 async function sbRetryPending(){
   let ok = true;
@@ -5603,18 +5699,20 @@ async function sbRetryPending(){
   return ok;
 }
 // 공개 함수: 큐에 넣고 바로 반환(저장 UI는 기다리지 않음)
-function sbPushSettings(key){ if(!sb || sbApplying) return; sbWriteGen++; sbPending[key] = true; if(!sbUserEmail) return; return sbRun(async()=>{ if(await _pushSettings(key)) sbStatus('계정: '+sbUserEmail+' · 서버 저장 '+sbNow()); }); }
-function sbPushReservations(){ if(!sb || sbApplying) return; sbWriteGen++; sbPending.res = true; if(!sbUserEmail) return; return sbRun(async()=>{ if(await _pushReservations()) sbStatus('계정: '+sbUserEmail+' · 서버 저장 '+sbNow()); }); }
-function sbPushHistory(){ if(!sb || sbApplying) return; sbWriteGen++; sbPending.hist = true; if(!sbUserEmail) return; return sbRun(async()=>{ if(await _pushHistory()) sbStatus('계정: '+sbUserEmail+' · 서버 저장 '+sbNow()); }); }
+function sbPushSettings(key){ if(sbApplying) return; sbWriteGen++; sbPending[key] = true; sbSaveState(); if(!sb || !sbUserEmail) return; return sbRun(async()=>{ if(await _pushSettings(key)) sbStatus('계정: '+sbUserEmail+' · 서버 저장 '+sbNow()); }); }
+function sbPushReservations(){ if(sbApplying) return; sbWriteGen++; sbPending.res = true; sbSaveState(); if(!sb || !sbUserEmail) return; return sbRun(async()=>{ if(await _pushReservations()) sbStatus('계정: '+sbUserEmail+' · 서버 저장 '+sbNow()); }); }
+function sbPushHistory(){ if(sbApplying) return; sbWriteGen++; sbPending.hist = true; sbSaveState(); if(!sb || !sbUserEmail) return; return sbRun(async()=>{ if(await _pushHistory()) sbStatus('계정: '+sbUserEmail+' · 서버 저장 '+sbNow()); }); }
 function sbPushAll(){
-  if(!sb || !sbUserEmail) return Promise.resolve();
-  sbWriteGen++; Object.keys(sbPending).forEach(k=>sbPending[k]=true);
+  sbWriteGen++; Object.keys(sbPending).forEach(k=>sbPending[k]=true); sbSaveState();   // 연결이 없어도 표시부터 남김 → 연결되면 올라감
+  if(!sb || !sbUserEmail) return Promise.reject(new Error('offline'));
   return sbRun(async()=>{ const ok = await sbRetryPending(); if(!ok || sbHasPending()) throw new Error('push incomplete'); sbStatus('계정: '+sbUserEmail+' · 서버에 올림 '+sbNow()); });
 }
 // 기존 저장 함수에 서버 쓰기 덧붙임 (설정·호실·기간·초기화는 전부 persistSettings 경유)
-const _persistSettings = persistSettings; persistSettings = function(){ _persistSettings(); sbFormDirty = false; sbPushSettings('settings'); };
-const _saveTplStorage = saveTplStorage; saveTplStorage = function(){ _saveTplStorage(); sbFormDirty = false; sbPushSettings('tpl'); };
-const _savePeriodsStorage = savePeriodsStorage; savePeriodsStorage = function(){ _savePeriodsStorage(); sbFormDirty = false; sbPushSettings('periods'); };
+const _persistSettings = persistSettings; persistSettings = function(){ _persistSettings(); if(!sbApplying) sbFormDirty = false; sbPushSettings('settings'); };
+const _saveTplStorage = saveTplStorage; saveTplStorage = function(){ _saveTplStorage(); if(!sbApplying) sbFormDirty = false; sbPushSettings('tpl'); };   // loadAll이 끝에서 매번 부름 → pull 중엔 「편집 중」 표시를 끄지 않음(v1.28.0)
+const _savePeriodsStorage = savePeriodsStorage; savePeriodsStorage = function(){ _savePeriodsStorage(); if(!sbApplying) sbFormDirty = false; sbPushSettings('periods'); };
+// 설정·템플릿 탭에서 입력만 하고 저장 없이 다른 탭으로 가면 「편집 중」을 풀어, 다른 기기가 바꾼 설정을 계속 못 받는 일을 막음(v1.28.0)
+const _switchTab = switchTab; switchTab = function(){ sbFormDirty = false; return _switchTab.apply(this, arguments); };
 const _saveReservations = saveReservations; saveReservations = function(){ _saveReservations(); sbPushReservations(); };
 const _saveHistoryStorage = saveHistoryStorage; saveHistoryStorage = function(){ _saveHistoryStorage(); sbPushHistory(); };
 const _importData = importData; importData = function(input){
@@ -5631,14 +5729,14 @@ const _importData = importData; importData = function(input){
       sbFormDirty = false;
       await sbPushAll();
       toast('가져오기 완료 ✅ (서버 반영)');
-    }catch(err){ console.error(err); toast(err && err.message==='push incomplete' ? '가져왔지만 서버 반영 실패 — 인터넷 확인 (자동 재시도)' : '파일이 올바르지 않아요 ❌'); }
+    }catch(err){ console.error(err); toast(err && err.message==='offline' ? '가져왔어요 — 서버에는 연결되면 올라가요' : err && err.message==='push incomplete' ? '가져왔지만 서버 반영 실패 — 인터넷 확인 (자동 재시도)' : '파일이 올바르지 않아요 ❌'); }
     input.value='';
   };
   reader.readAsText(file);
 };
 // 시작: 저장된 세션 있으면 바로(네트워크 불필요), 없으면 로그인 화면. 서버 설정이 없으면(개발) 로컬 전용.
 (async()=>{
-  if(!sb){ sbShowLogin(false); sbStatus('서버 설정 없음 — 이 기기에만 저장'); return; }
+  if(!sb){ sbShowLogin(false); sbStatus('서버에 연결하지 못했어요 — 지금 저장하는 내용은 이 기기에 두었다가, 인터넷이 될 때 앱을 다시 열면 서버로 올려요'); setTimeout(()=>toast('인터넷 연결이 약해 서버에 연결하지 못했어요'), 800); return; }
   const { data } = await sb.auth.getSession();
   if(data?.session) await sbAfterLogin(data.session); else sbShowLogin(true);
 })();
