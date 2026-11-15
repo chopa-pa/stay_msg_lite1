@@ -35,7 +35,7 @@
 
   --muted:#f1f5f9;
   --muted-fg:#64748b;
-  --muted-fg-2:#94a3b8;
+  --muted-fg-2:#6b7a90;
 
   --border:#e2e8f0;
   --border-strong:#cbd5e1;
@@ -1554,8 +1554,8 @@ input,select,textarea{font-family:inherit;}
   #tab-guests .gs-memo{grid-column:1 / -1;grid-row:3;margin-top:4px;font-size:13px;white-space:normal;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;line-height:1.45;}
   #tab-guests .gs-meta .gs-memo:first-child{margin-top:4px;}
   #tab-guests .gs-meta .rv-ch{grid-column:1 / -1;grid-row:4;justify-self:start;margin-top:8px;}
-  #tab-guests .gs-fl{grid-column:1 / -1;grid-row:4;justify-self:end;display:flex;gap:4px;margin-top:8px;}
-  #tab-guests .gs-f{height:32px;padding:0 8px;}
+  #tab-guests .gs-fl{grid-column:1 / -1;grid-row:4;justify-self:end;display:flex;gap:6px;margin-top:8px;}
+  #tab-guests .gs-f{height:40px;min-width:52px;padding:0 10px;}
   #tab-guests .gs-f .gs-auto{font-size:9px;}
   #tab-guests .gs-f.ph{display:none;}
   #tab-guests .gs-head + .gs-stay{margin-top:8px;}
@@ -2072,7 +2072,7 @@ input,select,textarea{font-family:inherit;}
       <div class="sidebar-brand" onclick="switchTab('home')" role="button" tabindex="0" aria-label="홈으로">
         <div class="sidebar-logo">SM</div>
         <div class="sidebar-brand-text">
-          <div class="sidebar-brand-name">Stay_Msg Pro<span class="sidebar-brand-ver" id="appVer">v1.28.1</span></div>
+          <div class="sidebar-brand-name">Stay_Msg Pro<span class="sidebar-brand-ver" id="appVer">v1.28.2</span></div>
           <div class="sidebar-brand-sub">숙소 예약 자동화</div>
         </div>
       </div>
@@ -2128,7 +2128,7 @@ input,select,textarea{font-family:inherit;}
       <div class="mheader-brand" onclick="switchTab('home')" role="button" tabindex="0" aria-label="홈으로">
         <div class="mheader-logo">SM</div>
         <div>
-          <div class="mheader-title">Stay_Msg Pro<span class="mheader-ver" id="appVerM">v1.28.1</span></div>
+          <div class="mheader-title">Stay_Msg Pro<span class="mheader-ver" id="appVerM">v1.28.2</span></div>
           <div class="mheader-sub">숙소 예약 자동화</div>
         </div>
       </div>
@@ -2925,7 +2925,7 @@ input,select,textarea{font-family:inherit;}
 <div class="toast" id="toast"></div>
 
 <script>
-const APP_VERSION='v1.28.1'; // Pro (2026-10-27 lite v3.3.0에서 이름·버전 리셋)
+const APP_VERSION='v1.28.2'; // Pro (2026-10-27 lite v3.3.0에서 이름·버전 리셋)
 const SK_SET='stay_msg_lite1_set_v1';
 const SK_TPL='stay_msg_lite1_tpl_v1';
 const SK_RES='stay_msg_lite1_res_v1';
@@ -4851,7 +4851,10 @@ function gpOf(phone){const d=String(phone||'').replace(/\D/g,'');return d.length
 const GUEST_DOG_RE = /(반려견|강아지|소형견)(?!\s*(동반\s*)?(없음|없어|안\s*함|아님|알레르기))/, GUEST_BBQ_RE = /바[비베]큐\s*(○|o|✓|예|있음|신청|이용|문의)(?!약?\s*(안\s*함|없음|없어|취소|불가))/i;
 function guestDog(r){ const n = guestNotes[r.id]; return (n && n.dog !== null && n.dog !== undefined) ? {on:!!n.dog, auto:false} : {on:GUEST_DOG_RE.test(r.memo||''), auto:true}; }
 function guestBbq(r){ const n = guestNotes[r.id]; return (n && n.bbq !== null && n.bbq !== undefined) ? {on:!!n.bbq, auto:false} : {on:GUEST_BBQ_RE.test(r.memo||''), auto:true}; }
-function guestVisitMap(){ const m = {}; reservations.forEach(r=>{ const k=(r.phone||'').replace(/\D/g,''); if(!k) return; (m[k]=m[k]||[]).push(r.checkin); }); return m; }
+function guestVisitMap(){ const m = {}; reservations.forEach(r=>{ const k=(r.phone||'').replace(/\D/g,''); if(!k) return; (m[k]=m[k]||[]).push(r); }); return m; }
+// v1.28.2 재방문 셈법(11-16 쵸파파): 날짜가 이어 붙은 예약(당일 연장)은 한 번으로, 아직 한 번도 안 온 손님의 예정 예약만으로는 재방문 아님. 지인도 셈
+function guestStayCount(list){ const a=list.filter(r=>r.checkin&&r.checkout).sort((x,y)=>x.checkin.localeCompare(y.checkin)); let n=0,end=''; a.forEach(r=>{ if(!end||r.checkin>end) n++; if(r.checkout>end) end=r.checkout; }); return n; }
+function guestIsRepeat(list){ const t=getTodayStr(); return guestStayCount(list)>=2 && list.some(r=>r.checkin<=t); }
 // ── 통계 (v1.8.0, 2026-11-01): 대분류 — 매출 / 손님 / 네이버 유입 / 분석. 차트는 SVG 직접(라이브러리 없음), hover는 <title> ──
 let placeStats = null, statsNote = null, statsCancelled = null;   // 취소 예약은 앱 목록(reservations)에 없어 통계용으로 따로 읽음
 const ST_COL = { 네이버:'#2a78d6', 에어비앤비:'#eb6834', 기타:'#1baf7a', seq:'#2a78d6', seq2:'#86b6ef', f:'#e87ba4', m:'#2a78d6' };   // dataviz 검증 팔레트(슬롯 1·2·3, 5)
@@ -4956,9 +4959,9 @@ function renderStGuest(){
   const el=document.getElementById('stGuest'); if(!el) return;
   const conf=statPaid(), cc={네이버:0,에어비앤비:0,기타:0}; conf.forEach(r=>cc[statChannel(r.channel)]++);
   const dog=conf.filter(r=>guestDog(r).on).length, bbq=conf.filter(r=>guestBbq(r).on).length;
-  const visits=Object.fromEntries(Object.entries(guestVisitMap()).filter(([k])=>conf.some(r=>(r.phone||'').replace(/\D/g,'')===k))), repeat=Object.values(visits).filter(v=>v.length>=2).length, people=Object.keys(visits).length;
+  const visits=Object.fromEntries(Object.entries(guestVisitMap()).filter(([k])=>conf.some(r=>(r.phone||'').replace(/\D/g,'')===k))), repeat=Object.values(visits).filter(guestIsRepeat).length, people=Object.keys(visits).length;
   const gcount={}; conf.forEach(r=>{ const g=parseNum(r.guests)||0; const k=g?g+'인':'미입력'; gcount[k]=(gcount[k]||0)+1; });
-  let h='<div class="stat-grid">'+tile('고객 수',`${people}명`,`확정 예약 ${conf.length}건`)+tile('재방문 고객',`${repeat}명`,'같은 전화번호 2회 이상')+tile('반려견 동반',`${pct(dog,conf.length)}%`,`${dog}건`)+tile('바비큐',`${pct(bbq,conf.length)}%`,`${bbq}건`)+'</div>';
+  let h='<div class="stat-grid">'+tile('고객 수',`${people}명`,`확정 예약 ${conf.length}건`)+tile('재방문 고객',`${repeat}명`,'같은 전화번호 2회 이상 (연장은 한 번)')+tile('반려견 동반',`${pct(dog,conf.length)}%`,`${dog}건`)+tile('바비큐',`${pct(bbq,conf.length)}%`,`${bbq}건`)+'</div>';
   h+='<div class="two">'+card('예약 채널 (건수)', chDonut([{label:'네이버',value:cc.네이버,color:ST_COL.네이버},{label:'에어비앤비',value:cc.에어비앤비,color:ST_COL.에어비앤비},{label:'기타(DM·전화)',value:cc.기타,color:ST_COL.기타}],{center:conf.length+'건'}))
     +card('인원', chDonut(Object.entries(gcount).sort().map(([k,v],i)=>({label:k,value:v,color:[ST_COL.seq,ST_COL.seq2,'#1baf7a','#eda100'][i%4]})),{center:conf.length+'건'}))+'</div>';
   h+='<div class="two">'+card('반려견 · 바비큐', chBars([{label:'반려견',values:{v:dog}},{label:'바비큐',values:{v:bbq}},{label:'둘 다 아님',values:{v:conf.filter(r=>!guestDog(r).on&&!guestBbq(r).on).length}}],{fmt:String,labels:true,h:150,w:320}),'메모·고객 탭 체크 기준');
@@ -5027,7 +5030,7 @@ function renderGuests(){
     st.sort((a,b)=>b.checkin.localeCompare(a.checkin));
     return {st,last:st[0],next:st.filter(r=>r.checkout>today).pop()||null,noRv:st.some(r=>r.checkout<=today&&!(guestNotes[r.id]||{}).review)};
   }).sort((a,b)=>a.next&&b.next?a.next.checkin.localeCompare(b.next.checkin):a.next?-1:b.next?1:b.last.checkin.localeCompare(a.last.checkin));
-  const sets={all,re:all.filter(g=>g.st.length>1),rv:all.filter(g=>g.noRv)};
+  const sets={all,re:all.filter(g=>guestIsRepeat(g.st)),rv:all.filter(g=>g.noRv)};
   document.getElementById('guestCount').textContent=reservations.length?`고객 ${all.length}명 · 재방문 ${sets.re.length}명 · 예약 ${reservations.length}건`:'예약이 없습니다';
   ['all','re','rv'].forEach(f=>{const b=document.querySelector(`#tab-guests .rv-seg [data-f="${f}"]`);if(b){b.classList.toggle('on',_gs.f===f);b.querySelector('b').textContent=sets[f].length;}});
   const q=(document.getElementById('guestSearch').value||'').trim().toLowerCase(),qd=q.replace(/\D/g,'');
@@ -5156,7 +5159,9 @@ function rvChip(c,t,lb){
 function rvRevisit(r){
   const d=s=>String(s||'').replace(/\D/g,''), p=d(r.phone);
   if(p.length<8||statFree(r)) return null;
-  const prev=reservations.filter(x=>x.id!==r.id&&(x.status||'confirmed')==='confirmed'&&!statFree(x)&&x.checkout&&x.checkout<=r.checkin&&d(x.phone)===p);
+  const mine=reservations.filter(x=>x.id!==r.id&&(x.status||'confirmed')==='confirmed'&&x.checkout&&d(x.phone)===p);
+  let start=r.checkin; for(let i=0,x;i<10&&(x=mine.find(y=>y.checkout===start));i++) start=x.checkin;   // v1.28.2: 앞 예약 퇴실일 = 이 예약 입실일이면 연장 → 재방문 아님
+  const prev=mine.filter(x=>!statFree(x)&&x.checkout<start);
   if(!prev.length) return null;
   const rv=prev.some(x=>(guestNotes[x.id]||{}).review);
   return {pct:rv?10:5, rv, txt:rv?'재방문 5% + 리뷰 5% = 10%':'재방문 5% (지난 방문 리뷰 체크 없음)'};
@@ -5297,6 +5302,10 @@ async function installApp(){
 }
 
 // ─────── INIT ───────
+// v1.28.2: 글자(라벨)와 입력칸 묶기 — for가 없는 라벨은 같은 칸 안의 첫 입력칸과 연결(글자를 눌러도 입력칸이 잡히고, 화면 읽기가 칸 이름을 읽음). 나중에 그려지는 칸도 묶음
+function linkLabel(l){ if(l.htmlFor||l.querySelector('input,select,textarea')) return; const c=l.parentElement&&l.parentElement.querySelector('input:not([type=hidden]),select,textarea'); if(!c) return; if(!c.id) c.id='f_'+Math.random().toString(36).slice(2,9); l.htmlFor=c.id; }
+document.addEventListener('DOMContentLoaded',()=>{ let t; const run=()=>document.querySelectorAll('label:not([for])').forEach(linkLabel); run();
+  new MutationObserver(()=>{ clearTimeout(t); t=setTimeout(run,300); }).observe(document.body,{childList:true,subtree:true}); });   // 화면이 다시 그려지면 새 칸도 묶음
 document.addEventListener('keydown',e=>{
   if(e.key==='Escape'){
     if(document.getElementById('_calModal').innerHTML)document.getElementById('_calModal').innerHTML='';
