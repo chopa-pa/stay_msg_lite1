@@ -833,7 +833,7 @@ input,select,textarea{font-family:inherit;}
   padding:10px 20px;border-radius:20px;
   font-size:13px;font-weight:600;
   opacity:0;transition:all .28s;z-index:999;
-  pointer-events:none;white-space:nowrap;
+  pointer-events:none;white-space:normal;width:max-content;max-width:calc(100vw - 32px);text-align:center;line-height:1.45;
   box-shadow:0 10px 30px rgba(0,0,0,0.2);
 }
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
@@ -2072,7 +2072,7 @@ input,select,textarea{font-family:inherit;}
       <div class="sidebar-brand" onclick="switchTab('home')" role="button" tabindex="0" aria-label="홈으로">
         <div class="sidebar-logo">SM</div>
         <div class="sidebar-brand-text">
-          <div class="sidebar-brand-name">Stay_Msg Pro<span class="sidebar-brand-ver" id="appVer">v1.28.0</span></div>
+          <div class="sidebar-brand-name">Stay_Msg Pro<span class="sidebar-brand-ver" id="appVer">v1.28.1</span></div>
           <div class="sidebar-brand-sub">숙소 예약 자동화</div>
         </div>
       </div>
@@ -2128,7 +2128,7 @@ input,select,textarea{font-family:inherit;}
       <div class="mheader-brand" onclick="switchTab('home')" role="button" tabindex="0" aria-label="홈으로">
         <div class="mheader-logo">SM</div>
         <div>
-          <div class="mheader-title">Stay_Msg Pro<span class="mheader-ver" id="appVerM">v1.28.0</span></div>
+          <div class="mheader-title">Stay_Msg Pro<span class="mheader-ver" id="appVerM">v1.28.1</span></div>
           <div class="mheader-sub">숙소 예약 자동화</div>
         </div>
       </div>
@@ -2925,7 +2925,7 @@ input,select,textarea{font-family:inherit;}
 <div class="toast" id="toast"></div>
 
 <script>
-const APP_VERSION='v1.28.0'; // Pro (2026-10-27 lite v3.3.0에서 이름·버전 리셋)
+const APP_VERSION='v1.28.1'; // Pro (2026-10-27 lite v3.3.0에서 이름·버전 리셋)
 const SK_SET='stay_msg_lite1_set_v1';
 const SK_TPL='stay_msg_lite1_tpl_v1';
 const SK_RES='stay_msg_lite1_res_v1';
@@ -3573,6 +3573,7 @@ function openDatePicker(ciId,coId,btnId,onDone){
   const today=new Date();
   _cal.ci=document.getElementById(_cal.targetCi).value||null;
   _cal.co=document.getElementById(_cal.targetCo).value||null;
+  _cal.min=_cal.ci&&_cal.ci<getTodayStr()?_cal.ci:null;   // v1.28.1: 이미 입실한 예약을 고칠 땐 원래 입실일부터 고를 수 있음(하루 연장 등)
   const base=_cal.ci?new Date(_cal.ci+'T00:00:00'):today;   // 고른 날짜가 있으면 그 달부터
   _cal.y=base.getFullYear();_cal.m=base.getMonth();
   _cal.step='ci';_cal.ym=false;_renderCal();
@@ -3589,7 +3590,7 @@ function _renderCal(){
     const ds=`${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
     const isCi=ds===_cal.ci,isCo=ds===_cal.co;
     const inRange=_cal.ci&&_cal.co&&ds>_cal.ci&&ds<_cal.co;
-    const isPast=ds<today;
+    const isPast=ds<(_cal.min||today);
     const isToday=ds===today;
     const dow=(first+d-1)%7;
     const isSun=dow===0,isSat=dow===6,isWe=dow===5||dow===6;
@@ -4270,7 +4271,8 @@ function addHistoryEntry(cur,body){
     at:new Date().toISOString(),
     stageId:cur.stage.id,stageLabel:cur.stage.label,stageIcon:cur.stage.icon,
     tplTitle:cur.tpl.title,
-    name,phone,body
+    name,phone,body,
+    resId:composeCtx().id||''   // v1.28.1: 불러온 예약으로 보낸 문자는 그 예약에 묶음(같은 번호의 다른 예약이 「보냄」으로 뜨지 않게)
   });
   if(msgHistory.length>200)msgHistory.length=200;
   saveHistoryStorage();renderDashboard();
@@ -4665,7 +4667,7 @@ function dashCalDayClick(ds,ev){
   if(dayRes.length>1){
     _dashCal.sel=ds;
     const td=getTodayStr(), allUp=dayRes.every(r=>r.checkout>=td), allPast=dayRes.every(r=>r.checkout<td);
-    _rv.f=allUp?'up':allPast?'past':'all'; _rv.open=null;
+    _rv.f=allUp?'up':allPast?'past':'all'; _rv.k=''; _rv.open=null;
     const se=document.getElementById('rvSearch'); if(se) se.value='';
     switchTab('reserv');
     setTimeout(()=>{
@@ -5015,6 +5017,7 @@ function gsSetFilter(f){_gs.f=f;try{localStorage.setItem('gsFilter',f);}catch(e)
 function gsPhone(p){const d=(p||'').replace(/\D/g,'');return d.length===11?d.slice(0,3)+'-'+d.slice(3,7)+'-'+d.slice(7):(p||'');}
 function gsDate(ds,y){const d=new Date(ds+'T00:00:00');return (d.getFullYear()!==y?d.getFullYear()+'.':'')+(d.getMonth()+1)+'.'+d.getDate();}
 function renderGuests(){
+  { const t=document.getElementById('gpMemo'), c=document.getElementById('gpCaution'); if(_gpEdit&&t) _gpDraft={memo:t.value,caution:!!(c&&c.checked)}; }   // v1.28.1: 다시 그려도 쓰던 메모가 안 사라지게
   const host=document.getElementById('guestList'); if(!host) return;
   const today=rvYmd(new Date()), y=new Date().getFullYear();
   const map=new Map();
@@ -5068,23 +5071,23 @@ function renderGuests(){
     grp('머무는 중 · 다가오는',list.filter(g=>g.next))+grp('다녀간 고객',list.filter(g=>!g.next));
 }
 // 손님 메모·주의(11-14 쵸파파). 전화번호 없는 손님(에어비앤비 등)은 저장할 곳이 없어 안 보임
-let _gpEdit=null;
+let _gpEdit=null, _gpDraft=null;
 function gpBlock(phone,canEdit){
   const d=String(phone||'').replace(/\D/g,''); if(d.length<8) return '';
   const pf=guestProfiles[d]||{};
-  if(_gpEdit===d) return `<div class="gs-pe"><textarea id="gpMemo" placeholder="사실만 적어 주세요 (예: 11-03 실내 흡연 확인)">${esc(pf.memo||'')}</textarea>`+
-    `<div class="row"><label><input type="checkbox" id="gpCaution"${pf.caution?' checked':''}>주의 손님</label><button type="button" class="btn btn-secondary btn-sm" onclick="gpEdit(null)">취소</button><button type="button" class="btn btn-primary btn-sm" onclick="gpSave('${d}')">저장</button></div></div>`;
+  if(_gpEdit===d) return `<div class="gs-pe"><textarea id="gpMemo" placeholder="사실만 적어 주세요 (예: 11-03 실내 흡연 확인)">${esc(_gpDraft?_gpDraft.memo:(pf.memo||''))}</textarea>`+
+    `<div class="row"><label><input type="checkbox" id="gpCaution"${(_gpDraft?_gpDraft.caution:pf.caution)?' checked':''}>주의 손님</label><button type="button" class="btn btn-secondary btn-sm" onclick="gpEdit(null)">취소</button><button type="button" class="btn btn-primary btn-sm" onclick="gpSave('${d}')">저장</button></div></div>`;
   const btn=canEdit?`<button type="button" class="gs-pmb" onclick="gpEdit('${d}')">${pf.memo||pf.caution?'메모 고치기':'+ 손님 메모'}</button>`:'';
   return pf.memo?`<div class="gs-pm${pf.caution?' ct':''}">${esc(pf.memo)}${btn}</div>`:(btn?`<div class="gs-pm">${btn.replace('gs-pmb','gs-pmb" style="margin-left:0')}</div>`:'');
 }
-function gpEdit(d){ if(d&&!(sb&&sbUserEmail)){ toast('로그인 후 적을 수 있어요'); return; } _gpEdit=d; renderGuests(); if(d){const t=document.getElementById('gpMemo'); if(t) t.focus();} }
+function gpEdit(d){ if(d&&!(sb&&sbUserEmail)){ toast('로그인 후 적을 수 있어요'); return; } _gpEdit=d; _gpDraft=null; const _o=document.getElementById('gpMemo'); if(_o) _o.removeAttribute('id'); renderGuests(); if(d){const t=document.getElementById('gpMemo'); if(t) t.focus();} }
 async function gpSave(d){
   if(!(sb && sbUserEmail)){ toast('로그인 후 적을 수 있어요'); return; }
   const memo=(document.getElementById('gpMemo').value||'').trim(), caution=document.getElementById('gpCaution').checked;
   const row={ phone:d, memo:memo||null, caution, updated_by:sbUserEmail, updated_at:new Date().toISOString() };
   const { error } = await sb.from('guest_profiles').upsert(row);
   if(error){ console.error(error); toast('저장 실패 — 인터넷 확인'); return; }
-  guestProfiles[d]=row; _gpEdit=null; renderGuests(); toast('저장됐어요 ✓');
+  guestProfiles[d]=row; _gpEdit=null; _gpDraft=null; const _o=document.getElementById('gpMemo'); if(_o) _o.removeAttribute('id'); renderGuests(); toast('저장됐어요 ✓');
 }
 async function guestToggle(resId, field){
   if(!(sb && sbUserEmail)){ toast('로그인 후 표시할 수 있어요'); return; }
@@ -5482,7 +5485,7 @@ function sbFail(e){ console.error(e); toast('서버 저장 실패 — 인터넷 
 
 const resToRow = r => ({ id:r.id, name:r.name||'', phone:r.phone||'', checkin:r.checkin, checkout:r.checkout, guests:r.guests||'', price:r.price||'', room_id:r.roomId||'', channel:r.channel||'', memo:r.memo||'', status:r.status||'confirmed', created_at:r.createdAt||new Date().toISOString() });
 const rowToRes = x => ({ id:x.id, name:x.name, phone:x.phone, checkin:x.checkin, checkout:x.checkout, guests:x.guests, price:x.price, roomId:x.room_id, channel:x.channel, memo:x.memo, status:x.status, createdAt:x.created_at });
-const histToRow = h => ({ id:h.id, stage_id:h.stageId||'', stage_label:h.stageLabel||'', tpl_title:h.tplTitle||'', name:h.name||'', phone:h.phone||'', body:h.body||'', sent_by:h.sentBy||'app', status:h.status||'sent', sent_at:h.at||new Date().toISOString() });
+const histToRow = h => ({ id:h.id, reservation_id:(h.resId&&sbBase.res[h.resId])?h.resId:null, stage_id:h.stageId||'', stage_label:h.stageLabel||'', tpl_title:h.tplTitle||'', name:h.name||'', phone:h.phone||'', body:h.body||'', sent_by:h.sentBy||'app', status:h.status||'sent', sent_at:h.at||new Date().toISOString() });
 const rowToHist = x => ({ id:x.id, resId:x.reservation_id||'', at:x.sent_at, stageId:x.stage_id, stageLabel:x.stage_label, stageIcon:(STAGES.find(s=>s.id===x.stage_id)||{}).icon||'', tplTitle:x.tpl_title, name:x.name, phone:x.phone, body:x.body, sentBy:x.sent_by, status:x.status });
 
 // ── 로그인/세션 ──
@@ -5496,7 +5499,14 @@ async function sbLogin(){
   document.getElementById('lg_pw').value='';
   await sbAfterLogin(data.session);
 }
-async function sbLogout(){ if(sb) await sb.auth.signOut(); location.reload(); }
+function sbLogout(){
+  // v1.28.1: 로그아웃하면 이 기기에 남은 예약·발송 이력(손님 이름·전화)도 지움. 서버에는 그대로라 다시 로그인하면 돌아옴
+  showConfirmModal('로그아웃', '이 기기에 저장된 예약·발송 이력도 함께 지웁니다.\n서버에는 그대로 있어 다시 로그인하면 돌아와요.'+(sbHasPending()?'\n\n아직 서버에 못 올린 변경이 있어요. 지금 로그아웃하면 그 변경은 사라집니다.':''), async()=>{
+    if(sb) await sb.auth.signOut();
+    [SK_RES, SK_HIST, SK_SYNC].forEach(k=>localStorage.removeItem(k));
+    location.reload();
+  });
+}
 async function sbAfterLogin(session){
   sbUserEmail = session?.user?.email || '';
   if(!sbUserEmail){ sbShowLogin(true); return; }
@@ -5541,7 +5551,7 @@ async function sbPull(manual){
       sb.from('guest_profiles').select('*'),
       sb.from('closures').select('*').eq('status','active').order('start_date'),
       sb.from('channel_blocks').select('reservation_id,channel,status,attempts,result').like('reservation_id','closure-%'),
-      sb.from('sms_jobs').select('id,reservation_id,stage_id,status,scheduled_date,result').in('status',['sent','delivered','sending','skipped']),
+      sb.from('sms_jobs').select('id,reservation_id,stage_id,status,scheduled_date,result').in('status',['sent','delivered','sending','skipped']).order('scheduled_date',{ascending:false}).limit(1000),
       sb.from('reservations').select('id,name,phone,checkin,checkout,channel,created_at,updated_at').eq('status','cancelled').gte('updated_at', day0.toISOString())
     ]);
     if(s.error||r.error||m.error) throw (s.error||r.error||m.error);
@@ -5571,10 +5581,10 @@ async function sbPull(manual){
     const res = (r.data||[]).map(rowToRes); localStorage.setItem(SK_RES, JSON.stringify(res)); sbBase.res = Object.fromEntries(res.map(x=>[x.id, resFields(x)])); sbBase.put = {};
     const hist = (m.data||[]).map(rowToHist); localStorage.setItem(SK_HIST, JSON.stringify(hist)); sbBase.hist = Object.fromEntries(hist.map(x=>[x.id, x.at||'']));
     sbSaveState();
+    if(gpf.error) console.error(gpf.error); else guestProfiles = Object.fromEntries((gpf.data||[]).map(x=>[x.phone,x]));
     sbApplying = true; try { sbRefreshUI(withSettings); } finally { sbApplying = false; }
     sbBotState = map.bot_state || null; sbRenderJobs(j.data||[]);
     if(cl.error||cb.error) console.error(cl.error||cb.error); else { sbClosures = cl.data||[]; sbClosureBlocks = cb.data||[]; renderClosures(); }
-    if(gpf.error) console.error(gpf.error); else guestProfiles = Object.fromEntries((gpf.data||[]).map(x=>[x.phone,x]));
     if(gn.error) console.error(gn.error); else { guestNotes = Object.fromEntries((gn.data||[]).map(x=>[x.reservation_id,x])); const gp=document.getElementById('tab-guests'); if(gp&&gp.classList.contains('active')&&!_gpEdit) renderGuests(); }   // 손님 메모 적는 중엔 다시 그리지 않음(쓰던 글 보존)
     sbStatus('계정: '+sbUserEmail+' · 서버 동기화 '+sbNow()+(withSettings?'':' (편집 중인 설정은 제외)')+sbBotLine());
     if(manual) toast('서버에서 새로고침 ✓');
