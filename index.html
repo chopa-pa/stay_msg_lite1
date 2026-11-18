@@ -2925,7 +2925,7 @@ input,select,textarea{font-family:inherit;}
 <div class="toast" id="toast"></div>
 
 <script>
-const APP_VERSION='v1.28.9'; // Pro (2026-10-27 lite v3.3.0에서 이름·버전 리셋)
+const APP_VERSION='v1.28.10'; // Pro (2026-10-27 lite v3.3.0에서 이름·버전 리셋)
 const SK_SET='stay_msg_lite1_set_v1';
 const SK_TPL='stay_msg_lite1_tpl_v1';
 const SK_RES='stay_msg_lite1_res_v1';
@@ -3068,7 +3068,7 @@ function bbqClosed(checkin,memo,resId){
 }
 function hasDog(memo){return GUEST_DOG_RE.test(memo||'');}
 // 입퇴실 블록용 한 줄. 반려견 예약이면 줄바꿈+「반려견 동반 (소형견 1마리)」, 아니면 빈 문자열(줄 자체 없음)
-const DOG_GUIDE='\n\n* 반려견 동반 안내\n  반려견은 침대 위에 올라가지 않게 부탁드립니다.\n  강아지 전용 침대, 전용 식기, 대형 패드 2장만 준비해 두었습니다.\n  실내에서 수컷은 매너벨트 착용이 필수이며, 암컷도 마킹을 하는 경우 기저귀 착용을 부탁드립니다.\n  견종과 성별을 답장으로 알려주세요.';   // 11-07 쵸파파: 확정 문자에 반려견 예약만 안내 붙임(봇 dog_guide와 같은 글)
+const DOG_GUIDE='\n\n* 반려견 동반 안내\n  반려견은 침대 위에 올라가지 않게 부탁드립니다.\n  강아지 전용 침대와 전용 식기, 패드 2장을 준비해 두었습니다.\n  실내에서 수컷은 매너벨트 착용이 필수이며, 암컷도 마킹을 하는 경우 기저귀 착용을 부탁드립니다.\n  견종과 성별을 답장으로 알려주세요.';   // 11-07 쵸파파: 확정 문자에 반려견 예약만 안내 붙임(봇 dog_guide와 같은 글)
 function dogGuide(memo,resId){const n=resId&&guestNotes[resId];return ((n&&n.dog!==null&&n.dog!==undefined)?n.dog:hasDog(memo))?DOG_GUIDE:'';}
 const DOG_CHECKIN='\n\n* 반려견은 침대 위에 올라가지 않게 부탁드립니다.\n  실내에서 수컷은 매너벨트 착용이 필수이며, 암컷도 마킹을 하는 경우 기저귀 착용을 부탁드립니다.';   // 입실안내 금연·가구 줄 뒤 따로 단락(11-14 쵸파파), 반려견 아니면 없음(봇과 같은 글)
 function dogCheckin(memo,resId){return dogGuide(memo,resId)?DOG_CHECKIN:'';}
