@@ -2925,7 +2925,7 @@ input,select,textarea{font-family:inherit;}
 <div class="toast" id="toast"></div>
 
 <script>
-const APP_VERSION='v1.28.8'; // Pro (2026-10-27 lite v3.3.0에서 이름·버전 리셋)
+const APP_VERSION='v1.28.9'; // Pro (2026-10-27 lite v3.3.0에서 이름·버전 리셋)
 const SK_SET='stay_msg_lite1_set_v1';
 const SK_TPL='stay_msg_lite1_tpl_v1';
 const SK_RES='stay_msg_lite1_res_v1';
@@ -4597,6 +4597,15 @@ function saveReservation(){
   if(co<=ci){toast('체크아웃은 체크인 다음 날 이후여야 해요');return;}
   const exists=reservations.find(r=>r.name===name&&r.checkin===ci&&r.checkout===co);
   if(exists){toast('이미 저장된 예약이에요');return;}
+  // v1.28.9: 같은 손님의 다가오는 예약이 이미 있으면 날짜 변경일 가능성 → 예약 탭 「수정」으로 안내(여기서 저장하면 예약이 하나 더 생김, 11-18 쵸파파)
+  const today=getTodayStr();
+  const same=reservations.find(r=>r.status!=='cancelled'&&r.name===name&&r.checkout>=today);
+  if(same){
+    showConfirmModal('날짜를 바꾸시나요?',
+      `${name}님 예약(${same.checkin} ~ ${same.checkout})이 이미 있어요. 날짜를 바꾸려면 예약 탭에서 그 예약을 「수정」해 주세요. 여기서 저장하면 예약이 하나 더 생겨요. 다른 날 또 오시는 예약이면 예약 탭의 「예약 추가」로 넣어 주세요.`,
+      ()=>{switchTab('reserv');setTimeout(()=>editResv(same.id),80);},null,'예약 탭에서 수정','닫기');
+    return;
+  }
   // v1.27.3: 여기는 항상 새 예약을 만든다 → 불러온 예약과 겹쳐도 막음(전엔 빼고 봐서 겹치는 예약이 둘 생김). 날짜·이름 수정은 예약 탭에서
   const conflict=findOverlap(roomId,ci,co,null);
   if(conflict){toast(conflict.id===_composeResId?'불러온 예약과 날짜가 겹쳐요. 고치려면 예약 탭에서 수정해 주세요':overlapMsg(conflict));return;}
@@ -4614,7 +4623,10 @@ function saveReservation(){
 function delReservation(id,ev){
   if(ev)ev.stopPropagation();
   const r=reservations.find(x=>x.id===id);if(!r)return;
-  showConfirmModal('예약 삭제',`${r.name}(${r.checkin} ~ ${r.checkout}) 예약을 삭제할까요?`,()=>{
+  // v1.28.9: 메모가 있으면 함께 사라진다고 먼저 알림(11-18 날짜 변경 중 메모 유실). 날짜만 바꿀 땐 「수정」
+  const hasMemo=!!(r.memo&&String(r.memo).trim());
+  const delMsg=`${r.name}(${r.checkin} ~ ${r.checkout}) 예약을 삭제할까요?`+(hasMemo?' 이 예약에 메모가 있어요. 지우면 메모도 함께 사라져요. 날짜만 바꾸려면 「수정」을 눌러 주세요.':'');
+  showConfirmModal(hasMemo?'메모가 있는 예약이에요':'예약 삭제',delMsg,()=>{
     reservations=reservations.filter(x=>x.id!==id);
     saveReservations();renderDashboard();renderReservations();toast('삭제됐어요');
   });
@@ -5306,9 +5318,11 @@ function toast(msg){
   el.textContent=msg;el.classList.add('show');
   setTimeout(()=>el.classList.remove('show'),2000);
 }
-function showConfirmModal(title,msg,onOk,onCancel){
+function showConfirmModal(title,msg,onOk,onCancel,okText,cancelText){
   document.getElementById('confirmTitle').textContent=title;
   document.getElementById('confirmMsg').textContent=msg;
+  document.getElementById('confirmOk').textContent=okText||'확인';
+  document.getElementById('confirmCancel').textContent=cancelText||'취소';
   document.getElementById('confirmOk').onclick=()=>{document.getElementById('confirmModal').classList.remove('open');onOk&&onOk();};
   document.getElementById('confirmCancel').onclick=()=>{document.getElementById('confirmModal').classList.remove('open');onCancel&&onCancel();};
   document.getElementById('confirmModal').classList.add('open');
