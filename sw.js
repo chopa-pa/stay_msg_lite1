@@ -1,4 +1,4 @@
-const CACHE_NAME = 'stay_msg_lite1-v188';
+const CACHE_NAME = 'stay_msg_lite1-v189';
 const ASSETS = ['./index.html', './manifest.json', './icon-192.png', './icon-512.png', './favicon-32.png'];
 // 서버 연결 모듈(supabase-js)은 앱 캐시와 따로 둠(v1.28.0) → 앱 버전을 올려도 안 지워져, 인터넷이 약해도 앱이 서버와 이어짐. 주소는 index.html의 script와 같아야 함
 const CDN_CACHE = 'stay_msg_cdn-v1';
