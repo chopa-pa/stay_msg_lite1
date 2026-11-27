@@ -1370,6 +1370,7 @@ input,select,textarea{font-family:inherit;}
 #tab-reserv .rv-out b{display:block;font-size:15px;font-weight:600;color:#0f172a;font-variant-numeric:tabular-nums;white-space:nowrap;}
 #tab-reserv .rv-out span{display:block;font-size:13px;color:#64748b;margin-top:3px;white-space:nowrap;}
 #tab-reserv .rv-price{text-align:right;font-size:15px;font-weight:700;color:#0f172a;font-variant-numeric:tabular-nums;white-space:nowrap;}
+#tab-reserv .rv-price .rv-bk{display:block;font-size:13px;font-weight:400;color:#64748b;margin-top:3px;}
 #tab-reserv .rv-chev{color:#94a3b8;font-size:20px;line-height:1;transition:transform .15s ease;justify-self:end;}
 #tab-reserv .rv-row.open .rv-chev{transform:rotate(90deg);}
 
@@ -1434,7 +1435,7 @@ input,select,textarea{font-family:inherit;}
   #tab-reserv .rv-tag,#tab-guests .rv-tag{font-size:11px;padding:2px 6px;border-radius:5px;}
   #tab-reserv .rv-ch,#tab-guests .rv-ch{font-size:12px;gap:4px;}
   #tab-reserv .rv-ch::before,#tab-guests .rv-ch::before{width:6px;height:6px;}
-  #tab-reserv .rv-l3{display:block;font-size:13px;color:#334155;margin-top:4px;font-variant-numeric:tabular-nums;}
+  #tab-reserv .rv-l3{display:block;font-size:13px;color:#334155;margin-top:4px;font-variant-numeric:tabular-nums;word-break:keep-all;}
   #tab-reserv .rv-l2{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;margin-top:4px;line-height:1.45;}
   #tab-reserv .rv-mtag{display:inline;font-size:11px;padding:1px 6px;margin-right:6px;}
   #tab-reserv .rv-memo{display:inline;white-space:normal;}
@@ -2075,7 +2076,7 @@ input,select,textarea{font-family:inherit;}
       <div class="sidebar-brand" onclick="switchTab('home')" role="button" tabindex="0" aria-label="홈으로">
         <div class="sidebar-logo">SM</div>
         <div class="sidebar-brand-text">
-          <div class="sidebar-brand-name">Stay_Msg Pro<span class="sidebar-brand-ver" id="appVer">v1.31.0</span></div>
+          <div class="sidebar-brand-name">Stay_Msg Pro<span class="sidebar-brand-ver" id="appVer">v1.32.0</span></div>
           <div class="sidebar-brand-sub">숙소 예약 자동화</div>
         </div>
       </div>
@@ -2133,7 +2134,7 @@ input,select,textarea{font-family:inherit;}
       <div class="mheader-brand" onclick="switchTab('home')" role="button" tabindex="0" aria-label="홈으로">
         <div class="mheader-logo">SM</div>
         <div>
-          <div class="mheader-title">Stay_Msg Pro<span class="mheader-ver" id="appVerM">v1.31.0</span></div>
+          <div class="mheader-title">Stay_Msg Pro<span class="mheader-ver" id="appVerM">v1.32.0</span></div>
           <div class="mheader-sub">숙소 예약 자동화</div>
         </div>
       </div>
@@ -2930,7 +2931,7 @@ input,select,textarea{font-family:inherit;}
 <div class="toast" id="toast"></div>
 
 <script>
-const APP_VERSION='v1.31.0'; // Pro (2026-10-27 lite v3.3.0에서 이름·버전 리셋)
+const APP_VERSION='v1.32.0'; // Pro (2026-10-27 lite v3.3.0에서 이름·버전 리셋)
 const SK_SET='stay_msg_lite1_set_v1';
 const SK_TPL='stay_msg_lite1_tpl_v1';
 const SK_RES='stay_msg_lite1_res_v1';
@@ -5228,6 +5229,16 @@ function rvRevisit(r){
   const rv=prev.some(x=>(guestNotes[x.id]||{}).review);
   return {pct:rv?10:5, rv, txt:rv?'재방문 5% + 리뷰 5% = 10%':'재방문 5% (지난 방문 리뷰 체크 없음)'};
 }
+// 11-27 쵸파파: 예약 화면에 예약한 날·입금한 날. 네이버·에어비앤비는 예약 때 결제 = 예약일, 직접 예약은 확정 문자 보낸 날을 입금일로 봄
+function rvPaid(r){
+  const ch=r.channel||'';
+  if(/네이버|에어비앤비/.test(ch)||String(r.id).startsWith('n')) return r.createdAt?{d:rvYmd(new Date(r.createdAt)),how:/에어비앤비/.test(ch)?'에어비앤비 결제':'네이버 결제'}:null;
+  const j=(typeof sbAllJobs!=='undefined'?sbAllJobs:[]).filter(x=>x.reservation_id===r.id&&x.stage_id==='booked'&&(x.status==='sent'||x.status==='delivered')).sort((a,b)=>b.id-a.id)[0];
+  if(j&&j.updated_at) return {d:rvYmd(new Date(j.updated_at)),how:'확정 문자 보낸 날'};
+  const dg=(r.phone||'').replace(/\D/g,''), w0=rvAdd(r.checkin,-240);
+  const h=(msgHistory||[]).find(x=>x.stageId==='booked'&&x.at&&(x.resId?x.resId===r.id:(dg&&(x.phone||'').replace(/\D/g,'')===dg))&&rvYmd(new Date(x.at))>=w0&&rvYmd(new Date(x.at))<=r.checkin);
+  return h?{d:rvYmd(new Date(h.at)),how:'확정 문자 보낸 날'}:null;
+}
 function rvRow(r,today){
   const open=_rv.open===r.id, n=Math.max(0,rvDays(r.checkin,r.checkout)), dw=rvDw(r.checkin), dwo=rvDw(r.checkout);
   let tag='';
@@ -5244,6 +5255,8 @@ function rvRow(r,today){
   const bits=[`→ ${rvMD(r.checkout)}(${dwo})`,`${n}박`];
   if(gs)bits.push(gs);
   if(won)bits.push(won);
+  const bkd=r.createdAt?rvYmd(new Date(r.createdAt)):'', paid=rvPaid(r);
+  if(bkd)bits.push(`${rvMD(bkd)}\u00a0예약`);   // 폰에서 「예약」만 다음 줄로 떨어지지 않게
   const stg=RV_STAGES.map(([id,lb,full])=>[id,lb,full,...rvStage(r,id)]);
   const st=stg.map(([,lb,full,c,t,l])=>`<span class="rv-st ${c}" title="${full} · ${esc(l)}">${rvChip(c,t,lb)}</span>`).join('');
   const now=r.checkin<=today&&r.checkout>=today, past=r.checkout<today;
@@ -5257,6 +5270,8 @@ function rvRow(r,today){
         ${won?`<dt class="pc">금액</dt><dd class="pc">${won}</dd>`:''}
         ${gw?`<dt class="m">${gs?'인원':'금액'}</dt><dd class="m">${gw}</dd>`:''}
         ${r.channel?`<dt>채널</dt><dd>${esc(r.channel)}</dd>`:''}
+        ${bkd?`<dt>예약</dt><dd>${bkd.replace(/-/g,'.')}(${rvDw(bkd)}) ${new Date(r.createdAt).toTimeString().slice(0,5)}</dd>`:''}
+        <dt>입금</dt><dd>${paid?`${paid.d.replace(/-/g,'.')}(${rvDw(paid.d)}) · ${paid.how}`:'확정 문자 기록 없음'}</dd>
         ${rvs?`<dt>할인</dt><dd>${rvs.txt} · 자동 적용 아님</dd>`:''}
         ${room?`<dt>호실</dt><dd>${esc(room.name||'')}</dd>`:''}
         ${r.memo?`<dt>메모</dt><dd class="memo">${esc(r.memo)}</dd>`:''}
@@ -5278,7 +5293,7 @@ function rvRow(r,today){
         ${(mtags||r.memo)?`<div class="rv-l2">${mtags}${r.memo?`<span class="rv-memo">${esc(r.memo)}</span>`:''}</div>`:''}
       </div>
       <div class="rv-out"><b>→ ${rvMD(r.checkout)}(${dwo})</b><span>${[`${n}박`,gs].filter(Boolean).join(' · ')}</span></div>
-      <div class="rv-price">${won}</div>
+      <div class="rv-price">${won}${bkd?`<span class="rv-bk">${rvMD(bkd)} 예약</span>`:''}</div>
       <div class="rv-sts">${st}</div>
       <span class="rv-chev">›</span>
     </div>${det}
@@ -5624,7 +5639,7 @@ async function sbPull(manual){
       sb.from('guest_profiles').select('*'),
       sb.from('closures').select('*').eq('status','active').order('start_date'),
       sb.from('channel_blocks').select('reservation_id,channel,status,attempts,result').like('reservation_id','closure-%'),
-      sb.from('sms_jobs').select('id,reservation_id,stage_id,status,scheduled_date,result').in('status',['sent','delivered','sending','skipped']).order('scheduled_date',{ascending:false}).limit(1000),
+      sb.from('sms_jobs').select('id,reservation_id,stage_id,status,scheduled_date,result,updated_at').in('status',['sent','delivered','sending','skipped']).order('scheduled_date',{ascending:false}).limit(1000),
       sb.from('reservations').select('id,name,phone,checkin,checkout,channel,created_at,updated_at').eq('status','cancelled').gte('updated_at', day0.toISOString())
     ]);
     if(s.error||r.error||m.error) throw (s.error||r.error||m.error);
